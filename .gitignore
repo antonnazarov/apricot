@@ -1,1 +1,3 @@
-/Apricot/target/
+/apricot-application/apricot-domain/target/
+/apricot-application/apricot-metascan/target/
+/apricot-application/apricot-tmp/target/
