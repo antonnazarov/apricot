@@ -1,4 +1,4 @@
-Apricot application includes the following modules:
+Apricot application consists of:
 
-apricot-domain - low level project databases access
-apricot-metascan - the database specific scanners of db structures
+apricot-persistence - all database related stuff
+apricot-metascan - the database specific structure- scanners
