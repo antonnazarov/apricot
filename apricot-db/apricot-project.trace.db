@@ -68,3 +68,62 @@ org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
 org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
 2018-09-14 22:58:49 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-09-20 19:49:25 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Table "APRICOT_COLUMN" not found; SQL statement:
+drop table apricot_column [42102-195]
+2018-09-20 19:50:42 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "                         
+
+                             
+CREATE TABLE APRICOT_RELATIONSHIP (
+   PARENT_CONSTRAINT_ID INT NOT NULL,
+   CHILD_CONSTRAINT_ID INT NOT NULL
+)
+
+ALTER[*] TABLE APRICOT_RELATIONSHIP ADD PRIMARY KEY (PARENT_CONSTRAINT_ID, CHILD_CONSTRAINT_ID) "; SQL statement:
+-------------------------
+
+-- parent/child relationships
+create table apricot_relationship (
+   parent_constraint_id int not null,
+   child_constraint_id int not null
+)
+
+alter table apricot_relationship add primary key (parent_constraint_id, child_constraint_id) [42000-195]
+2018-09-20 19:50:42 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Table "APRICOT_RELATIONSHIP" not found; SQL statement:
+alter table apricot_relationship
+   add foreign key(parent_constraint_id)
+   references apricot_constraint(constraint_id) [42102-195]
+2018-09-20 19:50:42 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Table "APRICOT_RELATIONSHIP" not found; SQL statement:
+alter table apricot_relationship
+   add foreign key(child_constraint_id)
+   references apricot_constraint(constraint_id) [42102-195]
+2018-09-20 20:01:01 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Table "APRICOT_COLUMN" not found; SQL statement:
+drop table apricot_column [42102-195]
+2018-09-20 20:41:32 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "INSERT INTO APRICOT_RELATIONSHIP (2000[*], 1003) "; expected "identifier"; SQL statement:
+insert into apricot_relationship (2000, 1003) [42001-195]
+2018-09-20 20:49:50 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "SELECT ATB.TABLE_NAME, AC.COLUMN_NAME, AC.ORDINAL_POSITION, AC.IS_NULLABLE, AC.DATA_TYPE, AC.VALUE_LENGTH, ATB.TABLE_ID, AC.COLUMN_ID
+FROM APRICOT_TABLE ATB
+JOIN APRICOT_COLUMN AC ON AC.TABLE_ID = ATB.TABLE_ID
+ORDER ATB[*].TABLE_NAME, AC.COLUMN_NAME, AC.ORDINAL_POSITION "; expected "BY"; SQL statement:
+select atb.table_name, ac.column_name, ac.ordinal_position, ac.is_nullable, ac.data_type, ac.value_length, atb.table_id, ac.column_id
+from apricot_table atb
+join apricot_column ac on ac.table_id = atb.table_id
+order atb.table_name, ac.column_name, ac.ordinal_position [42001-195]
+2018-09-20 21:18:09 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-09-20 21:18:09 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-09-20 21:18:09 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-09-20 21:18:09 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-09-20 21:18:09 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-09-20 21:18:09 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
