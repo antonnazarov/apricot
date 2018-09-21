@@ -127,3 +127,105 @@ org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
 org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
 2018-09-20 21:18:09 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-09-21 21:07:41 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: View "VW_COLUMN" already exists; SQL statement:
+create view vw_column as
+select atb.table_name, ac.column_name, ac.ordinal_position, ac.is_nullable, ac.data_type, ac.value_length,
+   case
+      when cic.column_id is not null then ctr.constraint_name
+      else null
+   end as primary_key,
+   case
+      when cic1.column_id is not null then ctr1.constraint_name
+      else null
+   end as foreign_key,
+--   case
+--      when cic1.column_id is not null then ptbl.table_name
+--      else null
+--   end as parent_table,
+   atb.table_id, ac.column_id
+from apricot_table atb
+join apricot_column ac on ac.table_id = atb.table_id
+left outer join apricot_constraint ctr on atb.table_id = ctr.table_id and ctr.constraint_type = 'PRIMARY_KEY'
+left outer join apricot_column_in_constraint cic on cic.constraint_id = ctr.constraint_id and cic.column_id = ac.column_id
+left outer join apricot_constraint ctr1 on atb.table_id = ctr1.table_id and ctr1.constraint_type = 'FOREIGN_KEY'
+left outer join apricot_column_in_constraint cic1 on cic1.constraint_id = ctr1.constraint_id and cic1.column_id = ac.column_id
+--left outer join apricot_relationship ar on ar.child_constraint_id = ctr1.constraint_id
+--left outer join apricot_constraint ctr2 on ar.parent_constraint_id = ctr2.constraint_id
+--left outer join apricot_table ptbl on ctr2.table_id = ptbl.table_id
+order by atb.table_name, ac.ordinal_position [90038-195]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:345)
+	at org.h2.message.DbException.get(DbException.java:179)
+	at org.h2.message.DbException.get(DbException.java:155)
+	at org.h2.command.ddl.CreateView.update(CreateView.java:87)
+	at org.h2.command.CommandContainer.update(CommandContainer.java:101)
+	at org.h2.command.Command.executeUpdate(Command.java:260)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:193)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:165)
+	at sun.reflect.GeneratedMethodAccessor48.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at com.onseven.dbvis.g.B.B.ā(Z:2186)
+	at com.onseven.dbvis.g.B.F$A.call(Z:1369)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2018-09-21 21:23:59 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Column "CIC.COLUMN_ID" not found; SQL statement:
+select atb.table_name, ac.column_name, ac.ordinal_position, ac.is_nullable, ac.data_type, ac.value_length,
+   case
+      when cic.column_id is not null and ctr.constraint_type = 'PRIMARY_KEY' then ctr.constraint_name
+      else null
+   end as primary_key,
+   ctr.constraint_type,
+--   case
+--      when cic1.column_id is not null then ctr1.constraint_name
+--      else null
+--   end as foreign_key,
+--   case
+--      when cic1.column_id is not null then ptbl.table_name
+--      else null
+--   end as parent_table,
+   atb.table_id, ac.column_id
+from apricot_table atb
+join apricot_column ac on ac.table_id = atb.table_id
+left outer join apricot_constraint ctr on atb.table_id = ctr.table_id and ctr.constraint_type in ('PRIMARY_KEY', 'FOREIGN_KEY')
+-- left outer join apricot_column_in_constraint cic on cic.constraint_id = ctr.constraint_id and cic.column_id = ac.column_id
+-- left outer join apricot_constraint ctr1 on atb.table_id = ctr1.table_id and ctr1.constraint_type = 'FOREIGN_KEY'
+--left outer join apricot_column_in_constraint cic1 on cic1.constraint_id = ctr1.constraint_id and cic1.column_id = ac.column_id
+
+--left outer join apricot_relationship ar on ar.child_constraint_id = ctr1.constraint_id
+--left outer join apricot_constraint ctr2 on ar.parent_constraint_id = ctr2.constraint_id
+--left outer join apricot_table ptbl on ctr2.table_id = ptbl.table_id
+order by atb.table_name, ac.ordinal_position [42122-195]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:345)
+	at org.h2.message.DbException.get(DbException.java:179)
+	at org.h2.message.DbException.get(DbException.java:155)
+	at org.h2.expression.ExpressionColumn.optimize(ExpressionColumn.java:147)
+	at org.h2.expression.Comparison.optimize(Comparison.java:178)
+	at org.h2.expression.ConditionAndOr.optimize(ConditionAndOr.java:130)
+	at org.h2.expression.Function.optimize(Function.java:2307)
+	at org.h2.expression.Alias.optimize(Alias.java:51)
+	at org.h2.command.dml.Select.prepare(Select.java:839)
+	at org.h2.command.Parser.prepareCommand(Parser.java:262)
+	at org.h2.engine.Session.prepareLocal(Session.java:573)
+	at org.h2.engine.Session.prepareCommand(Session.java:514)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1204)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:177)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:165)
+	at sun.reflect.GeneratedMethodAccessor48.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at com.onseven.dbvis.g.B.B.ā(Z:2186)
+	at com.onseven.dbvis.g.B.F$A.call(Z:1369)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2018-09-21 21:28:43 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-09-21 21:28:43 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-09-21 21:28:43 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]

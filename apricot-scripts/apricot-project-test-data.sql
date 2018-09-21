@@ -1,4 +1,13 @@
 -------------------------
+-- Delete all data
+-------------------------
+delete from apricot_column_in_constraint;
+delete from apricot_relationship;
+delete from apricot_constraint;
+delete from apricot_column;
+delete from apricot_table;
+
+-------------------------
 -- add test data
 -------------------------
 insert into apricot_table values (10, 'MY TABLE 1');
@@ -10,11 +19,13 @@ insert into apricot_column values (104, 10, 'surename', 4, false, 'varchar', '50
 insert into apricot_column values (105, 10, 'country_id', 5, false, 'varchar', '20');
 insert into apricot_column values (106, 10, 'age', 6, true, 'int', null);
 insert into apricot_column values (107, 10, 'ship_id', 7,false, 'int', null);
+insert into apricot_column values (108, 10, 'calc_method_id', 7,false, 'int', null);
 
 insert into apricot_constraint values (1000, 'PK_TABLE_1', 'PRIMARY_KEY', 10);
 insert into apricot_constraint values (1001, 'UNIQUE_ID', 'UNIQUE', 10);
 insert into apricot_constraint values (1002, 'UNIQUE_NAME_ID', 'UNIQUE_INDEX', 10);
 insert into apricot_constraint values (1003, 'FK_SHIP', 'FOREIGN_KEY', 10);
+insert into apricot_constraint values (1004, 'fk_calc_method_2387009', 'FOREIGN_KEY', 10);
 
 insert into apricot_column_in_constraint values (1000, 101, 1);
 insert into apricot_column_in_constraint values (1000, 102, 2);
@@ -22,6 +33,7 @@ insert into apricot_column_in_constraint values (1001, 105, 1);
 insert into apricot_column_in_constraint values (1002, 103, 1);
 insert into apricot_column_in_constraint values (1002, 104, 2);
 insert into apricot_column_in_constraint values (1003, 107, 1);
+insert into apricot_column_in_constraint values (1004, 108, 1);
 
 -------------------------
 insert into apricot_table values (11, 'REF_SHIP');
@@ -40,6 +52,17 @@ insert into apricot_column_in_constraint values (2001, 202, 1);
 insert into apricot_relationship values (2000, 1003);
 -------------------------
 
+insert into apricot_table values (12, 'CALC_METHOD');
+insert into apricot_column values (301, 12, 'method_id', 1, false, 'int', null);
+insert into apricot_column values (302, 12, 'method_name', 2, false, 'varchar', '200');
+insert into apricot_column values (303, 12, 'method_comment', 3, false, 'varchar', '1000');
+insert into apricot_constraint values (3000, 'PK_CALC_METHOD', 'PRIMARY_KEY', 12);
+insert into apricot_column_in_constraint values (3000, 301, 1);
+
+insert into apricot_relationship values (3000, 1004);
+-------------------------
+
+-------------------------
 select * from apricot_table;
 select * from apricot_column;
 select * from apricot_constraint;
