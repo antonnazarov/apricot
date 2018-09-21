@@ -229,3 +229,189 @@ org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
 org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
 2018-09-21 21:28:43 jdbc[4]: exception
 org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-09-21 21:39:08 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLException: Column "ATB.TABLE_NAME" not found; SQL statement:
+select * from (
+select atb.table_name, ac.column_name, ac.ordinal_position, ac.is_nullable, ac.data_type, ac.value_length,
+   case
+      when cic.column_id is not null then ctr.constraint_name
+      else null
+   end as primary_key,
+   atb.table_id, ac.column_id
+from apricot_table atb
+join apricot_column ac on ac.table_id = atb.table_id
+left outer join apricot_constraint ctr on atb.table_id = ctr.table_id and ctr.constraint_type = 'PRIMARY_KEY'
+left outer join apricot_column_in_constraint cic on cic.constraint_id = ctr.constraint_id and cic.column_id = ac.column_id
+) t
+order by atb.table_name, ac.ordinal_position [42122-195]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:345)
+	at org.h2.message.DbException.get(DbException.java:179)
+	at org.h2.message.DbException.get(DbException.java:155)
+	at org.h2.expression.ExpressionColumn.optimize(ExpressionColumn.java:147)
+	at org.h2.command.dml.Select.prepare(Select.java:839)
+	at org.h2.command.Parser.prepareCommand(Parser.java:262)
+	at org.h2.engine.Session.prepareLocal(Session.java:573)
+	at org.h2.engine.Session.prepareCommand(Session.java:514)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1204)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:177)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:165)
+	at sun.reflect.GeneratedMethodAccessor48.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at com.onseven.dbvis.g.B.B.ā(Z:2186)
+	at com.onseven.dbvis.g.B.F$A.call(Z:1369)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2018-09-21 21:42:09 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLException: Ambiguous column name "TABLE_ID"; SQL statement:
+select *, ac1.constraint_name from (
+select atb.table_name, ac.column_name, ac.ordinal_position, ac.is_nullable, ac.data_type, ac.value_length,
+   case
+      when cic.column_id is not null then ctr.constraint_name
+      else null
+   end as primary_key,
+   atb.table_id, ac.column_id
+from apricot_table atb
+join apricot_column ac on ac.table_id = atb.table_id
+left outer join apricot_constraint ctr on atb.table_id = ctr.table_id and ctr.constraint_type = 'PRIMARY_KEY'
+left outer join apricot_column_in_constraint cic on cic.constraint_id = ctr.constraint_id and cic.column_id = ac.column_id
+) t
+left outer join apricot_constraint ac1 on ac1.table_id = table_id
+order by table_name, ordinal_position [90059-195]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:345)
+	at org.h2.message.DbException.get(DbException.java:179)
+	at org.h2.message.DbException.get(DbException.java:155)
+	at org.h2.expression.ExpressionColumn.mapColumn(ExpressionColumn.java:124)
+	at org.h2.expression.ExpressionColumn.mapColumns(ExpressionColumn.java:94)
+	at org.h2.expression.Comparison.mapColumns(Comparison.java:494)
+	at org.h2.table.TableFilter$3.accept(TableFilter.java:681)
+	at org.h2.table.TableFilter.visit(TableFilter.java:1194)
+	at org.h2.table.TableFilter.addJoin(TableFilter.java:678)
+	at org.h2.command.Parser.readJoin(Parser.java:1579)
+	at org.h2.command.Parser.parseJoinTableFilter(Parser.java:1985)
+	at org.h2.command.Parser.parseSelectSimpleFromPart(Parser.java:1941)
+	at org.h2.command.Parser.parseSelectSimple(Parser.java:2089)
+	at org.h2.command.Parser.parseSelectSub(Parser.java:1934)
+	at org.h2.command.Parser.parseSelectUnion(Parser.java:1749)
+	at org.h2.command.Parser.parseSelect(Parser.java:1737)
+	at org.h2.command.Parser.parsePrepared(Parser.java:448)
+	at org.h2.command.Parser.parse(Parser.java:320)
+	at org.h2.command.Parser.parse(Parser.java:292)
+	at org.h2.command.Parser.prepareCommand(Parser.java:257)
+	at org.h2.engine.Session.prepareLocal(Session.java:573)
+	at org.h2.engine.Session.prepareCommand(Session.java:514)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1204)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:177)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:165)
+	at sun.reflect.GeneratedMethodAccessor48.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at com.onseven.dbvis.g.B.B.ā(Z:2186)
+	at com.onseven.dbvis.g.B.F$A.call(Z:1369)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2018-09-21 21:46:38 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-09-21 21:46:38 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-09-21 21:46:38 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-09-21 21:56:06 jdbc[6]: exception
+org.h2.jdbc.JdbcSQLException: View "VW_COLUMN" already exists; SQL statement:
+create view vw_column as
+select atb.table_name, ac.column_name, ac.ordinal_position, ac.is_nullable, ac.data_type, ac.value_length,
+   case
+      when cic.column_id is not null then ctr.constraint_name
+      else null
+   end as primary_key,
+   atb.table_id, ac.column_id,
+   t.constraint_name
+from apricot_table atb
+join apricot_column ac on ac.table_id = atb.table_id
+left join apricot_constraint ctr on atb.table_id = ctr.table_id and ctr.constraint_type = 'PRIMARY_KEY'
+left join apricot_column_in_constraint cic on cic.constraint_id = ctr.constraint_id and cic.column_id = ac.column_id
+left join (
+   select ac_1.constraint_id, ac_1.constraint_name, ac_1.table_id, cic_1.column_id 
+   from apricot_constraint ac_1
+   join apricot_column_in_constraint cic_1 on cic_1.constraint_id = ac_1.constraint_id
+   where constraint_type = 'FOREIGN_KEY'
+) t on t.column_id = ac.column_id
+order by atb.table_name, ac.ordinal_position [90038-195]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:345)
+	at org.h2.message.DbException.get(DbException.java:179)
+	at org.h2.message.DbException.get(DbException.java:155)
+	at org.h2.command.ddl.CreateView.update(CreateView.java:87)
+	at org.h2.command.CommandContainer.update(CommandContainer.java:101)
+	at org.h2.command.Command.executeUpdate(Command.java:260)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:193)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:165)
+	at sun.reflect.GeneratedMethodAccessor48.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at com.onseven.dbvis.g.B.B.ā(Z:2186)
+	at com.onseven.dbvis.g.B.F$A.call(Z:1369)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2018-09-21 22:14:09 jdbc[6]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "SELECT ATB.TABLE_NAME, AC.COLUMN_NAME, AC.ORDINAL_POSITION, AC.IS_NULLABLE, AC.DATA_TYPE, AC.VALUE_LENGTH,
+   CASE
+      WHEN CIC.COLUMN_ID IS NOT NULL THEN CTR.CONSTRAINT_NAME
+      ELSE NULL
+   END AS PRIMARY_KEY,
+   T.CONSTRAINT_NAME AS FOREIGN_KEY,   
+   T.TABLE_NAME AS PARENT_TABLE
+   ATB[*].TABLE_ID, AC.COLUMN_ID
+FROM APRICOT_TABLE ATB
+JOIN APRICOT_COLUMN AC ON AC.TABLE_ID = ATB.TABLE_ID
+LEFT JOIN APRICOT_CONSTRAINT CTR ON ATB.TABLE_ID = CTR.TABLE_ID AND CTR.CONSTRAINT_TYPE = 'PRIMARY_KEY'
+LEFT JOIN APRICOT_COLUMN_IN_CONSTRAINT CIC ON CIC.CONSTRAINT_ID = CTR.CONSTRAINT_ID AND CIC.COLUMN_ID = AC.COLUMN_ID
+LEFT JOIN (
+   SELECT AC_1.CONSTRAINT_ID, AC_1.CONSTRAINT_NAME, AC_1.TABLE_ID, CIC_1.COLUMN_ID, AT_1.TABLE_NAME
+   FROM APRICOT_CONSTRAINT AC_1
+   JOIN APRICOT_COLUMN_IN_CONSTRAINT CIC_1 ON CIC_1.CONSTRAINT_ID = AC_1.CONSTRAINT_ID
+   JOIN APRICOT_RELATIONSHIP AR ON AR.CHILD_CONSTRAINT_ID = AC_1.CONSTRAINT_ID
+   JOIN APRICOT_CONSTRAINT AC_2 ON AR.PARENT_CONSTRAINT_ID = AC_2.CONSTRAINT_ID
+   JOIN APRICOT_TABLE AT_1 ON AT_1.TABLE_ID = AC_2.TABLE_ID
+   WHERE AC_1.CONSTRAINT_TYPE = 'FOREIGN_KEY'
+) T ON T.COLUMN_ID = AC.COLUMN_ID
+ORDER BY ATB.TABLE_NAME, AC.ORDINAL_POSITION "; SQL statement:
+select atb.table_name, ac.column_name, ac.ordinal_position, ac.is_nullable, ac.data_type, ac.value_length,
+   case
+      when cic.column_id is not null then ctr.constraint_name
+      else null
+   end as primary_key,
+   t.constraint_name as foreign_key,   
+   t.table_name as parent_table
+   atb.table_id, ac.column_id
+from apricot_table atb
+join apricot_column ac on ac.table_id = atb.table_id
+left join apricot_constraint ctr on atb.table_id = ctr.table_id and ctr.constraint_type = 'PRIMARY_KEY'
+left join apricot_column_in_constraint cic on cic.constraint_id = ctr.constraint_id and cic.column_id = ac.column_id
+left join (
+   select ac_1.constraint_id, ac_1.constraint_name, ac_1.table_id, cic_1.column_id, at_1.table_name
+   from apricot_constraint ac_1
+   join apricot_column_in_constraint cic_1 on cic_1.constraint_id = ac_1.constraint_id
+   join apricot_relationship ar on ar.child_constraint_id = ac_1.constraint_id
+   join apricot_constraint ac_2 on ar.parent_constraint_id = ac_2.constraint_id
+   join apricot_table at_1 on at_1.table_id = ac_2.table_id
+   where ac_1.constraint_type = 'FOREIGN_KEY'
+) t on t.column_id = ac.column_id
+order by atb.table_name, ac.ordinal_position [42000-195]
+2018-09-21 22:20:59 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-09-21 22:20:59 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-09-21 22:20:59 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-09-21 22:20:59 jdbc[6]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-09-21 22:20:59 jdbc[6]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-09-21 22:20:59 jdbc[6]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]

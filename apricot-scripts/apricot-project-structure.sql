@@ -76,17 +76,22 @@ select atb.table_name, ac.column_name, ac.ordinal_position, ac.is_nullable, ac.d
       when cic.column_id is not null then ctr.constraint_name
       else null
    end as primary_key,
-   case
-      when cic1.column_id is not null then ctr1.constraint_name
-      else null
-   end as foreign_key,
+   t.constraint_name as foreign_key,   
+   t.table_name as parent_table,
    atb.table_id, ac.column_id
 from apricot_table atb
 join apricot_column ac on ac.table_id = atb.table_id
-left outer join apricot_constraint ctr on atb.table_id = ctr.table_id and ctr.constraint_type = 'PRIMARY_KEY'
-left outer join apricot_column_in_constraint cic on cic.constraint_id = ctr.constraint_id and cic.column_id = ac.column_id
-left outer join apricot_constraint ctr1 on atb.table_id = ctr1.table_id and ctr1.constraint_type = 'FOREIGN_KEY'
-left outer join apricot_column_in_constraint cic1 on cic1.constraint_id = ctr1.constraint_id and cic1.column_id = ac.column_id
+left join apricot_constraint ctr on atb.table_id = ctr.table_id and ctr.constraint_type = 'PRIMARY_KEY'
+left join apricot_column_in_constraint cic on cic.constraint_id = ctr.constraint_id and cic.column_id = ac.column_id
+left join (
+   select ac_1.constraint_id, ac_1.constraint_name, ac_1.table_id, cic_1.column_id, at_1.table_name
+   from apricot_constraint ac_1
+   join apricot_column_in_constraint cic_1 on cic_1.constraint_id = ac_1.constraint_id
+   join apricot_relationship ar on ar.child_constraint_id = ac_1.constraint_id
+   join apricot_constraint ac_2 on ar.parent_constraint_id = ac_2.constraint_id
+   join apricot_table at_1 on at_1.table_id = ac_2.table_id
+   where ac_1.constraint_type = 'FOREIGN_KEY'
+) t on t.column_id = ac.column_id
 order by atb.table_name, ac.ordinal_position;
 
 

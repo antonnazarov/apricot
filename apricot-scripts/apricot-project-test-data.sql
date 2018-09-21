@@ -19,7 +19,7 @@ insert into apricot_column values (104, 10, 'surename', 4, false, 'varchar', '50
 insert into apricot_column values (105, 10, 'country_id', 5, false, 'varchar', '20');
 insert into apricot_column values (106, 10, 'age', 6, true, 'int', null);
 insert into apricot_column values (107, 10, 'ship_id', 7,false, 'int', null);
-insert into apricot_column values (108, 10, 'calc_method_id', 7,false, 'int', null);
+insert into apricot_column values (108, 10, 'calc_method_id', 8,false, 'int', null);
 
 insert into apricot_constraint values (1000, 'PK_TABLE_1', 'PRIMARY_KEY', 10);
 insert into apricot_constraint values (1001, 'UNIQUE_ID', 'UNIQUE', 10);
