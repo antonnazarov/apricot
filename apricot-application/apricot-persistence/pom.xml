@@ -5,13 +5,12 @@
                              http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>co.za.apricot</groupId>
+        <groupId>za.co.apricot</groupId>
         <artifactId>apricotdb</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <artifactId>apricot-persistence</artifactId>
     <packaging>jar</packaging>
-
     <name>apricot-persistence</name>
 
     <dependencies>

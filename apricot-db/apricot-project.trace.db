@@ -415,3 +415,163 @@ org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
 org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
 2018-09-21 22:20:59 jdbc[6]: exception
 org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-09-22 19:52:23 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Cannot drop "APRICOT_COLUMN" because "VW_COLUMN" depends on it; SQL statement:
+drop table apricot_column [90107-195]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:345)
+	at org.h2.message.DbException.get(DbException.java:179)
+	at org.h2.command.ddl.DropTable.prepareDrop(DropTable.java:84)
+	at org.h2.command.ddl.DropTable.update(DropTable.java:113)
+	at org.h2.command.CommandContainer.update(CommandContainer.java:101)
+	at org.h2.command.Command.executeUpdate(Command.java:260)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:193)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:165)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at com.onseven.dbvis.g.B.B.ā(Z:2186)
+	at com.onseven.dbvis.g.B.F$A.call(Z:1369)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2018-09-22 19:52:23 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Cannot drop "APRICOT_TABLE" because "VW_COLUMN" depends on it; SQL statement:
+drop table apricot_table [90107-195]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:345)
+	at org.h2.message.DbException.get(DbException.java:179)
+	at org.h2.command.ddl.DropTable.prepareDrop(DropTable.java:84)
+	at org.h2.command.ddl.DropTable.update(DropTable.java:113)
+	at org.h2.command.CommandContainer.update(CommandContainer.java:101)
+	at org.h2.command.Command.executeUpdate(Command.java:260)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:193)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:165)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at com.onseven.dbvis.g.B.B.ā(Z:2186)
+	at com.onseven.dbvis.g.B.F$A.call(Z:1369)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2018-09-22 19:52:23 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Cannot drop "APRICOT_CONSTRAINT" because "VW_COLUMN" depends on it; SQL statement:
+drop table apricot_constraint [90107-195]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:345)
+	at org.h2.message.DbException.get(DbException.java:179)
+	at org.h2.command.ddl.DropTable.prepareDrop(DropTable.java:84)
+	at org.h2.command.ddl.DropTable.update(DropTable.java:113)
+	at org.h2.command.CommandContainer.update(CommandContainer.java:101)
+	at org.h2.command.Command.executeUpdate(Command.java:260)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:193)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:165)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at com.onseven.dbvis.g.B.B.ā(Z:2186)
+	at com.onseven.dbvis.g.B.F$A.call(Z:1369)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2018-09-22 19:52:23 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Cannot drop "APRICOT_COLUMN_IN_CONSTRAINT" because "VW_COLUMN" depends on it; SQL statement:
+drop table apricot_column_in_constraint [90107-195]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:345)
+	at org.h2.message.DbException.get(DbException.java:179)
+	at org.h2.command.ddl.DropTable.prepareDrop(DropTable.java:84)
+	at org.h2.command.ddl.DropTable.update(DropTable.java:113)
+	at org.h2.command.CommandContainer.update(CommandContainer.java:101)
+	at org.h2.command.Command.executeUpdate(Command.java:260)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:193)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:165)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at com.onseven.dbvis.g.B.B.ā(Z:2186)
+	at com.onseven.dbvis.g.B.F$A.call(Z:1369)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2018-09-22 19:52:52 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Table "APRICOT_RELATIONSHIP" not found; SQL statement:
+drop table apricot_relationship [42102-195]
+2018-09-22 19:52:52 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: View "VW_COLUMN" not found; SQL statement:
+drop view vw_column [90037-195]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:345)
+	at org.h2.message.DbException.get(DbException.java:179)
+	at org.h2.message.DbException.get(DbException.java:155)
+	at org.h2.command.ddl.DropView.update(DropView.java:55)
+	at org.h2.command.CommandContainer.update(CommandContainer.java:101)
+	at org.h2.command.Command.executeUpdate(Command.java:260)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:193)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:165)
+	at sun.reflect.GeneratedMethodAccessor48.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at com.onseven.dbvis.g.B.B.ā(Z:2186)
+	at com.onseven.dbvis.g.B.F$A.call(Z:1369)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2018-09-22 19:52:57 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Table "APRICOT_COLUMN" not found; SQL statement:
+drop table apricot_column [42102-195]
+2018-09-22 19:52:57 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Table "APRICOT_TABLE" not found; SQL statement:
+drop table apricot_table [42102-195]
+2018-09-22 19:52:57 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Table "APRICOT_CONSTRAINT" not found; SQL statement:
+drop table apricot_constraint [42102-195]
+2018-09-22 19:52:57 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Table "APRICOT_COLUMN_IN_CONSTRAINT" not found; SQL statement:
+drop table apricot_column_in_constraint [42102-195]
+2018-09-22 19:52:57 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Table "APRICOT_RELATIONSHIP" not found; SQL statement:
+drop table apricot_relationship [42102-195]
+2018-09-22 19:52:57 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: View "VW_COLUMN" not found; SQL statement:
+drop view vw_column [90037-195]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:345)
+	at org.h2.message.DbException.get(DbException.java:179)
+	at org.h2.message.DbException.get(DbException.java:155)
+	at org.h2.command.ddl.DropView.update(DropView.java:55)
+	at org.h2.command.CommandContainer.update(CommandContainer.java:101)
+	at org.h2.command.Command.executeUpdate(Command.java:260)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:193)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:165)
+	at sun.reflect.GeneratedMethodAccessor48.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at com.onseven.dbvis.g.B.B.ā(Z:2186)
+	at com.onseven.dbvis.g.B.F$A.call(Z:1369)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2018-09-22 19:53:13 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-09-22 19:53:13 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-09-22 19:53:13 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-09-22 21:12:10 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-09-22 21:12:10 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-09-22 21:12:10 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-09-22 21:12:11 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-09-22 21:12:11 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-09-22 21:12:11 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]

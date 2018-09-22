@@ -54,11 +54,11 @@ alter table apricot_column_in_constraint
 
 -- parent/child relationships
 create table apricot_relationship (
+   relationship_id identity primary Key,
    parent_constraint_id int not null,
-   child_constraint_id int not null
+   child_constraint_id int not null,
+   unique key relationship_unique_key (parent_constraint_id, child_constraint_id)
 );
-
-alter table apricot_relationship add primary key (parent_constraint_id, child_constraint_id);
 
 alter table apricot_relationship
    add foreign key(parent_constraint_id)

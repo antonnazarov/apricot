@@ -49,7 +49,7 @@ insert into apricot_column_in_constraint values (2000, 201, 1);
 insert into apricot_column_in_constraint values (2001, 202, 1);
 
 -------------------------
-insert into apricot_relationship values (2000, 1003);
+insert into apricot_relationship values (1, 2000, 1003);
 -------------------------
 
 insert into apricot_table values (12, 'CALC_METHOD');
@@ -59,8 +59,28 @@ insert into apricot_column values (303, 12, 'method_comment', 3, false, 'varchar
 insert into apricot_constraint values (3000, 'PK_CALC_METHOD', 'PRIMARY_KEY', 12);
 insert into apricot_column_in_constraint values (3000, 301, 1);
 
-insert into apricot_relationship values (3000, 1004);
+insert into apricot_relationship values (2, 3000, 1004);
 -------------------------
+
+insert into apricot_table values (13, 'COMBINED_REFERENCE');
+insert into apricot_column values (401, 13, 'ref_prefix', 1, false, 'varchar', '10');
+insert into apricot_column values (402, 13, 'ref_postfix', 2, false, 'varchar', '20');
+insert into apricot_column values (403, 13, 'reference_comment', 3, false, 'varchar', '1000');
+insert into apricot_constraint values (4000, 'COMBINED_REFERENCE_PK', 'PRIMARY_KEY', 13);
+insert into apricot_column_in_constraint values (4000, 401, 1);
+insert into apricot_column_in_constraint values (4000, 402, 2);
+
+insert into apricot_table values (14, 'COMBINED_RFCHILD');
+insert into apricot_column values (501, 14, 'id', 1, false, 'int', null);
+insert into apricot_column values (502, 14, 'ref_prefix', 2, false, 'varchar', '10');
+insert into apricot_column values (503, 14, 'ref_postfix', 3, false, 'varchar', '20');
+insert into apricot_constraint values (5000, 'RFCHILD_PK', 'PRIMARY_KEY', 14);
+insert into apricot_column_in_constraint values (5000, 501, 1);
+insert into apricot_constraint values (5100, 'RFCHILD_REF_FK', 'FOREIGN_KEY', 14);
+insert into apricot_column_in_constraint values (5100, 502, 1);
+insert into apricot_column_in_constraint values (5100, 503, 2);
+
+insert into apricot_relationship values (3, 4000, 5100);
 
 -------------------------
 select * from apricot_table;
