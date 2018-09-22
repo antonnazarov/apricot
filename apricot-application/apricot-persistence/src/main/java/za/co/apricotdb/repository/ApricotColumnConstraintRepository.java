@@ -1,7 +1,8 @@
 package za.co.apricotdb.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import za.co.apricotdb.entity.ApricotConstraint;
+import za.co.apricotdb.entity.ApricotColumnConstraint;
+import za.co.apricotdb.entity.ColumnConstraintId;
 
 /**
  * Automatic JPA- repository for ApricotConstraint.
