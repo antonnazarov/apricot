@@ -40,7 +40,7 @@ public class ApricotColumn implements Serializable {
     @Column(name = "ordinal_position")
     private int ordinalPosition;
     
-    @Column(name = "is_nullale")
+    @Column(name = "is_nullable")
     private boolean nullable;
     
     @Column(name = "data_type")
@@ -130,6 +130,14 @@ public class ApricotColumn implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(name);
-    }    
+    }
+    
+    @Override
+    public String toString() {
+       StringBuilder sb = new StringBuilder("column: ");
+       sb.append("id=[").append(id).append("], ");
+       
+       return sb.toString();
+    }
  }
 

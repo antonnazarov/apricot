@@ -1,9 +1,11 @@
 package za.co.apricotdb.entity;
 
 import java.util.Objects;
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
@@ -23,11 +25,16 @@ public class ApricotColumnConstraint {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("constraintId")
+    @JoinColumn(name = "constraint_id")
     private ApricotConstraint constraint;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("columnId")
+    @JoinColumn(name = "column_id")
     private ApricotColumn column;
+    
+    @Column(name = "ordinal_position")
+    private int ordinalPosition;
 
     private ApricotColumnConstraint() {
     }
@@ -80,5 +87,13 @@ public class ApricotColumnConstraint {
 
     public void setColumn(ApricotColumn column) {
         this.column = column;
+    }
+
+    public int getOrdinalPosition() {
+        return ordinalPosition;
+    }
+
+    public void setOrdinalPosition(int ordinalPosition) {
+        this.ordinalPosition = ordinalPosition;
     }
 }

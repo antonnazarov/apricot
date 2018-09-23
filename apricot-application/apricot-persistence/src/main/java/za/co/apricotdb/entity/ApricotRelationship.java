@@ -17,7 +17,7 @@ import javax.persistence.Table;
  * @since 22/09/2018
  */
 @Entity
-@Table(name = "apricot_constraint")
+@Table(name = "apricot_relationship")
 public class ApricotRelationship implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

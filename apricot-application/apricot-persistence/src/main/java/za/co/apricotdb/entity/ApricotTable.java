@@ -55,4 +55,13 @@ public class ApricotTable implements Serializable {
     public void setColumns(List<ApricotColumn> columns) {
         this.columns = columns;
     }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("ApricotTable: ");
+        sb.append("id=[").append(id).append("], ");
+        sb.append("name=[").append(name).append("]\n");
+        
+        return sb.toString();
+    }
 }

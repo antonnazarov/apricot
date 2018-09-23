@@ -44,9 +44,6 @@ public class ApricotConstraint implements Serializable {
     @JoinColumn(name = "table_id")
     private ApricotTable table;
 
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ApricotRelationship> relationships = new ArrayList<>();
-
     @OneToMany(mappedBy = "constraint", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ApricotColumnConstraint> columns = new ArrayList<>();
 
@@ -80,14 +77,6 @@ public class ApricotConstraint implements Serializable {
 
     public void setTable(ApricotTable table) {
         this.table = table;
-    }
-
-    public List<ApricotRelationship> getRelationships() {
-        return relationships;
-    }
-
-    public void setRelationships(List<ApricotRelationship> relationships) {
-        this.relationships = relationships;
     }
 
     public List<ApricotColumnConstraint> getColumns() {

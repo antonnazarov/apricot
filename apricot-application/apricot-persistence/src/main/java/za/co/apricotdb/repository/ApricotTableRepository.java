@@ -10,5 +10,5 @@ import za.co.apricotdb.entity.ApricotTable;
  * @since 22/09/2018
  */
 public interface ApricotTableRepository extends JpaRepository<ApricotTable, Long> {
-
+    ApricotTable findByName(String name);
 }
