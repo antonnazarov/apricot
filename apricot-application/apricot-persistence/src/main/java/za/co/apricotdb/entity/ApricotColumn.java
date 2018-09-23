@@ -136,6 +136,12 @@ public class ApricotColumn implements Serializable {
     public String toString() {
        StringBuilder sb = new StringBuilder("column: ");
        sb.append("id=[").append(id).append("], ");
+       sb.append("name=[").append(name).append("], ");
+       sb.append("ordinalPosition=[").append(ordinalPosition).append("], ");
+       sb.append("nullable=[").append(nullable).append("], ");
+       sb.append("dataType=[").append(dataType).append("], ");
+       sb.append("valueLength=[").append(valueLength).append("], ");
+       sb.append("table=[").append(table.getName()).append("]\n");
        
        return sb.toString();
     }

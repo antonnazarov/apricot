@@ -32,6 +32,9 @@ public class ApricotTable implements Serializable {
     @OneToMany(mappedBy = "table", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ApricotColumn> columns = new ArrayList<>();     
 
+    @OneToMany(mappedBy = "table", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ApricotConstraint> constraints = new ArrayList<>();     
+    
     public long getId() {
         return id;
     }
@@ -55,12 +58,22 @@ public class ApricotTable implements Serializable {
     public void setColumns(List<ApricotColumn> columns) {
         this.columns = columns;
     }
-    
+
+    public List<ApricotConstraint> getConstraints() {
+        return constraints;
+    }
+
+    public void setConstraints(List<ApricotConstraint> constraints) {
+        this.constraints = constraints;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("ApricotTable: ");
         sb.append("id=[").append(id).append("], ");
-        sb.append("name=[").append(name).append("]\n");
+        sb.append("name=[").append(name).append("], ");
+        sb.append("columns=[").append(columns).append("], ");
+        sb.append("constraints=[").append(constraints).append("]\n");
         
         return sb.toString();
     }

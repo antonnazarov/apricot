@@ -123,4 +123,16 @@ public class ApricotConstraint implements Serializable {
     public int hashCode() {
         return Objects.hash(name);
     }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("ApricotConstraint: ");
+        sb.append("id=[").append(id).append("], ");
+        sb.append("name=[").append(name).append("], ");
+        sb.append("type=[").append(type).append("], ");
+        sb.append("table=[").append(table.getName()).append("], ");
+        sb.append("columns=[").append(columns).append("]\n");
+        
+        return sb.toString();
+    }    
 }

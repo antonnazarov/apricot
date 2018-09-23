@@ -96,4 +96,13 @@ public class ApricotColumnConstraint {
     public void setOrdinalPosition(int ordinalPosition) {
         this.ordinalPosition = ordinalPosition;
     }
+    
+    @Override
+    public String toString() {
+       StringBuilder sb = new StringBuilder("constraint: [").append(constraint.getName()).append("] -> ");
+       sb.append("column=[").append(column.getName()).append("], ");
+       sb.append("ordinalPosition=[").append(ordinalPosition).append("]\n");
+       
+       return sb.toString();
+    }    
 }
