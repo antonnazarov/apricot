@@ -99,9 +99,9 @@ public class ApricotColumnConstraint {
     
     @Override
     public String toString() {
-       StringBuilder sb = new StringBuilder("constraint: [").append(constraint.getName()).append("] -> ");
+       StringBuilder sb = new StringBuilder("\n* ");
        sb.append("column=[").append(column.getName()).append("], ");
-       sb.append("ordinalPosition=[").append(ordinalPosition).append("]\n");
+       sb.append("ordinalPosition=[").append(ordinalPosition).append("]");
        
        return sb.toString();
     }    

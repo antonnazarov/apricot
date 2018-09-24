@@ -27,7 +27,17 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "apricot_constraint")
 public class ApricotConstraint implements Serializable {
-
+    
+    public ApricotConstraint() {};
+    
+    public ApricotConstraint(String name, ConstraintType type, ApricotTable table, String columns) {
+        this.name = name;
+        this.type = type;
+        this.table = table;
+        
+        createConstraints(columns);
+    };
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "constraint_id")
@@ -87,26 +97,6 @@ public class ApricotConstraint implements Serializable {
         this.columns = columns;
     }
 
-    public void addColumn(ApricotColumn column) {
-        ApricotColumnConstraint columnConstraint = new ApricotColumnConstraint(this, column);
-        columns.add(columnConstraint);
-        column.getConstraints().add(columnConstraint);
-    }
-
-    public void removeColumn(ApricotColumn column) {
-        for (Iterator<ApricotColumnConstraint> iterator = columns.iterator(); iterator.hasNext(); ) {
-            ApricotColumnConstraint columnConstraint = iterator.next();
-
-            if (columnConstraint.getConstraint().equals(this)
-                    && columnConstraint.getColumn().equals(column)) {
-                iterator.remove();
-                columnConstraint.getColumn().getConstraints().remove(columnConstraint);
-                columnConstraint.setConstraint(null);
-                columnConstraint.setColumn(null);
-            }
-        }
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -126,13 +116,26 @@ public class ApricotConstraint implements Serializable {
     
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("ApricotConstraint: ");
+        StringBuilder sb = new StringBuilder("\nApricotConstraint: ");
         sb.append("id=[").append(id).append("], ");
         sb.append("name=[").append(name).append("], ");
         sb.append("type=[").append(type).append("], ");
         sb.append("table=[").append(table.getName()).append("], ");
-        sb.append("columns=[").append(columns).append("]\n");
+        sb.append("columns=[").append(columns).append("]");
         
         return sb.toString();
-    }    
+    }
+    
+    /**
+     * Create constraints, provided as a semicolon- separated list.
+     */
+    private void createConstraints(String sColumns) {
+        List<ApricotColumn> cls = table.getColumnListByNames(sColumns);
+        for (int i = 0; i<cls.size(); i++) {
+            ApricotColumn c = cls.get(i);
+            ApricotColumnConstraint acc = new ApricotColumnConstraint(this, c);
+            acc.setOrdinalPosition(i+1);
+            columns.add(acc);
+        }
+    }
 }

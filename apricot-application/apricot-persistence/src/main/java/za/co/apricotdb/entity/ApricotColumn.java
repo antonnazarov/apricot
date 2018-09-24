@@ -15,43 +15,53 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-
 /**
  * Entity for apricot_column table.
- * 
+ *
  * @author Anton Nazarov
  * @since 22/09/2018
  */
 @Entity
-@Table(name="apricot_column")
+@Table(name = "apricot_column")
 public class ApricotColumn implements Serializable {
+
+    public ApricotColumn() {
+    }
+
+    public ApricotColumn(String name, int ordinalPosition, boolean nullable, String dataType,
+            String valueLength, ApricotTable table) {
+        this.name = name;
+        this.ordinalPosition = ordinalPosition;
+        this.nullable = nullable;
+        this.dataType = dataType;
+        this.valueLength = valueLength;
+        this.table = table;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "column_id")
     private long id;
-    
+
     @ManyToOne
     @JoinColumn(name = "table_id")
     private ApricotTable table;
-    
+
     @Column(name = "column_name")
     private String name;
-    
+
     @Column(name = "ordinal_position")
     private int ordinalPosition;
-    
+
     @Column(name = "is_nullable")
     private boolean nullable;
-    
+
     @Column(name = "data_type")
     private String dataType;
-    
+
     @Column(name = "value_length")
     private String valueLength;
 
-    @OneToMany(mappedBy = "column", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ApricotColumnConstraint> constraints = new ArrayList<>();
-    
     public long getId() {
         return id;
     }
@@ -108,42 +118,36 @@ public class ApricotColumn implements Serializable {
         this.valueLength = valueLength;
     }
 
-    public List<ApricotColumnConstraint> getConstraints() {
-        return constraints;
-    }
-
-    public void setConstraints(List<ApricotColumnConstraint> constraints) {
-        this.constraints = constraints;
-    }
-    
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
- 
-        if (o == null || getClass() != o.getClass()) 
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
             return false;
- 
+        }
+
         ApricotColumn column = (ApricotColumn) o;
         return Objects.equals(name, column.name);
     }
- 
+
     @Override
     public int hashCode() {
         return Objects.hash(name);
     }
-    
+
     @Override
     public String toString() {
-       StringBuilder sb = new StringBuilder("column: ");
-       sb.append("id=[").append(id).append("], ");
-       sb.append("name=[").append(name).append("], ");
-       sb.append("ordinalPosition=[").append(ordinalPosition).append("], ");
-       sb.append("nullable=[").append(nullable).append("], ");
-       sb.append("dataType=[").append(dataType).append("], ");
-       sb.append("valueLength=[").append(valueLength).append("], ");
-       sb.append("table=[").append(table.getName()).append("]\n");
-       
-       return sb.toString();
-    }
- }
+        StringBuilder sb = new StringBuilder("\ncolumn: ");
+        sb.append("id=[").append(id).append("], ");
+        sb.append("name=[").append(name).append("], ");
+        sb.append("ordinalPosition=[").append(ordinalPosition).append("], ");
+        sb.append("nullable=[").append(nullable).append("], ");
+        sb.append("dataType=[").append(dataType).append("], ");
+        sb.append("valueLength=[").append(valueLength).append("], ");
+        sb.append("table=[").append(table.getName()).append("]");
 
+        return sb.toString();
+    }
+}

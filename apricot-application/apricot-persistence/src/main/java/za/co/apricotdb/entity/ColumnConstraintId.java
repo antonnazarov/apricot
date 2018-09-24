@@ -45,6 +45,22 @@ public class ColumnConstraintId implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(columnId, columnId);
+        return Objects.hash(constraintId, columnId);
+    }
+
+    public long getConstraintId() {
+        return constraintId;
+    }
+
+    public void setConstraintId(long constraintId) {
+        this.constraintId = constraintId;
+    }
+
+    public long getColumnId() {
+        return columnId;
+    }
+
+    public void setColumnId(long columnId) {
+        this.columnId = columnId;
     }
 }

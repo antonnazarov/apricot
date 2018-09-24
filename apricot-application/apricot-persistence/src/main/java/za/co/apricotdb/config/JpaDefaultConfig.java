@@ -6,6 +6,7 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -31,8 +32,12 @@ public class JpaDefaultConfig {
 
     @Autowired
     private Environment env;
+    
+    @Autowired
+    DataSource dataSource;
 
     @Bean
+    @Profile("prod")
     public DataSource prodDataSource() {
         final DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(env.getProperty("jdbc.driverClassName"));
@@ -44,6 +49,7 @@ public class JpaDefaultConfig {
     }
     
     @Bean
+    @Profile("test")
     public DataSource testDataSource() {
         return new EmbeddedDatabaseBuilder()
                 .setType(EmbeddedDatabaseType.H2)
@@ -54,7 +60,7 @@ public class JpaDefaultConfig {
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-        em.setDataSource(testDataSource());
+        em.setDataSource(dataSource);
         em.setPackagesToScan(new String[]{"za.co.apricotdb.entity"});
         em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         em.setJpaProperties(additionalProperties());
