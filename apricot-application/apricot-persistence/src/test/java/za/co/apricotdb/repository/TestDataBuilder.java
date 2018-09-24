@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import za.co.apricotdb.entity.ApricotColumn;
 import za.co.apricotdb.entity.ApricotConstraint;
+import za.co.apricotdb.entity.ApricotRelationship;
 import za.co.apricotdb.entity.ApricotTable;
 import za.co.apricotdb.entity.ConstraintType;
 
@@ -19,6 +20,9 @@ public class TestDataBuilder {
     @Resource
     private ApricotTableRepository tableRepository;
 
+    @Resource
+    private ApricotRelationshipRepository relationshipRepository;
+
     /**
      * Create the testing data.
      */
@@ -32,6 +36,15 @@ public class TestDataBuilder {
         tableRepository.save(department);
         tableRepository.save(language);
         tableRepository.save(languageRef);
+
+        //  relationships
+        ApricotRelationship rPerson1 = department.establishChildConstraint("department_pk", person, "department_fk");
+        ApricotRelationship rPerson2 = language.establishChildConstraint("language_pk", person, "language_fk");
+        ApricotRelationship rLanguage = languageRef.establishChildConstraint("language_ref_pk", language, "language_ref_fk");
+
+        relationshipRepository.save(rPerson1);
+        relationshipRepository.save(rPerson2);
+        relationshipRepository.save(rLanguage);
     }
 
     private ApricotTable createPerson() {
@@ -51,7 +64,7 @@ public class TestDataBuilder {
         columns.add(column);
         column = new ApricotColumn("language_id", 6, false, "long", null, table);
         columns.add(column);
-        
+
         ApricotConstraint constraint = new ApricotConstraint("person_pk", ConstraintType.PRIMARY_KEY, table, "person_id");
         constraints.add(constraint);
         constraint = new ApricotConstraint("name_surname_unique_idx", ConstraintType.UNIQUE_INDEX, table, "person_name;person_surename");
@@ -75,7 +88,7 @@ public class TestDataBuilder {
 
         ApricotConstraint constraint = new ApricotConstraint("department_pk", ConstraintType.PRIMARY_KEY, table, "department_id");
         constraints.add(constraint);
-        
+
         return table;
     }
 
@@ -96,7 +109,7 @@ public class TestDataBuilder {
         constraints.add(constraint);
         constraint = new ApricotConstraint("language_ref_fk", ConstraintType.FOREIGN_KEY, table, "language_prefix;language_suffix");
         constraints.add(constraint);
-        
+
         return table;
     }
 
@@ -110,7 +123,7 @@ public class TestDataBuilder {
         columns.add(column);
         column = new ApricotColumn("ref_definition", 3, false, "varchar", "1000", table);
         columns.add(column);
-        
+
         ApricotConstraint constraint = new ApricotConstraint("language_ref_pk", ConstraintType.PRIMARY_KEY, table, "ref_prefix;ref_suffix");
         constraints.add(constraint);
 

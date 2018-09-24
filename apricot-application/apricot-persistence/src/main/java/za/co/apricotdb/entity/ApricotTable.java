@@ -116,4 +116,23 @@ public class ApricotTable implements Serializable {
         
         return columns;
     }
+    
+    public ApricotRelationship establishChildConstraint(String parentConstraintName, ApricotTable childTable, String childConstraintName) {
+        ApricotConstraint parent = getConstraingByName(parentConstraintName);
+        ApricotConstraint child = childTable.getConstraingByName(childConstraintName);
+        
+        ApricotRelationship r = new ApricotRelationship(parent, child);
+        
+        return r;
+    }
+    
+    public ApricotConstraint getConstraingByName(String name) {
+        for (ApricotConstraint c : constraints) {
+            if (c.getName().equals(name)) {
+                return c;
+            }
+        }
+        
+        return null;
+    }
 }

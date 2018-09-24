@@ -12,18 +12,26 @@ import javax.persistence.Table;
 
 /**
  * Entity for apricot_relationship.
- * 
+ *
  * @author Anton Nazarov
  * @since 22/09/2018
  */
 @Entity
 @Table(name = "apricot_relationship")
 public class ApricotRelationship implements Serializable {
+
+    public ApricotRelationship() {}
+    
+    public ApricotRelationship(ApricotConstraint parent, ApricotConstraint child) {
+        this.parent = parent;
+        this.child = child;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="relationship_id")
+    @Column(name = "relationship_id")
     private long id;
-    
+
     @ManyToOne
     @JoinColumn(name = "parent_constraint_id")
     private ApricotConstraint parent;
@@ -55,15 +63,13 @@ public class ApricotRelationship implements Serializable {
     public void setChild(ApricotConstraint child) {
         this.child = child;
     }
-    
+
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("ApricotRelationship: ");
+        StringBuilder sb = new StringBuilder("\nApricotRelationship: ");
         sb.append("parent table=[").append(parent.getTable().getName()).append("], ");
-        sb.append("child table=[").append(child.getTable().getName()).append("]\n");
-        
+        sb.append("child table=[").append(child.getTable().getName()).append("]");
+
         return sb.toString();
     }
 }
-
-
