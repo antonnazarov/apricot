@@ -4,15 +4,16 @@ import java.util.Properties;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.jdbc.core.JdbcOperations;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -32,35 +33,22 @@ public class JpaDefaultConfig {
 
     @Autowired
     private Environment env;
-    
-    @Autowired
-    DataSource dataSource;
 
     @Bean
-    @Profile("prod")
-    public DataSource prodDataSource() {
-        final DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(env.getProperty("jdbc.driverClassName"));
-        dataSource.setUrl(env.getProperty("jdbc.url"));
-        dataSource.setUsername(env.getProperty("jdbc.user"));
-        dataSource.setPassword(env.getProperty("jdbc.pass"));
+    public DataSource dataSource() {
+        final DriverManagerDataSource ds = new DriverManagerDataSource();
+        ds.setDriverClassName(env.getProperty("jdbc.driverClassName"));
+        ds.setUrl(env.getProperty("jdbc.url"));
+        ds.setUsername(env.getProperty("jdbc.user"));
+        ds.setPassword(env.getProperty("jdbc.pass"));
 
-        return dataSource;
-    }
-    
-    @Bean
-    @Profile("test")
-    public DataSource testDataSource() {
-        return new EmbeddedDatabaseBuilder()
-                .setType(EmbeddedDatabaseType.H2)
-                .addScript("classpath:apricot-project-structure.sql")
-                .build();
+        return ds;
     }
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-        em.setDataSource(dataSource);
+        em.setDataSource(dataSource());
         em.setPackagesToScan(new String[]{"za.co.apricotdb.entity"});
         em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         em.setJpaProperties(additionalProperties());
@@ -84,5 +72,15 @@ public class JpaDefaultConfig {
         hibernateProperties.setProperty("hibernate.cache.use_query_cache", env.getProperty("hibernate.cache.use_query_cache"));
 
         return hibernateProperties;
+    }
+
+    @Bean
+    JdbcOperations jdbcOperations() {
+        return new JdbcTemplate(dataSource());
+    }
+
+    @Bean
+    public BeanPostProcessor persistenceTranslation() {
+        return new PersistenceExceptionTranslationPostProcessor();
     }
 }

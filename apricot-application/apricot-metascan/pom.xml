@@ -14,5 +14,10 @@
     <name>apricot-metascan</name>
 
     <dependencies>
+        <dependency>
+            <groupId>za.co.apricot</groupId>
+            <artifactId>apricot-persistence</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>

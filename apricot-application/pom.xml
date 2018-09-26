@@ -54,8 +54,14 @@
             <artifactId>spring-data-jpa</artifactId>
             <version>1.11.3.RELEASE</version>
         </dependency>
+        
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+            <version>1.5.16.RELEASE</version>
+        </dependency>        
 
-       <!-- Hibernate -->       
+        <!-- Hibernate -->       
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>

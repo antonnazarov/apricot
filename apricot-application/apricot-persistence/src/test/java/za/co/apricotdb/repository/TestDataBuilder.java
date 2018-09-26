@@ -26,7 +26,13 @@ public class TestDataBuilder {
     /**
      * Create the testing data.
      */
-    public void createTestData() {
+    public void createTestData() throws TestDataBuilderException {
+        
+        List<ApricotTable> t = tableRepository.findAll();
+        if (t != null && t.size() > 0) {
+            throw new TestDataBuilderException("The database is not empty!");
+        }
+        
         ApricotTable person = createPerson();
         ApricotTable department = createDepartment();
         ApricotTable language = createLanguage();

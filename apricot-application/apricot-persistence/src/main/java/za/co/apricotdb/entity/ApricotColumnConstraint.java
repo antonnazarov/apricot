@@ -1,5 +1,6 @@
 package za.co.apricotdb.entity;
 
+import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -18,7 +19,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "apricot_column_in_constraint")
-public class ApricotColumnConstraint {
+public class ApricotColumnConstraint implements Serializable {
 
     @EmbeddedId
     private ColumnConstraintId id;

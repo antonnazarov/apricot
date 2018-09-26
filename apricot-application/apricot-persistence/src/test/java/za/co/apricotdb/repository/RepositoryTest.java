@@ -33,14 +33,12 @@ public class RepositoryTest {
 
     @Resource
     private ApricotTableRepository tableRepository;
-//    @Resource
-//    private ApricotColumnRepository columnRepository;
 
     @Autowired
     TestDataBuilder testDataBuilder;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         testDataBuilder.createTestData();
     }
 

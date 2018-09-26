@@ -1,7 +1,11 @@
 package za.co.apricotdb.config;
 
+import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import za.co.apricotdb.repository.TestDataBuilder;
 
 /**
@@ -14,7 +18,16 @@ import za.co.apricotdb.repository.TestDataBuilder;
 public class TestingConfiguration {
     
     @Bean
-    TestDataBuilder getTestDataBuilder() {
+    TestDataBuilder testDataBuilder() {
         return new TestDataBuilder();
+    }
+    
+    @Bean
+    @Profile("test")
+    public DataSource dataSource() {
+        return new EmbeddedDatabaseBuilder()
+                .setType(EmbeddedDatabaseType.H2)
+                .addScript("classpath:apricot-project-structure.sql")
+                .build();
     }
 }
