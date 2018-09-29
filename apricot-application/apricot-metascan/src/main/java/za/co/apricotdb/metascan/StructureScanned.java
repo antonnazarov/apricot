@@ -2,8 +2,8 @@ package za.co.apricotdb.metascan;
 
 import java.util.ArrayList;
 import java.util.List;
-import za.co.apricotdb.entity.ApricotRelationship;
-import za.co.apricotdb.entity.ApricotTable;
+import za.co.apricotdb.persistence.entity.ApricotRelationship;
+import za.co.apricotdb.persistence.entity.ApricotTable;
 
 /**
  * A representation of the final scanned database structure.

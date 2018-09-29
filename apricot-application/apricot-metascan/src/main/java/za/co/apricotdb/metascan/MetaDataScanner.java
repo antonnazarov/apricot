@@ -1,5 +1,10 @@
 package za.co.apricotdb.metascan;
 
+import javax.sql.DataSource;
+import org.springframework.jdbc.core.JdbcOperations;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+
 /**
  * The main interface of Meta Scan - the scanner of the DB- structure.
  *
@@ -9,4 +14,14 @@ package za.co.apricotdb.metascan;
 public interface MetaDataScanner {
 
     StructureScanned scan(String driverClassName, String url, String userName, String password);
+    
+    static JdbcOperations getTargetJdbcOperations(String driverClassName, String url, String userName, String password) {
+        DriverManagerDataSource ds = new DriverManagerDataSource();
+        ds.setDriverClassName(driverClassName);
+        ds.setUrl(url);
+        ds.setUsername(userName);
+        ds.setPassword(password);
+
+        return new JdbcTemplate(ds);
+    }
 }
