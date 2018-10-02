@@ -149,4 +149,14 @@ public class ApricotConstraint implements Serializable {
             columns.add(acc);
         }
     }
+    
+    /**
+     * Add an individual column.
+     */
+    public void addColumn(String column) {
+        ApricotColumn c = table.getColumnByName(column);
+        ApricotColumnConstraint acc = new ApricotColumnConstraint(this, c);
+        acc.setOrdinalPosition(columns.size()+1);
+        columns.add(acc);
+    }
 }
