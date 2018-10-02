@@ -39,4 +39,13 @@ public class StructureScanned {
     public void setRelationships(List<ApricotRelationship> relationships) {
         this.relationships = relationships;
     }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(tables);
+        sb.append(relationships);
+        
+        return sb.toString();
+    }
 }

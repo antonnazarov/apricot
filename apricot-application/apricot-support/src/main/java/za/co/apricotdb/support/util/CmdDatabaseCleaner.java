@@ -12,7 +12,7 @@ import za.co.apricotdb.persistence.util.DataCleaner;
  * @since 29/09/2018
  */
 @Component
-public class DatabaseCleaner implements CommandLineRunner {
+public class CmdDatabaseCleaner implements CommandLineRunner {
 
     @Autowired
     DataCleaner dataCleaner;

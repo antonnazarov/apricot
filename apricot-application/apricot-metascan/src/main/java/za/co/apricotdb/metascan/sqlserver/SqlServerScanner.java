@@ -76,6 +76,7 @@ public class SqlServerScanner implements MetaDataScanner {
                     } else {
                         c.setNullable(false);
                     }
+                    c.setDataType(rs.getString("data_type"));
                     c.setValueLength(String.valueOf(rs.getInt("character_maximum_length")));
 
                     ApricotTable t = tables.get(rs.getString("table_name"));
@@ -118,6 +119,7 @@ public class SqlServerScanner implements MetaDataScanner {
                     }
 
                     ApricotConstraint c = new ApricotConstraint(constraintName, constraintType, table);
+                    table.getConstraints().add(c);
 
                     return c;
                 }
@@ -166,6 +168,7 @@ public class SqlServerScanner implements MetaDataScanner {
                         }
 
                         ApricotConstraint c = new ApricotConstraint(constraintName, constraintType, table);
+                        table.getConstraints().add(c);
 
                         //  get the fields of the index
                         List<String> columns = jdbc.query(
@@ -185,7 +188,6 @@ public class SqlServerScanner implements MetaDataScanner {
                         }
 
                         return c;
-
                     }
 
                     return null;
