@@ -4851,3 +4851,75 @@ org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
 org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
 2018-10-02 21:14:19 jdbc[4]: exception
 org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-10-02 21:28:10 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Column "CONSTRAINT_NAME" not found; SQL statement:
+select * from APRICOT_COLUMN_IN_CONSTRAINT where constraint_name in (5290, 5291) [42122-195]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:345)
+	at org.h2.message.DbException.get(DbException.java:179)
+	at org.h2.message.DbException.get(DbException.java:155)
+	at org.h2.expression.ExpressionColumn.optimize(ExpressionColumn.java:147)
+	at org.h2.expression.ConditionIn.optimize(ConditionIn.java:80)
+	at org.h2.command.dml.Select.prepare(Select.java:842)
+	at org.h2.command.Parser.prepareCommand(Parser.java:262)
+	at org.h2.engine.Session.prepareLocal(Session.java:573)
+	at org.h2.engine.Session.prepareCommand(Session.java:514)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1204)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:177)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:165)
+	at sun.reflect.GeneratedMethodAccessor63.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at com.onseven.dbvis.g.B.B.ā(Z:2186)
+	at com.onseven.dbvis.g.B.F$A.call(Z:1369)
+	at java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.lang.Thread.run(Unknown Source)
+2018-10-02 21:29:19 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-10-02 21:29:19 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-10-02 21:29:19 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-10-02 21:29:19 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-10-02 21:29:19 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-10-02 21:29:19 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-10-04 17:47:35 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-10-04 17:47:36 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-10-04 17:47:36 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-10-04 17:47:36 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-10-04 17:47:36 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-10-04 17:47:36 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-10-04 17:48:03 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-10-04 17:48:03 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-10-04 17:48:03 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-10-04 17:48:03 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-10-04 17:48:03 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-10-04 17:48:03 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-10-04 17:54:36 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-10-04 17:54:36 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-10-04 17:54:36 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-10-04 17:54:36 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-10-04 17:54:36 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]
+2018-10-04 17:54:36 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: The object is already closed [90007-195]

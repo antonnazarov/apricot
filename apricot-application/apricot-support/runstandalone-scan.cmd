@@ -1,1 +1,1 @@
-mvn -e exec:java -Dexec.mainClass="za.co.apricotdb.support.util.ApricotUtils" -Dexec.args="scan"
+mvn -e exec:java -Dexec.mainClass="za.co.apricotdb.support.util.ApricotUtils" -Dexec.args="scan driver=com.microsoft.sqlserver.jdbc.SQLServerDriver url=jdbc:sqlserver://localhost:1433;databaseName=Intermediary_Account user=Intermediary_Account password=password"

@@ -1,311 +1,335 @@
-[
-ApricotTable: id=[0], name=[payment_transaction], 
+ApricotTable: id=[0], name=[payment_transaction],
 columns=[[
-column: id=[0], name=[id], ordinalPosition=[1], nullable=[false], dataType=[int], valueLength=[0], table=[payment_transaction], 
-column: id=[0], name=[transaction_period], ordinalPosition=[2], nullable=[false], dataType=[varchar], valueLength=[7], table=[payment_transaction], 
-column: id=[0], name=[transaction_started_date], ordinalPosition=[3], nullable=[false], dataType=[date], valueLength=[0], table=[payment_transaction], 
-column: id=[0], name=[transaction_finished_date], ordinalPosition=[4], nullable=[true], dataType=[date], valueLength=[0], table=[payment_transaction], 
-column: id=[0], name=[transaction_overall_amount], ordinalPosition=[5], nullable=[false], dataType=[float], valueLength=[0], table=[payment_transaction], 
-column: id=[0], name=[transaction_approved], ordinalPosition=[6], nullable=[false], dataType=[bit], valueLength=[0], table=[payment_transaction], 
-column: id=[0], name=[transaction_type], ordinalPosition=[7], nullable=[false], dataType=[int], valueLength=[0], table=[payment_transaction]]], 
+column: id=[0], name=[id], ordinalPosition=[1], nullable=[false], dataType=[int], valueLength=[0], table=[payment_transaction],
+column: id=[0], name=[transaction_period], ordinalPosition=[2], nullable=[false], dataType=[varchar], valueLength=[7], table=[payment_transaction],
+column: id=[0], name=[transaction_started_date], ordinalPosition=[3], nullable=[false], dataType=[date], valueLength=[0], table=[payment_transaction],
+column: id=[0], name=[transaction_finished_date], ordinalPosition=[4], nullable=[true], dataType=[date], valueLength=[0], table=[payment_transaction],
+column: id=[0], name=[transaction_overall_amount], ordinalPosition=[5], nullable=[false], dataType=[float], valueLength=[0], table=[payment_transaction],
+column: id=[0], name=[transaction_approved], ordinalPosition=[6], nullable=[false], dataType=[bit], valueLength=[0], table=[payment_transaction],
+column: id=[0], name=[transaction_type], ordinalPosition=[7], nullable=[false], dataType=[int], valueLength=[0], table=[payment_transaction]]],
 constraints=[[
 ApricotConstraint: id=[0], name=[fk_transaction_type], type=[FOREIGN_KEY], table=[payment_transaction], columns=[[
-* column=[transaction_type], ordinalPosition=[1]]], 
+* column=[transaction_type], ordinalPosition=[1]]],
 ApricotConstraint: id=[0], name=[PK__payment___3213E83FFD0D61C7], type=[PRIMARY_KEY], table=[payment_transaction], columns=[[
-* column=[id], ordinalPosition=[1]]]]]
-, 
-ApricotTable: id=[0], name=[master_doom], 
+* column=[id], ordinalPosition=[1]]],
+ApricotConstraint: id=[0], name=[transaction_startdate_idx], type=[NON_UNIQUE_INDEX], table=[payment_transaction], columns=[[
+* column=[transaction_started_date], ordinalPosition=[1]]],
+ApricotConstraint: id=[0], name=[transaction_type_idx], type=[NON_UNIQUE_INDEX], table=[payment_transaction], columns=[[
+* column=[transaction_type], ordinalPosition=[1]]]]]
+,
+ApricotTable: id=[0], name=[master_doom],
 columns=[[
-column: id=[0], name=[id], ordinalPosition=[1], nullable=[false], dataType=[int], valueLength=[0], table=[master_doom], 
-column: id=[0], name=[prefix], ordinalPosition=[2], nullable=[false], dataType=[int], valueLength=[0], table=[master_doom], 
-column: id=[0], name=[suffix], ordinalPosition=[3], nullable=[true], dataType=[int], valueLength=[0], table=[master_doom], 
-column: id=[0], name=[sdefinition], ordinalPosition=[4], nullable=[false], dataType=[varchar], valueLength=[100], table=[master_doom]]], 
+column: id=[0], name=[id], ordinalPosition=[1], nullable=[false], dataType=[int], valueLength=[0], table=[master_doom],
+column: id=[0], name=[prefix], ordinalPosition=[2], nullable=[false], dataType=[int], valueLength=[0], table=[master_doom],
+column: id=[0], name=[suffix], ordinalPosition=[3], nullable=[true], dataType=[int], valueLength=[0], table=[master_doom],
+column: id=[0], name=[sdefinition], ordinalPosition=[4], nullable=[false], dataType=[varchar], valueLength=[100], table=[master_doom]]],
 constraints=[[
 ApricotConstraint: id=[0], name=[fk_master_doom], type=[FOREIGN_KEY], table=[master_doom], columns=[[
-* column=[prefix], ordinalPosition=[1], 
-* column=[suffix], ordinalPosition=[2]]], 
+* column=[prefix], ordinalPosition=[1],
+* column=[suffix], ordinalPosition=[2]]],
 ApricotConstraint: id=[0], name=[PK__master_d__3213E83F6C6D6015], type=[PRIMARY_KEY], table=[master_doom], columns=[[
 * column=[id], ordinalPosition=[1]]]]]
-, 
-ApricotTable: id=[0], name=[ref_strange], 
+,
+ApricotTable: id=[0], name=[ref_strange],
 columns=[[
-column: id=[0], name=[prefix], ordinalPosition=[1], nullable=[false], dataType=[int], valueLength=[0], table=[ref_strange], 
-column: id=[0], name=[suffix], ordinalPosition=[2], nullable=[false], dataType=[int], valueLength=[0], table=[ref_strange], 
-column: id=[0], name=[name], ordinalPosition=[3], nullable=[true], dataType=[varchar], valueLength=[100], table=[ref_strange], 
-column: id=[0], name=[created], ordinalPosition=[4], nullable=[true], dataType=[date], valueLength=[0], table=[ref_strange], 
-column: id=[0], name=[price], ordinalPosition=[5], nullable=[true], dataType=[int], valueLength=[0], table=[ref_strange]]], 
+column: id=[0], name=[prefix], ordinalPosition=[1], nullable=[false], dataType=[int], valueLength=[0], table=[ref_strange],
+column: id=[0], name=[suffix], ordinalPosition=[2], nullable=[false], dataType=[int], valueLength=[0], table=[ref_strange],
+column: id=[0], name=[name], ordinalPosition=[3], nullable=[true], dataType=[varchar], valueLength=[100], table=[ref_strange],
+column: id=[0], name=[created], ordinalPosition=[4], nullable=[true], dataType=[date], valueLength=[0], table=[ref_strange],
+column: id=[0], name=[price], ordinalPosition=[5], nullable=[true], dataType=[int], valueLength=[0], table=[ref_strange]]],
 constraints=[[
 ApricotConstraint: id=[0], name=[PK__ref_stra__62F57356660F3C21], type=[PRIMARY_KEY], table=[ref_strange], columns=[[
-* column=[suffix], ordinalPosition=[1], 
+* column=[suffix], ordinalPosition=[1],
 * column=[prefix], ordinalPosition=[2]]]]]
-, 
-ApricotTable: id=[0], name=[book_author], 
+,
+ApricotTable: id=[0], name=[book_author],
 columns=[[
-column: id=[0], name=[id], ordinalPosition=[1], nullable=[false], dataType=[int], valueLength=[0], table=[book_author], 
-column: id=[0], name=[a_name], ordinalPosition=[2], nullable=[false], dataType=[varchar], valueLength=[100], table=[book_author], 
-column: id=[0], name=[a_surename], ordinalPosition=[3], nullable=[false], dataType=[varchar], valueLength=[100], table=[book_author]]], 
+column: id=[0], name=[id], ordinalPosition=[1], nullable=[false], dataType=[int], valueLength=[0], table=[book_author],
+column: id=[0], name=[a_name], ordinalPosition=[2], nullable=[false], dataType=[varchar], valueLength=[100], table=[book_author],
+column: id=[0], name=[a_surename], ordinalPosition=[3], nullable=[false], dataType=[varchar], valueLength=[100], table=[book_author]]],
 constraints=[[
 ApricotConstraint: id=[0], name=[PK__book_aut__3213E83FF6B0FDDF], type=[PRIMARY_KEY], table=[book_author], columns=[[
-* column=[id], ordinalPosition=[1]]]]]
-, 
-ApricotTable: id=[0], name=[personal_feature_type], 
+* column=[id], ordinalPosition=[1]]],
+ApricotConstraint: id=[0], name=[book_author_idx], type=[UNIQUE_INDEX], table=[book_author], columns=[[
+* column=[a_name], ordinalPosition=[1],
+* column=[a_surename], ordinalPosition=[2]]]]]
+,
+ApricotTable: id=[0], name=[personal_feature_type],
 columns=[[
-column: id=[0], name=[feature_code], ordinalPosition=[1], nullable=[false], dataType=[varchar], valueLength=[20], table=[personal_feature_type], 
-column: id=[0], name=[feature_field_type], ordinalPosition=[2], nullable=[false], dataType=[varchar], valueLength=[20], table=[personal_feature_type], 
-column: id=[0], name=[feature_name], ordinalPosition=[3], nullable=[false], dataType=[varchar], valueLength=[100], table=[personal_feature_type], 
-column: id=[0], name=[mandatory_flag], ordinalPosition=[4], nullable=[false], dataType=[bit], valueLength=[0], table=[personal_feature_type], 
-column: id=[0], name=[screen_position], ordinalPosition=[5], nullable=[true], dataType=[int], valueLength=[0], table=[personal_feature_type]]], 
+column: id=[0], name=[feature_code], ordinalPosition=[1], nullable=[false], dataType=[varchar], valueLength=[20], table=[personal_feature_type],
+column: id=[0], name=[feature_field_type], ordinalPosition=[2], nullable=[false], dataType=[varchar], valueLength=[20], table=[personal_feature_type],
+column: id=[0], name=[feature_name], ordinalPosition=[3], nullable=[false], dataType=[varchar], valueLength=[100], table=[personal_feature_type],
+column: id=[0], name=[mandatory_flag], ordinalPosition=[4], nullable=[false], dataType=[bit], valueLength=[0], table=[personal_feature_type],
+column: id=[0], name=[screen_position], ordinalPosition=[5], nullable=[true], dataType=[int], valueLength=[0], table=[personal_feature_type]]],
 constraints=[[
 ApricotConstraint: id=[0], name=[PK__personal__14CDD9E8AD2434E0], type=[PRIMARY_KEY], table=[personal_feature_type], columns=[[
 * column=[feature_code], ordinalPosition=[1]]]]]
-, 
-ApricotTable: id=[0], name=[triller_book], 
+,
+ApricotTable: id=[0], name=[triller_book],
 columns=[[
-column: id=[0], name=[id], ordinalPosition=[1], nullable=[false], dataType=[int], valueLength=[0], table=[triller_book], 
-column: id=[0], name=[script], ordinalPosition=[2], nullable=[true], dataType=[varchar], valueLength=[200], table=[triller_book], 
-column: id=[0], name=[name], ordinalPosition=[3], nullable=[false], dataType=[varchar], valueLength=[100], table=[triller_book]]], 
+column: id=[0], name=[id], ordinalPosition=[1], nullable=[false], dataType=[int], valueLength=[0], table=[triller_book],
+column: id=[0], name=[script], ordinalPosition=[2], nullable=[true], dataType=[varchar], valueLength=[200], table=[triller_book],
+column: id=[0], name=[name], ordinalPosition=[3], nullable=[false], dataType=[varchar], valueLength=[100], table=[triller_book]]],
 constraints=[[
 ApricotConstraint: id=[0], name=[fk_triller_book], type=[FOREIGN_KEY], table=[triller_book], columns=[[
-* column=[name], ordinalPosition=[1]]], 
+* column=[name], ordinalPosition=[1]]],
 ApricotConstraint: id=[0], name=[PK__triller___3213E83F785A1D41], type=[PRIMARY_KEY], table=[triller_book], columns=[[
 * column=[id], ordinalPosition=[1]]]]]
-, 
-ApricotTable: id=[0], name=[person_in_payment_group], 
+,
+ApricotTable: id=[0], name=[person_in_payment_group],
 columns=[[
-column: id=[0], name=[person_id], ordinalPosition=[1], nullable=[false], dataType=[int], valueLength=[0], table=[person_in_payment_group], 
-column: id=[0], name=[payment_group_id], ordinalPosition=[2], nullable=[false], dataType=[int], valueLength=[0], table=[person_in_payment_group], 
-column: id=[0], name=[primary_group_flag], ordinalPosition=[3], nullable=[false], dataType=[bit], valueLength=[0], table=[person_in_payment_group]]], 
+column: id=[0], name=[person_id], ordinalPosition=[1], nullable=[false], dataType=[int], valueLength=[0], table=[person_in_payment_group],
+column: id=[0], name=[payment_group_id], ordinalPosition=[2], nullable=[false], dataType=[int], valueLength=[0], table=[person_in_payment_group],
+column: id=[0], name=[primary_group_flag], ordinalPosition=[3], nullable=[false], dataType=[bit], valueLength=[0], table=[person_in_payment_group]]],
 constraints=[[
 ApricotConstraint: id=[0], name=[fk_ppg_payment_group], type=[FOREIGN_KEY], table=[person_in_payment_group], columns=[[
-* column=[payment_group_id], ordinalPosition=[1]]], 
+* column=[payment_group_id], ordinalPosition=[1]]],
 ApricotConstraint: id=[0], name=[fk_ppg_person], type=[FOREIGN_KEY], table=[person_in_payment_group], columns=[[
-* column=[person_id], ordinalPosition=[1]]], 
+* column=[person_id], ordinalPosition=[1]]],
 ApricotConstraint: id=[0], name=[PK__person_i__235C0DFA9FB20650], type=[PRIMARY_KEY], table=[person_in_payment_group], columns=[[
-* column=[person_id], ordinalPosition=[1], 
+* column=[person_id], ordinalPosition=[1],
 * column=[payment_group_id], ordinalPosition=[2]]]]]
-, 
-ApricotTable: id=[0], name=[triller], 
+,
+ApricotTable: id=[0], name=[triller],
 columns=[[
-column: id=[0], name=[name], ordinalPosition=[1], nullable=[true], dataType=[varchar], valueLength=[100], table=[triller], 
-column: id=[0], name=[price], ordinalPosition=[2], nullable=[true], dataType=[int], valueLength=[0], table=[triller]]], 
-constraints=[[]]
-, 
-ApricotTable: id=[0], name=[payment_transaction_type], 
+column: id=[0], name=[name], ordinalPosition=[1], nullable=[true], dataType=[varchar], valueLength=[100], table=[triller],
+column: id=[0], name=[price], ordinalPosition=[2], nullable=[true], dataType=[int], valueLength=[0], table=[triller]]],
+constraints=[[
+ApricotConstraint: id=[0], name=[triller_idx], type=[UNIQUE_INDEX], table=[triller], columns=[[
+* column=[name], ordinalPosition=[1]]]]]
+,
+ApricotTable: id=[0], name=[payment_transaction_type],
 columns=[[
-column: id=[0], name=[id], ordinalPosition=[1], nullable=[false], dataType=[int], valueLength=[0], table=[payment_transaction_type], 
-column: id=[0], name=[pt_name], ordinalPosition=[2], nullable=[false], dataType=[varchar], valueLength=[50], table=[payment_transaction_type], 
-column: id=[0], name=[pt_period], ordinalPosition=[3], nullable=[false], dataType=[varchar], valueLength=[10], table=[payment_transaction_type]]], 
+column: id=[0], name=[id], ordinalPosition=[1], nullable=[false], dataType=[int], valueLength=[0], table=[payment_transaction_type],
+column: id=[0], name=[pt_name], ordinalPosition=[2], nullable=[false], dataType=[varchar], valueLength=[50], table=[payment_transaction_type],
+column: id=[0], name=[pt_period], ordinalPosition=[3], nullable=[false], dataType=[varchar], valueLength=[10], table=[payment_transaction_type]]],
 constraints=[[
 ApricotConstraint: id=[0], name=[PK__payment___3213E83FE68E4CD2], type=[PRIMARY_KEY], table=[payment_transaction_type], columns=[[
 * column=[id], ordinalPosition=[1]]]]]
-, 
-ApricotTable: id=[0], name=[religion], 
+,
+ApricotTable: id=[0], name=[religion],
 columns=[[
-column: id=[0], name=[religion_name], ordinalPosition=[1], nullable=[false], dataType=[varchar], valueLength=[50], table=[religion], 
-column: id=[0], name=[religion_def], ordinalPosition=[2], nullable=[true], dataType=[varchar], valueLength=[500], table=[religion]]], 
+column: id=[0], name=[religion_name], ordinalPosition=[1], nullable=[false], dataType=[varchar], valueLength=[50], table=[religion],
+column: id=[0], name=[religion_def], ordinalPosition=[2], nullable=[true], dataType=[varchar], valueLength=[500], table=[religion]]],
 constraints=[[
 ApricotConstraint: id=[0], name=[PK__religion__07872CE51041A4F3], type=[PRIMARY_KEY], table=[religion], columns=[[
 * column=[religion_name], ordinalPosition=[1]]]]]
-, 
-ApricotTable: id=[0], name=[person_feature_history], 
+,
+ApricotTable: id=[0], name=[person_feature_history],
 columns=[[
-column: id=[0], name=[value_id], ordinalPosition=[1], nullable=[false], dataType=[int], valueLength=[0], table=[person_feature_history], 
-column: id=[0], name=[feature_value], ordinalPosition=[2], nullable=[false], dataType=[varchar], valueLength=[1000], table=[person_feature_history], 
-column: id=[0], name=[created_date], ordinalPosition=[3], nullable=[false], dataType=[date], valueLength=[0], table=[person_feature_history], 
-column: id=[0], name=[changed_date], ordinalPosition=[4], nullable=[false], dataType=[date], valueLength=[0], table=[person_feature_history]]], 
+column: id=[0], name=[value_id], ordinalPosition=[1], nullable=[false], dataType=[int], valueLength=[0], table=[person_feature_history],
+column: id=[0], name=[feature_value], ordinalPosition=[2], nullable=[false], dataType=[varchar], valueLength=[1000], table=[person_feature_history],
+column: id=[0], name=[created_date], ordinalPosition=[3], nullable=[false], dataType=[date], valueLength=[0], table=[person_feature_history],
+column: id=[0], name=[changed_date], ordinalPosition=[4], nullable=[false], dataType=[date], valueLength=[0], table=[person_feature_history]]],
 constraints=[[
 ApricotConstraint: id=[0], name=[fk_person_feature], type=[FOREIGN_KEY], table=[person_feature_history], columns=[[
-* column=[value_id], ordinalPosition=[1]]], 
+* column=[value_id], ordinalPosition=[1]]],
 ApricotConstraint: id=[0], name=[person_feature_history_unique], type=[UNIQUE], table=[person_feature_history], columns=[[
-* column=[value_id], ordinalPosition=[1], 
+* column=[value_id], ordinalPosition=[1],
 * column=[feature_value], ordinalPosition=[2]]]]]
-, 
-ApricotTable: id=[0], name=[book_title], 
+,
+ApricotTable: id=[0], name=[book_title],
 columns=[[
-column: id=[0], name=[title_id], ordinalPosition=[1], nullable=[false], dataType=[int], valueLength=[0], table=[book_title], 
-column: id=[0], name=[title_name], ordinalPosition=[2], nullable=[false], dataType=[varchar], valueLength=[100], table=[book_title], 
-column: id=[0], name=[title_surename], ordinalPosition=[3], nullable=[false], dataType=[varchar], valueLength=[100], table=[book_title]]], 
+column: id=[0], name=[title_id], ordinalPosition=[1], nullable=[false], dataType=[int], valueLength=[0], table=[book_title],
+column: id=[0], name=[title_name], ordinalPosition=[2], nullable=[false], dataType=[varchar], valueLength=[100], table=[book_title],
+column: id=[0], name=[title_surename], ordinalPosition=[3], nullable=[false], dataType=[varchar], valueLength=[100], table=[book_title]]],
 constraints=[[
 ApricotConstraint: id=[0], name=[fk_book_title], type=[FOREIGN_KEY], table=[book_title], columns=[[
-* column=[title_name], ordinalPosition=[1], 
-* column=[title_surename], ordinalPosition=[2]]], 
+* column=[title_name], ordinalPosition=[1],
+* column=[title_surename], ordinalPosition=[2]]],
 ApricotConstraint: id=[0], name=[PK__book_tit__1062D977EFE114BC], type=[PRIMARY_KEY], table=[book_title], columns=[[
 * column=[title_id], ordinalPosition=[1]]]]]
-, 
-ApricotTable: id=[0], name=[person], 
+,
+ApricotTable: id=[0], name=[person],
 columns=[[
-column: id=[0], name=[person_id], ordinalPosition=[1], nullable=[false], dataType=[int], valueLength=[0], table=[person], 
-column: id=[0], name=[tabel_nummer], ordinalPosition=[2], nullable=[false], dataType=[varchar], valueLength=[10], table=[person], 
-column: id=[0], name=[first_name], ordinalPosition=[3], nullable=[false], dataType=[varchar], valueLength=[50], table=[person], 
-column: id=[0], name=[second_name], ordinalPosition=[4], nullable=[false], dataType=[varchar], valueLength=[50], table=[person], 
-column: id=[0], name=[religion], ordinalPosition=[5], nullable=[true], dataType=[varchar], valueLength=[50], table=[person], 
-column: id=[0], name=[department], ordinalPosition=[6], nullable=[false], dataType=[varchar], valueLength=[20], table=[person], 
-column: id=[0], name=[manager], ordinalPosition=[7], nullable=[true], dataType=[int], valueLength=[0], table=[person], 
-column: id=[0], name=[position_code], ordinalPosition=[8], nullable=[false], dataType=[varchar], valueLength=[10], table=[person], 
-column: id=[0], name=[position_suffix], ordinalPosition=[9], nullable=[false], dataType=[varchar], valueLength=[5], table=[person]]], 
+column: id=[0], name=[person_id], ordinalPosition=[1], nullable=[false], dataType=[int], valueLength=[0], table=[person],
+column: id=[0], name=[tabel_nummer], ordinalPosition=[2], nullable=[false], dataType=[varchar], valueLength=[10], table=[person],
+column: id=[0], name=[first_name], ordinalPosition=[3], nullable=[false], dataType=[varchar], valueLength=[50], table=[person],
+column: id=[0], name=[second_name], ordinalPosition=[4], nullable=[false], dataType=[varchar], valueLength=[50], table=[person],
+column: id=[0], name=[religion], ordinalPosition=[5], nullable=[true], dataType=[varchar], valueLength=[50], table=[person],
+column: id=[0], name=[department], ordinalPosition=[6], nullable=[false], dataType=[varchar], valueLength=[20], table=[person],
+column: id=[0], name=[manager], ordinalPosition=[7], nullable=[true], dataType=[int], valueLength=[0], table=[person],
+column: id=[0], name=[position_code], ordinalPosition=[8], nullable=[false], dataType=[varchar], valueLength=[10], table=[person],
+column: id=[0], name=[position_suffix], ordinalPosition=[9], nullable=[false], dataType=[varchar], valueLength=[5], table=[person]]],
 constraints=[[
 ApricotConstraint: id=[0], name=[fk_person_department], type=[FOREIGN_KEY], table=[person], columns=[[
-* column=[department], ordinalPosition=[1]]], 
+* column=[department], ordinalPosition=[1]]],
 ApricotConstraint: id=[0], name=[fk_person_manager], type=[FOREIGN_KEY], table=[person], columns=[[
-* column=[manager], ordinalPosition=[1]]], 
+* column=[manager], ordinalPosition=[1]]],
 ApricotConstraint: id=[0], name=[fk_person_religion], type=[FOREIGN_KEY], table=[person], columns=[[
-* column=[religion], ordinalPosition=[1]]], 
+* column=[religion], ordinalPosition=[1]]],
 ApricotConstraint: id=[0], name=[fk_position], type=[FOREIGN_KEY], table=[person], columns=[[
-* column=[position_code], ordinalPosition=[1], 
-* column=[position_suffix], ordinalPosition=[2]]], 
+* column=[position_code], ordinalPosition=[1],
+* column=[position_suffix], ordinalPosition=[2]]],
 ApricotConstraint: id=[0], name=[PK__person__543848DFA9871B47], type=[PRIMARY_KEY], table=[person], columns=[[
-* column=[person_id], ordinalPosition=[1]]]]]
-, 
-ApricotTable: id=[0], name=[payment_group], 
+* column=[person_id], ordinalPosition=[1]]],
+ApricotConstraint: id=[0], name=[person_department_idx], type=[NON_UNIQUE_INDEX], table=[person], columns=[[
+* column=[department], ordinalPosition=[1]]],
+ApricotConstraint: id=[0], name=[person_name_idx], type=[NON_UNIQUE_INDEX], table=[person], columns=[[
+* column=[first_name], ordinalPosition=[1],
+* column=[second_name], ordinalPosition=[2]]],
+ApricotConstraint: id=[0], name=[tabel_nummer_idx], type=[UNIQUE_INDEX], table=[person], columns=[[
+* column=[tabel_nummer], ordinalPosition=[1]]]]]
+,
+ApricotTable: id=[0], name=[payment_group],
 columns=[[
-column: id=[0], name=[group_id], ordinalPosition=[1], nullable=[false], dataType=[int], valueLength=[0], table=[payment_group], 
-column: id=[0], name=[pg_name], ordinalPosition=[2], nullable=[false], dataType=[varchar], valueLength=[100], table=[payment_group], 
-column: id=[0], name=[pg_definition], ordinalPosition=[3], nullable=[false], dataType=[varchar], valueLength=[500], table=[payment_group], 
-column: id=[0], name=[privileged_flag], ordinalPosition=[4], nullable=[false], dataType=[bit], valueLength=[0], table=[payment_group], 
-column: id=[0], name=[overtime_allowed_flag], ordinalPosition=[5], nullable=[false], dataType=[bit], valueLength=[0], table=[payment_group]]], 
+column: id=[0], name=[group_id], ordinalPosition=[1], nullable=[false], dataType=[int], valueLength=[0], table=[payment_group],
+column: id=[0], name=[pg_name], ordinalPosition=[2], nullable=[false], dataType=[varchar], valueLength=[100], table=[payment_group],
+column: id=[0], name=[pg_definition], ordinalPosition=[3], nullable=[false], dataType=[varchar], valueLength=[500], table=[payment_group],
+column: id=[0], name=[privileged_flag], ordinalPosition=[4], nullable=[false], dataType=[bit], valueLength=[0], table=[payment_group],
+column: id=[0], name=[overtime_allowed_flag], ordinalPosition=[5], nullable=[false], dataType=[bit], valueLength=[0], table=[payment_group]]],
 constraints=[[
 ApricotConstraint: id=[0], name=[PK__payment___D57795A0F0C9B4A7], type=[PRIMARY_KEY], table=[payment_group], columns=[[
 * column=[group_id], ordinalPosition=[1]]]]]
-, 
-ApricotTable: id=[0], name=[ref_table], 
+,
+ApricotTable: id=[0], name=[ref_table],
 columns=[[
-column: id=[0], name=[prefix], ordinalPosition=[1], nullable=[false], dataType=[int], valueLength=[0], table=[ref_table], 
-column: id=[0], name=[suffix], ordinalPosition=[2], nullable=[false], dataType=[int], valueLength=[0], table=[ref_table], 
-column: id=[0], name=[name], ordinalPosition=[3], nullable=[true], dataType=[varchar], valueLength=[100], table=[ref_table], 
-column: id=[0], name=[created], ordinalPosition=[4], nullable=[true], dataType=[date], valueLength=[0], table=[ref_table], 
-column: id=[0], name=[price], ordinalPosition=[5], nullable=[true], dataType=[int], valueLength=[0], table=[ref_table]]], 
+column: id=[0], name=[prefix], ordinalPosition=[1], nullable=[false], dataType=[int], valueLength=[0], table=[ref_table],
+column: id=[0], name=[suffix], ordinalPosition=[2], nullable=[false], dataType=[int], valueLength=[0], table=[ref_table],
+column: id=[0], name=[name], ordinalPosition=[3], nullable=[true], dataType=[varchar], valueLength=[100], table=[ref_table],
+column: id=[0], name=[created], ordinalPosition=[4], nullable=[true], dataType=[date], valueLength=[0], table=[ref_table],
+column: id=[0], name=[price], ordinalPosition=[5], nullable=[true], dataType=[int], valueLength=[0], table=[ref_table]]],
 constraints=[[
 ApricotConstraint: id=[0], name=[PK__ref_tabl__62F573568B39F93B], type=[PRIMARY_KEY], table=[ref_table], columns=[[
-* column=[suffix], ordinalPosition=[1], 
+* column=[suffix], ordinalPosition=[1],
 * column=[prefix], ordinalPosition=[2]]]]]
-, 
-ApricotTable: id=[0], name=[payroll], 
+,
+ApricotTable: id=[0], name=[payroll],
 columns=[[
-column: id=[0], name=[payroll_id], ordinalPosition=[1], nullable=[false], dataType=[int], valueLength=[0], table=[payroll], 
-column: id=[0], name=[person_id], ordinalPosition=[2], nullable=[false], dataType=[int], valueLength=[0], table=[payroll], 
-column: id=[0], name=[payment_transaction_id], ordinalPosition=[3], nullable=[false], dataType=[int], valueLength=[0], table=[payroll], 
-column: id=[0], name=[payment_code], ordinalPosition=[4], nullable=[false], dataType=[varchar], valueLength=[10], table=[payroll], 
-column: id=[0], name=[payment_period], ordinalPosition=[5], nullable=[false], dataType=[varchar], valueLength=[7], table=[payroll], 
-column: id=[0], name=[payment_amount], ordinalPosition=[6], nullable=[false], dataType=[float], valueLength=[0], table=[payroll]]], 
+column: id=[0], name=[payroll_id], ordinalPosition=[1], nullable=[false], dataType=[int], valueLength=[0], table=[payroll],
+column: id=[0], name=[person_id], ordinalPosition=[2], nullable=[false], dataType=[int], valueLength=[0], table=[payroll],
+column: id=[0], name=[payment_transaction_id], ordinalPosition=[3], nullable=[false], dataType=[int], valueLength=[0], table=[payroll],
+column: id=[0], name=[payment_code], ordinalPosition=[4], nullable=[false], dataType=[varchar], valueLength=[10], table=[payroll],
+column: id=[0], name=[payment_period], ordinalPosition=[5], nullable=[false], dataType=[varchar], valueLength=[7], table=[payroll],
+column: id=[0], name=[payment_amount], ordinalPosition=[6], nullable=[false], dataType=[float], valueLength=[0], table=[payroll]]],
 constraints=[[
 ApricotConstraint: id=[0], name=[fk_payment_code], type=[FOREIGN_KEY], table=[payroll], columns=[[
-* column=[payment_code], ordinalPosition=[1]]], 
+* column=[payment_code], ordinalPosition=[1]]],
 ApricotConstraint: id=[0], name=[fk_payment_transaction], type=[FOREIGN_KEY], table=[payroll], columns=[[
-* column=[payment_transaction_id], ordinalPosition=[1]]], 
+* column=[payment_transaction_id], ordinalPosition=[1]]],
 ApricotConstraint: id=[0], name=[fk_person], type=[FOREIGN_KEY], table=[payroll], columns=[[
-* column=[person_id], ordinalPosition=[1]]], 
+* column=[person_id], ordinalPosition=[1]]],
 ApricotConstraint: id=[0], name=[PK__payroll__D99FC944D76EAC2A], type=[PRIMARY_KEY], table=[payroll], columns=[[
-* column=[payroll_id], ordinalPosition=[1]]], 
+* column=[payroll_id], ordinalPosition=[1]]],
 ApricotConstraint: id=[0], name=[payroll_code_unique], type=[UNIQUE], table=[payroll], columns=[[
-* column=[person_id], ordinalPosition=[1], 
-* column=[payment_transaction_id], ordinalPosition=[2], 
-* column=[payment_code], ordinalPosition=[3], 
-* column=[payment_period], ordinalPosition=[4]]]]]
-, 
-ApricotTable: id=[0], name=[pcode_in_payment_group], 
+* column=[person_id], ordinalPosition=[1],
+* column=[payment_transaction_id], ordinalPosition=[2],
+* column=[payment_code], ordinalPosition=[3],
+* column=[payment_period], ordinalPosition=[4]]],
+ApricotConstraint: id=[0], name=[payroll_person_period_idx], type=[NON_UNIQUE_INDEX], table=[payroll], columns=[[
+* column=[person_id], ordinalPosition=[1],
+* column=[payment_period], ordinalPosition=[2]]],
+ApricotConstraint: id=[0], name=[payroll_transaction_idx], type=[NON_UNIQUE_INDEX], table=[payroll], columns=[[
+* column=[payment_transaction_id], ordinalPosition=[1]]]]]
+,
+ApricotTable: id=[0], name=[pcode_in_payment_group],
 columns=[[
-column: id=[0], name=[pcode], ordinalPosition=[1], nullable=[false], dataType=[varchar], valueLength=[10], table=[pcode_in_payment_group], 
-column: id=[0], name=[payment_group_id], ordinalPosition=[2], nullable=[false], dataType=[int], valueLength=[0], table=[pcode_in_payment_group]]], 
+column: id=[0], name=[pcode], ordinalPosition=[1], nullable=[false], dataType=[varchar], valueLength=[10], table=[pcode_in_payment_group],
+column: id=[0], name=[payment_group_id], ordinalPosition=[2], nullable=[false], dataType=[int], valueLength=[0], table=[pcode_in_payment_group]]],
 constraints=[[
 ApricotConstraint: id=[0], name=[fk_pcpg_payment_group], type=[FOREIGN_KEY], table=[pcode_in_payment_group], columns=[[
-* column=[payment_group_id], ordinalPosition=[1]]], 
+* column=[payment_group_id], ordinalPosition=[1]]],
 ApricotConstraint: id=[0], name=[fk_pcpg_pcode], type=[FOREIGN_KEY], table=[pcode_in_payment_group], columns=[[
-* column=[pcode], ordinalPosition=[1]]]]]
-, 
-ApricotTable: id=[0], name=[person_feature_value], 
+* column=[pcode], ordinalPosition=[1]]],
+ApricotConstraint: id=[0], name=[pcode_in_payment_group_idx], type=[UNIQUE_INDEX], table=[pcode_in_payment_group], columns=[[
+* column=[pcode], ordinalPosition=[1],
+* column=[payment_group_id], ordinalPosition=[2]]]]]
+,
+ApricotTable: id=[0], name=[person_feature_value],
 columns=[[
-column: id=[0], name=[id], ordinalPosition=[1], nullable=[false], dataType=[int], valueLength=[0], table=[person_feature_value], 
-column: id=[0], name=[person_id], ordinalPosition=[2], nullable=[false], dataType=[int], valueLength=[0], table=[person_feature_value], 
-column: id=[0], name=[feature_code], ordinalPosition=[3], nullable=[false], dataType=[varchar], valueLength=[20], table=[person_feature_value], 
-column: id=[0], name=[feature_value], ordinalPosition=[4], nullable=[false], dataType=[varchar], valueLength=[1000], table=[person_feature_value], 
-column: id=[0], name=[created_date], ordinalPosition=[5], nullable=[false], dataType=[date], valueLength=[0], table=[person_feature_value]]], 
+column: id=[0], name=[id], ordinalPosition=[1], nullable=[false], dataType=[int], valueLength=[0], table=[person_feature_value],
+column: id=[0], name=[person_id], ordinalPosition=[2], nullable=[false], dataType=[int], valueLength=[0], table=[person_feature_value],
+column: id=[0], name=[feature_code], ordinalPosition=[3], nullable=[false], dataType=[varchar], valueLength=[20], table=[person_feature_value],
+column: id=[0], name=[feature_value], ordinalPosition=[4], nullable=[false], dataType=[varchar], valueLength=[1000], table=[person_feature_value],
+column: id=[0], name=[created_date], ordinalPosition=[5], nullable=[false], dataType=[date], valueLength=[0], table=[person_feature_value]]],
 constraints=[[
 ApricotConstraint: id=[0], name=[fk_feature_person], type=[FOREIGN_KEY], table=[person_feature_value], columns=[[
-* column=[person_id], ordinalPosition=[1]]], 
+* column=[person_id], ordinalPosition=[1]]],
 ApricotConstraint: id=[0], name=[fk_feature_type], type=[FOREIGN_KEY], table=[person_feature_value], columns=[[
-* column=[feature_code], ordinalPosition=[1]]], 
+* column=[feature_code], ordinalPosition=[1]]],
 ApricotConstraint: id=[0], name=[PK__person_f__3213E83F5F2D76DB], type=[PRIMARY_KEY], table=[person_feature_value], columns=[[
-* column=[id], ordinalPosition=[1]]], 
+* column=[id], ordinalPosition=[1]]],
 ApricotConstraint: id=[0], name=[person_feature_value_unique], type=[UNIQUE], table=[person_feature_value], columns=[[
-* column=[person_id], ordinalPosition=[1], 
-* column=[feature_code], ordinalPosition=[2]]]]]
-, 
-ApricotTable: id=[0], name=[position], 
+* column=[person_id], ordinalPosition=[1],
+* column=[feature_code], ordinalPosition=[2]]],
+ApricotConstraint: id=[0], name=[person_feature_idx], type=[NON_UNIQUE_INDEX], table=[person_feature_value], columns=[[
+* column=[person_id], ordinalPosition=[1]]]]]
+,
+ApricotTable: id=[0], name=[position],
 columns=[[
-column: id=[0], name=[position_code], ordinalPosition=[1], nullable=[false], dataType=[varchar], valueLength=[10], table=[position], 
-column: id=[0], name=[position_suffix], ordinalPosition=[2], nullable=[false], dataType=[varchar], valueLength=[5], table=[position], 
-column: id=[0], name=[position_name], ordinalPosition=[3], nullable=[false], dataType=[varchar], valueLength=[100], table=[position], 
-column: id=[0], name=[comment], ordinalPosition=[4], nullable=[true], dataType=[varchar], valueLength=[1000], table=[position]]], 
+column: id=[0], name=[position_code], ordinalPosition=[1], nullable=[false], dataType=[varchar], valueLength=[10], table=[position],
+column: id=[0], name=[position_suffix], ordinalPosition=[2], nullable=[false], dataType=[varchar], valueLength=[5], table=[position],
+column: id=[0], name=[position_name], ordinalPosition=[3], nullable=[false], dataType=[varchar], valueLength=[100], table=[position],
+column: id=[0], name=[comment], ordinalPosition=[4], nullable=[true], dataType=[varchar], valueLength=[1000], table=[position]]],
 constraints=[[
 ApricotConstraint: id=[0], name=[PK__position__3B2F090EE693B752], type=[PRIMARY_KEY], table=[position], columns=[[
-* column=[position_code], ordinalPosition=[1], 
+* column=[position_code], ordinalPosition=[1],
 * column=[position_suffix], ordinalPosition=[2]]]]]
-, 
-ApricotTable: id=[0], name=[book_ref], 
+,
+ApricotTable: id=[0], name=[book_ref],
 columns=[[
-column: id=[0], name=[id], ordinalPosition=[1], nullable=[true], dataType=[int], valueLength=[0], table=[book_ref], 
-column: id=[0], name=[book_name], ordinalPosition=[2], nullable=[false], dataType=[varchar], valueLength=[100], table=[book_ref], 
-column: id=[0], name=[isbn], ordinalPosition=[3], nullable=[true], dataType=[varchar], valueLength=[100], table=[book_ref]]], 
+column: id=[0], name=[id], ordinalPosition=[1], nullable=[true], dataType=[int], valueLength=[0], table=[book_ref],
+column: id=[0], name=[book_name], ordinalPosition=[2], nullable=[false], dataType=[varchar], valueLength=[100], table=[book_ref],
+column: id=[0], name=[isbn], ordinalPosition=[3], nullable=[true], dataType=[varchar], valueLength=[100], table=[book_ref]]],
 constraints=[[
 ApricotConstraint: id=[0], name=[book_ref_unique], type=[UNIQUE], table=[book_ref], columns=[[
 * column=[isbn], ordinalPosition=[1]]]]]
-, 
-ApricotTable: id=[0], name=[book_shelf], 
+,
+ApricotTable: id=[0], name=[book_shelf],
 columns=[[
-column: id=[0], name=[shelf_id], ordinalPosition=[1], nullable=[false], dataType=[int], valueLength=[0], table=[book_shelf], 
-column: id=[0], name=[isbn], ordinalPosition=[2], nullable=[false], dataType=[varchar], valueLength=[100], table=[book_shelf]]], 
+column: id=[0], name=[shelf_id], ordinalPosition=[1], nullable=[false], dataType=[int], valueLength=[0], table=[book_shelf],
+column: id=[0], name=[isbn], ordinalPosition=[2], nullable=[false], dataType=[varchar], valueLength=[100], table=[book_shelf]]],
 constraints=[[
 ApricotConstraint: id=[0], name=[fk_book_shelf], type=[FOREIGN_KEY], table=[book_shelf], columns=[[
-* column=[isbn], ordinalPosition=[1]]], 
+* column=[isbn], ordinalPosition=[1]]],
 ApricotConstraint: id=[0], name=[PK__book_she__E33A5B7C1F566724], type=[PRIMARY_KEY], table=[book_shelf], columns=[[
 * column=[shelf_id], ordinalPosition=[1]]]]]
-, 
-ApricotTable: id=[0], name=[department], 
+,
+ApricotTable: id=[0], name=[department],
 columns=[[
-column: id=[0], name=[department_code], ordinalPosition=[1], nullable=[false], dataType=[varchar], valueLength=[20], table=[department], 
-column: id=[0], name=[department_name], ordinalPosition=[2], nullable=[false], dataType=[varchar], valueLength=[100], table=[department], 
-column: id=[0], name=[stuff_total], ordinalPosition=[3], nullable=[false], dataType=[int], valueLength=[0], table=[department], 
-column: id=[0], name=[special_conditions], ordinalPosition=[4], nullable=[true], dataType=[varchar], valueLength=[500], table=[department]]], 
+column: id=[0], name=[department_code], ordinalPosition=[1], nullable=[false], dataType=[varchar], valueLength=[20], table=[department],
+column: id=[0], name=[department_name], ordinalPosition=[2], nullable=[false], dataType=[varchar], valueLength=[100], table=[department],
+column: id=[0], name=[stuff_total], ordinalPosition=[3], nullable=[false], dataType=[int], valueLength=[0], table=[department],
+column: id=[0], name=[special_conditions], ordinalPosition=[4], nullable=[true], dataType=[varchar], valueLength=[500], table=[department]]],
 constraints=[[
 ApricotConstraint: id=[0], name=[PK__departme__EBC3495FA291887B], type=[PRIMARY_KEY], table=[department], columns=[[
 * column=[department_code], ordinalPosition=[1]]]]]
-, 
-ApricotTable: id=[0], name=[tt_user], 
+,
+ApricotTable: id=[0], name=[tt_user],
 columns=[[
-column: id=[0], name=[id], ordinalPosition=[1], nullable=[false], dataType=[int], valueLength=[0], table=[tt_user], 
-column: id=[0], name=[first_name], ordinalPosition=[2], nullable=[false], dataType=[varchar], valueLength=[50], table=[tt_user], 
-column: id=[0], name=[surename], ordinalPosition=[3], nullable=[false], dataType=[varchar], valueLength=[50], table=[tt_user], 
-column: id=[0], name=[age], ordinalPosition=[4], nullable=[false], dataType=[int], valueLength=[0], table=[tt_user], 
-column: id=[0], name=[mobile_phone], ordinalPosition=[5], nullable=[true], dataType=[varchar], valueLength=[20], table=[tt_user]]], 
+column: id=[0], name=[id], ordinalPosition=[1], nullable=[false], dataType=[int], valueLength=[0], table=[tt_user],
+column: id=[0], name=[first_name], ordinalPosition=[2], nullable=[false], dataType=[varchar], valueLength=[50], table=[tt_user],
+column: id=[0], name=[surename], ordinalPosition=[3], nullable=[false], dataType=[varchar], valueLength=[50], table=[tt_user],
+column: id=[0], name=[age], ordinalPosition=[4], nullable=[false], dataType=[int], valueLength=[0], table=[tt_user],
+column: id=[0], name=[mobile_phone], ordinalPosition=[5], nullable=[true], dataType=[varchar], valueLength=[20], table=[tt_user]]],
 constraints=[[
 ApricotConstraint: id=[0], name=[PK__tt_user__3213E83FBB52EBB5], type=[PRIMARY_KEY], table=[tt_user], columns=[[
 * column=[id], ordinalPosition=[1]]]]]
-, 
-ApricotTable: id=[0], name=[payment_code], 
+,
+ApricotTable: id=[0], name=[payment_code],
 columns=[[
-column: id=[0], name=[pcode], ordinalPosition=[1], nullable=[false], dataType=[varchar], valueLength=[10], table=[payment_code], 
-column: id=[0], name=[pcode_name], ordinalPosition=[2], nullable=[false], dataType=[varchar], valueLength=[100], table=[payment_code]]], 
+column: id=[0], name=[pcode], ordinalPosition=[1], nullable=[false], dataType=[varchar], valueLength=[10], table=[payment_code],
+column: id=[0], name=[pcode_name], ordinalPosition=[2], nullable=[false], dataType=[varchar], valueLength=[100], table=[payment_code]]],
 constraints=[[
 ApricotConstraint: id=[0], name=[PK__payment___293812AAD3D9BBD0], type=[PRIMARY_KEY], table=[payment_code], columns=[[
 * column=[pcode], ordinalPosition=[1]]]]]
 ][
-ApricotRelationship: parent table=[book_author], child table=[book_title], 
-ApricotRelationship: parent table=[book_ref], child table=[book_shelf], 
-ApricotRelationship: parent table=[department], child table=[person], 
-ApricotRelationship: parent table=[payment_code], child table=[pcode_in_payment_group], 
-ApricotRelationship: parent table=[payment_code], child table=[payroll], 
-ApricotRelationship: parent table=[payment_transaction_type], child table=[payment_transaction], 
-ApricotRelationship: parent table=[payment_transaction], child table=[payroll], 
-ApricotRelationship: parent table=[payment_group], child table=[pcode_in_payment_group], 
-ApricotRelationship: parent table=[payment_group], child table=[person_in_payment_group], 
-ApricotRelationship: parent table=[person], child table=[person_in_payment_group], 
-ApricotRelationship: parent table=[person], child table=[person], 
-ApricotRelationship: parent table=[person], child table=[payroll], 
-ApricotRelationship: parent table=[person], child table=[person_feature_value], 
-ApricotRelationship: parent table=[person_feature_value], child table=[person_feature_history], 
-ApricotRelationship: parent table=[personal_feature_type], child table=[person_feature_value], 
-ApricotRelationship: parent table=[position], child table=[person], 
-ApricotRelationship: parent table=[ref_table], child table=[master_doom], 
-ApricotRelationship: parent table=[religion], child table=[person], 
+ApricotRelationship: parent table=[book_author], child table=[book_title],
+ApricotRelationship: parent table=[book_ref], child table=[book_shelf],
+ApricotRelationship: parent table=[department], child table=[person],
+ApricotRelationship: parent table=[payment_code], child table=[pcode_in_payment_group],
+ApricotRelationship: parent table=[payment_code], child table=[payroll],
+ApricotRelationship: parent table=[payment_transaction_type], child table=[payment_transaction],
+ApricotRelationship: parent table=[payment_transaction], child table=[payroll],
+ApricotRelationship: parent table=[payment_group], child table=[pcode_in_payment_group],
+ApricotRelationship: parent table=[payment_group], child table=[person_in_payment_group],
+ApricotRelationship: parent table=[person], child table=[person_in_payment_group],
+ApricotRelationship: parent table=[person], child table=[person],
+ApricotRelationship: parent table=[person], child table=[payroll],
+ApricotRelationship: parent table=[person], child table=[person_feature_value],
+ApricotRelationship: parent table=[person_feature_value], child table=[person_feature_history],
+ApricotRelationship: parent table=[personal_feature_type], child table=[person_feature_value],
+ApricotRelationship: parent table=[position], child table=[person],
+ApricotRelationship: parent table=[ref_table], child table=[master_doom],
+ApricotRelationship: parent table=[religion], child table=[person],
 ApricotRelationship: parent table=[triller], child table=[triller_book]]
-Scanner was successfully called
