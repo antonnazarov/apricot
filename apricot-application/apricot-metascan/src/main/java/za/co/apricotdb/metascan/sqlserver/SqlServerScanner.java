@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.metascan.MetaDataScanner;
-import za.co.apricotdb.metascan.StructureScanned;
+import za.co.apricotdb.persistence.data.MetaData;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ConstraintType;
@@ -24,7 +24,7 @@ import za.co.apricotdb.persistence.entity.ConstraintType;
 public class SqlServerScanner implements MetaDataScanner {
 
     @Override
-    public StructureScanned scan(String driverClassName, String url, String userName, String password) {
+    public MetaData scan(String driverClassName, String url, String userName, String password) {
         JdbcOperations jdbc = MetaDataScanner.getTargetJdbcOperations(driverClassName, url, userName, password);
 
         Map<String, ApricotTable> tables = getTables(jdbc);
@@ -34,7 +34,7 @@ public class SqlServerScanner implements MetaDataScanner {
         
         List<ApricotRelationship> relationships = getRelationships(jdbc, constraints);
         
-        StructureScanned ret = new StructureScanned();
+        MetaData ret = new MetaData();
         ret.setTables(new ArrayList(tables.values()));
         ret.setRelationships(relationships);
 

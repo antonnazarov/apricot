@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.repository.TestDataBuilder;
-import za.co.apricotdb.persistence.util.DataCleaner;
+import za.co.apricotdb.persistence.data.DataCleaner;
 
 /**
  * Spring based runner.

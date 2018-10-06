@@ -3,7 +3,7 @@ package za.co.apricotdb.metascan.oracle;
 
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.metascan.MetaDataScanner;
-import za.co.apricotdb.metascan.StructureScanned;
+import za.co.apricotdb.persistence.data.MetaData;
 
 /**
  * Scanner for the Oracle database.
@@ -15,7 +15,7 @@ import za.co.apricotdb.metascan.StructureScanned;
 public class OracleScanner implements MetaDataScanner {
 
     @Override
-    public StructureScanned scan(String driverClassName, String url, String userName, String password) {
+    public MetaData scan(String driverClassName, String url, String userName, String password) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

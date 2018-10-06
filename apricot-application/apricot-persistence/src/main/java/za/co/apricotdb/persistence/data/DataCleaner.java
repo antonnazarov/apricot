@@ -1,4 +1,4 @@
-package za.co.apricotdb.persistence.util;
+package za.co.apricotdb.persistence.data;
 
 import javax.annotation.Resource;
 import org.springframework.jdbc.core.JdbcOperations;

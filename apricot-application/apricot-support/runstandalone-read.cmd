@@ -1,0 +1,1 @@
+mvn -e exec:java -Dexec.mainClass="za.co.apricotdb.support.util.ApricotUtils" -Dexec.args="read"

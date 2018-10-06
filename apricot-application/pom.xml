@@ -88,7 +88,13 @@
             <artifactId>javax.inject</artifactId>
             <version>1</version>
         </dependency>
-
+        
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.9.1</version>
+        </dependency>        
+        
         <!-- testing stuff -->
         <dependency>
             <groupId>junit</groupId>

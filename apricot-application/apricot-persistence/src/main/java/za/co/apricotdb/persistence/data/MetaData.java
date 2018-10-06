@@ -1,4 +1,4 @@
-package za.co.apricotdb.metascan;
+package za.co.apricotdb.persistence.data;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import za.co.apricotdb.persistence.entity.ApricotTable;
  * @author Anton Nazarov
  * @since 26/09/2018
  */
-public class StructureScanned {
+public class MetaData {
     
     private List<ApricotTable> tables = new ArrayList<>();
     private List<ApricotRelationship> relationships = new ArrayList<>();

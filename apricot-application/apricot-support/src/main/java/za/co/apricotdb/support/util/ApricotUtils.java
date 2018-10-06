@@ -23,7 +23,7 @@ public class ApricotUtils {
                     + "za.co.apricotdb.support.util.ApricotUtils <arguments>\n"
                     + "arguments:\n"
                     + "clean - to clean the Apricot project database\n"
-                    + "info - get the current database content\n"
+                    + "read - get the current database content\n"
                     + "scan - scan the target database\n"
             );
         }

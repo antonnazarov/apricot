@@ -59,6 +59,8 @@ public class JpaDefaultConfig {
     JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(entityManagerFactory);
+        transactionManager.setDataSource(dataSource());
+
         return transactionManager;
     }
 
@@ -70,7 +72,9 @@ public class JpaDefaultConfig {
         hibernateProperties.setProperty("hibernate.show_sql", env.getProperty("hibernate.show_sql"));
         hibernateProperties.setProperty("hibernate.cache.use_second_level_cache", env.getProperty("hibernate.cache.use_second_level_cache"));
         hibernateProperties.setProperty("hibernate.cache.use_query_cache", env.getProperty("hibernate.cache.use_query_cache"));
-
+        
+        // hibernateProperties.setProperty("hibernate.enable_lazy_load_no_trans", "true");  //  this property might be problematic
+        
         return hibernateProperties;
     }
 

@@ -1,9 +1,10 @@
 package za.co.apricotdb.support.util;
 
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import za.co.apricotdb.persistence.util.DataCleaner;
+import za.co.apricotdb.persistence.data.DataCleaner;
 
 /**
  * Clean the Apricot- database.
@@ -18,6 +19,7 @@ public class CmdDatabaseCleaner implements CommandLineRunner {
     DataCleaner dataCleaner;
     
     @Override
+    @Transactional
     public void run(String... args) throws Exception {
         for (String c : args) {
             if (c.equals("clean")) {

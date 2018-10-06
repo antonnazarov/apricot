@@ -1,6 +1,6 @@
 package za.co.apricotdb.metascan;
 
-import javax.sql.DataSource;
+import za.co.apricotdb.persistence.data.MetaData;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -13,7 +13,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
  */
 public interface MetaDataScanner {
 
-    StructureScanned scan(String driverClassName, String url, String userName, String password);
+    MetaData scan(String driverClassName, String url, String userName, String password);
     
     static JdbcOperations getTargetJdbcOperations(String driverClassName, String url, String userName, String password) {
         DriverManagerDataSource ds = new DriverManagerDataSource();

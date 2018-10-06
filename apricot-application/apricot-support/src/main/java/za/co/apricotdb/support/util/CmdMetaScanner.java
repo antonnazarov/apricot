@@ -1,17 +1,14 @@
 package za.co.apricotdb.support.util;
 
 import java.util.Properties;
-import javax.annotation.Resource;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.metascan.MetaDataScanner;
 import za.co.apricotdb.metascan.ScannerRecognizer;
-import za.co.apricotdb.metascan.StructureScanned;
-import za.co.apricotdb.persistence.entity.ApricotRelationship;
-import za.co.apricotdb.persistence.entity.ApricotTable;
-import za.co.apricotdb.persistence.repository.ApricotRelationshipRepository;
-import za.co.apricotdb.persistence.repository.ApricotTableRepository;
+import za.co.apricotdb.persistence.data.DataSaver;
+import za.co.apricotdb.persistence.data.MetaData;
 
 /**
  * This component calls the meta- scanner.
@@ -20,16 +17,14 @@ import za.co.apricotdb.persistence.repository.ApricotTableRepository;
  * @since 01/10/2018
  */
 @Component
+@Transactional
 public class CmdMetaScanner implements CommandLineRunner {
 
-    @Resource
-    ApricotTableRepository tableRepository;
-    
-    @Resource
-    ApricotRelationshipRepository relationshipRepository;
-    
     @Autowired
     ScannerRecognizer scannerRecognizer;
+    
+    @Autowired
+    DataSaver dataSaver;
 
     @Override
     public void run(String... args) throws Exception {
@@ -55,13 +50,13 @@ public class CmdMetaScanner implements CommandLineRunner {
                 }
                 
                 System.out.println("Scanning the database for the following parameters: driver=[" + driver + "], url=[" + url + "], user=[" + user + "], password=[" + password + "]");                
-                StructureScanned result = scanner.scan(driver, url, user, password);
+                MetaData result = scanner.scan(driver, url, user, password);
                 System.out.println("The scanned results:");                
                 System.out.println(result);
                 
-                serializeScanResults(result);
-                
+                dataSaver.saveMetaData(result);
                 System.out.println("Scanner was successfully called. The scanner results were serialized");
+                
                 break;
             }
         }
@@ -90,15 +85,5 @@ public class CmdMetaScanner implements CommandLineRunner {
         }
         
         return true;
-    }
-
-    private void serializeScanResults(StructureScanned result) {
-        for (ApricotTable t : result.getTables()) {
-            tableRepository.save(t);
-        }
-        
-        for (ApricotRelationship r : result.getRelationships()) {
-            relationshipRepository.save(r);
-        }
     }
 }
