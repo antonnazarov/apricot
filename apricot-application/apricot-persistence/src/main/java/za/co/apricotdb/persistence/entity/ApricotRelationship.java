@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -18,6 +19,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "apricot_relationship")
+@NamedQuery(name="ApricotRelationship.getRelationshipsForTables", query="SELECT rl FROM ApricotRelationship rl WHERE rl.child.table.name IN (:tables) OR rl.parent.table.name IN (:tables)")
 public class ApricotRelationship implements Serializable {
 
     public ApricotRelationship() {}
