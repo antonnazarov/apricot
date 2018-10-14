@@ -65,7 +65,7 @@ public class SqlServerScanner implements MetaDataScanner {
 
     private Map<String, ApricotColumn> getColumns(JdbcOperations jdbc, Map<String, ApricotTable> tables) {
         List<ApricotColumn> columns = jdbc.query("select table_name, column_name, ordinal_position, is_nullable, data_type, character_maximum_length "
-                + "from Intermediary_Account.INFORMATION_SCHEMA.COLUMNS "
+                + "from INFORMATION_SCHEMA.COLUMNS "
                 + "order by table_name, ordinal_position",
                 (rs, rowNum) -> {
                     ApricotColumn c = new ApricotColumn();

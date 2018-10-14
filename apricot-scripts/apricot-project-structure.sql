@@ -1,7 +1,7 @@
 -- tables of the metamodel
 create table apricot_table (
    table_id long identity primary key,
-   table_name varchar(50) not null
+   table_name varchar(100) not null
 );
 -------------------------
 
@@ -9,7 +9,7 @@ create table apricot_table (
 create table apricot_column (
    column_id long identity primary key,
    table_id long not null,
-   column_name varchar(50) not null,
+   column_name varchar(100) not null,
    ordinal_position int not null,
    is_nullable boolean not null,
    data_type varchar(25) not null,
