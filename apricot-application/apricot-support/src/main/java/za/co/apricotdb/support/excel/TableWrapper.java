@@ -21,25 +21,21 @@ import za.co.apricotdb.persistence.entity.ConstraintType;
  */
 public class TableWrapper {
 
-    private String tableName;
     private ApricotTable apricotTable;
     private List<ApricotRelationship> relationships;
     private Map<String, ReportRow> rows = new LinkedHashMap<>();
-    private Map<String, Integer> constraintCount = new HashMap<>();
     private List<ReportRow> indexedRows = new ArrayList<>();
 
     public TableWrapper(ApricotTable apricotTable, List<ApricotRelationship> relationships) {
         this.apricotTable = apricotTable;
         this.relationships = relationships;
-        this.tableName = apricotTable.getName();
 
-        initConstrainCount();
         populateColumnsDefinition();
         populateConstraints();
         populateRelationships();
     }
 
-    private void initConstrainCount() {
+    private void initConstrainCount(Map<String, Integer> constraintCount) {
         constraintCount.put(ConstraintType.PRIMARY_KEY.name(), 0);
         constraintCount.put(ConstraintType.FOREIGN_KEY.name(), 0);
         constraintCount.put(ConstraintType.UNIQUE.name(), 0);
@@ -68,6 +64,9 @@ public class TableWrapper {
     }
 
     private void populateConstraints() {
+        Map<String, Integer> constraintCount = new HashMap<>();
+        initConstrainCount(constraintCount);
+        
         List<ApricotConstraint> constraints = apricotTable.getConstraints();
         constraints.sort((ApricotConstraint c1, ApricotConstraint c2) -> c1.getType().getOrder() - c2.getType().getOrder());
         for (ApricotConstraint c : constraints) {
@@ -139,7 +138,7 @@ public class TableWrapper {
     }
 
     public String getTableName() {
-        return tableName;
+        return apricotTable.getName();
     }
 
     public List<ReportRow> getRows() {

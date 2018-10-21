@@ -1,1 +1,1 @@
-mvn -e exec:java -Dexec.mainClass="za.co.apricotdb.support.util.ApricotUtils" -Dexec.args="report tables=person,position,payment_code sortby=weight"
+mvn -e exec:java -Dexec.mainClass="za.co.apricotdb.support.util.ApricotUtils" -Dexec.args="report tables=* file=D:\\AntonNazarov\\ApricotTestReport.xlsx sortby=weight"

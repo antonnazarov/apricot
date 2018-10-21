@@ -8,6 +8,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.DataReader;
 import za.co.apricotdb.persistence.data.MetaData;
+import za.co.apricotdb.persistence.entity.ApricotTable;
+import za.co.apricotdb.support.excel.ReportWriter;
+import za.co.apricotdb.support.excel.TableWrapper;
 
 /**
  * Command line utility to generate Excel- report.
@@ -20,6 +23,9 @@ public class CmdExcelReport implements CommandLineRunner {
 
     @Autowired
     DataReader dataReader;
+    
+    @Autowired
+    ReportWriter reportWriter;
 
     /**
      * Run the Excel- report with the following parameters:
@@ -34,6 +40,13 @@ public class CmdExcelReport implements CommandLineRunner {
                 ReportParameters params = getReportParameters(args);
                 System.out.println("Generating report for the following parameters: " + params);
                 MetaData result = dataReader.readTablesByList(params.tables);
+                List<ApricotTable> tables = result.getTables();
+                List<TableWrapper> wrappers = new ArrayList<>();
+                for (ApricotTable t : tables) {
+                    wrappers.add(new TableWrapper(t, result.getRelationships()));
+                }
+                
+                reportWriter.createReport(wrappers, params.file);
 
                 System.out.println(result);
             }
@@ -63,6 +76,9 @@ public class CmdExcelReport implements CommandLineRunner {
                 } else {
                     ret.sortBy = "alphabetically";
                 }
+            } else if (c.contains("file=")) {
+                String file = c.substring(5);
+                ret.file = file;
             }
         }
         
@@ -74,11 +90,14 @@ public class CmdExcelReport implements CommandLineRunner {
     class ReportParameters {
         List<String> tables;
         String sortBy = "alphabetically";
+        String file;
         
         @Override
         public String toString() {
             StringBuilder sb = new StringBuilder();
-            sb.append("tables=").append(tables).append(", sortBy=[").append(sortBy).append("]");
+            sb.append("tables=").append(tables)
+                    .append(", file=[").append(file).append("]")
+                    .append(", sortBy=[").append(sortBy).append("]");
             
             return sb.toString();
         }
