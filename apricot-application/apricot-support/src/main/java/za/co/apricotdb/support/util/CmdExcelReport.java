@@ -41,6 +41,9 @@ public class CmdExcelReport implements CommandLineRunner {
                 System.out.println("Generating report for the following parameters: " + params);
                 MetaData result = dataReader.readTablesByList(params.tables);
                 List<ApricotTable> tables = result.getTables();
+                if (params.sortBy.equals("alphabetically")) {
+                    sortAlphabetically(tables);
+                }
                 List<TableWrapper> wrappers = new ArrayList<>();
                 for (ApricotTable t : tables) {
                     wrappers.add(new TableWrapper(t, result.getRelationships()));
@@ -51,6 +54,10 @@ public class CmdExcelReport implements CommandLineRunner {
                 System.out.println(result);
             }
         }
+    }
+    
+    private void sortAlphabetically(List<ApricotTable> tables) {
+        tables.sort((ApricotTable t1, ApricotTable t2) -> t1.getName().compareTo(t2.getName()));
     }
 
     /**

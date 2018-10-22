@@ -92,25 +92,22 @@ public class TableWrapper {
     private void populateRelationships() {
 
         int childCnt = 0;
-        int parentCnt = 0;
         int tableSize = indexedRows.size();
 
         for (ApricotRelationship r : relationships) {
             String child = r.getChild().getTable().getName();
             String parent = r.getParent().getTable().getName();
 
+            //  populate the parent tables names
             if (child.equals(apricotTable.getName())) {
-                if (parentCnt <= tableSize) {
-                    ReportRow row = indexedRows.get(parentCnt);
+                List<ApricotColumnConstraint> relColumns = r.getChild().getColumns();
+                for (ApricotColumnConstraint acc : relColumns) {
+                    ReportRow row = rows.get(acc.getColumn().getName());
                     row.parentTable = parent;
-                } else {
-                    ReportRow row = new ReportRow();
-                    row.parentTable = parent;
-                    indexedRows.add(row);
-                    tableSize = indexedRows.size();
                 }
-                parentCnt++;
             }
+            
+            //  populate the child tables names
             if (parent.equals(apricotTable.getName())) {
                 if (childCnt <= tableSize) {
                     ReportRow row = indexedRows.get(childCnt);

@@ -137,4 +137,14 @@ public class ApricotTable implements Serializable {
         
         return null;
     }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof ApricotTable) {
+            ApricotTable t = (ApricotTable) o;
+            return this.name.equals(t.name);
+        }
+        
+        return false;
+    }
 }
