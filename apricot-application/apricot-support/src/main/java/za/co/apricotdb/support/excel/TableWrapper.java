@@ -109,7 +109,7 @@ public class TableWrapper {
             
             //  populate the child tables names
             if (parent.equals(apricotTable.getName())) {
-                if (childCnt <= tableSize) {
+                if (childCnt < tableSize) {
                     ReportRow row = indexedRows.get(childCnt);
                     row.childTable = child;
                 } else {

@@ -20,6 +20,7 @@ public class ReportWriterTest {
         wrappers.add(wrapper);
         wrappers.add(wrapper);
         ReportWriter rw = new ReportWriter();
-        rw.createReport(wrappers, "D:\\AntonNazarov\\ApricotReport.xlsx");
+        rw.createReport(wrappers, "..\\..\\apricot-reports\\ApricotReport.xlsx");
+        //  rw.createReport(wrappers, "..\\apricot-application\\apricot-support\\target\\ApricotReport.xlsx");
     }
 }
