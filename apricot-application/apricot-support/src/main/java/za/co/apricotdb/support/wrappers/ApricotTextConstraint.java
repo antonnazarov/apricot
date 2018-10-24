@@ -2,7 +2,14 @@ package za.co.apricotdb.support.wrappers;
 
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
 
+/**
+ * The report specific implementation of the ApricotConstraintWrapper.
+ * 
+ * @author Anton Nazarov
+ * @since 24/10/2018
+ */
 public class ApricotTextConstraint implements ApricotConstraintWrapper {
+
     private ApricotConstraint constraint;
     private String alias;
 
