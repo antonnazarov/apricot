@@ -66,9 +66,16 @@ public class TableWrapper {
     private void populateConstraints() {
         Map<String, Integer> constraintCount = new HashMap<>();
         initConstrainCount(constraintCount);
-        
+
         List<ApricotConstraint> constraints = apricotTable.getConstraints();
-        constraints.sort((ApricotConstraint c1, ApricotConstraint c2) -> c1.getType().getOrder() - c2.getType().getOrder());
+        constraints.sort((ApricotConstraint c1, ApricotConstraint c2) -> {
+            if (c1.getType().getOrder() == c2.getType().getOrder()) {
+                //  use ordinal position of the constraint fields
+                return c1.getColumns().get(0).getColumn().getOrdinalPosition() - c2.getColumns().get(0).getColumn().getOrdinalPosition();
+            }
+            return c1.getType().getOrder() - c2.getType().getOrder();
+        });
+
         for (ApricotConstraint c : constraints) {
             String abbreviation = c.getType().getAbbreviation();
             int cnt = constraintCount.get(c.getType().name());
@@ -106,7 +113,7 @@ public class TableWrapper {
                     row.parentTable = parent;
                 }
             }
-            
+
             //  populate the child tables names
             if (parent.equals(apricotTable.getName())) {
                 if (childCnt < tableSize) {
@@ -141,11 +148,11 @@ public class TableWrapper {
     public List<ReportRow> getRows() {
         return indexedRows;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        
+
         for (ReportRow r : indexedRows) {
             sb.append(r.parentTable).append("\t");
             sb.append(r.ordinalPosition).append("\t");
@@ -154,7 +161,7 @@ public class TableWrapper {
             sb.append(r.constraints).append("\t");
             sb.append(r.childTable).append("\n");
         }
-        
+
         return sb.toString();
     }
 }
