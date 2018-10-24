@@ -25,6 +25,7 @@ public class TableWrapper {
     private List<ApricotRelationship> relationships;
     private Map<String, ReportRow> rows = new LinkedHashMap<>();
     private List<ReportRow> indexedRows = new ArrayList<>();
+    private Map<String, String> constraintsLegend = new LinkedHashMap<>();
 
     public TableWrapper(ApricotTable apricotTable, List<ApricotRelationship> relationships) {
         this.apricotTable = apricotTable;
@@ -83,6 +84,9 @@ public class TableWrapper {
                 abbreviation += String.valueOf(cnt);
             }
 
+            //  populate the constraint legend
+            constraintsLegend.put(abbreviation, c.getName());
+
             for (ApricotColumnConstraint acc : c.getColumns()) {
                 ReportRow row = rows.get(acc.getColumn().getName());
                 if (row.constraints == null) {
@@ -101,6 +105,8 @@ public class TableWrapper {
         int childCnt = 0;
         int tableSize = indexedRows.size();
 
+        relationships.sort((ApricotRelationship r1, ApricotRelationship r2) -> r1.getChild().getTable().getName().compareTo(r2.getChild().getTable().getName()));
+        List<String> children = new ArrayList<>();
         for (ApricotRelationship r : relationships) {
             String child = r.getChild().getTable().getName();
             String parent = r.getParent().getTable().getName();
@@ -116,16 +122,19 @@ public class TableWrapper {
 
             //  populate the child tables names
             if (parent.equals(apricotTable.getName())) {
-                if (childCnt < tableSize) {
-                    ReportRow row = indexedRows.get(childCnt);
-                    row.childTable = child;
-                } else {
-                    ReportRow row = new ReportRow();
-                    row.childTable = child;
-                    indexedRows.add(row);
-                    tableSize = indexedRows.size();
+                if (!children.contains(child)) {
+                    if (childCnt < tableSize) {
+                        ReportRow row = indexedRows.get(childCnt);
+                        row.childTable = child;
+                    } else {
+                        ReportRow row = new ReportRow();
+                        row.childTable = child;
+                        indexedRows.add(row);
+                        tableSize = indexedRows.size();
+                    }
+                    children.add(child);
+                    childCnt++;
                 }
-                childCnt++;
             }
         }
     }
@@ -147,6 +156,10 @@ public class TableWrapper {
 
     public List<ReportRow> getRows() {
         return indexedRows;
+    }
+
+    public Map<String, String> getConstraintsLegend() {
+        return constraintsLegend;
     }
 
     @Override
