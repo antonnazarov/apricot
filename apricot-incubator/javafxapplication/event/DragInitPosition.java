@@ -1,4 +1,4 @@
-package javafxapplication;
+package javafxapplication.event;
 
 import java.io.Serializable;
 

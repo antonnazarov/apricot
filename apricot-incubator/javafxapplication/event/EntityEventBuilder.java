@@ -1,27 +1,19 @@
-package javafxapplication;
+package javafxapplication.event;
 
+import javafxapplication.entity.ApricotEntity;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import static javafxapplication.SimpleEntityBuilder.BORDER_WIDTH_STANDARD;
-import static javafxapplication.SimpleEntityBuilder.BORDER_WIDTH_THICK;
 
 /**
  * A helper class which creates the events,
@@ -67,9 +59,10 @@ public class EntityEventBuilder implements EventBuilder {
 
     private void setFocusToEntity(MouseEvent t) {
         Node sourceNode = (Node) t.getSource();
-
-        sourceNode.requestFocus();
-        setEntityBorderThickness(sourceNode, BORDER_WIDTH_THICK);
+        if (sourceNode instanceof ApricotEntity) {
+            ApricotEntity entity = (ApricotEntity) sourceNode;
+            entity.setSelected(true);
+        }
 
         Parent p = sourceNode.getParent();
         Pane parent = (Pane) p;
@@ -78,8 +71,9 @@ public class EntityEventBuilder implements EventBuilder {
         for (Node n : children) {
             if (n != sourceNode) {
                 sortedCol.add(n);
-                if (n instanceof VBox) {
-                    setEntityBorderThickness(n, BORDER_WIDTH_STANDARD);
+                if (n instanceof ApricotEntity) {
+                    ApricotEntity entity = (ApricotEntity) n;
+                    entity.setSelected(false);
                 }
             }
         }
@@ -87,24 +81,6 @@ public class EntityEventBuilder implements EventBuilder {
         sortedCol.add(sourceNode);
         children.removeAll(children);
         children.addAll(sortedCol);
-    }
-
-    /**
-     * The current focused entity
-     */
-    private void setEntityBorderThickness(Node sourceNode, double borderWidth) {
-        VBox entity = (VBox) sourceNode;
-        GridPane primary = (GridPane) entity.getChildren().get(1);
-        BorderStroke bs = new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(0), new BorderWidths(borderWidth));
-        Border b = new Border(bs);
-        primary.setBorder(b);
-
-        GridPane nonPrimary = (GridPane) entity.getChildren().get(2);
-        bs = new BorderStroke(Color.TRANSPARENT, Color.BLACK, Color.BLACK, Color.BLACK,
-                BorderStrokeStyle.NONE, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID,
-                new CornerRadii(0), new BorderWidths(borderWidth), Insets.EMPTY);
-        b = new Border(bs);
-        nonPrimary.setBorder(b);
     }
 
     @Override
@@ -163,6 +139,10 @@ public class EntityEventBuilder implements EventBuilder {
                 if (primaryStage.getScene().getCursor() != Cursor.DEFAULT) {
                     primaryStage.getScene().setCursor(Cursor.DEFAULT);
                 }
+                sourceNode.setLayoutX(sourceNode.getLayoutX() + sourceNode.getTranslateX());
+                sourceNode.setLayoutY(sourceNode.getLayoutY() + sourceNode.getTranslateY());
+                sourceNode.setTranslateX(0);
+                sourceNode.setTranslateY(0);
             }
         });
     }

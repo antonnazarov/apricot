@@ -1,4 +1,4 @@
-package javafxapplication;
+package javafxapplication.event;
 
 /**
  * There are several types of possible dragging.

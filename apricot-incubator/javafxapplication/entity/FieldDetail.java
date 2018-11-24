@@ -1,4 +1,4 @@
-package javafxapplication;
+package javafxapplication.entity;
 
 public class FieldDetail {
     private String name;

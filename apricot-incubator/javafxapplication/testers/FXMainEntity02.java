@@ -1,4 +1,4 @@
-package javafxapplication;
+package javafxapplication.testers;
 
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -26,6 +26,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafxapplication.event.DragInitPosition;
 
 /**
  * Attempt to draw an entity.
