@@ -8,6 +8,13 @@ import javafx.scene.shape.Shape;
 import javafxapplication.relationship.shape.BasicLinkPrimitivesBuilder;
 import javafxapplication.relationship.shape.LinkPrimitivesBuilder;
 
+/**
+ * This class is responsible for drawings of all the graphic primitives of the 
+ * simpliest (Ordinary) link.
+ * 
+ * @author Anton Nazarov
+ * @since 20/11/2018
+ */
 public class OrdinaryLinkBuilder implements EntityLinkBuilder {
 
     LinkPrimitivesBuilder pb = new BasicLinkPrimitivesBuilder();
@@ -21,20 +28,23 @@ public class OrdinaryLinkBuilder implements EntityLinkBuilder {
         Point2D startPoint = getStartPoint(link.getParent(), link.getChild(), link.getPrimaryFieldLayoutY());
         Point2D endPoint = getEndPoint(link.getParent(), link.getChild(), link.getForeignFieldLayoutY());
 
+        Shape start = pb.getOptionalStart();
+        start.setLayoutY(startPoint.getY() - LinkPrimitivesBuilder.OPTIONAL_START_LENGTH/2);
         double horDist = link.getParent().getHorizontalDistance(link.getChild());
         if (isParentLeft(link.getParent(), link.getChild())) {
             p = buildPolyline(startPoint, endPoint, horDist);
             link.setMiddleStepLayoutX(startPoint.getX() + horDist / 2);
             end = pb.getEnd(endPoint.subtract(new Point2D(LinkPrimitivesBuilder.LINK_END_DIAMETER, 0)));
+            start.setLayoutX(startPoint.getX());
         } else {
             p = buildPolyline(endPoint, startPoint, horDist);
             link.setMiddleStepLayoutX(endPoint.getX() + horDist / 2);
              end = pb.getEnd(endPoint.add(new Point2D(LinkPrimitivesBuilder.LINK_END_DIAMETER, 0)));
+             start.setLayoutX(startPoint.getX() - LinkPrimitivesBuilder.OPTIONAL_START_LENGTH);
         }
-        
 
 // Group g = new OrdinaryShapeGroup(p);
-        Group g = new Group(p, end);
+        Group g = new Group(p, end, start);
 
         return g;
     }

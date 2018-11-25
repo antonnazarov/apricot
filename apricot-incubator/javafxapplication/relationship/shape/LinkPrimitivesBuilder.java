@@ -11,6 +11,7 @@ import javafx.scene.shape.Shape;
  */
 public interface LinkPrimitivesBuilder {
     static final double LINK_END_DIAMETER = 6;
+    static final double OPTIONAL_START_LENGTH = 12;
 
     Shape getOptionalStart();
 

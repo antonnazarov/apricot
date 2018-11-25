@@ -1,8 +1,10 @@
 package javafxapplication.relationship.shape;
 
 import javafx.geometry.Point2D;
+import javafx.geometry.Point3D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
 /**
@@ -15,7 +17,12 @@ public class BasicLinkPrimitivesBuilder implements LinkPrimitivesBuilder {
 
     @Override
     public Shape getOptionalStart() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Rectangle r = new Rectangle(OPTIONAL_START_LENGTH, OPTIONAL_START_LENGTH);
+        r.setRotate(45);
+        r.setFill(Color.WHITE);
+        r.setStroke(Color.BLACK);
+        
+        return r;
     }
 
     @Override
@@ -25,7 +32,7 @@ public class BasicLinkPrimitivesBuilder implements LinkPrimitivesBuilder {
 
     @Override
     public Shape getEnd(Point2D p) {
-        Circle c = new Circle(LinkPrimitivesBuilder.LINK_END_DIAMETER);
+        Circle c = new Circle(LINK_END_DIAMETER);
         c.setCenterX(p.getX());
         c.setCenterY(p.getY());
         
@@ -33,5 +40,4 @@ public class BasicLinkPrimitivesBuilder implements LinkPrimitivesBuilder {
         
         return c;
     }
-    
 }
