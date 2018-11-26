@@ -35,12 +35,12 @@ public class OrdinaryLinkBuilder implements EntityLinkBuilder {
             p = buildPolyline(startPoint, endPoint, horDist);
             link.setMiddleStepLayoutX(startPoint.getX() + horDist / 2);
             end = pb.getEnd(endPoint.subtract(new Point2D(LinkPrimitivesBuilder.LINK_END_DIAMETER, 0)));
-            start.setLayoutX(startPoint.getX());
+            start.setLayoutX(startPoint.getX() + LinkPrimitivesBuilder.OPTIONAL_START_CORRECTION);
         } else {
             p = buildPolyline(endPoint, startPoint, horDist);
             link.setMiddleStepLayoutX(endPoint.getX() + horDist / 2);
              end = pb.getEnd(endPoint.add(new Point2D(LinkPrimitivesBuilder.LINK_END_DIAMETER, 0)));
-             start.setLayoutX(startPoint.getX() - LinkPrimitivesBuilder.OPTIONAL_START_LENGTH);
+             start.setLayoutX(startPoint.getX() - LinkPrimitivesBuilder.OPTIONAL_START_LENGTH - LinkPrimitivesBuilder.OPTIONAL_START_CORRECTION);
         }
 
 // Group g = new OrdinaryShapeGroup(p);

@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
 public class BorderStrokeHelper {
 
     public BorderStroke getPrimaryMasterBorderStroke(double borderWidth) {
-        return new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(0), new BorderWidths(borderWidth));
+        return new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(borderWidth));
     }
 
     public BorderStroke getPrimarySlaveBorderStroke(double borderWidth) {
@@ -18,14 +18,12 @@ public class BorderStrokeHelper {
     }
 
     public BorderStroke getNonPrimaryMasterBorderStroke(double borderWidth) {
-        return new BorderStroke(Color.TRANSPARENT, Color.BLACK, Color.BLACK, Color.BLACK,
-                BorderStrokeStyle.NONE, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID,
-                new CornerRadii(0), new BorderWidths(borderWidth), Insets.EMPTY);
+        return new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID,
+                CornerRadii.EMPTY, new BorderWidths(0, borderWidth, borderWidth, borderWidth), Insets.EMPTY);
     }
 
     public BorderStroke getNonPrimarySlaveBorderStroke(double borderWidth) {
-        return new BorderStroke(Color.TRANSPARENT, Color.BLACK, Color.BLACK, Color.BLACK,
-                BorderStrokeStyle.NONE, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID,
-                new CornerRadii(0, 0, 15, 15, false), new BorderWidths(borderWidth), Insets.EMPTY);
+        return new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID,
+                new CornerRadii(0, 0, 15, 15, false), new BorderWidths(0, borderWidth, borderWidth, borderWidth), Insets.EMPTY);
     }
 }

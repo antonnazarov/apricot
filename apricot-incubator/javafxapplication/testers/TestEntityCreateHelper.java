@@ -475,8 +475,8 @@ public class TestEntityCreateHelper {
                 entity.setLayoutY(layoutY);
                 entityCanvas.getChildren().add(entity);
 
-                layoutX += 20;
-                layoutY += 20;
+                layoutX += 320;
+                layoutY += 320;
             }
         }
     }

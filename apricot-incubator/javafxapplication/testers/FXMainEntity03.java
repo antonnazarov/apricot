@@ -46,7 +46,7 @@ public class FXMainEntity03 extends Application {
         //  helper.buildAllEntities(primaryStage, entityCanvas, new String[] {"party", "role_player", "award", "party_role", "work_permit", "fsb_adviser_registration", "fsp_registration"});
         //  helper.buildAllEntities(primaryStage, entityCanvas, new String[] {"party", "fpa_education_course"});
         //  helper.buildAllEntities(primaryStage, entityCanvas);
-        helper.buildAllEntities(primaryStage, entityCanvas, new String[] {"fsp_registration", "fsb_adviser_registration", "party"});
+        helper.buildAllEntities(primaryStage, entityCanvas, new String[]{"fsp_registration", "fsb_adviser_registration", "party"});
 
         root.getChildren().add(topBox);
 
@@ -70,10 +70,10 @@ public class FXMainEntity03 extends Application {
             for (Node n : entityCanvas.getChildren()) {
                 if (n instanceof VBox) {
                     VBox ent = (VBox) n;
-                    System.out.println(n.getId() + "-> width=" + ent.getWidth() + 
-                            ", height=" + ent.getHeight() +
-                            ", LayoutX=" + ent.getLayoutX() + ", LayoutY=" + ent.getLayoutY() +
-                            ", TranslateX=" + ent.getTranslateX() + ", TranslateY=" + ent.getTranslateY());
+                    System.out.println(n.getId() + "-> width=" + ent.getWidth()
+                            + ", height=" + ent.getHeight()
+                            + ", LayoutX=" + ent.getLayoutX() + ", LayoutY=" + ent.getLayoutY()
+                            + ", TranslateX=" + ent.getTranslateX() + ", TranslateY=" + ent.getTranslateY());
                 }
             }
         });
@@ -122,18 +122,28 @@ public class FXMainEntity03 extends Application {
         btn.setOnAction(event -> {
             ApricotEntityLinkManager manager = new BasicEntityLinkManager();
             manager.createEntityLink("fsp_registration", "fsb_adviser_registration", "id", "fsp_registration_id", RelationshipType.IDENTIFYING, entityCanvas);
-            
+
 //            ApricotEntityLinkDeprecated r = new ApricotEntityLinkDeprecated("fsp_registration", "fsb_adviser_registration", 
 //                    "id", "fsp_registration_id", RelationshipType.IDENTIFYING, entityCanvas);
 //            r.draw();
         });
         topBox.getChildren().add(btn);
-        
+
         Scene scene = new Scene(root, 1200, 800);
 
         primaryStage.setTitle("Many Entities Test");
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        postProcess(entityCanvas);
+    }
+
+    private void postProcess(Pane entityCanvas) {
+        DiagramPanelManager m = new DiagramPanelManager();
+        m.adjustDiagramPanel(entityCanvas);
+        ApricotEntityLinkManager manager = new BasicEntityLinkManager();
+        manager.createEntityLink("fsp_registration", "fsb_adviser_registration", "id", "fsp_registration_id", RelationshipType.IDENTIFYING, entityCanvas);
+
     }
 
     public static void main(String[] args) {

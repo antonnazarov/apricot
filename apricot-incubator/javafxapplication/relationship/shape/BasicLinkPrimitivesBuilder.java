@@ -1,7 +1,6 @@
 package javafxapplication.relationship.shape;
 
 import javafx.geometry.Point2D;
-import javafx.geometry.Point3D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;

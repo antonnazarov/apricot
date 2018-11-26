@@ -36,10 +36,11 @@ public class ApricotEntity extends VBox {
     public static final double BORDER_WIDTH_STANDARD = 1;
     public static final double BORDER_WIDTH_THICK = 4;
     public static final Insets STANDARD_PANEL_INSETS = new Insets(5, 10, 5, 10);
-    public static final Insets REDUCED_PANEL_INSETS = new Insets(2, 7, 2, 7);
+    public static final Insets REDUCED_PANEL_INSETS = new Insets(5, 7, 5, 7);
+    public static final Insets REDUCED_PANEL_INSETS_PK = new Insets(2, 7, 2, 7);
     public static final Background MASTER_PANEL_BACKGROUND = new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY));
-    public static final Background SLAVE_PANEL_BACKGROUND_PK = new Background(new BackgroundFill(Color.WHITE, new CornerRadii(15, 15, 0, 0, false), Insets.EMPTY));
-    public static final Background SLAVE_PANEL_BACKGROUND_NPK = new Background(new BackgroundFill(Color.WHITE, new CornerRadii(0, 0, 15, 15, false), Insets.EMPTY));
+    public static final Background SLAVE_PANEL_BACKGROUND_PK = new Background(new BackgroundFill(Color.WHITE, new CornerRadii(18, 18, 0, 0, false), Insets.EMPTY));
+    public static final Background SLAVE_PANEL_BACKGROUND_NPK = new Background(new BackgroundFill(Color.WHITE, new CornerRadii(0, 0, 18, 18, false), Insets.EMPTY));
     public static final double FIELDS_HORIZONTAL_GAP = 10;
     public static final double FIELDS_VERTICAL_GAP = 3;
     public static final String STANDARD_FONT = "Helvetica";
@@ -54,7 +55,7 @@ public class ApricotEntity extends VBox {
     private Map<String, Text> fieldsMapping = new HashMap<>();
 
     private BorderStrokeHelper borderStrokeHelper = new BorderStrokeHelper();
-    
+
     private List<ApricotEntityLink> entityLinks = new ArrayList<>();
 
     /**
@@ -69,15 +70,15 @@ public class ApricotEntity extends VBox {
 
         init();
     }
-    
+
     public Text getTextObjectForField(String fieldName) {
         return fieldsMapping.get(fieldName);
     }
-    
+
     public void addEntityLink(ApricotEntityLink link) {
         entityLinks.add(link);
     }
-    
+
     public double getHorizontalDistance(ApricotEntity entity) {
         Point2D parentTopLeft = new Point2D(this.getLayoutX(), this.getLayoutY());
         Point2D parentBottomRight = new Point2D(this.getLayoutX() + this.getWidth(), this.getLayoutY() + this.getHeight());
@@ -272,6 +273,7 @@ public class ApricotEntity extends VBox {
                 bs = borderStrokeHelper.getNonPrimaryMasterBorderStroke(BORDER_WIDTH_THICK);
                 b = new Border(bs);
                 npk.setBorder(b);
+
             } else {
                 bs = borderStrokeHelper.getPrimarySlaveBorderStroke(BORDER_WIDTH_THICK);
                 b = new Border(bs);
@@ -280,9 +282,10 @@ public class ApricotEntity extends VBox {
                 bs = borderStrokeHelper.getNonPrimarySlaveBorderStroke(BORDER_WIDTH_THICK);
                 b = new Border(bs);
                 npk.setBorder(b);
-            }
 
-            pk.setPadding(REDUCED_PANEL_INSETS);
+            }
+            
+            pk.setPadding(REDUCED_PANEL_INSETS_PK);
             npk.setPadding(REDUCED_PANEL_INSETS);
         }
         if (!slave) {
