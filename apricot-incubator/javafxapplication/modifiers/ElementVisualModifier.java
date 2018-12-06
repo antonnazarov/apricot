@@ -1,6 +1,6 @@
 package javafxapplication.modifiers;
 
-import javafxapplication.canvas.ApricotERElement;
+import javafxapplication.canvas.ApricotElementShape;
 
 /**
  * The visual modifiers behaves as a "Command"- design pattern and change the current appearance of the element.
@@ -10,5 +10,5 @@ import javafxapplication.canvas.ApricotERElement;
  */
 public interface ElementVisualModifier {
     
-    void modify(ApricotERElement element);
+    void modify(ApricotElementShape shape);
 }

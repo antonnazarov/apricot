@@ -1,6 +1,6 @@
 package javafxapplication.event;
 
-import javafxapplication.entity.ApricotEntity;
+import javafxapplication.entity.ApricotBBBEntity;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.ObservableList;
@@ -59,8 +59,8 @@ public class EntityEventBuilder implements EventBuilder {
 
     private void setFocusToEntity(MouseEvent t) {
         Node sourceNode = (Node) t.getSource();
-        if (sourceNode instanceof ApricotEntity) {
-            ApricotEntity entity = (ApricotEntity) sourceNode;
+        if (sourceNode instanceof ApricotBBBEntity) {
+            ApricotBBBEntity entity = (ApricotBBBEntity) sourceNode;
             entity.setSelected(true);
         }
 
@@ -71,8 +71,8 @@ public class EntityEventBuilder implements EventBuilder {
         for (Node n : children) {
             if (n != sourceNode) {
                 sortedCol.add(n);
-                if (n instanceof ApricotEntity) {
-                    ApricotEntity entity = (ApricotEntity) n;
+                if (n instanceof ApricotBBBEntity) {
+                    ApricotBBBEntity entity = (ApricotBBBEntity) n;
                     entity.setSelected(false);
                 }
             }

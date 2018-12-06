@@ -5,10 +5,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafxapplication.entity.ApricotEntity;
+import javafxapplication.entity.ApricotBBBEntity;
 import javafxapplication.entity.FieldDetail;
 
 /**
@@ -470,7 +469,7 @@ public class TestEntityCreateHelper {
                     || entitiesToCreate == null) {
                 List<FieldDetail> fields = entities.get(entityName);
 
-                ApricotEntity entity = new ApricotEntity(entityName, fields, primaryStage);
+                ApricotBBBEntity entity = new ApricotBBBEntity(entityName, fields, primaryStage);
                 entity.setLayoutX(layoutX);
                 entity.setLayoutY(layoutY);
                 entityCanvas.getChildren().add(entity);

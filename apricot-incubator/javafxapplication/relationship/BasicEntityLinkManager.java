@@ -1,7 +1,7 @@
 package javafxapplication.relationship;
 
 import javafx.scene.Group;
-import javafxapplication.entity.ApricotEntity;
+import javafxapplication.entity.ApricotBBBEntity;
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -18,8 +18,8 @@ public class BasicEntityLinkManager implements ApricotEntityLinkManager {
     public static final double MINIMAL_SEGMENT_LENGTH = 20;
     public static final double VERTICAL_CORRECTION = -4;
 
-    private ApricotEntity parent;
-    private ApricotEntity child;
+    private ApricotBBBEntity parent;
+    private ApricotBBBEntity child;
     Text primaryField;
     Text foreignField;
 
@@ -65,13 +65,13 @@ public class BasicEntityLinkManager implements ApricotEntityLinkManager {
 
     private void findParentAndChild(String parentEntityName, String childEntityName, Pane entityCanvas) {
         for (Node n : entityCanvas.getChildren()) {
-            if (n instanceof ApricotEntity) {
+            if (n instanceof ApricotBBBEntity) {
                 if (n.getId().equals(parentEntityName)) {
-                    parent = (ApricotEntity) n;
+                    parent = (ApricotBBBEntity) n;
                 }
 
                 if (n.getId().equals(childEntityName)) {
-                    child = (ApricotEntity) n;
+                    child = (ApricotBBBEntity) n;
                 }
             }
         }

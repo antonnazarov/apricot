@@ -3,7 +3,7 @@ package javafxapplication.align;
 import java.util.List;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
-import javafxapplication.entity.ApricotEntity;
+import javafxapplication.entity.ApricotBBBEntity;
 
 public class DiagramPanelManager {
 
@@ -25,8 +25,8 @@ public class DiagramPanelManager {
         Coordinates c = new Coordinates(Double.MAX_VALUE, Double.MAX_VALUE, Double.MIN_VALUE, Double.MIN_VALUE);
         List<Node> entities = diagramPanel.getChildren();
         for (Node n : entities) {
-            if (n instanceof ApricotEntity) {
-                ApricotEntity b = (ApricotEntity) n;
+            if (n instanceof ApricotBBBEntity) {
+                ApricotBBBEntity b = (ApricotBBBEntity) n;
                 double left = b.getLayoutX() + b.getTranslateX();
                 double right = left + b.getWidth();
                 double top = b.getLayoutY() + b.getTranslateY();
@@ -72,8 +72,8 @@ public class DiagramPanelManager {
 
         List<Node> entities = diagramPanel.getChildren();
         for (Node n : entities) {
-            if (n instanceof ApricotEntity) {
-                ApricotEntity b = (ApricotEntity) n;
+            if (n instanceof ApricotBBBEntity) {
+                ApricotBBBEntity b = (ApricotBBBEntity) n;
                 b.setLayoutX(b.getLayoutX() + disp.getLeft());
                 b.setLayoutY(b.getLayoutY() + disp.getTop());
             }

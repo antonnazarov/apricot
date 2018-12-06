@@ -1,6 +1,6 @@
 package javafxapplication.relationship;
 
-import javafxapplication.entity.ApricotEntity;
+import javafxapplication.entity.ApricotBBBEntity;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.shape.Polyline;
@@ -57,7 +57,7 @@ public class OrdinaryLinkBuilder implements EntityLinkBuilder {
         );
     }
 
-    private Point2D getStartPoint(ApricotEntity parent, ApricotEntity child, double primaryFieldLayoutY) {
+    private Point2D getStartPoint(ApricotBBBEntity parent, ApricotBBBEntity child, double primaryFieldLayoutY) {
         Point2D startPoint = null;
         double x = 0;
         double y = 0;
@@ -72,7 +72,7 @@ public class OrdinaryLinkBuilder implements EntityLinkBuilder {
         return startPoint;
     }
 
-    private Point2D getEndPoint(ApricotEntity parent, ApricotEntity child, double foreignFieldLayoutY) {
+    private Point2D getEndPoint(ApricotBBBEntity parent, ApricotBBBEntity child, double foreignFieldLayoutY) {
         Point2D endPoint = null;
         double x = 0;
         double y = 0;
@@ -87,7 +87,7 @@ public class OrdinaryLinkBuilder implements EntityLinkBuilder {
         return endPoint;
     }
 
-    private boolean isParentLeft(ApricotEntity parent, ApricotEntity child) {
+    private boolean isParentLeft(ApricotBBBEntity parent, ApricotBBBEntity child) {
         return parent.getLayoutX() < child.getLayoutX();
     }
 }

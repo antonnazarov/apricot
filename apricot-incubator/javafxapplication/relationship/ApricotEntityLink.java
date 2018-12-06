@@ -1,18 +1,9 @@
 package javafxapplication.relationship;
 
-import javafxapplication.entity.ApricotEntity;
+import javafxapplication.canvas.ApricotERElement;
+import javafxapplication.relationship.shape.ApricotLinkShape;
 
-public interface ApricotEntityLink {
-
-    ApricotEntity getParent();
-
-    ApricotEntity getChild();
+public interface ApricotEntityLink extends ApricotERElement {
     
-    double getPrimaryFieldLayoutY();
-    
-    double getForeignFieldLayoutY();
-    
-    EntityLinkBuilder getLinkBuilder();
-    
-    RelationshipType getRelationshipType();
+    ApricotLinkShape getLinkShape();
 }

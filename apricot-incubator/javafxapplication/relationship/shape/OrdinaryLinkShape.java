@@ -1,6 +1,5 @@
 package javafxapplication.relationship.shape;
 
-import javafx.scene.Group;
 import javafx.scene.shape.Shape;
 import javafxapplication.relationship.ApricotEntityLink;
 import javafxapplication.relationship.RelationshipType;
@@ -10,16 +9,11 @@ import javafxapplication.relationship.RelationshipType;
  * 
  * @author Anton Nazarov
  */
-public class OrdinaryShapeGroup extends Group implements ApricotShapeGroup {
+public class OrdinaryLinkShape extends ApricotLinkShape {
 
-    private ApricotEntityLink link;
-    private Shape polyline;
-    private Shape startSign;
-    private Shape endSign;
     private Shape rulerX;
-    private RelationshipType type;
     
-    public OrdinaryShapeGroup(Shape polyline, Shape startSign, Shape endSign, Shape rulerX, ApricotEntityLink link) {
+    public OrdinaryLinkShape(Shape polyline, Shape startSign, Shape endSign, Shape rulerX, ApricotEntityLink link) {
         super(polyline, startSign, endSign, rulerX);
         
         this.polyline = polyline;

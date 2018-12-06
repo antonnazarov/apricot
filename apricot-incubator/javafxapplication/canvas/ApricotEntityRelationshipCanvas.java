@@ -1,7 +1,8 @@
 package javafxapplication.canvas;
 
 import javafxapplication.entity.ApricotEntity;
-import javafxapplication.relationship.ApricotEntityLink;
+import javafxapplication.entity.shape.ApricotEntityShape;
+import javafxapplication.relationship.shape.ApricotLinkShape;
 
 /**
  * The canvas on which the ER- diagram will be drawn.
@@ -11,9 +12,9 @@ import javafxapplication.relationship.ApricotEntityLink;
  */
 public interface ApricotEntityRelationshipCanvas {
 
-    void addEntity(ApricotEntity entity);
+    void addEntity(ApricotEntityShape entity);
 
-    void addLink(ApricotEntityLink relationship);
+    void addLink(ApricotLinkShape relationship);
 
     void orderElements();
 

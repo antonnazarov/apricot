@@ -1,6 +1,6 @@
 package javafxapplication.relationship;
 
-import javafxapplication.entity.ApricotEntity;
+import javafxapplication.entity.ApricotBBBEntity;
 
 /**
  * Implementation of the Ordinary Link.
@@ -8,11 +8,11 @@ import javafxapplication.entity.ApricotEntity;
  * @author Anton Nazarov
  * @since 22/11/2018
  */
-public class ApricotOrdinaryLink extends ApricotGenericLink {
+public class ApricotOrdinaryLink extends ApricotBasicEntityLink {
 
     private double middleStepLayoutX;
 
-    public ApricotOrdinaryLink(ApricotEntity parent, ApricotEntity child,
+    public ApricotOrdinaryLink(ApricotBBBEntity parent, ApricotBBBEntity child,
             double primaryFieldLayoutY, double foreignFieldLayoutY,
             RelationshipType type) {
         super(parent, child, primaryFieldLayoutY, foreignFieldLayoutY, type);
