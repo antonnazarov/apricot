@@ -105,7 +105,9 @@ public class TableWrapper {
         int childCnt = 0;
         int tableSize = indexedRows.size();
 
-        relationships.sort((ApricotRelationship r1, ApricotRelationship r2) -> r1.getChild().getTable().getName().compareTo(r2.getChild().getTable().getName()));
+        relationships.sort((ApricotRelationship r1, ApricotRelationship r2) -> 
+                r1.getChild().getTable().getName()
+                        .compareTo(r2.getChild().getTable().getName()));
         List<String> children = new ArrayList<>();
         for (ApricotRelationship r : relationships) {
             String child = r.getChild().getTable().getName();

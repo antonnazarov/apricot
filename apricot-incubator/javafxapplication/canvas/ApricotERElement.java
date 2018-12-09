@@ -1,5 +1,7 @@
 package javafxapplication.canvas;
 
+import javafx.scene.Node;
+
 /**
  * A representation of the ER- element (entity or relationship so far).
  *
@@ -13,4 +15,8 @@ public interface ApricotERElement {
     ElementStatus getElementStatus();
     
     void buildShape();
+    
+    Node getShape();
+    
+    ElementType getElementType();
 }

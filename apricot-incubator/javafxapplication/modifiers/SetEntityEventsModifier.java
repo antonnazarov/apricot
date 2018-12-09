@@ -1,7 +1,7 @@
 package javafxapplication.modifiers;
 
-import javafx.scene.layout.VBox;
 import javafxapplication.canvas.ApricotElementShape;
+import javafxapplication.canvas.ApricotEntityRelationshipCanvas;
 import javafxapplication.entity.shape.ApricotEntityShape;
 import javafxapplication.event.EntityOnMousePressedEventHandler;
 
@@ -12,6 +12,12 @@ import javafxapplication.event.EntityOnMousePressedEventHandler;
  * @since 04/12/2018
  */
 public class SetEntityEventsModifier implements ElementVisualModifier {
+    
+    ApricotEntityRelationshipCanvas canvas = null;
+    
+    public SetEntityEventsModifier(ApricotEntityRelationshipCanvas canvas) {
+        this.canvas = canvas;
+    }
 
     @Override
     public void modify(ApricotElementShape shape) {
@@ -19,7 +25,7 @@ public class SetEntityEventsModifier implements ElementVisualModifier {
             ApricotEntityShape entityShape = (ApricotEntityShape) shape;
             String tableName = entityShape.getEntity().getTableName();
             
-            entityShape.setOnMousePressed(new EntityOnMousePressedEventHandler(tableName));
+            entityShape.setOnMousePressed(new EntityOnMousePressedEventHandler(tableName, canvas));
         }
     }
 }

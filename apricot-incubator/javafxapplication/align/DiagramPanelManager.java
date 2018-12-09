@@ -5,6 +5,10 @@ import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafxapplication.entity.ApricotBBBEntity;
 
+/**
+ * @deprecated
+ *
+ */
 public class DiagramPanelManager {
 
     public static final double DIAGRAM_PANEL_OFFSET = 10;

@@ -13,6 +13,7 @@ import javafx.stage.Stage;
  *
  * @author Anton Nazarov
  * @since 19/11/2018
+ * @deprecated
  */
 public class SimpleGridEntityAllocator implements AlignCommand {
 

@@ -1,12 +1,13 @@
 package javafxapplication.modifiers;
 
-import javafxapplication.canvas.ApricotERElement;
+import javafxapplication.canvas.ApricotElementShape;
 
 public class SlaveEntitySelectModifier implements ElementVisualModifier {
 
     @Override
-    public void modify(ApricotERElement element) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void modify(ApricotElementShape shape) {
+        // TODO Auto-generated method stub
+        
     }
     
 }

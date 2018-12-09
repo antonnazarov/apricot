@@ -1,5 +1,10 @@
 package javafxapplication.align;
 
+/**
+ * 
+ * @deprecated
+ *
+ */
 public class Coordinates {
 
     private double left = 0;

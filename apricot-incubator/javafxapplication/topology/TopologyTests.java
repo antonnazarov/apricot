@@ -6,6 +6,7 @@ import java.util.List;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -29,6 +30,7 @@ public class TopologyTests extends Application {
     @Override
     public void start(Stage primaryStage) {
         
+        TopologyManager m = new TopologyManager();
         Path p = getPath();
         VBox root = new VBox();
         Pane pane = new Pane();
@@ -40,16 +42,16 @@ public class TopologyTests extends Application {
             @Override
             public void handle(ActionEvent event) {
                 List<Rectangle2D> rectangles = getRectangles();
-                TopologyManager m = new TopologyManager();
-                Path recalcPath = m.recalculatePath(p, rectangles);
+                Path tildas = new Path();
+                tildas.setStrokeWidth(2);
+                Path recalcPath = m.recalculatePath(p, rectangles, tildas);
                 recalcPath.setStrokeWidth(2);
                 recalcPath.setStroke(Color.LIGHTGRAY);
                 
                 pane.getChildren().add(recalcPath);
+                pane.getChildren().add(tildas);
             }
         });
-
-        
 
         root.getChildren().add(btn);
 
@@ -62,6 +64,14 @@ public class TopologyTests extends Application {
             pane.getChildren().add(r);
         }
         
+        /*
+        Path tilda1 = m.getTilda(new Point2D(310, 310), true);
+        tilda1.setStrokeWidth(2);
+        pane.getChildren().add(tilda1);
+        Path tilda2 = m.getTilda(new Point2D(380, 380), false);
+        tilda2.setStrokeWidth(2);
+        pane.getChildren().add(tilda2);
+        */
 
         root.getChildren().add(pane);
 
@@ -106,6 +116,11 @@ public class TopologyTests extends Application {
         p.getElements().add(new HLineTo(100));
         p.getElements().add(new VLineTo(550));
         p.getElements().add(new HLineTo(600));
+        p.getElements().add(new VLineTo(650));
+        p.getElements().add(new HLineTo(250));
+        p.getElements().add(new VLineTo(80));
+        p.getElements().add(new HLineTo(320));
+        p.getElements().add(new VLineTo(750));
 
         p.setStrokeWidth(2);
 

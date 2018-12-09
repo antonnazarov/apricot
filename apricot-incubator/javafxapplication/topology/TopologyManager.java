@@ -5,6 +5,7 @@ import java.util.List;
 
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.shape.CubicCurveTo;
 import javafx.scene.shape.HLineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
@@ -21,7 +22,7 @@ public class TopologyManager {
     
     private IntersectionManager im = new IntersectionManager();
 
-    public Path recalculatePath(Path path, List<Rectangle2D> rectangles) {
+    public Path recalculatePath(Path path, List<Rectangle2D> rectangles, Path tildas) {
 
         Path resultPath = new Path();
 
@@ -31,7 +32,7 @@ public class TopologyManager {
             for (LineSegment s : segments) {
                 if (intersects(s, r)) {
                     // handle only if intersects
-                    im.intersect(s, r, resultPath);
+                    im.intersect(s, r, resultPath, tildas, rectangles);
                 }
             }
         }

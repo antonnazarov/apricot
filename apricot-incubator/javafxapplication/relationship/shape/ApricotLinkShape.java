@@ -3,6 +3,7 @@ package javafxapplication.relationship.shape;
 import javafx.scene.Group;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
+import javafxapplication.canvas.ApricotElementShape;
 import javafxapplication.relationship.ApricotEntityLink;
 
 /**
@@ -11,7 +12,7 @@ import javafxapplication.relationship.ApricotEntityLink;
  * @author Anton Nazarov
  * @since 27/11/2018
  */
-public abstract class ApricotLinkShape extends Group {
+public abstract class ApricotLinkShape extends Group implements ApricotElementShape {
     
     private final ApricotEntityLink entityLink;
     private Path path;

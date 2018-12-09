@@ -1,11 +1,14 @@
 package javafxapplication.canvas;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
 import javafx.scene.layout.Pane;
+import javafxapplication.align.OrderManager;
 import javafxapplication.entity.ApricotEntity;
-import javafxapplication.entity.shape.ApricotEntityShape;
-import javafxapplication.relationship.shape.ApricotLinkShape;
+import javafxapplication.relationship.ApricotEntityLink;
 
 /**
  * The basic implementation of the Apricot- canvas.
@@ -15,42 +18,55 @@ import javafxapplication.relationship.shape.ApricotLinkShape;
  */
 public class ApricotBasicCanvas extends Pane implements ApricotEntityRelationshipCanvas {
 
-    private final Map<String, ApricotEntityShape> entities = new HashMap<>();
-    // private List<ApricotEntityLink> links = new ArrayList<>();
+    private final List<ApricotERElement> elements = new ArrayList<>();
+    private final Map<String, ApricotEntity> entities = new HashMap<>();
+    private final List<ApricotEntityLink> links = new ArrayList<>();
 
     /**
      * Register new Entity Shape into the canvas.
      */
-    @Override
-    public void addEntity(ApricotEntityShape entityShape) {
-        ApricotEntity e = entityShape.getEntity();
-        entities.put(e.getTableName(), entityShape);
-
-        // draw/redraw the element
-        if (this.getChildren().contains(entityShape)) {
-            this.getChildren().remove(entityShape);
+    @Override   
+    public void addElement(ApricotERElement element) {
+        elements.add(element);
+        if (element.getElementType() == ElementType.ENTITY) {
+            ApricotEntity entity = (ApricotEntity) element;
+            entities.put(entity.getTableName(), entity);
+        } else if (element.getElementType() == ElementType.LINK) {
+            ApricotEntityLink link = (ApricotEntityLink) element;
+            links.add(link);
         }
-        this.getChildren().add(entityShape);
+        
+        this.getChildren().add(element.getShape());
     }
 
     @Override
-    public void addLink(ApricotLinkShape relationship) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void orderElements() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void orderElements(OrderManager orderManager) {
+        orderManager.order(this);
     }
 
     @Override
     public ApricotEntity findEntityByName(String name) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return entities.get(name);
     }
 
     @Override
-    public void deleteElement(ApricotERElement element) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void removeElement(ApricotERElement element) {
+        elements.remove(element);
+        if (element.getElementType() == ElementType.ENTITY) {
+            entities.remove(((ApricotEntity)element).getTableName());
+        }
+        this.getChildren().remove(element.getShape());
     }
 
+    @Override
+    public void sendToFront(ApricotEntity entity) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void changeAllElementsStatus(ElementStatus status) {
+        // TODO Auto-generated method stub
+        
+    }
 }

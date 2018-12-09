@@ -1,9 +1,14 @@
 package javafxapplication.entity;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import javafx.scene.Node;
 import javafxapplication.canvas.ElementStatus;
+import javafxapplication.canvas.ElementType;
 import javafxapplication.entity.shape.ApricotEntityShape;
 import javafxapplication.entity.shape.EntityShapeBuilder;
+import javafxapplication.relationship.ApricotEntityLink;
 
 /**
  * Implementation of the ApricotEntity interface.
@@ -19,6 +24,8 @@ public final class ApricotEntityImpl implements ApricotEntity {
     private final EntityShapeBuilder shapeBuilder;
     private ElementStatus status = ElementStatus.DEFAULT;
     private ApricotEntityShape entityShape;
+    private List<ApricotEntityLink> primaryLinks = new ArrayList<>();
+    private List<ApricotEntityLink> foreignLinks = new ArrayList<>();
 
     /**
      * Construct a new instance of the ApricotEntity.
@@ -65,5 +72,34 @@ public final class ApricotEntityImpl implements ApricotEntity {
     @Override
     public boolean isSlave() {
         return slave;
+    }
+
+    @Override
+    public List<ApricotEntityLink> getPrimaryLinks() {
+        return primaryLinks;
+    }
+
+    @Override
+    public List<ApricotEntityLink> getForeignLinks() {
+        return foreignLinks;
+    }
+
+    @Override
+    public void addLink(ApricotEntityLink link, boolean primary) {
+        if (primary) {
+            primaryLinks.add(link);
+        } else {
+            foreignLinks.add(link);
+        }
+    }
+
+    @Override
+    public Node getShape() {
+        return entityShape;
+    }
+
+    @Override
+    public ElementType getElementType() {
+        return ElementType.ENTITY;
     }
 }
