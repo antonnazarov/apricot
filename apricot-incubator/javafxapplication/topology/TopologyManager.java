@@ -79,7 +79,7 @@ public class TopologyManager {
         return segments;
     }
 
-    private boolean intersects(LineSegment s, Rectangle2D r) {
+    public boolean intersects(LineSegment s, Rectangle2D r) {
         return s.getRectangle().intersects(r);
     }
 }
