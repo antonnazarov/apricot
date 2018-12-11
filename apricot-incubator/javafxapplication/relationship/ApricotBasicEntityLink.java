@@ -17,14 +17,13 @@ public class ApricotBasicEntityLink implements ApricotEntityLink {
     private final String foreignFieldName;
     private final RelationshipType type;
     ApricotLinkShape linkShape;
-    private boolean selected;    
+    private boolean selected;
 
     /**
      * Construct the EntityLink bean.
      */
-    public ApricotBasicEntityLink(ApricotEntity parent, ApricotEntity child,
-            String primaryFieldName, String foreignFieldName,
-            RelationshipType type) {
+    public ApricotBasicEntityLink(ApricotEntity parent, ApricotEntity child, String primaryFieldName,
+            String foreignFieldName, RelationshipType type) {
         this.parent = parent;
         this.child = child;
         this.primaryFieldName = primaryFieldName;
@@ -49,16 +48,19 @@ public class ApricotBasicEntityLink implements ApricotEntityLink {
 
     @Override
     public void hide() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose
+                                                                       // Tools | Templates.
     }
 
     @Override
     public void show() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose
+                                                                       // Tools | Templates.
     }
 
     @Override
     public void grayDown(boolean grayed) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose
+                                                                       // Tools | Templates.
     }
 }

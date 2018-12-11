@@ -27,27 +27,30 @@ import javafx.stage.Stage;
  * @author Anton Nazarov
  */
 public class FXMainEntity01 extends Application {
-    
+
     @Override
     public void start(Stage primaryStage) {
         Button btn = new Button();
         btn.setText("Command Button");
-        btn.setOnAction(event -> {System.out.println("Command has been performed");});
-        
-        //  the main pane
+        btn.setOnAction(event -> {
+            System.out.println("Command has been performed");
+        });
+
+        // the main pane
         Pane root = new Pane();
         root.getChildren().add(btn);
         Insets insets = new Insets(20, 20, 20, 20);
         root.setPadding(insets);
-        
+
         VBox outerBox = new VBox();
         Text header = new Text("criminal_record_audit");
         header.setFont(Font.font("Helvetica", FontWeight.BOLD, 12));
         outerBox.getChildren().add(header);
         outerBox.setLayoutX(100);
         outerBox.setLayoutY(100);
-        
-        BorderStroke bs = new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(0), new BorderWidths(2));
+
+        BorderStroke bs = new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(0),
+                new BorderWidths(2));
         Border b = new Border(bs);
         GridPane pkBox = new GridPane();
         pkBox.setBorder(b);
@@ -66,7 +69,7 @@ public class FXMainEntity01 extends Application {
         Text constr = new Text("PK");
         constr.setFont(Font.font("Helvetica", FontWeight.BOLD, 12));
         pkBox.add(constr, 2, i);
-        
+
         i++;
         fieldName = new Text("audit_id *");
         fieldName.setFont(Font.font("Helvetica", FontWeight.BOLD, 12));
@@ -77,11 +80,10 @@ public class FXMainEntity01 extends Application {
         constr = new Text("PK");
         constr.setFont(Font.font("Helvetica", FontWeight.BOLD, 12));
         pkBox.add(constr, 2, i);
-        
-        
-        bs = new BorderStroke(Color.TRANSPARENT, Color.BLACK, Color.BLACK, Color.BLACK,
-                BorderStrokeStyle.NONE, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID,
-                new CornerRadii(0), new BorderWidths(2), Insets.EMPTY);
+
+        bs = new BorderStroke(Color.TRANSPARENT, Color.BLACK, Color.BLACK, Color.BLACK, BorderStrokeStyle.NONE,
+                BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, new CornerRadii(0),
+                new BorderWidths(2), Insets.EMPTY);
         b = new Border(bs);
         GridPane innerBox = new GridPane();
         innerBox.setBorder(b);
@@ -89,7 +91,7 @@ public class FXMainEntity01 extends Application {
         innerBox.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         innerBox.setHgap(10);
         innerBox.setVgap(3);
-       
+
         i = 0;
         fieldName = new Text("action");
         innerBox.add(fieldName, 0, i);
@@ -105,7 +107,7 @@ public class FXMainEntity01 extends Application {
         innerBox.add(type, 1, i);
         constr = new Text("");
         innerBox.add(constr, 2, i);
-        
+
         i++;
         fieldName = new Text("prev_audit_timestamp");
         innerBox.add(fieldName, 0, i);
@@ -161,7 +163,7 @@ public class FXMainEntity01 extends Application {
         innerBox.add(type, 1, i);
         constr = new Text("");
         innerBox.add(constr, 2, i);
-        
+
         DropShadow e = new DropShadow();
         e.setWidth(3);
         e.setHeight(3);
@@ -170,17 +172,17 @@ public class FXMainEntity01 extends Application {
         e.setRadius(4);
         pkBox.setEffect(e);
         innerBox.setEffect(e);
-        
+
         outerBox.getChildren().add(pkBox);
         outerBox.getChildren().add(innerBox);
-        
+
         // outerBox.setScaleX(1.5);
         // outerBox.setScaleY(1.5);
-        
+
         root.getChildren().add(outerBox);
-        
+
         Scene scene = new Scene(root, 1200, 800);
-        
+
         primaryStage.setTitle("Entity Drawing, version 1");
         primaryStage.setScene(scene);
         primaryStage.show();

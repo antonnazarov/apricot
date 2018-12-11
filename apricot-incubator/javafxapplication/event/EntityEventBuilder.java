@@ -45,8 +45,7 @@ public class EntityEventBuilder implements EventBuilder {
     private void registerEntityOriginalPosition(MouseEvent t, String entityId) {
 
         Node sourceNode = (Node) t.getSource();
-        DragInitPosition pos = new DragInitPosition(t.getSceneX(),
-                t.getSceneY(), sourceNode.getTranslateX(),
+        DragInitPosition pos = new DragInitPosition(t.getSceneX(), t.getSceneY(), sourceNode.getTranslateX(),
                 sourceNode.getTranslateY());
         DraggingType type = getDraggingType(t, entityId);
         pos.setDraggingType(type);
@@ -101,13 +100,13 @@ public class EntityEventBuilder implements EventBuilder {
 
                         VBox b = (VBox) sourceNode;
                         switch (pos.getDraggingType()) {
-                            case ENTITY_POSITION_DRAGGING:
-                                sourceNode.setTranslateX(newTranslateX);
-                                sourceNode.setTranslateY(newTranslateY);
-                                break;
-                            case ENTITY_HORIZONTAL_DRAGGING:
-                                setNewWidth(b, pos, offsetX);
-                                break;
+                        case ENTITY_POSITION_DRAGGING:
+                            sourceNode.setTranslateX(newTranslateX);
+                            sourceNode.setTranslateY(newTranslateY);
+                            break;
+                        case ENTITY_HORIZONTAL_DRAGGING:
+                            setNewWidth(b, pos, offsetX);
+                            break;
                         }
 
                         primaryStage.getScene().setCursor(Cursor.HAND);
@@ -154,18 +153,18 @@ public class EntityEventBuilder implements EventBuilder {
             @Override
             public void handle(MouseEvent t) {
                 switch (getDraggingType(t, entityId)) {
-                    case ENTITY_NW_DRAGGING:
-                        // primaryStage.getScene().setCursor(Cursor.NW_RESIZE);
-                        break;
-                    case ENTITY_HORIZONTAL_DRAGGING:
-                        primaryStage.getScene().setCursor(Cursor.E_RESIZE);
-                        break;
-                    case ENTITY_VERTICAL_DRAGGING:
-                        // primaryStage.getScene().setCursor(Cursor.N_RESIZE);
-                        break;
-                    default:
-                        primaryStage.getScene().setCursor(Cursor.DEFAULT);
-                        break;
+                case ENTITY_NW_DRAGGING:
+                    // primaryStage.getScene().setCursor(Cursor.NW_RESIZE);
+                    break;
+                case ENTITY_HORIZONTAL_DRAGGING:
+                    primaryStage.getScene().setCursor(Cursor.E_RESIZE);
+                    break;
+                case ENTITY_VERTICAL_DRAGGING:
+                    // primaryStage.getScene().setCursor(Cursor.N_RESIZE);
+                    break;
+                default:
+                    primaryStage.getScene().setCursor(Cursor.DEFAULT);
+                    break;
                 }
 
                 t.consume();
@@ -181,8 +180,7 @@ public class EntityEventBuilder implements EventBuilder {
         Node n = (Node) t.getSource();
         if (entityId.equals(n.getId())) {
             VBox entity = (VBox) n;
-            if (t.getX() > entity.getWidth() - RIM_CONTROL_WIDTH
-                    && t.getY() > entity.getHeight() - RIM_CONTROL_WIDTH) {
+            if (t.getX() > entity.getWidth() - RIM_CONTROL_WIDTH && t.getY() > entity.getHeight() - RIM_CONTROL_WIDTH) {
                 type = DraggingType.ENTITY_NW_DRAGGING;
             } else if (t.getX() > entity.getWidth() - RIM_CONTROL_WIDTH) {
                 type = DraggingType.ENTITY_HORIZONTAL_DRAGGING;

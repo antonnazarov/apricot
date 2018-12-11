@@ -20,13 +20,14 @@ public class BasicLinkPrimitivesBuilder implements LinkPrimitivesBuilder {
         r.setRotate(45);
         r.setFill(Color.WHITE);
         r.setStroke(Color.BLACK);
-        
+
         return r;
     }
 
     @Override
     public Shape getRuler() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose
+                                                                       // Tools | Templates.
     }
 
     @Override
@@ -34,9 +35,9 @@ public class BasicLinkPrimitivesBuilder implements LinkPrimitivesBuilder {
         Circle c = new Circle(LINK_END_DIAMETER);
         c.setCenterX(p.getX());
         c.setCenterY(p.getY());
-        
+
         c.setFill(Color.BLACK);
-        
+
         return c;
     }
 }

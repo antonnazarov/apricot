@@ -4,13 +4,13 @@ import javafx.scene.Node;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafxapplication.canvas.ApricotElementShape;
+import javafxapplication.canvas.ApricotShape;
 import javafxapplication.entity.shape.ApricotEntityShape;
 
 public class EntitySetDetailedEntityShadowModifier implements ElementVisualModifier {
 
     @Override
-    public void modify(ApricotElementShape shape) {
+    public void modify(ApricotShape shape) {
         if (shape instanceof ApricotEntityShape) {
             VBox box = (VBox) shape;
             DropShadow shadow = buildShadow();

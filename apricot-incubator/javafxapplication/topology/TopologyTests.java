@@ -29,13 +29,13 @@ public class TopologyTests extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        
+
         TopologyManager m = new TopologyManager();
         Path pa = getPathA();
         Path pb = getPathB();
         VBox root = new VBox();
         Pane pane = new Pane();
-        
+
         Button btn = new Button();
         btn.setText("Run Test");
         btn.setOnAction(new EventHandler<ActionEvent>() {
@@ -43,25 +43,25 @@ public class TopologyTests extends Application {
             @Override
             public void handle(ActionEvent event) {
                 List<Rectangle2D> rectangles = getRectangles();
-                
+
                 Path tildasA = new Path();
                 tildasA.setStrokeWidth(2);
                 Path recalcPathA = m.recalculatePath(pa, rectangles, tildasA);
                 recalcPathA.setStrokeWidth(2);
                 recalcPathA.setStroke(Color.LIGHTGRAY);
-                
+
                 pane.getChildren().add(recalcPathA);
                 pane.getChildren().add(tildasA);
-                
+
                 Path tildasB = new Path();
                 tildasA.setStrokeWidth(2);
                 Path recalcPathB = m.recalculatePath(pb, rectangles, tildasB);
                 recalcPathB.setStrokeWidth(2);
                 recalcPathB.setStroke(Color.LIGHTGRAY);
-                
+
                 pane.getChildren().add(recalcPathB);
                 pane.getChildren().add(tildasB);
-                
+
                 List<Path> lines = new ArrayList<>();
                 lines.add(pa);
                 lines.add(pb);
@@ -79,9 +79,10 @@ public class TopologyTests extends Application {
 
         root.getChildren().add(btn);
 
-        pane.setBorder(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.DASHED, CornerRadii.EMPTY, new BorderWidths(2))));
-        
-        //  rectangles
+        pane.setBorder(new Border(
+                new BorderStroke(Color.RED, BorderStrokeStyle.DASHED, CornerRadii.EMPTY, new BorderWidths(2))));
+
+        // rectangles
         List<Rectangle2D> rectangles = getRectangles();
         for (Rectangle2D rect : rectangles) {
             Rectangle r = getReclangle(rect);
@@ -89,18 +90,16 @@ public class TopologyTests extends Application {
             pane.getChildren().add(r);
         }
 
-        //  paths
+        // paths
         pane.getChildren().add(pa);
         pane.getChildren().add(pb);
-        
+
         /*
-        Path tilda1 = m.getTilda(new Point2D(310, 310), true);
-        tilda1.setStrokeWidth(2);
-        pane.getChildren().add(tilda1);
-        Path tilda2 = m.getTilda(new Point2D(380, 380), false);
-        tilda2.setStrokeWidth(2);
-        pane.getChildren().add(tilda2);
-        */
+         * Path tilda1 = m.getTilda(new Point2D(310, 310), true);
+         * tilda1.setStrokeWidth(2); pane.getChildren().add(tilda1); Path tilda2 =
+         * m.getTilda(new Point2D(380, 380), false); tilda2.setStrokeWidth(2);
+         * pane.getChildren().add(tilda2);
+         */
 
         root.getChildren().add(pane);
 
@@ -121,10 +120,10 @@ public class TopologyTests extends Application {
     }
 
     /**
-     * The main() method is ignored in correctly deployed JavaFX application.
-     * main() serves only as fallback in case the application can not be
-     * launched through deployment artifacts, e.g., in IDEs with limited FX
-     * support. NetBeans ignores main().
+     * The main() method is ignored in correctly deployed JavaFX application. main()
+     * serves only as fallback in case the application can not be launched through
+     * deployment artifacts, e.g., in IDEs with limited FX support. NetBeans ignores
+     * main().
      *
      * @param args the command line arguments
      */
@@ -155,7 +154,7 @@ public class TopologyTests extends Application {
 
         return p;
     }
-    
+
     private Path getPathB() {
         Path p = new Path();
 
@@ -175,37 +174,37 @@ public class TopologyTests extends Application {
 
         return p;
     }
-    
+
     private Rectangle getReclangle(Rectangle2D rect) {
-        
+
         Rectangle r = new Rectangle(rect.getMinX(), rect.getMinY(), rect.getWidth(), rect.getHeight());
         r.setFill(Color.TRANSPARENT);
         r.setStroke(Color.BLUE);
-        
+
         return r;
     }
-    
+
     private List<Rectangle2D> getRectangles() {
         List<Rectangle2D> ret = new ArrayList<>();
-        
+
         Rectangle2D r = new Rectangle2D(170, 170, 250, 450);
         ret.add(r);
-        
+
         r = new Rectangle2D(290, 300, 120, 420);
         ret.add(r);
-        
+
         r = new Rectangle2D(500, 300, 120, 420);
         ret.add(r);
-        
+
         r = new Rectangle2D(680, 100, 180, 210);
         ret.add(r);
-        
+
         r = new Rectangle2D(750, 400, 420, 120);
         ret.add(r);
-        
+
         r = new Rectangle2D(850, 120, 180, 560);
         ret.add(r);
-        
+
         return ret;
     }
 

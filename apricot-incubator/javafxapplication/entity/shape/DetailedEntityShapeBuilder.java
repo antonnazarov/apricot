@@ -19,34 +19,28 @@ public class DetailedEntityShapeBuilder implements EntityShapeBuilder {
 
     public static final double FIELDS_HORIZONTAL_GAP = 10;
     public static final double FIELDS_VERTICAL_GAP = 3;
-    
+
     private final ElementVisualModifier[] modifiers;
 
     public DetailedEntityShapeBuilder(ElementVisualModifier... modifiers) {
         this.modifiers = modifiers;
     }
-    
+
     @Override
     public ApricotEntityShape build(ApricotEntity entity) {
 
         ApricotEntityShape shape = null;
 
         if (!entity.isSlave()) {
-            shape = new DetailedMasterEntityShape(entity,
-                    buildEntityHeader(entity.getTableName()),
-                    buildPrimaryKeyPanel(entity.getDetails()),
-                    buildNonPrimaryKeyPanel(entity.getDetails())
-            );
+            shape = new DetailedMasterEntityShape(entity, buildEntityHeader(entity.getTableName()),
+                    buildPrimaryKeyPanel(entity.getDetails()), buildNonPrimaryKeyPanel(entity.getDetails()));
         } else {
-            shape = new DetailedSlaveEntityShape(entity,
-                    buildEntityHeader(entity.getTableName()),
-                    buildPrimaryKeyPanel(entity.getDetails()),
-                    buildNonPrimaryKeyPanel(entity.getDetails())
-            );
+            shape = new DetailedSlaveEntityShape(entity, buildEntityHeader(entity.getTableName()),
+                    buildPrimaryKeyPanel(entity.getDetails()), buildNonPrimaryKeyPanel(entity.getDetails()));
         }
-        
+
         shape.setId(entity.getTableName());
-        
+
         applyModifiers(shape);
 
         return shape;
@@ -132,7 +126,7 @@ public class DetailedEntityShapeBuilder implements EntityShapeBuilder {
 
         return t;
     }
-    
+
     private void applyModifiers(ApricotEntityShape shape) {
         if (modifiers != null) {
             for (ElementVisualModifier modifier : modifiers) {

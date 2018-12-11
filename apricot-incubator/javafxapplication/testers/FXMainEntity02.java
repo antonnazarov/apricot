@@ -38,10 +38,10 @@ public class FXMainEntity02 extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        
+
         this.primaryStage = primaryStage;
 
-        //  the main pane
+        // the main pane
         Pane root = new Pane();
 
         Insets insets = new Insets(5, 0, 5, 20);
@@ -54,7 +54,8 @@ public class FXMainEntity02 extends Application {
         outerBox.setLayoutX(100);
         outerBox.setLayoutY(100);
 
-        BorderStroke bs = new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(0), new BorderWidths(2));
+        BorderStroke bs = new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(0),
+                new BorderWidths(2));
         Border b = new Border(bs);
         GridPane pkBox = new GridPane();
         pkBox.setBorder(b);
@@ -66,8 +67,7 @@ public class FXMainEntity02 extends Application {
         int i = 0;
         Text fieldName = new Text("id *");
         fieldName.setFont(Font.font("Helvetica", FontWeight.BOLD, 12));
-        Tooltip.install(fieldName,
-                new Tooltip("id, not null, bigint, PK"));
+        Tooltip.install(fieldName, new Tooltip("id, not null, bigint, PK"));
         pkBox.add(fieldName, 0, i);
         Text type = new Text(" ");
         type.setFont(Font.font("Helvetica", FontWeight.BOLD, 12));
@@ -87,9 +87,9 @@ public class FXMainEntity02 extends Application {
         constr.setFont(Font.font("Helvetica", FontWeight.BOLD, 12));
         pkBox.add(constr, 2, i);
 
-        bs = new BorderStroke(Color.TRANSPARENT, Color.BLACK, Color.BLACK, Color.BLACK,
-                BorderStrokeStyle.NONE, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID,
-                new CornerRadii(0), new BorderWidths(2), Insets.EMPTY);
+        bs = new BorderStroke(Color.TRANSPARENT, Color.BLACK, Color.BLACK, Color.BLACK, BorderStrokeStyle.NONE,
+                BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, new CornerRadii(0),
+                new BorderWidths(2), Insets.EMPTY);
         b = new Border(bs);
         GridPane innerBox = new GridPane();
         innerBox.setBorder(b);
@@ -193,22 +193,16 @@ public class FXMainEntity02 extends Application {
         });
 
         /*
-         AtomicBoolean focused = new AtomicBoolean(false);
-         outerBox.setOnMouseClicked(event -> {
-         BorderStroke pbs = null;
-         if (!focused.get()) {
-         pbs = new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(0), new BorderWidths(3));
-         focused.getAndSet(true);
-         } else {
-         pbs = new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(0), new BorderWidths(1));
-         focused.getAndSet(false);
-         }
-         Border pb = new Border(pbs);
-         pkBox.setBorder(pb);
-         innerBox.setBorder(pb);
-
-         System.out.println("Mouse clicked");
-         });
+         * AtomicBoolean focused = new AtomicBoolean(false);
+         * outerBox.setOnMouseClicked(event -> { BorderStroke pbs = null; if
+         * (!focused.get()) { pbs = new BorderStroke(Color.BLACK,
+         * BorderStrokeStyle.SOLID, new CornerRadii(0), new BorderWidths(3));
+         * focused.getAndSet(true); } else { pbs = new BorderStroke(Color.BLACK,
+         * BorderStrokeStyle.SOLID, new CornerRadii(0), new BorderWidths(1));
+         * focused.getAndSet(false); } Border pb = new Border(pbs); pkBox.setBorder(pb);
+         * innerBox.setBorder(pb);
+         * 
+         * System.out.println("Mouse clicked"); });
          */
         // outerBox.setScaleX(1.5);
         // outerBox.setScaleY(1.5);
@@ -246,9 +240,8 @@ public class FXMainEntity02 extends Application {
             public void handle(MouseEvent t) {
                 if (t.getButton() == MouseButton.PRIMARY) {
                     Node sourceNode = (Node) t.getSource();
-                    DragInitPosition pos = new DragInitPosition(t.getSceneX(),
-                            t.getSceneY(), sourceNode.getTranslateX(),
-                            sourceNode.getTranslateY());
+                    DragInitPosition pos = new DragInitPosition(t.getSceneX(), t.getSceneY(),
+                            sourceNode.getTranslateX(), sourceNode.getTranslateY());
                     sourceNode.setUserData(pos);
                 }
             }

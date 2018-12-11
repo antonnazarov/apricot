@@ -22,8 +22,7 @@ public class DiagramPanelManager {
     }
 
     /**
-     * Get coordinates of the region which surrounds all entities in the
-     * diagram.
+     * Get coordinates of the region which surrounds all entities in the diagram.
      */
     private Coordinates getRegion(Pane diagramPanel) {
         Coordinates c = new Coordinates(Double.MAX_VALUE, Double.MAX_VALUE, Double.MIN_VALUE, Double.MIN_VALUE);

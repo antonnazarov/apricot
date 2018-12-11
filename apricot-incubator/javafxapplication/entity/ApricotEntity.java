@@ -2,7 +2,7 @@ package javafxapplication.entity;
 
 import java.util.List;
 
-import javafxapplication.canvas.ApricotERElement;
+import javafxapplication.canvas.ApricotElement;
 import javafxapplication.entity.shape.ApricotEntityShape;
 import javafxapplication.relationship.ApricotEntityLink;
 
@@ -12,7 +12,7 @@ import javafxapplication.relationship.ApricotEntityLink;
  * @author Anton Nazarov
  * @since 27/11/2018
  */
-public interface ApricotEntity extends ApricotERElement {
+public interface ApricotEntity extends ApricotElement {
 
     ApricotEntityShape getEntityShape();
 
@@ -21,10 +21,10 @@ public interface ApricotEntity extends ApricotERElement {
     List<FieldDetail> getDetails();
 
     boolean isSlave();
-    
+
     List<ApricotEntityLink> getPrimaryLinks();
-    
+
     List<ApricotEntityLink> getForeignLinks();
-    
+
     void addLink(ApricotEntityLink link, boolean primary);
 }

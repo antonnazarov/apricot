@@ -1,5 +1,8 @@
 package javafxapplication.canvas;
 
+import java.util.List;
+
+import javafx.scene.Node;
 import javafxapplication.align.OrderManager;
 import javafxapplication.entity.ApricotEntity;
 
@@ -9,17 +12,21 @@ import javafxapplication.entity.ApricotEntity;
  * @author Anton Nazarov
  * @since 26/11/2018
  */
-public interface ApricotEntityRelationshipCanvas {
+public interface ApricotCanvas {
 
-    void addElement(ApricotERElement element);
-    
-    void removeElement(ApricotERElement element);    
+    void addElement(ApricotElement element);
+
+    void removeElement(ApricotElement element);
 
     void orderElements(OrderManager orderManager);
 
     ApricotEntity findEntityByName(String name);
-    
-    void sendToFront(ApricotEntity entity);
-    
+
+    void sendToFront(ApricotElement entity);
+
     void changeAllElementsStatus(ElementStatus status);
+
+    List<ApricotElement> getElements();
+
+    List<Node> getShapes();
 }

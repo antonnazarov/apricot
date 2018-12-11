@@ -3,9 +3,9 @@ package javafxapplication.event;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafxapplication.canvas.ApricotEntityRelationshipCanvas;
+import javafxapplication.canvas.ApricotCanvas;
+import javafxapplication.canvas.ApricotElement;
 import javafxapplication.canvas.ElementStatus;
-import javafxapplication.entity.ApricotEntity;
 import javafxapplication.entity.shape.ApricotEntityShape;
 
 /**
@@ -19,33 +19,35 @@ public class EntityOnMousePressedEventHandler implements EventHandler<MouseEvent
     public static final double RIM_CONTROL_WIDTH = 10;
 
     private String tableName = null;
-    ApricotEntityRelationshipCanvas canvas = null;
+    ApricotCanvas canvas = null;
 
-    public EntityOnMousePressedEventHandler(String tableName, ApricotEntityRelationshipCanvas canvas) {
+    public EntityOnMousePressedEventHandler(String tableName, ApricotCanvas canvas) {
         this.tableName = tableName;
         this.canvas = canvas;
     }
 
     @Override
     public void handle(MouseEvent event) {
-        // event.isControlDown() !!!!!!!
         if (event.getSource() instanceof ApricotEntityShape && event.getButton() == MouseButton.PRIMARY) {
             ApricotEntityShape entityShape = (ApricotEntityShape) event.getSource();
             if (tableName.equals(entityShape.getId())) {
                 DraggingType type = getDraggingType(entityShape, event.getX(), event.getY());
                 registerEntityOriginalPosition(entityShape, event.getSceneX(), event.getSceneY(), type);
-                
-                ApricotEntity entity = entityShape.getEntity();
-                entity.setElementStatus(ElementStatus.SELECTED);
-                
 
+                if (!event.isControlDown()) {
+                    canvas.changeAllElementsStatus(ElementStatus.DEFAULT);
+                }
+
+                ApricotElement entity = entityShape.getElement();
+                entity.setElementStatus(ElementStatus.SELECTED);
+
+                canvas.sendToFront(entity);
 
                 event.consume();
             }
         }
-
     }
-
+    
     private void registerEntityOriginalPosition(ApricotEntityShape entityShape, double sceneX, double sceneY,
             DraggingType type) {
 

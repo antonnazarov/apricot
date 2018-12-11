@@ -19,7 +19,7 @@ import javafx.scene.shape.VLineTo;
  * @since 06/12/2018
  */
 public class TopologyManager {
-    
+
     private IntersectionManager im = new IntersectionManager();
 
     public Path recalculatePath(Path path, List<Rectangle2D> rectangles, Path tildas) {

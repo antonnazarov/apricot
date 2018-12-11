@@ -2,7 +2,8 @@ package javafxapplication.entity.shape;
 
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafxapplication.canvas.ApricotElementShape;
+import javafxapplication.canvas.ApricotElement;
+import javafxapplication.canvas.ApricotShape;
 import javafxapplication.entity.ApricotEntity;
 
 /**
@@ -11,7 +12,7 @@ import javafxapplication.entity.ApricotEntity;
  * @author Anton Nazarov
  * @since 27/11/2018
  */
-public abstract class ApricotEntityShape extends VBox implements ApricotElementShape {
+public abstract class ApricotEntityShape extends VBox implements ApricotShape {
 
     public static final double VERTICAL_CORRECTION = -4;
 
@@ -21,15 +22,16 @@ public abstract class ApricotEntityShape extends VBox implements ApricotElementS
         this.entity = entity;
     }
 
-    public abstract Text getFieldByName(String fieldName);
-
-    public ApricotEntity getEntity() {
+    @Override
+    public ApricotElement getElement() {
         return entity;
     }
 
+    public abstract Text getFieldByName(String fieldName);
+
     public double getFieldLocalY(String name) {
         Text field = getFieldByName(name);
-        
+
         return field.getLayoutY() + VERTICAL_CORRECTION;
     }
 }

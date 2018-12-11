@@ -15,8 +15,9 @@ public interface ApricotEntityLinkManager {
     /**
      * Create a new link between entities using the mnemonic parameters
      */
-    void createEntityLink(String parentEntityName, String childEntityName, String primaryKeyName, String foreignKeyName, RelationshipType relationshipType, Pane entityCanvas);
-    
+    void createEntityLink(String parentEntityName, String childEntityName, String primaryKeyName, String foreignKeyName,
+            RelationshipType relationshipType, Pane entityCanvas);
+
     /**
      * handle an existing link between entities.
      */

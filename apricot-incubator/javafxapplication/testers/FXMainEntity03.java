@@ -35,23 +35,30 @@ public class FXMainEntity03 extends Application {
 
         VBox root = new VBox();
         HBox topBox = new HBox();
-        topBox.setBorder(new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.DOTTED, new CornerRadii(0), new BorderWidths(4))));
+        topBox.setBorder(new Border(
+                new BorderStroke(Color.GREEN, BorderStrokeStyle.DOTTED, new CornerRadii(0), new BorderWidths(4))));
         topBox.setSpacing(7);
 
         Pane entityCanvas = new Pane();
         entityCanvas.setPrefSize(400, 400);
-        entityCanvas.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.DOTTED, new CornerRadii(0), new BorderWidths(4))));
+        entityCanvas.setBorder(new Border(
+                new BorderStroke(Color.BLACK, BorderStrokeStyle.DOTTED, new CornerRadii(0), new BorderWidths(4))));
 
         TestEntityCreateHelper helper = new TestEntityCreateHelper();
-        //  helper.buildAllEntities(primaryStage, entityCanvas, new String[] {"party", "role_player", "award", "party_role", "work_permit", "fsb_adviser_registration", "fsp_registration"});
-        //  helper.buildAllEntities(primaryStage, entityCanvas, new String[] {"party", "fpa_education_course"});
-        //  helper.buildAllEntities(primaryStage, entityCanvas);
-        helper.buildAllEntities(primaryStage, entityCanvas, new String[]{"fsp_registration", "fsb_adviser_registration", "party"});
+        // helper.buildAllEntities(primaryStage, entityCanvas, new String[] {"party",
+        // "role_player", "award", "party_role", "work_permit",
+        // "fsb_adviser_registration", "fsp_registration"});
+        // helper.buildAllEntities(primaryStage, entityCanvas, new String[] {"party",
+        // "fpa_education_course"});
+        // helper.buildAllEntities(primaryStage, entityCanvas);
+        helper.buildAllEntities(primaryStage, entityCanvas,
+                new String[] { "fsp_registration", "fsb_adviser_registration", "party" });
 
         root.getChildren().add(topBox);
 
         ScrollPane s1 = new ScrollPane();
-        s1.setBorder(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(0), new BorderWidths(4))));
+        s1.setBorder(new Border(
+                new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(0), new BorderWidths(4))));
         s1.setContent(entityCanvas);
 
         root.getChildren().add(s1);
@@ -70,10 +77,9 @@ public class FXMainEntity03 extends Application {
             for (Node n : entityCanvas.getChildren()) {
                 if (n instanceof VBox) {
                     VBox ent = (VBox) n;
-                    System.out.println(n.getId() + "-> width=" + ent.getWidth()
-                            + ", height=" + ent.getHeight()
-                            + ", LayoutX=" + ent.getLayoutX() + ", LayoutY=" + ent.getLayoutY()
-                            + ", TranslateX=" + ent.getTranslateX() + ", TranslateY=" + ent.getTranslateY());
+                    System.out.println(n.getId() + "-> width=" + ent.getWidth() + ", height=" + ent.getHeight()
+                            + ", LayoutX=" + ent.getLayoutX() + ", LayoutY=" + ent.getLayoutY() + ", TranslateX="
+                            + ent.getTranslateX() + ", TranslateY=" + ent.getTranslateY());
                 }
             }
         });
@@ -121,7 +127,8 @@ public class FXMainEntity03 extends Application {
         btn.setText("Create Link");
         btn.setOnAction(event -> {
             ApricotEntityLinkManager manager = new BasicEntityLinkManager();
-            manager.createEntityLink("fsp_registration", "fsb_adviser_registration", "id", "fsp_registration_id", RelationshipType.IDENTIFYING, entityCanvas);
+            manager.createEntityLink("fsp_registration", "fsb_adviser_registration", "id", "fsp_registration_id",
+                    RelationshipType.IDENTIFYING, entityCanvas);
 
 //            ApricotEntityLinkDeprecated r = new ApricotEntityLinkDeprecated("fsp_registration", "fsb_adviser_registration", 
 //                    "id", "fsp_registration_id", RelationshipType.IDENTIFYING, entityCanvas);
@@ -142,7 +149,8 @@ public class FXMainEntity03 extends Application {
         DiagramPanelManager m = new DiagramPanelManager();
         m.adjustDiagramPanel(entityCanvas);
         ApricotEntityLinkManager manager = new BasicEntityLinkManager();
-        manager.createEntityLink("fsp_registration", "fsb_adviser_registration", "id", "fsp_registration_id", RelationshipType.IDENTIFYING, entityCanvas);
+        manager.createEntityLink("fsp_registration", "fsb_adviser_registration", "id", "fsp_registration_id",
+                RelationshipType.IDENTIFYING, entityCanvas);
 
     }
 

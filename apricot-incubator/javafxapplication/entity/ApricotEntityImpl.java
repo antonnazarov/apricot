@@ -30,7 +30,8 @@ public final class ApricotEntityImpl implements ApricotEntity {
     /**
      * Construct a new instance of the ApricotEntity.
      */
-    public ApricotEntityImpl(String tableName, List<FieldDetail> details, boolean slave, EntityShapeBuilder shapeBuilder) {
+    public ApricotEntityImpl(String tableName, List<FieldDetail> details, boolean slave,
+            EntityShapeBuilder shapeBuilder) {
         this.tableName = tableName;
         this.details = details;
         this.slave = slave;

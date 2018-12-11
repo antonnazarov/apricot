@@ -54,8 +54,9 @@ public class Coordinates {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("X0=[").append(left).append("], X1=[").append(right).append("], Y0=[").append(top).append("], Y1=[").append(bottom).append("]");
-        
+        sb.append("X0=[").append(left).append("], X1=[").append(right).append("], Y0=[").append(top).append("], Y1=[")
+                .append(bottom).append("]");
+
         return sb.toString();
     }
 }

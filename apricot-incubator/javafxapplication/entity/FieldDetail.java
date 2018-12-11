@@ -6,9 +6,8 @@ public class FieldDetail {
     private String type;
     private boolean primaryKey;
     private String constraints;
-    
-    public FieldDetail(String name, boolean mandatory, String type, 
-            boolean primaryKey, String constraints) {
+
+    public FieldDetail(String name, boolean mandatory, String type, boolean primaryKey, String constraints) {
         this.name = name;
         this.mandatory = mandatory;
         this.type = type;

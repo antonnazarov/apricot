@@ -1,7 +1,7 @@
 package javafxapplication.modifiers;
 
-import javafxapplication.canvas.ApricotElementShape;
-import javafxapplication.canvas.ApricotEntityRelationshipCanvas;
+import javafxapplication.canvas.ApricotShape;
+import javafxapplication.canvas.ApricotCanvas;
 import javafxapplication.entity.shape.ApricotEntityShape;
 import javafxapplication.event.EntityOnMousePressedEventHandler;
 
@@ -12,19 +12,19 @@ import javafxapplication.event.EntityOnMousePressedEventHandler;
  * @since 04/12/2018
  */
 public class SetEntityEventsModifier implements ElementVisualModifier {
-    
-    ApricotEntityRelationshipCanvas canvas = null;
-    
-    public SetEntityEventsModifier(ApricotEntityRelationshipCanvas canvas) {
+
+    ApricotCanvas canvas = null;
+
+    public SetEntityEventsModifier(ApricotCanvas canvas) {
         this.canvas = canvas;
     }
 
     @Override
-    public void modify(ApricotElementShape shape) {
+    public void modify(ApricotShape shape) {
         if (shape instanceof ApricotEntityShape) {
             ApricotEntityShape entityShape = (ApricotEntityShape) shape;
             String tableName = entityShape.getEntity().getTableName();
-            
+
             entityShape.setOnMousePressed(new EntityOnMousePressedEventHandler(tableName, canvas));
         }
     }

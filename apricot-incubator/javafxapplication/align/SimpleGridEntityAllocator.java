@@ -32,14 +32,14 @@ public class SimpleGridEntityAllocator implements AlignCommand {
             }
         }
         entities.sort((VBox v1, VBox v2) -> Double.compare(v2.getHeight(), v1.getHeight()));
-        
+
         double maxColumnHeight = totalHeight / COLUMNS_ON_CANVAS;
         double columnMaxWidth = 0;
         double currentColumnHeight = COLUMN_SPACING;
         double currentColumnTransX = COLUMN_SPACING;
         for (VBox entity : entities) {
             if (currentColumnHeight > maxColumnHeight) {
-                //  start a new column
+                // start a new column
                 currentColumnHeight = COLUMN_SPACING;
                 currentColumnTransX += columnMaxWidth + COLUMN_SPACING;
                 columnMaxWidth = 0;
@@ -47,7 +47,7 @@ public class SimpleGridEntityAllocator implements AlignCommand {
 
             entity.setLayoutX(currentColumnTransX);
             entity.setLayoutY(currentColumnHeight);
-            
+
             currentColumnHeight += entity.getHeight() + COLUMN_SPACING;
             if (entity.getWidth() > columnMaxWidth) {
                 columnMaxWidth = entity.getWidth();

@@ -58,8 +58,8 @@ public class IntersectionManager {
         }
     }
 
-    private void intersect(Point2D inside, Point2D outside, Rectangle2D r, Path p, 
-            boolean isHoriziontal, Path tildas, List<Rectangle2D> rectangles) {
+    private void intersect(Point2D inside, Point2D outside, Rectangle2D r, Path p, boolean isHoriziontal, Path tildas,
+            List<Rectangle2D> rectangles) {
         p.getElements().add(new MoveTo(inside.getX(), inside.getY()));
         if (isHoriziontal) {
             double intersectX = 0;

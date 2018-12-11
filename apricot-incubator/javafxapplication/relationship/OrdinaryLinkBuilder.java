@@ -9,7 +9,7 @@ import javafxapplication.relationship.shape.BasicLinkPrimitivesBuilder;
 import javafxapplication.relationship.shape.LinkPrimitivesBuilder;
 
 /**
- * This class is responsible for drawings of all the graphic primitives of the 
+ * This class is responsible for drawings of all the graphic primitives of the
  * simpliest (Ordinary) link.
  * 
  * @author Anton Nazarov
@@ -29,7 +29,7 @@ public class OrdinaryLinkBuilder implements EntityLinkBuilder {
         Point2D endPoint = getEndPoint(link.getParent(), link.getChild(), link.getForeignFieldLayoutY());
 
         Shape start = pb.getOptionalStart();
-        start.setLayoutY(startPoint.getY() - LinkPrimitivesBuilder.OPTIONAL_START_LENGTH/2);
+        start.setLayoutY(startPoint.getY() - LinkPrimitivesBuilder.OPTIONAL_START_LENGTH / 2);
         double horDist = link.getParent().getHorizontalDistance(link.getChild());
         if (isParentLeft(link.getParent(), link.getChild())) {
             p = buildPolyline(startPoint, endPoint, horDist);
@@ -39,8 +39,9 @@ public class OrdinaryLinkBuilder implements EntityLinkBuilder {
         } else {
             p = buildPolyline(endPoint, startPoint, horDist);
             link.setMiddleStepLayoutX(endPoint.getX() + horDist / 2);
-             end = pb.getEnd(endPoint.add(new Point2D(LinkPrimitivesBuilder.LINK_END_DIAMETER, 0)));
-             start.setLayoutX(startPoint.getX() - LinkPrimitivesBuilder.OPTIONAL_START_LENGTH - LinkPrimitivesBuilder.OPTIONAL_START_CORRECTION);
+            end = pb.getEnd(endPoint.add(new Point2D(LinkPrimitivesBuilder.LINK_END_DIAMETER, 0)));
+            start.setLayoutX(startPoint.getX() - LinkPrimitivesBuilder.OPTIONAL_START_LENGTH
+                    - LinkPrimitivesBuilder.OPTIONAL_START_CORRECTION);
         }
 
 // Group g = new OrdinaryShapeGroup(p);
@@ -50,11 +51,8 @@ public class OrdinaryLinkBuilder implements EntityLinkBuilder {
     }
 
     private Polyline buildPolyline(Point2D start, Point2D end, double horizontalDistance) {
-        return new Polyline(start.getX(), start.getY(),
-                start.getX() + horizontalDistance / 2, start.getY(),
-                start.getX() + horizontalDistance / 2, end.getY(),
-                end.getX(), end.getY()
-        );
+        return new Polyline(start.getX(), start.getY(), start.getX() + horizontalDistance / 2, start.getY(),
+                start.getX() + horizontalDistance / 2, end.getY(), end.getX(), end.getY());
     }
 
     private Point2D getStartPoint(ApricotBBBEntity parent, ApricotBBBEntity child, double primaryFieldLayoutY) {

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafxapplication.align.OrderManager;
 import javafxapplication.entity.ApricotEntity;
@@ -16,17 +17,17 @@ import javafxapplication.relationship.ApricotEntityLink;
  * @author Anton Nazarov
  * @since 26/11/2018
  */
-public class ApricotBasicCanvas extends Pane implements ApricotEntityRelationshipCanvas {
+public class ApricotBasicCanvas extends Pane implements ApricotCanvas {
 
-    private final List<ApricotERElement> elements = new ArrayList<>();
+    private final List<ApricotElement> elements = new ArrayList<>();
     private final Map<String, ApricotEntity> entities = new HashMap<>();
     private final List<ApricotEntityLink> links = new ArrayList<>();
 
     /**
      * Register new Entity Shape into the canvas.
      */
-    @Override   
-    public void addElement(ApricotERElement element) {
+    @Override
+    public void addElement(ApricotElement element) {
         elements.add(element);
         if (element.getElementType() == ElementType.ENTITY) {
             ApricotEntity entity = (ApricotEntity) element;
@@ -35,7 +36,7 @@ public class ApricotBasicCanvas extends Pane implements ApricotEntityRelationshi
             ApricotEntityLink link = (ApricotEntityLink) element;
             links.add(link);
         }
-        
+
         this.getChildren().add(element.getShape());
     }
 
@@ -50,23 +51,36 @@ public class ApricotBasicCanvas extends Pane implements ApricotEntityRelationshi
     }
 
     @Override
-    public void removeElement(ApricotERElement element) {
+    public void removeElement(ApricotElement element) {
         elements.remove(element);
         if (element.getElementType() == ElementType.ENTITY) {
-            entities.remove(((ApricotEntity)element).getTableName());
+            entities.remove(((ApricotEntity) element).getTableName());
         }
         this.getChildren().remove(element.getShape());
     }
 
     @Override
-    public void sendToFront(ApricotEntity entity) {
-        // TODO Auto-generated method stub
-        
+    public void sendToFront(ApricotElement element) {
+        if (this.getChildren().contains(element.getShape())) {
+            this.getChildren().remove(element.getShape());
+        }
+        this.getChildren().add(element.getShape());
     }
 
     @Override
     public void changeAllElementsStatus(ElementStatus status) {
-        // TODO Auto-generated method stub
-        
+        for (ApricotElement e : elements) {
+            e.setElementStatus(status);
+        }
+    }
+
+    @Override
+    public List<ApricotElement> getElements() {
+        return elements;
+    }
+
+    @Override
+    public List<Node> getShapes() {
+        return this.getChildren();
     }
 }

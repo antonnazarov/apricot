@@ -8,15 +8,15 @@ import javafx.scene.Node;
  * @author Anton Nazarov
  * @since 26/11/2018
  */
-public interface ApricotERElement {
+public interface ApricotElement {
 
     void setElementStatus(ElementStatus status);
 
     ElementStatus getElementStatus();
-    
+
     void buildShape();
-    
+
     Node getShape();
-    
+
     ElementType getElementType();
 }

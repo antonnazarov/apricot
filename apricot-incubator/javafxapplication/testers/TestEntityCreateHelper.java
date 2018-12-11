@@ -366,14 +366,14 @@ public class TestEntityCreateHelper {
 
         return fields;
     }
-    
+
     /**
      * Table role_player
      */
     public List<FieldDetail> getRolePlayer() {
         List<FieldDetail> fields = new ArrayList<>();
         fields.add(new FieldDetail("id", true, "bigint", true, "PK"));
-        
+
         return fields;
     }
 

@@ -7,7 +7,7 @@ public class DragInitPosition implements Serializable {
     private double orgSceneX, orgSceneY, orgTranslateX, orgTranslateY;
     private DraggingType draggingType;
     private double origWidth, origHeight;
-    
+
     public DragInitPosition(double orgSceneX, double orgSceneY, double orgTranslateX, double orgTranslateY) {
         this.orgSceneX = orgSceneX;
         this.orgSceneY = orgSceneY;

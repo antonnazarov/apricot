@@ -12,12 +12,12 @@ import javafx.stage.Stage;
  */
 public interface EventBuilder {
     EventHandler<MouseEvent> getOnMousePressedEventHandler(String entityId);
-    
+
     EventHandler<MouseEvent> getOnMouseDraggedEventHandler(Stage primaryStage, String entityId);
-    
+
     EventHandler<MouseEvent> getOnMouseReleasedEventHandler(Stage primaryStage, String entityId);
-    
+
     EventHandler<MouseEvent> getOnMouseMovedEventHandler(Stage primaryStage, String entityId);
-    
+
     EventHandler<MouseEvent> getOnMouseExitedEventHandler(Stage primaryStage);
 }

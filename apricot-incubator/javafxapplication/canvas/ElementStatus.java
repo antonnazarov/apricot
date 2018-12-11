@@ -7,8 +7,5 @@ package javafxapplication.canvas;
  * @since 27/11/2018
  */
 public enum ElementStatus {
-    DEFAULT,
-    SELECTED,
-    HIDDEN,
-    GRAYED
+    DEFAULT, SELECTED, HIDDEN, GRAYED
 }

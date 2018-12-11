@@ -24,9 +24,8 @@ public class BasicEntityLinkManager implements ApricotEntityLinkManager {
     Text foreignField;
 
     @Override
-    public void createEntityLink(String parentEntityName, String childEntityName,
-            String primaryKeyName, String foreignKeyName,
-            RelationshipType relationshipType, Pane entityCanvas) {
+    public void createEntityLink(String parentEntityName, String childEntityName, String primaryKeyName,
+            String foreignKeyName, RelationshipType relationshipType, Pane entityCanvas) {
 
         findParentAndChild(parentEntityName, childEntityName, entityCanvas);
         if (parent == null || child == null) {
@@ -48,7 +47,8 @@ public class BasicEntityLinkManager implements ApricotEntityLinkManager {
         ApricotEntityLink entityLink = null;
         EntityLinkBuilder builder = null;
         if (parent.getHorizontalDistance(child) >= MINIMAL_SEGMENT_LENGTH) {
-            entityLink = new ApricotOrdinaryLink(parent, child, primaryFieldLayoutY, foreignFieldLayoutY, relationshipType);
+            entityLink = new ApricotOrdinaryLink(parent, child, primaryFieldLayoutY, foreignFieldLayoutY,
+                    relationshipType);
         }
 
         if (entityLink != null) {

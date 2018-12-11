@@ -38,9 +38,12 @@ public class ApricotBBBEntity extends VBox {
     public static final Insets STANDARD_PANEL_INSETS = new Insets(5, 10, 5, 10);
     public static final Insets REDUCED_PANEL_INSETS = new Insets(5, 7, 5, 7);
     public static final Insets REDUCED_PANEL_INSETS_PK = new Insets(2, 7, 2, 7);
-    public static final Background MASTER_PANEL_BACKGROUND = new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY));
-    public static final Background SLAVE_PANEL_BACKGROUND_PK = new Background(new BackgroundFill(Color.WHITE, new CornerRadii(18, 18, 0, 0, false), Insets.EMPTY));
-    public static final Background SLAVE_PANEL_BACKGROUND_NPK = new Background(new BackgroundFill(Color.WHITE, new CornerRadii(0, 0, 18, 18, false), Insets.EMPTY));
+    public static final Background MASTER_PANEL_BACKGROUND = new Background(
+            new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY));
+    public static final Background SLAVE_PANEL_BACKGROUND_PK = new Background(
+            new BackgroundFill(Color.WHITE, new CornerRadii(18, 18, 0, 0, false), Insets.EMPTY));
+    public static final Background SLAVE_PANEL_BACKGROUND_NPK = new Background(
+            new BackgroundFill(Color.WHITE, new CornerRadii(0, 0, 18, 18, false), Insets.EMPTY));
     public static final double FIELDS_HORIZONTAL_GAP = 10;
     public static final double FIELDS_VERTICAL_GAP = 3;
     public static final String STANDARD_FONT = "Helvetica";
@@ -81,9 +84,11 @@ public class ApricotBBBEntity extends VBox {
 
     public double getHorizontalDistance(ApricotBBBEntity entity) {
         Point2D parentTopLeft = new Point2D(this.getLayoutX(), this.getLayoutY());
-        Point2D parentBottomRight = new Point2D(this.getLayoutX() + this.getWidth(), this.getLayoutY() + this.getHeight());
+        Point2D parentBottomRight = new Point2D(this.getLayoutX() + this.getWidth(),
+                this.getLayoutY() + this.getHeight());
         Point2D childTopLeft = new Point2D(entity.getLayoutX(), entity.getLayoutY());
-        Point2D childBottomRight = new Point2D(entity.getLayoutX() + entity.getWidth(), entity.getLayoutY() + entity.getHeight());
+        Point2D childBottomRight = new Point2D(entity.getLayoutX() + entity.getWidth(),
+                entity.getLayoutY() + entity.getHeight());
 
         Point2D parentMidpoint = parentTopLeft.midpoint(parentBottomRight);
         Point2D childMidpoint = childTopLeft.midpoint(childBottomRight);
@@ -284,7 +289,7 @@ public class ApricotBBBEntity extends VBox {
                 npk.setBorder(b);
 
             }
-            
+
             pk.setPadding(REDUCED_PANEL_INSETS_PK);
             npk.setPadding(REDUCED_PANEL_INSETS);
         }

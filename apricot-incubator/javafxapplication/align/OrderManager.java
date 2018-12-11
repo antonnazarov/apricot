@@ -1,8 +1,8 @@
 package javafxapplication.align;
 
-import javafxapplication.canvas.ApricotEntityRelationshipCanvas;
+import javafxapplication.canvas.ApricotCanvas;
 
 public interface OrderManager {
-    
-    void order(ApricotEntityRelationshipCanvas canvas);
+
+    void order(ApricotCanvas canvas);
 }

@@ -2,7 +2,7 @@ package javafxapplication.entity;
 
 import java.util.List;
 
-import javafxapplication.canvas.ApricotEntityRelationshipCanvas;
+import javafxapplication.canvas.ApricotCanvas;
 import javafxapplication.entity.shape.DetailedEntityShapeBuilder;
 import javafxapplication.entity.shape.EntityShapeBuilder;
 import javafxapplication.modifiers.ElementVisualModifier;
@@ -16,18 +16,16 @@ import javafxapplication.modifiers.SetEntityEventsModifier;
  * @since 04/12/2018
  */
 public class ApricotEntityBuilder implements EntityBuilder {
-    
+
     private EntityShapeBuilder shapeBuilder = null;
-    
-    public ApricotEntityBuilder(ApricotEntityRelationshipCanvas canvas) {
-        
-        //  collect all necessary modifiers
-        ElementVisualModifier[] modifiers = new ElementVisualModifier[] { 
-                new EntitySetDetailedEntityShadowModifier(),
-                new SetEntityEventsModifier(canvas) 
-        };
-        
-        shapeBuilder = new DetailedEntityShapeBuilder(modifiers);        
+
+    public ApricotEntityBuilder(ApricotCanvas canvas) {
+
+        // collect all necessary modifiers
+        ElementVisualModifier[] modifiers = new ElementVisualModifier[] { new EntitySetDetailedEntityShadowModifier(),
+                new SetEntityEventsModifier(canvas) };
+
+        shapeBuilder = new DetailedEntityShapeBuilder(modifiers);
     }
 
     @Override

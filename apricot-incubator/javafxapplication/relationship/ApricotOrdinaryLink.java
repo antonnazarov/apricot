@@ -12,9 +12,8 @@ public class ApricotOrdinaryLink extends ApricotBasicEntityLink {
 
     private double middleStepLayoutX;
 
-    public ApricotOrdinaryLink(ApricotBBBEntity parent, ApricotBBBEntity child,
-            double primaryFieldLayoutY, double foreignFieldLayoutY,
-            RelationshipType type) {
+    public ApricotOrdinaryLink(ApricotBBBEntity parent, ApricotBBBEntity child, double primaryFieldLayoutY,
+            double foreignFieldLayoutY, RelationshipType type) {
         super(parent, child, primaryFieldLayoutY, foreignFieldLayoutY, type);
     }
 
