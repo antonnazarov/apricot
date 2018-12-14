@@ -33,6 +33,9 @@ public class DetailedSlaveEntityShape extends DetailedEntityShape {
         primaryPanel.setBorder(b);
         b = new Border(nonPrimaryBs);
         nonPrimaryPanel.setBorder(b);
+        
+        primaryPanel.setBackground(SLAVE_PANEL_BACKGROUND_PK);
+        nonPrimaryPanel.setBackground(SLAVE_PANEL_BACKGROUND_NPK);
     }
 
     @Override
@@ -50,6 +53,9 @@ public class DetailedSlaveEntityShape extends DetailedEntityShape {
         primaryPanel.setBorder(b);
         b = new Border(nonPrimaryBs);
         nonPrimaryPanel.setBorder(b);
+        
+        primaryPanel.setBackground(SLAVE_PANEL_BACKGROUND_PK);
+        nonPrimaryPanel.setBackground(SLAVE_PANEL_BACKGROUND_NPK);
     }
 
     @Override

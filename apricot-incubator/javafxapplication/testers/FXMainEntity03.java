@@ -1,7 +1,5 @@
 package javafxapplication.testers;
 
-import javafxapplication.align.SimpleGridEntityAllocator;
-import javafxapplication.align.AlignCommand;
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -17,7 +15,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafxapplication.align.AlignCommand;
 import javafxapplication.align.DiagramPanelManager;
+import javafxapplication.align.SimpleGridEntityAllocator;
 import javafxapplication.relationship.ApricotEntityLinkManager;
 import javafxapplication.relationship.BasicEntityLinkManager;
 import javafxapplication.relationship.RelationshipType;

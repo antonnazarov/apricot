@@ -2,9 +2,14 @@ package javafxapplication.entity.shape;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafxapplication.entity.ApricotEntity;
 
@@ -22,6 +27,12 @@ public abstract class DetailedEntityShape extends ApricotEntityShape {
     public static final Insets REDUCED_PANEL_INSETS_NPK = new Insets(5, 7, 5, 7);
     public static final double STANDARD_BORDER_WIDTH = 1;
     public static final double THICK_BORDER_WIDTH = 4;
+    public static final Background MASTER_PANEL_BACKGROUND = new Background(
+            new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY));
+    public static final Background SLAVE_PANEL_BACKGROUND_PK = new Background(
+            new BackgroundFill(Color.WHITE, new CornerRadii(18, 18, 0, 0, false), Insets.EMPTY));
+    public static final Background SLAVE_PANEL_BACKGROUND_NPK = new Background(
+            new BackgroundFill(Color.WHITE, new CornerRadii(0, 0, 18, 18, false), Insets.EMPTY));
 
     protected final Text header;
     protected final GridPane primaryPanel;

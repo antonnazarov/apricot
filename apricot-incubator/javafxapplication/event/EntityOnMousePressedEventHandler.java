@@ -19,7 +19,7 @@ public class EntityOnMousePressedEventHandler implements EventHandler<MouseEvent
     public static final double RIM_CONTROL_WIDTH = 10;
 
     private String tableName = null;
-    ApricotCanvas canvas = null;
+    private ApricotCanvas canvas = null;
 
     public EntityOnMousePressedEventHandler(String tableName, ApricotCanvas canvas) {
         this.tableName = tableName;
@@ -47,7 +47,7 @@ public class EntityOnMousePressedEventHandler implements EventHandler<MouseEvent
             }
         }
     }
-    
+
     private void registerEntityOriginalPosition(ApricotEntityShape entityShape, double sceneX, double sceneY,
             DraggingType type) {
 
@@ -66,7 +66,7 @@ public class EntityOnMousePressedEventHandler implements EventHandler<MouseEvent
      * Detect the dragging type for the current entity. Not all dragging types have
      * been used.
      */
-    private DraggingType getDraggingType(ApricotEntityShape entityShape, double eventX, double eventY) {
+    public static DraggingType getDraggingType(ApricotEntityShape entityShape, double eventX, double eventY) {
         DraggingType type = DraggingType.ENTITY_POSITION_DRAGGING;
 
         if (eventX > entityShape.getWidth() - RIM_CONTROL_WIDTH

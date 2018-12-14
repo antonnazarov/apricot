@@ -36,8 +36,6 @@ public final class ApricotEntityImpl implements ApricotEntity {
         this.details = details;
         this.slave = slave;
         this.shapeBuilder = shapeBuilder;
-
-        buildShape();
     }
 
     @Override
@@ -48,6 +46,21 @@ public final class ApricotEntityImpl implements ApricotEntity {
     @Override
     public void setElementStatus(ElementStatus status) {
         this.status = status;
+
+        switch (status) {
+        case DEFAULT:
+            entityShape.setDefault();
+            break;
+        case SELECTED:
+            entityShape.setSelected();
+            break;
+        default:
+            break;
+        }
+
+        if (status == ElementStatus.DEFAULT) {
+            entityShape.setDefault();
+        }
     }
 
     @Override

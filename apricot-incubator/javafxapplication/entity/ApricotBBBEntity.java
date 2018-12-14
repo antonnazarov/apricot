@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -21,9 +22,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafxapplication.relationship.ApricotEntityLink;
 import javafxapplication.event.EntityEventBuilder;
 import javafxapplication.event.EventBuilder;
+import javafxapplication.relationship.ApricotEntityLink;
 
 /**
  * An extension of the class VBox, which represents an entity.

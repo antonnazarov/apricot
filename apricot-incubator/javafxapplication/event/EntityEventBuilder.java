@@ -1,8 +1,8 @@
 package javafxapplication.event;
 
-import javafxapplication.entity.ApricotBBBEntity;
 import java.util.ArrayList;
 import java.util.List;
+
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
@@ -14,12 +14,14 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafxapplication.entity.ApricotBBBEntity;
 
 /**
  * A helper class which creates the events,
  *
  * @author Anton Nazarov
  * @since 05/11/2018
+ * @deprecated
  */
 public class EntityEventBuilder implements EventBuilder {
 

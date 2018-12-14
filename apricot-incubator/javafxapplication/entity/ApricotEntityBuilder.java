@@ -3,6 +3,7 @@ package javafxapplication.entity;
 import java.util.List;
 
 import javafxapplication.canvas.ApricotCanvas;
+import javafxapplication.canvas.ElementStatus;
 import javafxapplication.entity.shape.DetailedEntityShapeBuilder;
 import javafxapplication.entity.shape.EntityShapeBuilder;
 import javafxapplication.modifiers.ElementVisualModifier;
@@ -31,6 +32,8 @@ public class ApricotEntityBuilder implements EntityBuilder {
     @Override
     public ApricotEntity buildEntity(String tableName, List<FieldDetail> details, boolean slave) {
         ApricotEntity entity = new ApricotEntityImpl(tableName, details, slave, shapeBuilder);
+        entity.buildShape();
+        entity.setElementStatus(ElementStatus.DEFAULT);
 
         return entity;
     }

@@ -1,10 +1,10 @@
 package javafxapplication.relationship;
 
-import javafxapplication.entity.ApricotBBBEntity;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.shape.Polyline;
 import javafx.scene.shape.Shape;
+import javafxapplication.entity.ApricotBBBEntity;
 import javafxapplication.relationship.shape.BasicLinkPrimitivesBuilder;
 import javafxapplication.relationship.shape.LinkPrimitivesBuilder;
 

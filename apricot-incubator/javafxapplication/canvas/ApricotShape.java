@@ -1,7 +1,5 @@
 package javafxapplication.canvas;
 
-import javafx.scene.Node;
-
 /**
  * This interface is general for all graphical (shape) elements on the Apricot
  * Diagram.

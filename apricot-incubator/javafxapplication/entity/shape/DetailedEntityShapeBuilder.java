@@ -1,10 +1,12 @@
 package javafxapplication.entity.shape;
 
 import java.util.List;
+
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafxapplication.canvas.ElementStatus;
 import javafxapplication.entity.ApricotEntity;
 import javafxapplication.entity.FieldDetail;
 import javafxapplication.modifiers.ElementVisualModifier;

@@ -31,6 +31,9 @@ public class DetailedMasterEntityShape extends DetailedEntityShape {
         primaryPanel.setBorder(b);
         b = new Border(nonPrimaryBs);
         nonPrimaryPanel.setBorder(b);
+        
+        primaryPanel.setBackground(MASTER_PANEL_BACKGROUND);
+        nonPrimaryPanel.setBackground(MASTER_PANEL_BACKGROUND);
     }
 
     @Override
@@ -46,6 +49,9 @@ public class DetailedMasterEntityShape extends DetailedEntityShape {
         primaryPanel.setBorder(b);
         b = new Border(nonPrimaryBs);
         nonPrimaryPanel.setBorder(b);
+        
+        primaryPanel.setBackground(MASTER_PANEL_BACKGROUND);
+        nonPrimaryPanel.setBackground(MASTER_PANEL_BACKGROUND);
     }
 
     @Override

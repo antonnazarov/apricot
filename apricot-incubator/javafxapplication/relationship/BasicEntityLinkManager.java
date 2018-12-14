@@ -1,11 +1,11 @@
 package javafxapplication.relationship;
 
 import javafx.scene.Group;
-import javafxapplication.entity.ApricotBBBEntity;
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+import javafxapplication.entity.ApricotBBBEntity;
 
 /**
  * A basic implementation of the ApricotEntityLinkManager interface.

@@ -2,7 +2,6 @@ package javafxapplication.relationship.shape;
 
 import javafx.scene.shape.Shape;
 import javafxapplication.relationship.ApricotEntityLink;
-import javafxapplication.relationship.RelationshipType;
 
 /**
  * This is an extension of the Group class with the parameters, specific for the

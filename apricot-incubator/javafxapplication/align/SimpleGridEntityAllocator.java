@@ -2,6 +2,7 @@ package javafxapplication.align;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
