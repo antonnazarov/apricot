@@ -1,32 +1,30 @@
 package javafxapplication.event;
 
 import javafx.event.EventHandler;
-import javafx.scene.Cursor;
-import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
+import javafxapplication.align.AlignCommand;
+import javafxapplication.align.CanvasSizeAjustor;
 import javafxapplication.canvas.ApricotCanvas;
 import javafxapplication.entity.shape.ApricotEntityShape;
 
-public class EventOnMouseExitedEventHandler implements EventHandler<MouseEvent> {
+public class EntityOnMouseReleasedEventHandler implements EventHandler<MouseEvent> {
 
     private String tableName = null;
     private ApricotCanvas canvas = null;
+    private AlignCommand aligner = null;
 
-    public EventOnMouseExitedEventHandler(String tableName, ApricotCanvas canvas) {
+    public EntityOnMouseReleasedEventHandler(String tableName, ApricotCanvas canvas) {
         this.tableName = tableName;
         this.canvas = canvas;
+        aligner = new CanvasSizeAjustor(canvas);
     }
-
+    
     @Override
     public void handle(MouseEvent event) {
         if (event.getSource() instanceof ApricotEntityShape) {
             ApricotEntityShape entityShape = (ApricotEntityShape) event.getSource();
             if (tableName.equals(entityShape.getId())) {
-                Pane pane = (Pane) canvas;
-                Scene scene = pane.getScene();
-                
-                scene.setCursor(Cursor.DEFAULT);
+                aligner.align();
                 
                 event.consume();
             }

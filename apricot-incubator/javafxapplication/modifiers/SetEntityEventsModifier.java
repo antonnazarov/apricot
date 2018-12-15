@@ -6,8 +6,10 @@ import javafxapplication.canvas.ApricotShape;
 import javafxapplication.entity.ApricotEntity;
 import javafxapplication.entity.shape.ApricotEntityShape;
 import javafxapplication.event.EntityOnMouseDraggedEventHandler;
+import javafxapplication.event.EntityOnMouseEnteredEventHandler;
 import javafxapplication.event.EntityOnMouseMovedEventHandler;
 import javafxapplication.event.EntityOnMousePressedEventHandler;
+import javafxapplication.event.EntityOnMouseReleasedEventHandler;
 import javafxapplication.event.EventOnMouseExitedEventHandler;
 
 /**
@@ -32,9 +34,11 @@ public class SetEntityEventsModifier implements ElementVisualModifier {
             String tableName = ((ApricotEntity) element).getTableName();
 
             entityShape.setOnMousePressed(new EntityOnMousePressedEventHandler(tableName, canvas));
-            entityShape.setOnMousePressed(new EntityOnMouseDraggedEventHandler(tableName, canvas));
-            entityShape.setOnMousePressed(new EntityOnMouseMovedEventHandler(tableName, canvas));
-            entityShape.setOnMousePressed(new EventOnMouseExitedEventHandler(tableName, canvas));
+            entityShape.setOnMouseReleased(new EntityOnMouseReleasedEventHandler(tableName, canvas));
+            entityShape.setOnMouseDragged(new EntityOnMouseDraggedEventHandler(tableName, canvas));
+            entityShape.setOnMouseMoved(new EntityOnMouseMovedEventHandler(tableName, canvas));
+            entityShape.setOnMouseEntered(new EntityOnMouseEnteredEventHandler(tableName, canvas));
+            entityShape.setOnMouseExited(new EventOnMouseExitedEventHandler(tableName, canvas));
         }
     }
 }

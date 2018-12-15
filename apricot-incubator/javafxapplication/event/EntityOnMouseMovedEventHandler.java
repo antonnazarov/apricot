@@ -3,7 +3,6 @@ package javafxapplication.event;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafxapplication.canvas.ApricotCanvas;
@@ -29,17 +28,18 @@ public class EntityOnMouseMovedEventHandler implements EventHandler<MouseEvent> 
     @Override
     public void handle(MouseEvent event) {
 
-        if (event.getSource() instanceof ApricotEntityShape && event.getButton() == MouseButton.PRIMARY) {
+        if (event.getSource() instanceof ApricotEntityShape) {
             ApricotEntityShape entityShape = (ApricotEntityShape) event.getSource();
             if (tableName.equals(entityShape.getId())) {
                 Pane pane = (Pane) canvas;
                 Scene scene = pane.getScene();
+
                 switch (EntityOnMousePressedEventHandler.getDraggingType(entityShape, event.getX(), event.getY())) {
                 case ENTITY_HORIZONTAL_DRAGGING:
                     scene.setCursor(Cursor.E_RESIZE);
                     break;
                 default:
-                    scene.setCursor(Cursor.DEFAULT);
+                    scene.setCursor(Cursor.HAND);
                     break;
                 }
 

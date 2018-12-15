@@ -5,6 +5,7 @@ import java.util.List;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -49,6 +50,11 @@ public class EntityOnMouseDraggedEventHandler implements EventHandler<MouseEvent
                     case ENTITY_POSITION_DRAGGING:
                         entityShape.setTranslateX(newTranslateX);
                         entityShape.setTranslateY(newTranslateY);
+
+                        Pane pane = (Pane) canvas;
+                        Scene scene = pane.getScene();
+                        scene.setCursor(Cursor.HAND);
+
                         break;
                     case ENTITY_HORIZONTAL_DRAGGING:
                         setNewWidth(b, pos, offsetX);
@@ -56,9 +62,6 @@ public class EntityOnMouseDraggedEventHandler implements EventHandler<MouseEvent
                     default:
                         break;
                     }
-                    
-                    Pane pane = (Pane) canvas;
-                    pane.getScene().setCursor(Cursor.HAND);
                     
                     event.consume();
                 }

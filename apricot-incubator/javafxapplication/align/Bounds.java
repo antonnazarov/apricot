@@ -1,18 +1,13 @@
 package javafxapplication.align;
 
-/**
- * 
- * @deprecated
- *
- */
-public class Coordinates {
+public class Bounds {
 
     private double left = 0;
     private double top = 0;
     private double right = 0;
     private double bottom = 0;
 
-    Coordinates(double left, double top, double right, double bottom) {
+    Bounds(double left, double top, double right, double bottom) {
         this.left = left;
         this.top = top;
         this.right = right;

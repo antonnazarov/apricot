@@ -19,10 +19,16 @@ import javafxapplication.canvas.ElementType;
  * @since 11/12/2018
  *
  */
-public class SelectedOnTopOrderManager implements OrderManager {
+public class BringSelectedToTopOrderManager implements OrderManager {
+    
+    private ApricotCanvas canvas = null;
+    
+    public BringSelectedToTopOrderManager(ApricotCanvas canvas) {
+        this.canvas = canvas;
+    }
 
     @Override
-    public void order(ApricotCanvas canvas) {
+    public void order() {
         List<Node> result = new ArrayList<>();
 
         List<Node> selectedEntities = new ArrayList<>();

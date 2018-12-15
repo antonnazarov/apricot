@@ -42,7 +42,7 @@ public class ApricotBasicCanvas extends Pane implements ApricotCanvas {
 
     @Override
     public void orderElements(OrderManager orderManager) {
-        orderManager.order(this);
+        orderManager.order();
     }
 
     @Override
