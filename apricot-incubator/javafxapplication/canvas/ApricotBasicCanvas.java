@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafxapplication.align.OrderManager;
@@ -82,5 +83,18 @@ public class ApricotBasicCanvas extends Pane implements ApricotCanvas {
     @Override
     public List<Node> getShapes() {
         return this.getChildren();
+    }
+    
+    @Override
+    public Map<String, Bounds> getEntityBounds() {
+        Map<String, Bounds> ret = new HashMap<>();
+        
+        for (String table : entities.keySet()) {
+            ApricotEntity entity = entities.get(table);
+            Node n = entity.getShape();
+            ret.put(table, n.getBoundsInParent());
+        }
+        
+        return ret;
     }
 }

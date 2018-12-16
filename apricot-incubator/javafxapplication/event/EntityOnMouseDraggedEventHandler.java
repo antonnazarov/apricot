@@ -12,6 +12,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafxapplication.canvas.ApricotCanvas;
+import javafxapplication.canvas.ElementStatus;
 import javafxapplication.entity.shape.ApricotEntityShape;
 
 /**
@@ -25,10 +26,12 @@ public class EntityOnMouseDraggedEventHandler implements EventHandler<MouseEvent
 
     private String tableName = null;
     private ApricotCanvas canvas = null;
+    private GroupOperationHandler groupHander = null;
 
     public EntityOnMouseDraggedEventHandler(String tableName, ApricotCanvas canvas) {
         this.tableName = tableName;
         this.canvas = canvas;
+        groupHander = new GroupOperationHandler();
     }
 
     @Override
@@ -48,8 +51,13 @@ public class EntityOnMouseDraggedEventHandler implements EventHandler<MouseEvent
                     VBox b = (VBox) entityShape;
                     switch (pos.getDraggingType()) {
                     case ENTITY_POSITION_DRAGGING:
-                        entityShape.setTranslateX(newTranslateX);
-                        entityShape.setTranslateY(newTranslateY);
+                        if (event.isControlDown()) {
+                            groupHander.setEntityTranslatePosition(canvas, newTranslateX, newTranslateY,
+                                    ElementStatus.SELECTED);
+                        } else {
+                            entityShape.setTranslateX(newTranslateX);
+                            entityShape.setTranslateY(newTranslateY);
+                        }
 
                         Pane pane = (Pane) canvas;
                         Scene scene = pane.getScene();
@@ -62,7 +70,7 @@ public class EntityOnMouseDraggedEventHandler implements EventHandler<MouseEvent
                     default:
                         break;
                     }
-                    
+
                     event.consume();
                 }
             }

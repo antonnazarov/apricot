@@ -7,6 +7,10 @@ import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 
+/**
+ * 
+ *@deprecated
+ */
 public class BorderStrokeHelper {
 
     public BorderStroke getPrimaryMasterBorderStroke(double borderWidth) {

@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 public class DragInitPosition implements Serializable {
 
+    private static final long serialVersionUID = -1262439709050476344L;
+    
     private double orgSceneX, orgSceneY, orgTranslateX, orgTranslateY;
     private DraggingType draggingType;
     private double origWidth, origHeight;

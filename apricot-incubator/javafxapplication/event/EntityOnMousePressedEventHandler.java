@@ -33,13 +33,16 @@ public class EntityOnMousePressedEventHandler implements EventHandler<MouseEvent
             if (tableName.equals(entityShape.getId())) {
                 DraggingType type = getDraggingType(entityShape, event.getX(), event.getY());
                 registerEntityOriginalPosition(entityShape, event.getSceneX(), event.getSceneY(), type);
-
+                
+                ApricotElement entity = entityShape.getElement();
                 if (!event.isControlDown()) {
                     canvas.changeAllElementsStatus(ElementStatus.DEFAULT);
+                    entity.setElementStatus(ElementStatus.SELECTED);
+                } else if (entity.getElementStatus() == ElementStatus.SELECTED) {
+                    // entity.setElementStatus(ElementStatus.DEFAULT);
+                } else {
+                    entity.setElementStatus(ElementStatus.SELECTED);                    
                 }
-
-                ApricotElement entity = entityShape.getElement();
-                entity.setElementStatus(ElementStatus.SELECTED);
 
                 canvas.sendToFront(entity);
 

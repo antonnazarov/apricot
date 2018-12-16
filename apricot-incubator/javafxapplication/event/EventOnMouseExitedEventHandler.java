@@ -25,9 +25,9 @@ public class EventOnMouseExitedEventHandler implements EventHandler<MouseEvent> 
             if (tableName.equals(entityShape.getId())) {
                 Pane pane = (Pane) canvas;
                 Scene scene = pane.getScene();
-                
+
                 scene.setCursor(Cursor.DEFAULT);
-                
+
                 event.consume();
             }
         }

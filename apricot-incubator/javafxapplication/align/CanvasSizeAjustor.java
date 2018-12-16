@@ -39,7 +39,7 @@ public class CanvasSizeAjustor implements AlignCommand {
 
         for (ApricotElement e : canvas.getElements()) {
             if (e.getElementType() == ElementType.ENTITY) {
-                
+
                 VBox box = (VBox) e.getShape();
 
                 double left = box.getLayoutX() + box.getTranslateX();
@@ -83,7 +83,7 @@ public class CanvasSizeAjustor implements AlignCommand {
     }
 
     /**
-     * Re-position all entities to the calculated bias. 
+     * Re-position all entities to the calculated bias.
      */
     private void biasAllEntities(Bounds canvasBounds) {
         Point2D bias = getEntitiesBias(canvasBounds);
@@ -91,20 +91,16 @@ public class CanvasSizeAjustor implements AlignCommand {
         for (ApricotElement e : canvas.getElements()) {
             if (e.getElementType() == ElementType.ENTITY) {
                 VBox box = (VBox) e.getShape();
-                
+
                 box.setLayoutX(box.getLayoutX() + bias.getX());
                 box.setLayoutY(box.getLayoutY() + bias.getY());
             }
         }
     }
-    
+
     private void alignCanvasSize(Bounds canvasBounds) {
         ApricotBasicCanvas boxCanvas = (ApricotBasicCanvas) canvas;
-        if (canvasBounds.getRight() > boxCanvas.getPrefWidth()) {
-            boxCanvas.setPrefWidth(canvasBounds.getRight() + DIAGRAM_PANEL_OFFSET);
-        }
-        if (canvasBounds.getBottom() > boxCanvas.getPrefHeight()) {
-            boxCanvas.setPrefHeight(canvasBounds.getBottom() + DIAGRAM_PANEL_OFFSET);
-        }
+        boxCanvas.setPrefWidth(canvasBounds.getRight() + DIAGRAM_PANEL_OFFSET);
+        boxCanvas.setPrefHeight(canvasBounds.getBottom() + DIAGRAM_PANEL_OFFSET);
     }
 }

@@ -63,14 +63,6 @@ public class FXMainEntity03 extends Application {
 
         root.getChildren().add(s1);
 
-        Button btn = new Button();
-        btn.setText("Align Screen");
-        btn.setOnAction(event -> {
-            DiagramPanelManager m = new DiagramPanelManager();
-            m.adjustDiagramPanel(entityCanvas);
-        });
-        topBox.getChildren().add(btn);
-
         btn = new Button();
         btn.setText("Get Pos");
         btn.setOnAction(event -> {

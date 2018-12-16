@@ -8,7 +8,6 @@ import java.util.Map;
 
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafxapplication.entity.ApricotBBBEntity;
 import javafxapplication.entity.FieldDetail;
 
 /**
@@ -470,10 +469,6 @@ public class TestEntityCreateHelper {
                     || entitiesToCreate == null) {
                 List<FieldDetail> fields = entities.get(entityName);
 
-                ApricotBBBEntity entity = new ApricotBBBEntity(entityName, fields, primaryStage);
-                entity.setLayoutX(layoutX);
-                entity.setLayoutY(layoutY);
-                entityCanvas.getChildren().add(entity);
 
                 layoutX += 320;
                 layoutY += 320;

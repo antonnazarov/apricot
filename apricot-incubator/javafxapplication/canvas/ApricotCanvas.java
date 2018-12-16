@@ -1,7 +1,9 @@
 package javafxapplication.canvas;
 
 import java.util.List;
+import java.util.Map;
 
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafxapplication.align.OrderManager;
 import javafxapplication.entity.ApricotEntity;
@@ -29,4 +31,6 @@ public interface ApricotCanvas {
     List<ApricotElement> getElements();
 
     List<Node> getShapes();
+    
+    Map<String, Bounds> getEntityBounds();
 }
