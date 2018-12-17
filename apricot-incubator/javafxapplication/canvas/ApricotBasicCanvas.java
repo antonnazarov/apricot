@@ -10,7 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafxapplication.align.OrderManager;
 import javafxapplication.entity.ApricotEntity;
-import javafxapplication.relationship.ApricotEntityLink;
+import javafxapplication.relationship.ApricotRelationship;
 
 /**
  * The basic implementation of the Apricot- canvas.
@@ -22,7 +22,7 @@ public class ApricotBasicCanvas extends Pane implements ApricotCanvas {
 
     private final List<ApricotElement> elements = new ArrayList<>();
     private final Map<String, ApricotEntity> entities = new HashMap<>();
-    private final List<ApricotEntityLink> links = new ArrayList<>();
+    private final List<ApricotRelationship> relationships = new ArrayList<>();
 
     /**
      * Register new Entity Shape into the canvas.
@@ -33,9 +33,9 @@ public class ApricotBasicCanvas extends Pane implements ApricotCanvas {
         if (element.getElementType() == ElementType.ENTITY) {
             ApricotEntity entity = (ApricotEntity) element;
             entities.put(entity.getTableName(), entity);
-        } else if (element.getElementType() == ElementType.LINK) {
-            ApricotEntityLink link = (ApricotEntityLink) element;
-            links.add(link);
+        } else if (element.getElementType() == ElementType.RELATIONSHIP) {
+            ApricotRelationship relationship = (ApricotRelationship) element;
+            relationships.add(relationship);
         }
 
         this.getChildren().add(element.getShape());

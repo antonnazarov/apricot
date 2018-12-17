@@ -44,8 +44,8 @@ public class BasicEntityLinkManager implements ApricotEntityLinkManager {
         double primaryFieldLayoutY = pk.getLayoutY() + primaryField.getLayoutY() + VERTICAL_CORRECTION;
         double foreignFieldLayoutY = npk.getLayoutY() + foreignField.getLayoutY() + VERTICAL_CORRECTION;
 
-        ApricotEntityLink entityLink = null;
-        EntityLinkBuilder builder = null;
+        ApricotRelationship entityLink = null;
+        RelationshipBuilder builder = null;
         if (parent.getHorizontalDistance(child) >= MINIMAL_SEGMENT_LENGTH) {
             entityLink = new ApricotOrdinaryLink(parent, child, primaryFieldLayoutY, foreignFieldLayoutY,
                     relationshipType);
@@ -59,7 +59,7 @@ public class BasicEntityLinkManager implements ApricotEntityLinkManager {
     }
 
     @Override
-    public void handleEntityLink(ApricotEntityLink link) {
+    public void handleEntityLink(ApricotRelationship link) {
 
     }
 

@@ -3,9 +3,7 @@ package javafxapplication.relationship;
 import javafx.scene.layout.Pane;
 
 /**
- * This is the manager interface, which incapsulate the algorithms of making
- * decisions which type of the link to be drawn ("Ordinary", "Dad's Hand", "A
- * Hat").
+ * This is the manager interface, which contains the algorithms of making decisions which type of the link to be drawn ("Ordinary", "Dad's Hand", "Hat").
  *
  * @author Anton Nazarov
  * @since 21/11/2018
@@ -21,5 +19,5 @@ public interface ApricotEntityLinkManager {
     /**
      * handle an existing link between entities.
      */
-    void handleEntityLink(ApricotEntityLink link);
+    void handleEntityLink(ApricotRelationship link);
 }

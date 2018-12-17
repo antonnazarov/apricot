@@ -9,18 +9,17 @@ import javafxapplication.relationship.shape.BasicLinkPrimitivesBuilder;
 import javafxapplication.relationship.shape.LinkPrimitivesBuilder;
 
 /**
- * This class is responsible for drawings of all the graphic primitives of the
- * simpliest (Ordinary) link.
+ * This class is responsible for drawings of all the graphic primitives of the simplest (Ordinary) link.
  * 
  * @author Anton Nazarov
  * @since 20/11/2018
  */
-public class OrdinaryLinkBuilder implements EntityLinkBuilder {
+public class OrdinaryLinkBuilder implements RelationshipBuilder {
 
     LinkPrimitivesBuilder pb = new BasicLinkPrimitivesBuilder();
 
     @Override
-    public Group buildLink(ApricotEntityLink l) {
+    public Group buildLink(ApricotRelationship l) {
         ApricotOrdinaryLink link = (ApricotOrdinaryLink) l;
 
         Polyline p = null;

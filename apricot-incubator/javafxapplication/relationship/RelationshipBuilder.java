@@ -9,7 +9,7 @@ import javafx.scene.Group;
  * @author Anton Nazarov
  * @since 22/11/2018
  */
-public interface EntityLinkBuilder {
+public interface RelationshipBuilder {
 
-    Group buildLink(ApricotEntityLink entityLink);
+    Group buildLink(ApricotRelationship entityLink);
 }

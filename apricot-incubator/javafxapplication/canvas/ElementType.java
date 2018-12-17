@@ -1,5 +1,5 @@
 package javafxapplication.canvas;
 
 public enum ElementType {
-    ENTITY, LINK;
+    ENTITY, RELATIONSHIP;
 }

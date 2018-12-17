@@ -43,10 +43,10 @@ public class BringSelectedToTopOrderManager implements OrderManager {
                 if (element.getElementType() == ElementType.ENTITY
                         && element.getElementStatus() == ElementStatus.SELECTED) {
                     selectedEntities.add(n);
-                } else if (element.getElementType() == ElementType.LINK
+                } else if (element.getElementType() == ElementType.RELATIONSHIP
                         && element.getElementStatus() == ElementStatus.SELECTED) {
                     selectedLinks.add(n);
-                } else if (element.getElementType() == ElementType.LINK
+                } else if (element.getElementType() == ElementType.RELATIONSHIP
                         && element.getElementStatus() != ElementStatus.SELECTED) {
                     otherLinks.add(n);
                 } else if (element.getElementType() == ElementType.ENTITY

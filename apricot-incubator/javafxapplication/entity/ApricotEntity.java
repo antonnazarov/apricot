@@ -4,7 +4,7 @@ import java.util.List;
 
 import javafxapplication.canvas.ApricotElement;
 import javafxapplication.entity.shape.ApricotEntityShape;
-import javafxapplication.relationship.ApricotEntityLink;
+import javafxapplication.relationship.ApricotRelationship;
 
 /**
  * This interface is for a graphical representation of an entity.
@@ -22,9 +22,9 @@ public interface ApricotEntity extends ApricotElement {
 
     boolean isSlave();
 
-    List<ApricotEntityLink> getPrimaryLinks();
+    List<ApricotRelationship> getPrimaryLinks();
 
-    List<ApricotEntityLink> getForeignLinks();
+    List<ApricotRelationship> getForeignLinks();
 
-    void addLink(ApricotEntityLink link, boolean primary);
+    void addLink(ApricotRelationship link, boolean primary);
 }

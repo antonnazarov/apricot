@@ -1,7 +1,7 @@
 package javafxapplication.relationship.shape;
 
 import javafx.scene.shape.Shape;
-import javafxapplication.relationship.ApricotEntityLink;
+import javafxapplication.relationship.ApricotRelationship;
 
 /**
  * This is an extension of the Group class with the parameters, specific for the
@@ -13,7 +13,7 @@ public class OrdinaryLinkShape extends ApricotLinkShape {
 
     private Shape rulerX;
 
-    public OrdinaryLinkShape(Shape polyline, Shape startSign, Shape endSign, Shape rulerX, ApricotEntityLink link) {
+    public OrdinaryLinkShape(Shape polyline, Shape startSign, Shape endSign, Shape rulerX, ApricotRelationship link) {
         super(polyline, startSign, endSign, rulerX);
 
         this.polyline = polyline;
@@ -30,7 +30,7 @@ public class OrdinaryLinkShape extends ApricotLinkShape {
     }
 
     @Override
-    public ApricotEntityLink getEntityLink() {
+    public ApricotRelationship getEntityLink() {
         return link;
     }
 

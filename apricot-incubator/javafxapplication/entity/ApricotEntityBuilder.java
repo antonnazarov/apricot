@@ -19,9 +19,11 @@ import javafxapplication.modifiers.SetEntityEventsModifier;
 public class ApricotEntityBuilder implements EntityBuilder {
 
     private EntityShapeBuilder shapeBuilder = null;
+    private ApricotCanvas canvas = null;
 
     public ApricotEntityBuilder(ApricotCanvas canvas) {
-
+        this.canvas = canvas;
+        
         // collect all necessary modifiers
         ElementVisualModifier[] modifiers = new ElementVisualModifier[] { new EntitySetDetailedEntityShadowModifier(),
                 new SetEntityEventsModifier(canvas) };
@@ -31,7 +33,7 @@ public class ApricotEntityBuilder implements EntityBuilder {
 
     @Override
     public ApricotEntity buildEntity(String tableName, List<FieldDetail> details, boolean slave) {
-        ApricotEntity entity = new ApricotEntityImpl(tableName, details, slave, shapeBuilder);
+        ApricotEntity entity = new ApricotEntityImpl(tableName, details, slave, shapeBuilder, canvas);
         entity.buildShape();
         entity.setElementStatus(ElementStatus.DEFAULT);
 

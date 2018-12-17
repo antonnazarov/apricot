@@ -9,7 +9,7 @@ import javafxapplication.relationship.shape.ApricotLinkShape;
  * @author Anton Nazarov
  * @since 22/11/2018
  */
-public class ApricotBasicEntityLink implements ApricotEntityLink {
+public class ApricotBasicEntityLink implements ApricotRelationship {
 
     private final ApricotEntity parent;
     private final ApricotEntity child;

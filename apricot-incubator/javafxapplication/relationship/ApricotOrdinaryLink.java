@@ -18,7 +18,7 @@ public class ApricotOrdinaryLink extends ApricotBasicEntityLink {
     }
 
     @Override
-    public EntityLinkBuilder getLinkBuilder() {
+    public RelationshipBuilder getLinkBuilder() {
         return new OrdinaryLinkBuilder();
     }
 

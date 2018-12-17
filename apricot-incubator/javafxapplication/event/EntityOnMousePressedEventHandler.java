@@ -44,8 +44,6 @@ public class EntityOnMousePressedEventHandler implements EventHandler<MouseEvent
                     entity.setElementStatus(ElementStatus.SELECTED);                    
                 }
 
-                canvas.sendToFront(entity);
-
                 event.consume();
             }
         }

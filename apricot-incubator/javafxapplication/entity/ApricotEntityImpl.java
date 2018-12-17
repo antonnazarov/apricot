@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.scene.Node;
+import javafxapplication.canvas.ApricotCanvas;
 import javafxapplication.canvas.ElementStatus;
 import javafxapplication.canvas.ElementType;
 import javafxapplication.entity.shape.ApricotEntityShape;
 import javafxapplication.entity.shape.EntityShapeBuilder;
-import javafxapplication.relationship.ApricotEntityLink;
+import javafxapplication.relationship.ApricotRelationship;
 
 /**
  * Implementation of the ApricotEntity interface.
@@ -24,18 +25,20 @@ public final class ApricotEntityImpl implements ApricotEntity {
     private final EntityShapeBuilder shapeBuilder;
     private ElementStatus status = ElementStatus.DEFAULT;
     private ApricotEntityShape entityShape;
-    private List<ApricotEntityLink> primaryLinks = new ArrayList<>();
-    private List<ApricotEntityLink> foreignLinks = new ArrayList<>();
+    private List<ApricotRelationship> primaryLinks = new ArrayList<>();
+    private List<ApricotRelationship> foreignLinks = new ArrayList<>();
+    private ApricotCanvas canvas;
 
     /**
      * Construct a new instance of the ApricotEntity.
      */
     public ApricotEntityImpl(String tableName, List<FieldDetail> details, boolean slave,
-            EntityShapeBuilder shapeBuilder) {
+            EntityShapeBuilder shapeBuilder, ApricotCanvas canvas) {
         this.tableName = tableName;
         this.details = details;
         this.slave = slave;
         this.shapeBuilder = shapeBuilder;
+        this.canvas = canvas;
     }
 
     @Override
@@ -53,6 +56,7 @@ public final class ApricotEntityImpl implements ApricotEntity {
             break;
         case SELECTED:
             entityShape.setSelected();
+            canvas.sendToFront(this);
             break;
         default:
             break;
@@ -89,17 +93,17 @@ public final class ApricotEntityImpl implements ApricotEntity {
     }
 
     @Override
-    public List<ApricotEntityLink> getPrimaryLinks() {
+    public List<ApricotRelationship> getPrimaryLinks() {
         return primaryLinks;
     }
 
     @Override
-    public List<ApricotEntityLink> getForeignLinks() {
+    public List<ApricotRelationship> getForeignLinks() {
         return foreignLinks;
     }
 
     @Override
-    public void addLink(ApricotEntityLink link, boolean primary) {
+    public void addLink(ApricotRelationship link, boolean primary) {
         if (primary) {
             primaryLinks.add(link);
         } else {
