@@ -42,6 +42,14 @@ public class CanvasOnMouseDraggedEventHandler implements EventHandler<MouseEvent
                     entity.setElementStatus(ElementStatus.SELECTED);
                 }
             }
+            
+            //  the lasso is always on top
+            sendLassoToFront(pane, lasso);
         }
+    }
+    
+    private void sendLassoToFront(Pane pane, Rectangle lasso) {
+        pane.getChildren().remove(lasso);
+        pane.getChildren().add(lasso);
     }
 }

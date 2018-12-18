@@ -63,7 +63,7 @@ public class FXMainEntity03 extends Application {
 
         root.getChildren().add(s1);
 
-        btn = new Button();
+        Button btn = new Button();
         btn.setText("Get Pos");
         btn.setOnAction(event -> {
             for (Node n : entityCanvas.getChildren()) {

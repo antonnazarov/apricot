@@ -2,7 +2,7 @@ package javafxapplication.align;
 
 import javafx.geometry.Point2D;
 import javafx.scene.layout.VBox;
-import javafxapplication.canvas.ApricotBasicCanvas;
+import javafxapplication.canvas.ApricotCanvasImpl;
 import javafxapplication.canvas.ApricotCanvas;
 import javafxapplication.canvas.ApricotElement;
 import javafxapplication.canvas.ElementType;
@@ -99,7 +99,7 @@ public class CanvasSizeAjustor implements AlignCommand {
     }
 
     private void alignCanvasSize(Bounds canvasBounds) {
-        ApricotBasicCanvas boxCanvas = (ApricotBasicCanvas) canvas;
+        ApricotCanvasImpl boxCanvas = (ApricotCanvasImpl) canvas;
         boxCanvas.setPrefWidth(canvasBounds.getRight() + DIAGRAM_PANEL_OFFSET);
         boxCanvas.setPrefHeight(canvasBounds.getBottom() + DIAGRAM_PANEL_OFFSET);
     }

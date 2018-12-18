@@ -1,7 +1,5 @@
 package javafxapplication.relationship;
 
-import javafx.scene.Group;
-
 /**
  * Classes of this type are responsible for drawing of graphical representation
  * of the entity link.
@@ -11,5 +9,6 @@ import javafx.scene.Group;
  */
 public interface RelationshipBuilder {
 
-    Group buildLink(ApricotRelationship entityLink);
+    ApricotRelationship buildRelationship(String parentEntityName, String childEntityName, 
+            String primaryKeyName, String foreignKeyName, RelationshipType type);
 }

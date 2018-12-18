@@ -12,7 +12,12 @@ import javafx.scene.shape.Shape;
  * @author Anton Nazarov
  * @since 23/11/2018
  */
-public class BasicLinkPrimitivesBuilder implements LinkPrimitivesBuilder {
+public class RelationshipPrimitivesBuilderImpl implements RelationshipPrimitivesBuilder {
+    
+    public static final double LINK_END_DIAMETER = 6;
+    public static final double OPTIONAL_START_LENGTH = 10;
+    public static final double OPTIONAL_START_CORRECTION = 3;
+   
 
     @Override
     public Shape getOptionalStart() {
@@ -26,8 +31,14 @@ public class BasicLinkPrimitivesBuilder implements LinkPrimitivesBuilder {
 
     @Override
     public Shape getRuler() {
-        throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose
-                                                                       // Tools | Templates.
+        Rectangle r = new Rectangle(OPTIONAL_START_LENGTH, OPTIONAL_START_LENGTH);
+        r.setFill(Color.BLACK);
+        r.setStroke(Color.BLACK);
+        
+        r.managedProperty().bind(r.visibleProperty());
+        r.setVisible(false);
+
+        return r;
     }
 
     @Override

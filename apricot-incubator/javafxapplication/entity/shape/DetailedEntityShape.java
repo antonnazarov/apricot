@@ -23,8 +23,6 @@ import javafxapplication.entity.ApricotEntity;
 public abstract class DetailedEntityShape extends ApricotEntityShape {
 
     public static final Insets STANDARD_PANEL_INSETS = new Insets(5, 10, 5, 10);
-    // public static final Insets REDUCED_PANEL_INSETS_PK = new Insets(2, 7, 2, 7);
-    // public static final Insets REDUCED_PANEL_INSETS_NPK = new Insets(5, 7, 5, 7);
     public static final Insets REDUCED_PANEL_INSETS_PK = new Insets(3, 8, 3, 8);
     public static final Insets REDUCED_PANEL_INSETS_NPK = new Insets(5, 8, 5, 8);
     public static final double STANDARD_BORDER_WIDTH = 1;

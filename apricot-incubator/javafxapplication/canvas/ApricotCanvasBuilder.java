@@ -9,7 +9,7 @@ public class ApricotCanvasBuilder implements CanvasBuilder {
     @Override
     public ApricotCanvas buildCanvas() {
         
-        ApricotBasicCanvas canvas = new ApricotBasicCanvas();
+        ApricotCanvasImpl canvas = new ApricotCanvasImpl();
         canvas.setOnMousePressed(new CanvasOnMousePressedEventHandler());
         canvas.setOnMouseReleased(new CanvasOnMouseReleasedEventHandler());
         canvas.setOnMouseDragged(new CanvasOnMouseDraggedEventHandler());

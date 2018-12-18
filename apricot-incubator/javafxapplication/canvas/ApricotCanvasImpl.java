@@ -18,7 +18,7 @@ import javafxapplication.relationship.ApricotRelationship;
  * @author Anton Nazarov
  * @since 26/11/2018
  */
-public class ApricotBasicCanvas extends Pane implements ApricotCanvas {
+public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
 
     private final List<ApricotElement> elements = new ArrayList<>();
     private final Map<String, ApricotEntity> entities = new HashMap<>();
@@ -56,6 +56,8 @@ public class ApricotBasicCanvas extends Pane implements ApricotCanvas {
         elements.remove(element);
         if (element.getElementType() == ElementType.ENTITY) {
             entities.remove(((ApricotEntity) element).getTableName());
+        } else {
+            relationships.remove(element);
         }
         this.getChildren().remove(element.getShape());
     }

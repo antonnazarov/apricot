@@ -21,12 +21,12 @@ import javafx.stage.Stage;
 import javafxapplication.align.AlignCommand;
 import javafxapplication.align.CanvasSizeAjustor;
 import javafxapplication.align.SetMaxEqualWidth;
-import javafxapplication.canvas.ApricotBasicCanvas;
+import javafxapplication.canvas.ApricotCanvasImpl;
 import javafxapplication.canvas.ApricotCanvasBuilder;
 import javafxapplication.canvas.CanvasBuilder;
 
 public class FXMainEntity04 extends Application {
-    ApricotBasicCanvas erCanvas = null;
+    ApricotCanvasImpl erCanvas = null;
     CanvasBuilder canvasBuilder = new ApricotCanvasBuilder();
 
     @Override
@@ -38,7 +38,7 @@ public class FXMainEntity04 extends Application {
         topBox.setSpacing(7);
         root.getChildren().add(topBox);
 
-        erCanvas = (ApricotBasicCanvas) canvasBuilder.buildCanvas();
+        erCanvas = (ApricotCanvasImpl) canvasBuilder.buildCanvas();
         erCanvas.setBorder(new Border(
                 new BorderStroke(Color.BLACK, BorderStrokeStyle.DOTTED, new CornerRadii(0), new BorderWidths(1))));
         erCanvas.setPrefSize(600, 600);

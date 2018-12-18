@@ -9,11 +9,8 @@ import javafx.scene.shape.Shape;
  * @author Anton Nazarov
  * @since 23/11/2018
  */
-public interface LinkPrimitivesBuilder {
-    static final double LINK_END_DIAMETER = 6;
-    static final double OPTIONAL_START_LENGTH = 10;
-    static final double OPTIONAL_START_CORRECTION = 3;
-
+public interface RelationshipPrimitivesBuilder {
+    
     Shape getOptionalStart();
 
     Shape getRuler();

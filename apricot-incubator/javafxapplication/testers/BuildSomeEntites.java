@@ -4,18 +4,18 @@ import java.util.List;
 import java.util.Map;
 
 import javafx.scene.Node;
-import javafxapplication.canvas.ApricotBasicCanvas;
+import javafxapplication.canvas.ApricotCanvasImpl;
 import javafxapplication.entity.ApricotEntity;
 import javafxapplication.entity.ApricotEntityBuilder;
 import javafxapplication.entity.FieldDetail;
 
 public class BuildSomeEntites implements TestEntityBuilder {
 
-    private ApricotBasicCanvas erCanvas = null;
+    private ApricotCanvasImpl erCanvas = null;
     private Map<String, List<FieldDetail>> entities = null;
     private ApricotEntityBuilder builder = null;
 
-    public BuildSomeEntites(ApricotBasicCanvas erCanvas) {
+    public BuildSomeEntites(ApricotCanvasImpl erCanvas) {
         this.erCanvas = erCanvas;
         builder = new ApricotEntityBuilder(erCanvas);
         TestEntityCreateHelper helper = new TestEntityCreateHelper();
@@ -28,6 +28,7 @@ public class BuildSomeEntites implements TestEntityBuilder {
         build("intermediary_agreement", true, 350, 30);
         build("role_player", false, 30, 450);
         build("party_role", true, 30, 550);
+        build("fsp_registration", false, 700, 30);
     }
 
     private void build(String tableName, boolean isSlave, double x, double y) {
