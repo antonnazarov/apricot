@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.Map;
 
 import javafx.scene.Node;
-import javafxapplication.canvas.ApricotCanvasImpl;
-import javafxapplication.entity.ApricotEntity;
-import javafxapplication.entity.ApricotEntityBuilder;
-import javafxapplication.entity.FieldDetail;
+import za.co.apricotdb.viewport.canvas.ApricotCanvasImpl;
+import za.co.apricotdb.viewport.entity.ApricotEntity;
+import za.co.apricotdb.viewport.entity.ApricotEntityBuilder;
+import za.co.apricotdb.viewport.entity.FieldDetail;
 
 public class BuildSomeEntites implements TestEntityBuilder {
 
@@ -24,11 +24,12 @@ public class BuildSomeEntites implements TestEntityBuilder {
 
     public void buildEntities() {
         
-        build("fsb_adviser_registration", false, 30, 30);
+        build("fsb_adviser_registration", false, 700, 500);
+        build("fsp_registration", false, 30, 30);
         build("intermediary_agreement", true, 350, 30);
-        build("role_player", false, 30, 450);
+        build("role_player", false, 780, 380);
         build("party_role", true, 30, 550);
-        build("fsp_registration", false, 700, 30);
+        build("agreement", false, 800, 200);
     }
 
     private void build(String tableName, boolean isSlave, double x, double y) {

@@ -26,12 +26,13 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafxapplication.event.DragInitPosition;
+import za.co.apricotdb.viewport.event.DragInitPosition;
 
 /**
  * Attempt to draw an entity.
  *
  * @author Anton Nazarov
+ * @deprecated
  */
 public class FXMainEntity02 extends Application {
     private Stage primaryStage;

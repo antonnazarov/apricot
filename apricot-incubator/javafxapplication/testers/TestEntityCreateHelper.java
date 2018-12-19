@@ -8,7 +8,7 @@ import java.util.Map;
 
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafxapplication.entity.FieldDetail;
+import za.co.apricotdb.viewport.entity.FieldDetail;
 
 /**
  * This class helps to create the test entities for visual testing.
@@ -376,6 +376,21 @@ public class TestEntityCreateHelper {
 
         return fields;
     }
+    
+    /**
+     * Table agreement
+     */
+    public List<FieldDetail> getAgreement() {
+        List<FieldDetail> fields = new ArrayList<>();
+        fields.add(new FieldDetail("id", true, "bigint", true, "PK"));
+        fields.add(new FieldDetail("payment_agreement_id", false, "bigint", false, null));
+        fields.add(new FieldDetail("start_date", true, "date", false, null));
+        fields.add(new FieldDetail("end_date", false, "date", false, null));
+        fields.add(new FieldDetail("created_date", false, "datetime2", false, null));
+        fields.add(new FieldDetail("channel_type", true, "varchar (50)", false, null));
+
+        return fields;
+    }
 
     public Map<String, List<FieldDetail>> getAllEntities() {
         Map<String, List<FieldDetail>> ret = new HashMap<>();
@@ -451,7 +466,10 @@ public class TestEntityCreateHelper {
 
         l = getRolePlayer();
         ret.put("role_player", l);
-
+        
+        l = getAgreement();
+        ret.put("agreement", l);
+        
         return ret;
     }
 

@@ -18,12 +18,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafxapplication.align.AlignCommand;
-import javafxapplication.align.CanvasSizeAjustor;
-import javafxapplication.align.SetMaxEqualWidth;
-import javafxapplication.canvas.ApricotCanvasImpl;
-import javafxapplication.canvas.ApricotCanvasBuilder;
-import javafxapplication.canvas.CanvasBuilder;
+import za.co.apricotdb.viewport.align.AlignCommand;
+import za.co.apricotdb.viewport.align.CanvasSizeAjustor;
+import za.co.apricotdb.viewport.align.SetMaxEqualWidth;
+import za.co.apricotdb.viewport.canvas.ApricotCanvasBuilder;
+import za.co.apricotdb.viewport.canvas.ApricotCanvasImpl;
+import za.co.apricotdb.viewport.canvas.CanvasBuilder;
 
 public class FXMainEntity04 extends Application {
     ApricotCanvasImpl erCanvas = null;
@@ -68,8 +68,10 @@ public class FXMainEntity04 extends Application {
         //  post creation aligns
         AlignCommand aligner = new CanvasSizeAjustor(erCanvas);
         aligner.align();
+        
         aligner = new SetMaxEqualWidth(erCanvas);
         aligner.align();
+        
         // aligner = new SimpleGridEntityAllocator(erCanvas);
         // aligner.align();
         
@@ -83,7 +85,10 @@ public class FXMainEntity04 extends Application {
                     sb.setPrefHeight(18);
                 }
             }
-        }        
+        }
+        
+        BuildSomeRelationships br = new BuildSomeRelationships(erCanvas);
+        br.build();
     }
 
     public static void main(String[] args) {

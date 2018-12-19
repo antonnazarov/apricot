@@ -25,6 +25,7 @@ import javafx.stage.Stage;
  * Attempt to draw an entity.
  * 
  * @author Anton Nazarov
+ * @deprecated
  */
 public class FXMainEntity01 extends Application {
 

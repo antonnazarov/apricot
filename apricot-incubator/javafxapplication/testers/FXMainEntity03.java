@@ -15,18 +15,13 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafxapplication.align.AlignCommand;
-import javafxapplication.align.DiagramPanelManager;
-import javafxapplication.align.SimpleGridEntityAllocator;
-import javafxapplication.relationship.ApricotEntityLinkManager;
-import javafxapplication.relationship.BasicEntityLinkManager;
-import javafxapplication.relationship.RelationshipType;
 
 /**
  * The advances test.
  *
  * @author Anton Nazarov
  * @since 10/11/2018
+ * @deprecated
  */
 public class FXMainEntity03 extends Application {
 
@@ -104,6 +99,7 @@ public class FXMainEntity03 extends Application {
         });
         topBox.getChildren().add(btn);
 
+        /*
         btn = new Button();
         btn.setText("Grid Align");
         btn.setOnAction(event -> {
@@ -127,6 +123,7 @@ public class FXMainEntity03 extends Application {
 //            r.draw();
         });
         topBox.getChildren().add(btn);
+        */
 
         Scene scene = new Scene(root, 1200, 800);
 
@@ -134,9 +131,10 @@ public class FXMainEntity03 extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        postProcess(entityCanvas);
+        // postProcess(entityCanvas);
     }
 
+    /*
     private void postProcess(Pane entityCanvas) {
         DiagramPanelManager m = new DiagramPanelManager();
         m.adjustDiagramPanel(entityCanvas);
@@ -145,6 +143,7 @@ public class FXMainEntity03 extends Application {
                 RelationshipType.IDENTIFYING, entityCanvas);
 
     }
+    */
 
     public static void main(String[] args) {
         launch(args);
