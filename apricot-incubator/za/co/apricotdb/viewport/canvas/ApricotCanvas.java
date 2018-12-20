@@ -33,4 +33,6 @@ public interface ApricotCanvas {
     List<Node> getShapes();
     
     Map<String, Bounds> getEntityBounds();
+    
+    void redrawRelationships();
 }

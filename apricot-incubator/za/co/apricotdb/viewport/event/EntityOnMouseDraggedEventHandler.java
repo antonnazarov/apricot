@@ -49,20 +49,19 @@ public class EntityOnMouseDraggedEventHandler implements EventHandler<MouseEvent
                     double newTranslateX = pos.getOrgTranslateX() + offsetX;
                     double newTranslateY = pos.getOrgTranslateY() + offsetY;
 
+                    Scene scene = ((Pane) canvas).getScene();
                     VBox b = (VBox) entityShape;
                     switch (pos.getDraggingType()) {
                     case ENTITY_POSITION_DRAGGING:
                         groupHander.setEntityTranslatePosition(canvas, newTranslateX, newTranslateY,
                                 ElementStatus.SELECTED);
-
-                        Pane pane = (Pane) canvas;
-                        Scene scene = pane.getScene();
                         scene.setCursor(Cursor.HAND);
 
                         break;
                     case ENTITY_HORIZONTAL_DRAGGING:
                         setNewWidth(b, pos, offsetX);
                         groupHander.rebuildRelationships((ApricotEntity) entityShape.getElement());
+                        scene.setCursor(Cursor.E_RESIZE);
 
                         break;
                     default:

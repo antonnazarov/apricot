@@ -3,7 +3,9 @@ package za.co.apricotdb.viewport.align;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.animation.PauseTransition;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ApricotElement;
 import za.co.apricotdb.viewport.canvas.ElementType;
@@ -35,5 +37,9 @@ public class SetMaxEqualWidth implements AlignCommand {
         for (VBox entity : entities) {
             entity.setPrefWidth(maxWidth);
         }
+        
+        PauseTransition delay = new PauseTransition(Duration.seconds(0.01));
+        delay.setOnFinished(event -> canvas.redrawRelationships());
+        delay.play();
     }
 }

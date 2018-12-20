@@ -69,12 +69,6 @@ public class FXMainEntity04 extends Application {
         AlignCommand aligner = new CanvasSizeAjustor(erCanvas);
         aligner.align();
         
-        aligner = new SetMaxEqualWidth(erCanvas);
-        aligner.align();
-        
-        // aligner = new SimpleGridEntityAllocator(erCanvas);
-        // aligner.align();
-        
         Set<Node> nodes = scroll.lookupAll(".scroll-bar");
         for (final Node node : nodes) {
             if (node instanceof ScrollBar) {
@@ -97,9 +91,9 @@ public class FXMainEntity04 extends Application {
 
     private void addButtons(HBox topBox) {
         Button btn = new Button();
-        btn.setText("Align Screen");
+        btn.setText("Align Entities");
         btn.setOnAction(event -> {
-            AlignCommand aligner = new CanvasSizeAjustor(erCanvas);
+            AlignCommand aligner = new SetMaxEqualWidth(erCanvas);
             aligner.align();
         });
         topBox.getChildren().add(btn);

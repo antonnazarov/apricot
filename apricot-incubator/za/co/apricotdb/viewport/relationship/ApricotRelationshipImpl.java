@@ -61,13 +61,13 @@ public class ApricotRelationshipImpl implements ApricotRelationship {
         RelationshipShapeBuilder shapeBulder = topology.getRelationshipShapeBuilder(this);
         if (relationshipShape != null && relationshipShape.getShapeType() == shapeBulder.getShapeType()) {
             shapeBulder.alterExistingRelationshipShape(this);
-        } else if (relationshipShape != null) {
+        } else if (relationshipShape != null && relationshipShape.getShapeType() != shapeBulder.getShapeType()) {
             canvas.getShapes().remove(relationshipShape);
             relationshipShape = shapeBulder.buildRelationshipShape(this);
             if (relationshipShape != null) {
                 canvas.getShapes().add(relationshipShape);
             }
-        } else {
+        } else if (relationshipShape == null) {
             relationshipShape = shapeBulder.buildRelationshipShape(this);
         }
 

@@ -101,4 +101,16 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
 
         return ret;
     }
+
+    /**
+     * Redraw all relationships on the canvas. 
+     */
+    @Override
+    public void redrawRelationships() {
+        for (ApricotRelationship r : relationships) {
+            if (r.getShape() != null) {
+                r.buildShape();
+            }
+        }
+    }
 }
