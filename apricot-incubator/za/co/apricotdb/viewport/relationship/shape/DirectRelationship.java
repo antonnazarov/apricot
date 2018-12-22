@@ -49,4 +49,20 @@ public class DirectRelationship extends ApricotRelationshipShape {
         super.setSelected();
         ruler.setVisible(true);
     }
+
+    @Override
+    public void translateRelationshipRulers(double translateX, double translateY) {
+        if (this.getUserData() == null) {
+            this.setUserData(rulerX);
+            rulerX += translateX;
+        } else {
+            double initRulerX = (double)this.getUserData();
+            rulerX = initRulerX + translateX;
+        }
+    }
+
+    @Override
+    public void resetRelationshipRulers() {
+        this.setUserData(null);
+    }
 }

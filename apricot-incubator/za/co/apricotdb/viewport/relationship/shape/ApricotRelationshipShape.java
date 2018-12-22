@@ -102,4 +102,8 @@ public abstract class ApricotRelationshipShape extends Group implements ApricotS
         this.getChildren().add(endElement);
         this.endElement = endElement;
     }
+    
+    public abstract void translateRelationshipRulers(double translateX, double translateY);
+    
+    public abstract void resetRelationshipRulers();
 }

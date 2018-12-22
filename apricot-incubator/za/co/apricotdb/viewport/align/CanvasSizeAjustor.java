@@ -90,11 +90,13 @@ public class CanvasSizeAjustor implements AlignCommand {
 
         for (ApricotElement e : canvas.getElements()) {
             Node n = e.getShape();
-            if (n != null) {
+            if (n != null  && e.getElementType() == ElementType.ENTITY) {
                 n.setLayoutX(n.getLayoutX() + bias.getX());
                 n.setLayoutY(n.getLayoutY() + bias.getY());
             }
         }
+        
+        canvas.redrawRelationships();
     }
 
     private void alignCanvasSize(Bounds canvasBounds) {

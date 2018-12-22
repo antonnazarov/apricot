@@ -25,5 +25,27 @@ public class BuildSomeRelationships {
         canvas.addElement(r);
         r = rBuilder.buildRelationship("role_player", "fsb_adviser_registration", "id", "role_player_id", RelationshipType.OPTIONAL_NON_IDENTIFYING);
         canvas.addElement(r);
+        r = rBuilder.buildRelationship("role_player", "award", "id", "role_player_id", RelationshipType.OPTIONAL_NON_IDENTIFYING);
+        canvas.addElement(r);  
+        r = rBuilder.buildRelationship("role_player", "fsb_adviser_registration", "id", "role_player_id", RelationshipType.OPTIONAL_NON_IDENTIFYING);
+        canvas.addElement(r);
+        r = rBuilder.buildRelationship("role_player", "insurance_educational_credits", "id", "person_id", RelationshipType.MANDATORY_NON_IDENTIFYING);
+        canvas.addElement(r);
+        r = rBuilder.buildRelationship("role_player", "party", "id", "id", RelationshipType.IDENTIFYING);
+        canvas.addElement(r);
+        r = rBuilder.buildRelationship("role_player", "work_permit", "id", "person_id", RelationshipType.MANDATORY_NON_IDENTIFYING);
+        canvas.addElement(r); 
+        r = rBuilder.buildRelationship("party", "person", "id", "id", RelationshipType.IDENTIFYING);
+        canvas.addElement(r);  
+        r = rBuilder.buildRelationship("person", "accreditation_registration", "id", "person_id", RelationshipType.OPTIONAL_NON_IDENTIFYING);
+        canvas.addElement(r);
+        r = rBuilder.buildRelationship("person", "award", "id", "person_id", RelationshipType.OPTIONAL_NON_IDENTIFYING);
+        canvas.addElement(r);   
+        r = rBuilder.buildRelationship("person", "award_eagle_data", "id", "person_id", RelationshipType.OPTIONAL_NON_IDENTIFYING);
+        canvas.addElement(r);  
+        r = rBuilder.buildRelationship("person", "criminal_record", "id", "person_id", RelationshipType.OPTIONAL_NON_IDENTIFYING);
+        canvas.addElement(r);
+        r = rBuilder.buildRelationship("person", "education_certificate", "id", "person_id", RelationshipType.OPTIONAL_NON_IDENTIFYING);
+        canvas.addElement(r);          
     }
 }

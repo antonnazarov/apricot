@@ -391,7 +391,84 @@ public class TestEntityCreateHelper {
 
         return fields;
     }
+    
+    /**
+     * Person agreement
+     */
+    public List<FieldDetail> getPerson() {
+        List<FieldDetail> fields = new ArrayList<>();
+        fields.add(new FieldDetail("id", true, "bigint", true, "PK, FK"));
+        fields.add(new FieldDetail("broker_type", false, "varchar (255)", false, null));
+        fields.add(new FieldDetail("date_of_birth", true, "datetime2", false, null));
+        fields.add(new FieldDetail("ethnicity", false, "varchar (255)", false, null));
+        fields.add(new FieldDetail("gender", false, "varchar (255)", false, null));
+        fields.add(new FieldDetail("marital_status", false, "varchar (255)", false, null));
+        fields.add(new FieldDetail("religion", false, "varchar (255)", false, null));
+        fields.add(new FieldDetail("in_community_of_property", false, "varchar (255)", false, null));
 
+        return fields;
+    } 
+
+    /**
+     * accreditation_registration
+     */
+    public List<FieldDetail> getAccreditationRegistration() {
+        List<FieldDetail> fields = new ArrayList<>();
+        fields.add(new FieldDetail("id", true, "bigint", true, "PK"));
+        fields.add(new FieldDetail("accrediation_id", false, "bigint", false, null));
+        fields.add(new FieldDetail("person_id", false, "bigint", false, "FK"));
+        fields.add(new FieldDetail("start_date", false, "datetime2", false, null));
+        fields.add(new FieldDetail("end_date", false, "datetime2", false, null));
+
+        return fields;
+    }
+    
+    /**
+     * award eagle data
+     */
+    public List<FieldDetail> getAwardEagleData() {
+        List<FieldDetail> fields = new ArrayList<>();
+        fields.add(new FieldDetail("id", true, "bigint", true, "PK"));
+        fields.add(new FieldDetail("cumulative_eagle_score", false, "int", false, null));
+        fields.add(new FieldDetail("last_updated_date_time", false, "datetime2", false, null));
+        fields.add(new FieldDetail("next_eagle_limit", false, "int", false, null));
+        fields.add(new FieldDetail("person_id", false, "datetime2", false, "FK"));
+
+        return fields;
+    }
+    
+    /**
+     * award eagle data
+     */
+    public List<FieldDetail> getCriminalRecord() {
+        List<FieldDetail> fields = new ArrayList<>();
+        fields.add(new FieldDetail("id", true, "bigint", true, "PK"));
+        fields.add(new FieldDetail("finger_prints_taken", false, "bit", false, null));
+        fields.add(new FieldDetail("date_finger_prints_taken", false, "date", false, null));
+        fields.add(new FieldDetail("record_type", false, "varchar (255)", false, null));
+        fields.add(new FieldDetail("criminal_record_result", false, "varchar (255)", false, null));
+        fields.add(new FieldDetail("date_indemnity_form_signed", false, "date", false, null));
+        fields.add(new FieldDetail("person_id", false, "datetime2", false, "FK"));
+
+        return fields;
+    }  
+    
+    /**
+     * award education certificate
+     */
+    public List<FieldDetail> getEducationCertificate() {
+        List<FieldDetail> fields = new ArrayList<>();
+        fields.add(new FieldDetail("id", true, "bigint", true, "PK"));
+        fields.add(new FieldDetail("end_date", false, "date", false, null));
+        fields.add(new FieldDetail("external_reference", false, "varchar (255)", false, null));
+        fields.add(new FieldDetail("issue_date", false, "date", false, null));
+        fields.add(new FieldDetail("date_obtained", false, "date", false, null));
+        fields.add(new FieldDetail("person_id", false, "datetime2", false, "FK"));
+        fields.add(new FieldDetail("education_qualification_id", false, "bigint", false, null));        
+
+        return fields;
+    }
+    
     public Map<String, List<FieldDetail>> getAllEntities() {
         Map<String, List<FieldDetail>> ret = new HashMap<>();
 
@@ -418,9 +495,6 @@ public class TestEntityCreateHelper {
 
         l = getFsbRecognizedInstitute();
         ret.put("fsb_recognized_institute", l);
-
-        l = getOrganisation();
-        ret.put("organisation", l);
 
         l = getOrganisation();
         ret.put("organisation", l);
@@ -469,6 +543,21 @@ public class TestEntityCreateHelper {
         
         l = getAgreement();
         ret.put("agreement", l);
+        
+        l = getPerson();
+        ret.put("person", l);
+        
+        l = getAccreditationRegistration();
+        ret.put("accreditation_registration", l);
+        
+        l = getAwardEagleData();
+        ret.put("award_eagle_data", l);
+        
+        l = getCriminalRecord();
+        ret.put("criminal_record", l);
+        
+        l = getEducationCertificate();
+        ret.put("education_certificate", l);
         
         return ret;
     }
