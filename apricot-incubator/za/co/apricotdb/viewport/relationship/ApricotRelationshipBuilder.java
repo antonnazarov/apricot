@@ -26,7 +26,8 @@ public class ApricotRelationshipBuilder implements RelationshipBuilder {
         ApricotRelationship relationship = new ApricotRelationshipImpl(parentEntity, childEntity, 
                 primaryKeyName, foreignKeyName, type, topology, canvas);
         relationship.setElementStatus(ElementStatus.DEFAULT);
-        relationship.buildShape();
+        
+        // relationship.buildShape();
         
         parentEntity.addLink(relationship, true);
         childEntity.addLink(relationship, false);

@@ -34,5 +34,5 @@ public interface ApricotCanvas {
     
     Map<String, Bounds> getEntityBounds();
     
-    void redrawRelationships();
+    void buildRelationships();
 }

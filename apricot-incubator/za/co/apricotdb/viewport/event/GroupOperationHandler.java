@@ -9,6 +9,8 @@ import za.co.apricotdb.viewport.canvas.ApricotElement;
 import za.co.apricotdb.viewport.canvas.ElementStatus;
 import za.co.apricotdb.viewport.canvas.ElementType;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
+import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
+import za.co.apricotdb.viewport.entity.shape.DetailedEntityShape;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 import za.co.apricotdb.viewport.relationship.shape.ApricotRelationshipShape;
 
@@ -24,6 +26,7 @@ public class GroupOperationHandler {
                 shape.setTranslateY(translateY);
                 
                 rebuildRelationships((ApricotEntity) element);
+                translatePrimaryKeyStacks((ApricotEntity) element, translateX, translateY);
             }
         }
     }
@@ -61,6 +64,7 @@ public class GroupOperationHandler {
                 shape.setTranslateY(0);
                 
                 resetRelationshipRulers((ApricotEntity)element);
+                applyPrimaryKeyStacks((ApricotEntity)element);
             }
         }
     }
@@ -84,6 +88,29 @@ public class GroupOperationHandler {
         
         for (ApricotRelationship r : relationships) {
             r.buildShape();
+        }
+    }
+    
+    /**
+     * Translate all the stacks associated with the given entity.
+     */
+    private void translatePrimaryKeyStacks(ApricotEntity entity, double translateX, double translateY) {
+        ApricotEntityShape s = entity.getEntityShape();
+        if (s instanceof DetailedEntityShape) {
+            DetailedEntityShape entityShape = (DetailedEntityShape) s;
+            entityShape.getLeftStack().translateStack(translateX, translateY);
+            entityShape.getRightStack().translateStack(translateX, translateY);
+            entityShape.getTopStack().translateStack(translateX, translateY);
+        }
+    }
+    
+    private void applyPrimaryKeyStacks(ApricotEntity entity) {
+        ApricotEntityShape s = entity.getEntityShape();
+        if (s instanceof DetailedEntityShape) {
+            DetailedEntityShape entityShape = (DetailedEntityShape) s;
+            entityShape.getLeftStack().applyStackPosition();
+            entityShape.getRightStack().applyStackPosition();
+            entityShape.getTopStack().applyStackPosition();
         }
     }
 }

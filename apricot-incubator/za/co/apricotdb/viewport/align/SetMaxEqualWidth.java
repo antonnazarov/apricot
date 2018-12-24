@@ -39,7 +39,7 @@ public class SetMaxEqualWidth implements AlignCommand {
         }
         
         PauseTransition delay = new PauseTransition(Duration.seconds(0.01));
-        delay.setOnFinished(event -> canvas.redrawRelationships());
+        delay.setOnFinished(event -> canvas.buildRelationships());
         delay.play();
     }
 }

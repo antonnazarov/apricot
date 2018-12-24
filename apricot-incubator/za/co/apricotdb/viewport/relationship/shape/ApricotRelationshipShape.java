@@ -14,29 +14,30 @@ import za.co.apricotdb.viewport.relationship.ApricotRelationship;
  * @since 27/11/2018
  */
 public abstract class ApricotRelationshipShape extends Group implements ApricotShape {
-    
+
     public static final double RELATIONSHIP_DEFAULT_STROKE_WIDTH = 1;
     public static final double RELATIONSHIP_SELECTED_STROKE_WIDTH = 2;
 
     private final ApricotRelationship relationship;
-    private RelationshipShapeType shapeType;    
+    private RelationshipShapeType shapeType;
     private Path path;
     private Shape startElement;
     private Shape endElement;
-
 
     public ApricotRelationshipShape(ApricotRelationship relationship, RelationshipShapeType shapeType) {
         this.relationship = relationship;
         this.shapeType = shapeType;
     }
-    
+
     public RelationshipShapeType getShapeType() {
         return shapeType;
     }
-    
+
     @Override
     public void setDefault() {
-        path.setStrokeWidth(RELATIONSHIP_DEFAULT_STROKE_WIDTH);
+        if (path != null) {
+            path.setStrokeWidth(RELATIONSHIP_DEFAULT_STROKE_WIDTH);
+        }
         if (startElement != null) {
             startElement.setStrokeWidth(RELATIONSHIP_DEFAULT_STROKE_WIDTH);
         }
@@ -44,7 +45,9 @@ public abstract class ApricotRelationshipShape extends Group implements ApricotS
 
     @Override
     public void setSelected() {
-        path.setStrokeWidth(RELATIONSHIP_SELECTED_STROKE_WIDTH);
+        if (path != null) {
+            path.setStrokeWidth(RELATIONSHIP_SELECTED_STROKE_WIDTH);
+        }
         if (startElement != null) {
             startElement.setStrokeWidth(RELATIONSHIP_SELECTED_STROKE_WIDTH);
         }
@@ -53,13 +56,13 @@ public abstract class ApricotRelationshipShape extends Group implements ApricotS
     @Override
     public void setGrayed() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void setHidden() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -78,7 +81,7 @@ public abstract class ApricotRelationshipShape extends Group implements ApricotS
         this.getChildren().add(path);
         this.path = path;
     }
-    
+
     public Shape getStartElement() {
         return startElement;
     }
@@ -102,8 +105,8 @@ public abstract class ApricotRelationshipShape extends Group implements ApricotS
         this.getChildren().add(endElement);
         this.endElement = endElement;
     }
-    
+
     public abstract void translateRelationshipRulers(double translateX, double translateY);
-    
+
     public abstract void resetRelationshipRulers();
 }

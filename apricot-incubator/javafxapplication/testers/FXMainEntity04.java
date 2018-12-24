@@ -2,6 +2,7 @@ package javafxapplication.testers;
 
 import java.util.Set;
 
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
@@ -18,6 +19,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import za.co.apricotdb.viewport.align.AlignCommand;
 import za.co.apricotdb.viewport.align.CanvasSizeAjustor;
 import za.co.apricotdb.viewport.align.SetMaxEqualWidth;
@@ -46,29 +48,30 @@ public class FXMainEntity04 extends Application {
         ScrollPane scroll = new ScrollPane();
         scroll.setBorder(new Border(
                 new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(0), new BorderWidths(1))));
-        
-        //scroll.setStyle("-fx-font-size: 18px;");  // set the font size to something big.
-        //erCanvas.setStyle("-fx-font-size: 12px;");
-        
+
+        // scroll.setStyle("-fx-font-size: 18px;"); // set the font size to something
+        // big.
+        // erCanvas.setStyle("-fx-font-size: 12px;");
+
         scroll.setContent(erCanvas);
         root.getChildren().add(scroll);
-        
+
         addButtons(topBox);
 
-        //  build entities 
+        // build entities
         TestEntityBuilder eb = new BuildSomeEntites(erCanvas);
         eb.buildEntities();
-        
+
         Scene scene = new Scene(root, 1200, 800);
 
         primaryStage.setTitle("Proper Class Hierarchy Test");
         primaryStage.setScene(scene);
         primaryStage.show();
-        
-        //  post creation aligns
+
+        // post creation aligns
         AlignCommand aligner = new CanvasSizeAjustor(erCanvas);
         aligner.align();
-        
+
         Set<Node> nodes = scroll.lookupAll(".scroll-bar");
         for (final Node node : nodes) {
             if (node instanceof ScrollBar) {
@@ -80,9 +83,10 @@ public class FXMainEntity04 extends Application {
                 }
             }
         }
-        
+
         BuildSomeRelationships br = new BuildSomeRelationships(erCanvas);
         br.build();
+        erCanvas.buildRelationships();
     }
 
     public static void main(String[] args) {
@@ -97,5 +101,12 @@ public class FXMainEntity04 extends Application {
             aligner.align();
         });
         topBox.getChildren().add(btn);
+        
+        btn = new Button();
+        btn.setText("Relationships");
+        btn.setOnAction(event -> {
+            erCanvas.buildRelationships();
+        });
+        topBox.getChildren().add(btn);        
     }
 }

@@ -2,10 +2,13 @@ package za.co.apricotdb.viewport.entity;
 
 import java.util.List;
 
+import za.co.apricotdb.viewport.align.AlignCommand;
+import za.co.apricotdb.viewport.align.CanvasSizeAjustor;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ElementStatus;
 import za.co.apricotdb.viewport.entity.shape.DetailedEntityShapeBuilder;
 import za.co.apricotdb.viewport.entity.shape.EntityShapeBuilder;
+import za.co.apricotdb.viewport.event.GroupOperationHandler;
 import za.co.apricotdb.viewport.modifiers.ElementVisualModifier;
 import za.co.apricotdb.viewport.modifiers.EntitySetDetailedEntityShadowModifier;
 import za.co.apricotdb.viewport.modifiers.SetEntityEventsModifier;
@@ -24,9 +27,12 @@ public class ApricotEntityBuilder implements EntityBuilder {
     public ApricotEntityBuilder(ApricotCanvas canvas) {
         this.canvas = canvas;
         
+        GroupOperationHandler groupHandler = new GroupOperationHandler();
+        AlignCommand aligner = new CanvasSizeAjustor(canvas);
+        
         // collect all necessary modifiers
         ElementVisualModifier[] modifiers = new ElementVisualModifier[] { new EntitySetDetailedEntityShadowModifier(),
-                new SetEntityEventsModifier(canvas) };
+                new SetEntityEventsModifier(canvas, groupHandler, aligner) };
 
         shapeBuilder = new DetailedEntityShapeBuilder(modifiers);
     }

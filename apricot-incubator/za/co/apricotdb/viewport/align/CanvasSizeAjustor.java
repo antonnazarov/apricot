@@ -96,7 +96,7 @@ public class CanvasSizeAjustor implements AlignCommand {
             }
         }
         
-        canvas.redrawRelationships();
+        canvas.buildRelationships();
     }
 
     private void alignCanvasSize(Bounds canvasBounds) {

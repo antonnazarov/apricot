@@ -29,10 +29,10 @@ public class EntityOnMouseDraggedEventHandler implements EventHandler<MouseEvent
     private ApricotCanvas canvas = null;
     private GroupOperationHandler groupHander = null;
 
-    public EntityOnMouseDraggedEventHandler(String tableName, ApricotCanvas canvas) {
+    public EntityOnMouseDraggedEventHandler(String tableName, ApricotCanvas canvas, GroupOperationHandler groupHandler) {
         this.tableName = tableName;
         this.canvas = canvas;
-        groupHander = new GroupOperationHandler();
+        this.groupHander = groupHandler;
     }
 
     @Override

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -41,6 +42,10 @@ public abstract class DetailedEntityShape extends ApricotEntityShape {
     protected final GridPane primaryPanel;
     protected final GridPane nonPrimaryPanel;
     private final Map<String, Text> fieldsMapping = new HashMap<>();
+    
+    private final NonIdentifyingStack leftStack = new NonIdentifyingStack(this, Side.LEFT);
+    private final NonIdentifyingStack rightStack = new NonIdentifyingStack(this, Side.RIGHT);
+    private final IdentifyingStack topStack = new IdentifyingStack(this);
 
     public DetailedEntityShape(ApricotEntity entity, Text header, GridPane primaryPanel, GridPane nonPrimaryPanel) {
         super(entity);
@@ -86,5 +91,17 @@ public abstract class DetailedEntityShape extends ApricotEntityShape {
                 fieldsMapping.put(n.getId(), (Text) n);
             }
         }
+    }
+
+    public NonIdentifyingStack getLeftStack() {
+        return leftStack;
+    }
+
+    public NonIdentifyingStack getRightStack() {
+        return rightStack;
+    }
+
+    public IdentifyingStack getTopStack() {
+        return topStack;
     }
 }
