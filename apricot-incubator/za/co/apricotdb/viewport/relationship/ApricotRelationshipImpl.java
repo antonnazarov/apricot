@@ -130,4 +130,11 @@ public class ApricotRelationshipImpl implements ApricotRelationship {
     public RelationshipType getRelationshipType() {
         return type;
     }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("ApricotRelationship: ");
+        sb.append(parent.getTableName()).append(" (").append(primaryKeyName).append("), ").append(child.getTableName()).append(" (").append(foreignKeyName).append(")");
+        return sb.toString();
+    }
 }

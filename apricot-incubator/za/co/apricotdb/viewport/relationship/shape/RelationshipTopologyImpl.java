@@ -3,6 +3,7 @@ package za.co.apricotdb.viewport.relationship.shape;
 import javafx.geometry.Side;
 import javafx.scene.layout.VBox;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
+import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 import za.co.apricotdb.viewport.relationship.RelationshipType;
 
@@ -56,7 +57,12 @@ public class RelationshipTopologyImpl implements RelationshipTopology {
         if (relationship.getRelationshipType() != RelationshipType.IDENTIFYING) {
             if (hDist > MIN_HORIZONTAL_DISTANCE) {
                 ret = RelationshipShapeType.DIRECT;
+            } 
+            else if (isHatType(relationship)) {
+                ret = RelationshipShapeType.HAT;
             } else {
+                ret = RelationshipShapeType.DADS_HAND;
+/*
                 boolean isDadsHand = false;
                 double parentYPoint = TopologyHelper.getFieldY(relationship.getParent(),
                         relationship.getPrimaryKeyName());
@@ -75,12 +81,40 @@ public class RelationshipTopologyImpl implements RelationshipTopology {
                 } else {
                     ret = RelationshipShapeType.HAT;
                 }
+*/                
             }
         } else {
             // identifying relationships: ROOF or HOOK
             ret = RelationshipShapeType.ROOF;
         }
 
+        return ret;
+    }
+
+    /**
+     * Detect the "HAT"- type shape.
+     */
+    private boolean isHatType(ApricotRelationship relationship) {
+        boolean ret = false;
+        
+        double parentYPoint = TopologyHelper.getFieldY(relationship.getParent(),
+                relationship.getPrimaryKeyName());
+        double childYPoint = TopologyHelper.getFieldY(relationship.getChild(),
+                relationship.getForeignKeyName());        
+        
+        ApricotEntityShape shape = relationship.getParent().getEntityShape();
+        double parentMinY = shape.getLayoutY() + shape.getTranslateY() - MIN_VERTICAL_DISTANCE;
+        double parentMaxY = shape.getLayoutY() + shape.getTranslateY() + shape.getHeight() + MIN_VERTICAL_DISTANCE;
+        
+        shape = relationship.getChild().getEntityShape();
+        double childMinY = shape.getLayoutY() + shape.getTranslateY() - MIN_VERTICAL_DISTANCE;
+        double childMaxY = shape.getLayoutY() + shape.getTranslateY() + shape.getHeight() + MIN_VERTICAL_DISTANCE;
+        
+        if (parentMinY <= childYPoint && childYPoint <= parentMaxY && 
+                childMinY <= parentYPoint && parentYPoint <= childMaxY) {
+            ret = true;
+        }
+        
         return ret;
     }
 

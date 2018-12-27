@@ -67,7 +67,6 @@ public class HatShapeBuilder extends RelationshipShapeBuilderImpl {
         addPath(parentStart, childEnd, relationship.getRelationshipType(), shape);
         addStartElement(relationship.getRelationshipType(), parentStart, parentSide, shape);
         addEndElement(childEnd, childSide, shape);
-        // addPath(parentStart, childEnd, rulerX, relationship.getRelationshipType(), shape);
         // addRuler(parentStart, childEnd, rulerX, shape);
     }
     
