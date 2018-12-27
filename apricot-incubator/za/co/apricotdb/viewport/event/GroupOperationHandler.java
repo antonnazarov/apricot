@@ -16,44 +16,44 @@ import za.co.apricotdb.viewport.relationship.shape.ApricotRelationshipShape;
 
 public class GroupOperationHandler {
 
-    public void setEntityTranslatePosition(ApricotCanvas canvas, double translateX, double translateY, ElementStatus elementStatus) {
+    public void setEntityTranslatePosition(ApricotCanvas canvas, double translateX, double translateY,
+            ElementStatus elementStatus) {
         translateRelationshipRulers(canvas, translateX, translateY, elementStatus);
-        
+
         for (ApricotElement element : canvas.getElements()) {
             if (element.getElementType() == ElementType.ENTITY && element.getElementStatus() == elementStatus) {
                 Node shape = element.getShape();
                 shape.setTranslateX(translateX);
                 shape.setTranslateY(translateY);
-                
-                rebuildRelationships((ApricotEntity) element);
-                translatePrimaryKeyStacks((ApricotEntity) element, translateX, translateY);
             }
         }
     }
-    
-    private void translateRelationshipRulers(ApricotCanvas canvas, double translateX, double translateY, ElementStatus elementStatus) {
-        //  prepare a list of the selected Entities
+
+    private void translateRelationshipRulers(ApricotCanvas canvas, double translateX, double translateY,
+            ElementStatus elementStatus) {
+        // prepare a list of the selected Entities
         List<ApricotEntity> entities = new ArrayList<>();
         for (ApricotElement element : canvas.getElements()) {
             if (element.getElementType() == ElementType.ENTITY && element.getElementStatus() == elementStatus) {
                 entities.add((ApricotEntity) element);
             }
         }
-        
+
         for (ApricotEntity e : entities) {
             List<ApricotRelationship> primaryLinks = e.getPrimaryLinks();
             for (ApricotRelationship r : primaryLinks) {
                 ApricotEntity child = r.getChild();
                 if (entities.contains(child) && r.getShape() != null) {
-                    ApricotRelationshipShape rShape = (ApricotRelationshipShape)r.getShape();
-                    //  this operation allows to keep topology of the relationship when both sides of the 
-                    //  relationship have being moved simultaneously 
+                    ApricotRelationshipShape rShape = (ApricotRelationshipShape) r.getShape();
+                    // this operation allows to keep topology of the relationship when both sides of
+                    // the
+                    // relationship have being moved simultaneously
                     rShape.translateRelationshipRulers(translateX, translateY);
                 }
             }
         }
     }
-    
+
     public void applyCurrentPosition(ApricotCanvas canvas, ElementStatus elementStatus) {
         for (ApricotElement element : canvas.getElements()) {
             if (element.getElementType() == ElementType.ENTITY && element.getElementStatus() == elementStatus) {
@@ -62,13 +62,13 @@ public class GroupOperationHandler {
                 shape.setLayoutY(shape.getLayoutY() + shape.getTranslateY());
                 shape.setTranslateX(0);
                 shape.setTranslateY(0);
-                
-                resetRelationshipRulers((ApricotEntity)element);
-                applyPrimaryKeyStacks((ApricotEntity)element);
+
+                resetRelationshipRulers((ApricotEntity) element);
+                applyPrimaryKeyStacks((ApricotEntity) element);
             }
         }
     }
-    
+
     private void resetRelationshipRulers(ApricotEntity entity) {
         for (ApricotRelationship r : entity.getPrimaryLinks()) {
             if (r.getShape() != null && r.getShape() instanceof ApricotRelationshipShape) {
@@ -77,7 +77,7 @@ public class GroupOperationHandler {
             }
         }
     }
-    
+
     /**
      * Rebuild all relationships related to the given entity.
      */
@@ -85,16 +85,16 @@ public class GroupOperationHandler {
         List<ApricotRelationship> relationships = new ArrayList<>();
         relationships.addAll(entity.getPrimaryLinks());
         relationships.addAll(entity.getForeignLinks());
-        
+
         for (ApricotRelationship r : relationships) {
             r.buildShape();
         }
     }
-    
+
     /**
      * Translate all the stacks associated with the given entity.
      */
-    private void translatePrimaryKeyStacks(ApricotEntity entity, double translateX, double translateY) {
+    public void translatePrimaryKeyStacks(ApricotEntity entity, double translateX, double translateY) {
         ApricotEntityShape s = entity.getEntityShape();
         if (s instanceof DetailedEntityShape) {
             DetailedEntityShape entityShape = (DetailedEntityShape) s;
@@ -103,7 +103,7 @@ public class GroupOperationHandler {
             entityShape.getTopStack().translateStack(translateX, translateY);
         }
     }
-    
+
     private void applyPrimaryKeyStacks(ApricotEntity entity) {
         ApricotEntityShape s = entity.getEntityShape();
         if (s instanceof DetailedEntityShape) {

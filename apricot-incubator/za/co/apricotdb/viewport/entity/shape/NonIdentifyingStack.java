@@ -30,15 +30,20 @@ public class NonIdentifyingStack extends PrimaryKeyStack {
     @Override
     public Point2D getRelationshipStart(ApricotRelationship relationship) {
         Point2D ret = null;
+        
+        if (!hasRelationships()) {
+            return null;
+        }
+        
         int idx = relationships.indexOf(relationship);
         if (idx >= 0) {
             Point2D stackStart = getStackStartingPoint();
-            double y = (idx + 1) * STACK_PARTICLE_LENGTH;
+            double y = stackStart.getY() + (idx + 1) * STACK_PARTICLE_LENGTH;
             double x = 0;
             if (side == side.LEFT) {
-                x = stackStart.getX() - STACK_PARTICLE_LENGTH;
+                x = stackStart.getX() - STACK_ENTITY_DISTANCE;
             } else {
-                x = stackStart.getX() + STACK_PARTICLE_LENGTH;
+                x = stackStart.getX() + STACK_ENTITY_DISTANCE;
             }
             
             ret = new Point2D(x, y);
@@ -50,9 +55,9 @@ public class NonIdentifyingStack extends PrimaryKeyStack {
     private Point2D getStackStartingPoint() {
         double X = 0;
         if (side == side.LEFT) {
-            X = entityShape.getLayoutX();
+            X = entityShape.getLayoutX() + entityShape.getTranslateX();
         } else {
-            X = entityShape.getLayoutX() + entityShape.getWidth();
+            X = entityShape.getLayoutX() + entityShape.getTranslateX() + entityShape.getWidth();
         }
         Point2D ret = new Point2D(X, getPrimaryKeyY());
 
@@ -65,7 +70,7 @@ public class NonIdentifyingStack extends PrimaryKeyStack {
             ApricotRelationship r = relationships.get(0);
 
             String pKey = r.getPrimaryKeyName();
-            ret = entityShape.getLayoutY() + entityShape.getFieldLocalY(pKey);
+            ret = entityShape.getLayoutY() + + entityShape.getTranslateY() + entityShape.getFieldLocalY(pKey);
         }
 
         return ret;
@@ -78,9 +83,9 @@ public class NonIdentifyingStack extends PrimaryKeyStack {
         Point2D start = getStackStartingPoint(); 
         this.getElements().add(new MoveTo(start.getX(), start.getY()));
         if (side == side.LEFT) {
-            this.getElements().add(new HLineTo(start.getX()-STACK_PARTICLE_LENGTH));
+            this.getElements().add(new HLineTo(start.getX()-STACK_ENTITY_DISTANCE));
         } else {
-            this.getElements().add(new HLineTo(start.getX()+STACK_PARTICLE_LENGTH));
+            this.getElements().add(new HLineTo(start.getX()+STACK_ENTITY_DISTANCE));
         }
         
         this.getElements().add(new VLineTo(start.getY() + relationships.size() * STACK_PARTICLE_LENGTH));

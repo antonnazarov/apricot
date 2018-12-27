@@ -1,5 +1,6 @@
 package za.co.apricotdb.viewport.relationship.shape;
 
+import javafx.geometry.Side;
 import javafx.scene.layout.VBox;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
@@ -14,10 +15,10 @@ public class RelationshipTopologyImpl implements RelationshipTopology {
 
     public RelationshipTopologyImpl() {
         RelationshipPrimitivesBuilder primitivesBuilder = new RelationshipPrimitivesBuilderImpl();
-        directBuilder = new DirectShapeBuilder(primitivesBuilder);
-        hatBuilder = new HatShapeBuilder(primitivesBuilder);
-        dadsHandBuilder = new DadsHandShapeBuilder(primitivesBuilder);
-        roofHandBuilder= new RoofShapeBuilder(primitivesBuilder);
+        directBuilder = new DirectShapeBuilder(primitivesBuilder, this);
+        hatBuilder = new HatShapeBuilder(primitivesBuilder, this);
+        dadsHandBuilder = new DadsHandShapeBuilder(primitivesBuilder, this);
+        roofHandBuilder = new RoofShapeBuilder(primitivesBuilder, this);
     }
 
     @Override
@@ -76,8 +77,8 @@ public class RelationshipTopologyImpl implements RelationshipTopology {
                 }
             }
         } else {
-            //  identifying relationships: ROOF or HOOK
-            ret = RelationshipShapeType.ROOF;            
+            // identifying relationships: ROOF or HOOK
+            ret = RelationshipShapeType.ROOF;
         }
 
         return ret;
@@ -93,6 +94,49 @@ public class RelationshipTopologyImpl implements RelationshipTopology {
             ret = true;
         } else if (lY > hBox.getLayoutY() + hBox.getTranslateY() + hBox.getHeight() + MIN_VERTICAL_DISTANCE) {
             ret = true;
+        }
+
+        return ret;
+    }
+
+    /**
+     * Calculate the exact side of the relationship primary key output.
+     */
+
+    @Override
+    public Side getRelationshipSide(ApricotRelationship relationship, boolean isPrimaryKey) {
+        Side ret = null;
+
+        RelationshipShapeType rShapeType = calculateRelationshipShapeType(relationship);
+        switch (rShapeType) {
+        case DIRECT:
+            if (TopologyHelper.isParentLeft(relationship.getParent(), relationship.getChild())) {
+                ret = isPrimaryKey ? Side.RIGHT : Side.LEFT;
+            } else {
+                ret = isPrimaryKey ? Side.LEFT : Side.RIGHT;
+            }
+
+            break;
+        case DADS_HAND:
+            if (TopologyHelper.isParentLeft(relationship.getParent(), relationship.getChild())) {
+                ret = Side.RIGHT;
+            } else {
+                ret = Side.LEFT;
+            }
+            break;
+        case HAT:
+            if (TopologyHelper.isParentLeft(relationship.getParent(), relationship.getChild())) {
+                ret = isPrimaryKey ? Side.LEFT : Side.RIGHT;
+            } else {
+                ret = isPrimaryKey ? Side.RIGHT : Side.LEFT;
+            }
+            break;
+        case ROOF:
+            ret = Side.TOP;
+            break;
+        case HOOK:
+            ret = Side.TOP;
+            break;
         }
 
         return ret;

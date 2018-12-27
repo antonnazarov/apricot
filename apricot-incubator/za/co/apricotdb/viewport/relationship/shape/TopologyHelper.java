@@ -12,7 +12,7 @@ public class TopologyHelper {
      * Detect, which side is the parent entity.
      */
     public static boolean isParentLeft(ApricotEntity parent, ApricotEntity child) {
-        return parent.getShape().getLayoutX() < child.getShape().getLayoutX();
+        return parent.getShape().getLayoutX() + parent.getShape().getTranslateX() < child.getShape().getLayoutX() + child.getShape().getTranslateX();
     }
 
     /**

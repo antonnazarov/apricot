@@ -27,8 +27,6 @@ public class BuildSomeRelationships {
         canvas.addElement(r);
         r = rBuilder.buildRelationship("role_player", "award", "id", "role_player_id", RelationshipType.OPTIONAL_NON_IDENTIFYING);
         canvas.addElement(r);  
-        r = rBuilder.buildRelationship("role_player", "fsb_adviser_registration", "id", "role_player_id", RelationshipType.OPTIONAL_NON_IDENTIFYING);
-        canvas.addElement(r);
         r = rBuilder.buildRelationship("role_player", "insurance_educational_credits", "id", "person_id", RelationshipType.MANDATORY_NON_IDENTIFYING);
         canvas.addElement(r);
         r = rBuilder.buildRelationship("role_player", "party", "id", "id", RelationshipType.IDENTIFYING);

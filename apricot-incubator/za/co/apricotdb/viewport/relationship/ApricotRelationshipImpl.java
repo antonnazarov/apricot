@@ -69,6 +69,9 @@ public class ApricotRelationshipImpl implements ApricotRelationship {
             }
         } else if (relationshipShape == null) {
             relationshipShape = shapeBulder.buildRelationshipShape(this);
+            if (relationshipShape != null) {
+                canvas.getShapes().add(relationshipShape);
+            }            
         }
 
         setShapeStyle();

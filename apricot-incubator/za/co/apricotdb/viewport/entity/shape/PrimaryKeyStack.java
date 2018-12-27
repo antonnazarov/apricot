@@ -19,7 +19,8 @@ import za.co.apricotdb.viewport.relationship.shape.ApricotRelationshipShape;
  */
 public abstract class PrimaryKeyStack extends Path implements ApricotShape {
     
-    public final static double STACK_PARTICLE_LENGTH = 10;
+    public final static double STACK_PARTICLE_LENGTH = 17;
+    public final static double STACK_ENTITY_DISTANCE = 8;
 
     protected final ApricotEntityShape entityShape;
     protected final List<ApricotRelationship> relationships = new ArrayList<>();
@@ -34,11 +35,15 @@ public abstract class PrimaryKeyStack extends Path implements ApricotShape {
     }
 
     public boolean hasRelationships() {
-        return !relationships.isEmpty();
+        return relationships.size() > 1;
     }
 
     public void addRelationship(ApricotRelationship relationship) {
         relationships.add(relationship);
+    }
+    
+    public void clear() {
+        relationships.clear();
     }
 
     public abstract void sortRelationships();
@@ -55,9 +60,6 @@ public abstract class PrimaryKeyStack extends Path implements ApricotShape {
     }
     
     public void applyStackPosition() {
-        this.setLayoutX(this.getLayoutX() + this.getTranslateX());
-        this.setLayoutY(this.getLayoutY() + this.getTranslateY());
-        
         this.setTranslateX(0);
         this.setTranslateY(0);
     }
@@ -69,7 +71,7 @@ public abstract class PrimaryKeyStack extends Path implements ApricotShape {
 
     @Override
     public void setSelected() {
-        this.setStrokeWidth(ApricotRelationshipShape.RELATIONSHIP_SELECTED_STROKE_WIDTH);
+        this.setStrokeWidth(ApricotRelationshipShape.RELATIONSHIP_SELECTED_STROKE_WIDTH+1);
     }
 
     @Override

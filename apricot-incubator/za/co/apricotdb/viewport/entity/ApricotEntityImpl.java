@@ -8,6 +8,7 @@ import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ElementStatus;
 import za.co.apricotdb.viewport.canvas.ElementType;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
+import za.co.apricotdb.viewport.entity.shape.DetailedEntityShape;
 import za.co.apricotdb.viewport.entity.shape.EntityShapeBuilder;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 
@@ -53,6 +54,7 @@ public final class ApricotEntityImpl implements ApricotEntity {
         switch (status) {
         case DEFAULT:
             entityShape.setDefault();
+            makePrimaryRelationshipsDefault();
             break;
         case SELECTED:
             entityShape.setSelected();
@@ -68,9 +70,22 @@ public final class ApricotEntityImpl implements ApricotEntity {
         }
     }
     
+    private void makePrimaryRelationshipsDefault() {
+        if (entityShape instanceof DetailedEntityShape) {
+            ((DetailedEntityShape) entityShape).getLeftStack().setDefault();
+            ((DetailedEntityShape) entityShape).getRightStack().setDefault();
+            ((DetailedEntityShape) entityShape).getTopStack().setDefault();
+        }        
+    }
+    
     private void makePrimaryRelationshipsSelected() {
         for (ApricotRelationship r : primaryLinks) {
             r.setElementStatus(ElementStatus.SELECTED);
+        }
+        if (entityShape instanceof DetailedEntityShape) {
+            ((DetailedEntityShape) entityShape).getLeftStack().setSelected();
+            ((DetailedEntityShape) entityShape).getRightStack().setSelected();
+            ((DetailedEntityShape) entityShape).getTopStack().setSelected();
         }
     }
 

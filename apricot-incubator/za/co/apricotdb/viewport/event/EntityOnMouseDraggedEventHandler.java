@@ -27,12 +27,12 @@ public class EntityOnMouseDraggedEventHandler implements EventHandler<MouseEvent
 
     private String tableName = null;
     private ApricotCanvas canvas = null;
-    private GroupOperationHandler groupHander = null;
+    private GroupOperationHandler groupHandler = null;
 
     public EntityOnMouseDraggedEventHandler(String tableName, ApricotCanvas canvas, GroupOperationHandler groupHandler) {
         this.tableName = tableName;
         this.canvas = canvas;
-        this.groupHander = groupHandler;
+        this.groupHandler = groupHandler;
     }
 
     @Override
@@ -53,14 +53,15 @@ public class EntityOnMouseDraggedEventHandler implements EventHandler<MouseEvent
                     VBox b = (VBox) entityShape;
                     switch (pos.getDraggingType()) {
                     case ENTITY_POSITION_DRAGGING:
-                        groupHander.setEntityTranslatePosition(canvas, newTranslateX, newTranslateY,
+                        groupHandler.setEntityTranslatePosition(canvas, newTranslateX, newTranslateY,
                                 ElementStatus.SELECTED);
+                        canvas.buildRelationships();
                         scene.setCursor(Cursor.HAND);
 
                         break;
                     case ENTITY_HORIZONTAL_DRAGGING:
                         setNewWidth(b, pos, offsetX);
-                        groupHander.rebuildRelationships((ApricotEntity) entityShape.getElement());
+                        canvas.buildRelationships();
                         scene.setCursor(Cursor.E_RESIZE);
 
                         break;

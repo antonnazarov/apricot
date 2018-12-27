@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.layout.Background;
@@ -13,6 +14,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
+import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 
 /**
  * An implementation of the entity- shape with reflection of all the fields in
@@ -103,5 +105,26 @@ public abstract class DetailedEntityShape extends ApricotEntityShape {
 
     public IdentifyingStack getTopStack() {
         return topStack;
+    }
+    
+    @Override
+    public void resetAllStacks() {
+        leftStack.clear();
+        rightStack.clear();
+        topStack.clear();
+    }
+    
+    @Override
+    public Point2D getStackRelationshipStart(ApricotRelationship relationship) {
+        Point2D ret = null;
+        ret = leftStack.getRelationshipStart(relationship);
+        if (ret == null) {
+            ret = rightStack.getRelationshipStart(relationship);
+        }
+        if (ret == null) {
+            ret = topStack.getRelationshipStart(relationship);
+        }
+        
+        return ret;
     }
 }

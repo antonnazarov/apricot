@@ -1,24 +1,35 @@
 package za.co.apricotdb.viewport.relationship.shape;
 
 import javafx.geometry.Point2D;
-import javafx.scene.layout.VBox;
+import javafx.geometry.Side;
+import javafx.scene.shape.HLineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
+import javafx.scene.shape.VLineTo;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
+import za.co.apricotdb.viewport.relationship.RelationshipType;
 
 public class HatShapeBuilder extends RelationshipShapeBuilderImpl {
 
-    public HatShapeBuilder(RelationshipPrimitivesBuilder primitivesBuilder) {
-        super(primitivesBuilder);
+    public HatShapeBuilder(RelationshipPrimitivesBuilder primitivesBuilder, RelationshipTopology relationshipTopology) {
+        super(primitivesBuilder, relationshipTopology);
     }
 
     @Override
     public ApricotRelationshipShape buildRelationshipShape(ApricotRelationship relationship) {
-        Point2D parentStart = getParentStart(relationship);
-        Point2D childEnd = getChildEnd(relationship);
+        Side parentSide = relationshipTopology.getRelationshipSide(relationship, true);
+        Side childSide = relationshipTopology.getRelationshipSide(relationship, false);
+        Point2D parentStart = getParentStart(relationship, parentSide);
+        Point2D childEnd = getChildEnd(relationship, childSide);
 
         HatRelationship shape = new HatRelationship(relationship);
         
-        double defaultLeftRulerX = getDefaultLeftRulerX();
-        
+        shape.setLeftRulerX(getDefaultLeftRulerX(parentStart, childEnd));
+        shape.setRightRulerX(getDefaultRightRulerX(parentStart, childEnd));
+        shape.setCenterRulerY(getDefaultCenterRulerY(relationship));
+
+        addElements(relationship, parentStart, childEnd, parentSide, childSide, shape);
+
         return shape;
     }
 
@@ -27,45 +38,56 @@ public class HatShapeBuilder extends RelationshipShapeBuilderImpl {
         // TODO Auto-generated method stub
 
     }
-    
+
     @Override
     public RelationshipShapeType getShapeType() {
         return RelationshipShapeType.HAT;
     }
 
-    @Override
-    protected Point2D getParentStart(ApricotRelationship relationship) {
-        Point2D ret = null;
-
-        VBox pBox = (VBox) relationship.getParent().getShape();
-        if (TopologyHelper.isParentLeft(relationship.getParent(), relationship.getChild())) {
-            ret = new Point2D(pBox.getLayoutX() + pBox.getTranslateX(),
-                    TopologyHelper.getFieldY(relationship.getParent(), relationship.getPrimaryKeyName()));
-        } else {
-            ret = new Point2D(pBox.getLayoutX() + pBox.getTranslateX() + pBox.getWidth(),
-                    TopologyHelper.getFieldY(relationship.getParent(), relationship.getPrimaryKeyName()));
-        }
-
-        return ret;
+    private double getDefaultLeftRulerX(Point2D parentStart, Point2D childEnd) {
+        return Math.min(parentStart.getX(), childEnd.getX()) - 30;
     }
 
-    @Override
-    protected Point2D getChildEnd(ApricotRelationship relationship) {
-        Point2D ret = null;
+    private double getDefaultRightRulerX(Point2D parentStart, Point2D childEnd) {
+        return Math.max(parentStart.getX(), childEnd.getX()) + 30;
+    }
 
-        VBox cBox = (VBox) relationship.getChild().getShape();
-        if (TopologyHelper.isParentLeft(relationship.getParent(), relationship.getChild())) {
-            ret = new Point2D(cBox.getLayoutX() + cBox.getTranslateX() + cBox.getWidth(),
-                    TopologyHelper.getFieldY(relationship.getChild(), relationship.getForeignKeyName()));
-        } else {
-            ret = new Point2D(cBox.getLayoutX() + cBox.getTranslateX(),
-                    TopologyHelper.getFieldY(relationship.getChild(), relationship.getForeignKeyName()));
+    private double getDefaultCenterRulerY(ApricotRelationship relationship) {
+        double ret = 0;
+        if (relationship.getParent().getShape() != null && relationship.getChild().getShape() != null) {
+            ret = Math.min(relationship.getParent().getShape().getLayoutY(),
+                    relationship.getChild().getShape().getLayoutY()) - 10;
         }
 
         return ret;
     }
     
-    private double getDefaultLeftRulerX() {
-        return 0;
+    private void addElements(ApricotRelationship relationship, Point2D parentStart, Point2D childEnd, Side parentSide,
+            Side childSide, HatRelationship shape) {
+        addPath(parentStart, childEnd, relationship.getRelationshipType(), shape);
+        addStartElement(relationship.getRelationshipType(), parentStart, parentSide, shape);
+        addEndElement(childEnd, childSide, shape);
+        // addPath(parentStart, childEnd, rulerX, relationship.getRelationshipType(), shape);
+        // addRuler(parentStart, childEnd, rulerX, shape);
+    }
+    
+    private void addPath(Point2D parentStart, Point2D childEnd, RelationshipType type, HatRelationship shape) {
+        Path path = new Path();
+        
+        Point2D left = parentStart.getX() < childEnd.getX() ? parentStart : childEnd;
+        Point2D right = parentStart.getX() > childEnd.getX() ? parentStart : childEnd;
+        
+        path.getElements().add(new MoveTo(left.getX(), left.getY()));
+        path.getElements().add(new HLineTo(shape.getLeftRulerX()));
+        path.getElements().add(new VLineTo(shape.getCenterRulerY()));
+        path.getElements().add(new HLineTo(shape.getRightRulerX()));
+        path.getElements().add(new VLineTo(right.getY()));
+        path.getElements().add(new HLineTo(right.getX()));
+        
+        if (type != RelationshipType.IDENTIFYING) {
+            path.getStrokeDashArray().addAll(5d, 5d);
+        }
+
+        shape.setPath(path);        
     }
 }

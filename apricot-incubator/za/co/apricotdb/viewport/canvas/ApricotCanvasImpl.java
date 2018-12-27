@@ -6,11 +6,15 @@ import java.util.List;
 import java.util.Map;
 
 import javafx.geometry.Bounds;
+import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import za.co.apricotdb.viewport.align.OrderManager;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
+import za.co.apricotdb.viewport.entity.shape.DetailedEntityShape;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
+import za.co.apricotdb.viewport.relationship.shape.RelationshipTopology;
+import za.co.apricotdb.viewport.relationship.shape.RelationshipTopologyImpl;
 
 /**
  * The basic implementation of the Apricot- canvas.
@@ -23,6 +27,7 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
     private final List<ApricotElement> elements = new ArrayList<>();
     private final Map<String, ApricotEntity> entities = new HashMap<>();
     private final List<ApricotRelationship> relationships = new ArrayList<>();
+    private final RelationshipTopology topology = new RelationshipTopologyImpl();
 
     /**
      * Register new Entity Shape into the canvas.
@@ -107,6 +112,50 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
      */
     @Override
     public void buildRelationships() {
+        for (ApricotElement e : elements) {
+            if (e.getElementType() == ElementType.ENTITY) {
+                ApricotEntity entity = (ApricotEntity) e;
+                if (entity.getEntityShape() != null) {
+                    if (entity.getEntityShape() instanceof DetailedEntityShape) {
+                        DetailedEntityShape entityShape = (DetailedEntityShape) entity.getEntityShape();
+                        entityShape.resetAllStacks();
+                        this.getChildren().remove(entityShape.getLeftStack());
+                        this.getChildren().remove(entityShape.getRightStack());
+                        this.getChildren().remove(entityShape.getTopStack());
+                        if (entity.getPrimaryLinks().size() > 1) {
+                            for (ApricotRelationship r : entity.getPrimaryLinks()) {
+                                Side side = topology.getRelationshipSide(r, true);
+                                switch (side) {
+                                case LEFT:
+                                    entityShape.getLeftStack().addRelationship(r);
+                                    break;
+                                case RIGHT:
+                                    entityShape.getRightStack().addRelationship(r);
+                                    break;
+                                case TOP:
+                                    entityShape.getTopStack().addRelationship(r);
+                                    break;
+                                }
+                            }
+                            
+                            if (entityShape.getLeftStack().hasRelationships()) {
+                                entityShape.getLeftStack().build();
+                                this.getChildren().add(entityShape.getLeftStack());
+                            }
+                            if (entityShape.getRightStack().hasRelationships()) {
+                                entityShape.getRightStack().build();
+                                this.getChildren().add(entityShape.getRightStack());
+                            }
+                            if (entityShape.getTopStack().hasRelationships()) {
+                                entityShape.getTopStack().build();
+                                this.getChildren().add(entityShape.getTopStack());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         for (ApricotRelationship r : relationships) {
             r.buildShape();
         }
