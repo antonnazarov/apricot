@@ -1,8 +1,6 @@
 package za.co.apricotdb.viewport.relationship.shape;
 
 import javafx.geometry.Side;
-import javafx.scene.layout.VBox;
-import za.co.apricotdb.viewport.entity.ApricotEntity;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 import za.co.apricotdb.viewport.relationship.RelationshipType;
@@ -57,31 +55,10 @@ public class RelationshipTopologyImpl implements RelationshipTopology {
         if (relationship.getRelationshipType() != RelationshipType.IDENTIFYING) {
             if (hDist > MIN_HORIZONTAL_DISTANCE) {
                 ret = RelationshipShapeType.DIRECT;
-            } 
-            else if (isHatType(relationship)) {
+            } else if (isHatType(relationship)) {
                 ret = RelationshipShapeType.HAT;
             } else {
                 ret = RelationshipShapeType.DADS_HAND;
-/*
-                boolean isDadsHand = false;
-                double parentYPoint = TopologyHelper.getFieldY(relationship.getParent(),
-                        relationship.getPrimaryKeyName());
-                double childYPoint = TopologyHelper.getFieldY(relationship.getChild(),
-                        relationship.getForeignKeyName());
-                if (parentYPoint > childYPoint) {
-                    isDadsHand = isDadsHand(relationship.getParent(), relationship.getChild(), parentYPoint,
-                            childYPoint);
-                } else {
-                    isDadsHand = isDadsHand(relationship.getChild(), relationship.getParent(), childYPoint,
-                            parentYPoint);
-                }
-
-                if (isDadsHand) {
-                    ret = RelationshipShapeType.DADS_HAND;
-                } else {
-                    ret = RelationshipShapeType.HAT;
-                }
-*/                
             }
         } else {
             // identifying relationships: ROOF or HOOK
@@ -96,37 +73,20 @@ public class RelationshipTopologyImpl implements RelationshipTopology {
      */
     private boolean isHatType(ApricotRelationship relationship) {
         boolean ret = false;
-        
-        double parentYPoint = TopologyHelper.getFieldY(relationship.getParent(),
-                relationship.getPrimaryKeyName());
-        double childYPoint = TopologyHelper.getFieldY(relationship.getChild(),
-                relationship.getForeignKeyName());        
-        
+
+        double parentYPoint = TopologyHelper.getFieldY(relationship.getParent(), relationship.getPrimaryKeyName());
+        double childYPoint = TopologyHelper.getFieldY(relationship.getChild(), relationship.getForeignKeyName());
+
         ApricotEntityShape shape = relationship.getParent().getEntityShape();
         double parentMinY = shape.getLayoutY() + shape.getTranslateY() - MIN_VERTICAL_DISTANCE;
         double parentMaxY = shape.getLayoutY() + shape.getTranslateY() + shape.getHeight() + MIN_VERTICAL_DISTANCE;
-        
+
         shape = relationship.getChild().getEntityShape();
         double childMinY = shape.getLayoutY() + shape.getTranslateY() - MIN_VERTICAL_DISTANCE;
         double childMaxY = shape.getLayoutY() + shape.getTranslateY() + shape.getHeight() + MIN_VERTICAL_DISTANCE;
-        
-        if (parentMinY <= childYPoint && childYPoint <= parentMaxY && 
-                childMinY <= parentYPoint && parentYPoint <= childMaxY) {
-            ret = true;
-        }
-        
-        return ret;
-    }
 
-    private boolean isDadsHand(ApricotEntity hEntity, ApricotEntity lEntity, double hY, double lY) {
-        boolean ret = false;
-
-        VBox hBox = (VBox) hEntity.getShape();
-        VBox lBox = (VBox) lEntity.getShape();
-
-        if (hY < lBox.getLayoutY() + lBox.getTranslateY() - MIN_VERTICAL_DISTANCE) {
-            ret = true;
-        } else if (lY > hBox.getLayoutY() + hBox.getTranslateY() + hBox.getHeight() + MIN_VERTICAL_DISTANCE) {
+        if (parentMinY <= childYPoint && childYPoint <= parentMaxY && childMinY <= parentYPoint
+                && parentYPoint <= childMaxY) {
             ret = true;
         }
 
@@ -149,14 +109,9 @@ public class RelationshipTopologyImpl implements RelationshipTopology {
             } else {
                 ret = isPrimaryKey ? Side.LEFT : Side.RIGHT;
             }
-
             break;
         case DADS_HAND:
-            if (TopologyHelper.isParentLeft(relationship.getParent(), relationship.getChild())) {
-                ret = Side.RIGHT;
-            } else {
-                ret = Side.LEFT;
-            }
+            ret = getDadsHandSide(relationship, isPrimaryKey);
             break;
         case HAT:
             if (TopologyHelper.isParentLeft(relationship.getParent(), relationship.getChild())) {
@@ -171,6 +126,43 @@ public class RelationshipTopologyImpl implements RelationshipTopology {
         case HOOK:
             ret = Side.TOP;
             break;
+        }
+
+        return ret;
+    }
+
+    /**
+     * Find the "open" side of the DAD's Hand. If both sides are open, the highest
+     * one has preference.
+     */
+    private Side getDadsHandSide(ApricotRelationship relationship, boolean isPrimaryKey) {
+        Side ret = null;
+
+        double parentYPoint = TopologyHelper.getFieldY(relationship.getParent(), relationship.getPrimaryKeyName());
+        double childYPoint = TopologyHelper.getFieldY(relationship.getChild(), relationship.getForeignKeyName());
+
+        ApricotEntityShape shape = relationship.getParent().getEntityShape();
+        double parentMinY = shape.getLayoutY() + shape.getTranslateY() - RelationshipTopology.MIN_VERTICAL_DISTANCE;
+        double parentMaxY = shape.getLayoutY() + shape.getTranslateY() + shape.getHeight()
+                + RelationshipTopology.MIN_VERTICAL_DISTANCE;
+
+        shape = relationship.getChild().getEntityShape();
+        double childMinY = shape.getLayoutY() + shape.getTranslateY() - RelationshipTopology.MIN_VERTICAL_DISTANCE;
+        double childMaxY = shape.getLayoutY() + shape.getTranslateY() + shape.getHeight()
+                + RelationshipTopology.MIN_VERTICAL_DISTANCE;
+
+        if (parentYPoint < childMinY || parentYPoint > childMaxY) {
+            if (TopologyHelper.isParentLeft(relationship.getParent(), relationship.getChild())) {
+                ret = Side.RIGHT;
+            } else {
+                ret = Side.LEFT;
+            }
+        } else if (childYPoint < parentMinY || childYPoint > parentMaxY) {
+            if (TopologyHelper.isParentLeft(relationship.getParent(), relationship.getChild())) {
+                ret = Side.LEFT;
+            } else {
+                ret = Side.RIGHT;
+            }
         }
 
         return ret;

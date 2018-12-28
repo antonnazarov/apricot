@@ -7,6 +7,7 @@ import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ApricotCanvasImpl;
 import za.co.apricotdb.viewport.canvas.ApricotElement;
 import za.co.apricotdb.viewport.canvas.ElementType;
+import za.co.apricotdb.viewport.event.GroupOperationHandler;
 
 /**
  * Allocate the canvas for the minimal proper size.
@@ -18,6 +19,7 @@ public class CanvasSizeAjustor implements AlignCommand {
 
     public static final double DIAGRAM_PANEL_OFFSET = 10;
 
+    private final GroupOperationHandler groupHandler = new GroupOperationHandler();
     private ApricotCanvas canvas = null;
 
     public CanvasSizeAjustor(ApricotCanvas canvas) {
@@ -88,6 +90,9 @@ public class CanvasSizeAjustor implements AlignCommand {
     private void biasAllElements(Bounds canvasBounds) {
         Point2D bias = getEntitiesBias(canvasBounds);
 
+        groupHandler.translateRelationshipRulers(canvas, bias.getX(), bias.getY(), null);
+        groupHandler.resetRelationshipRulers(canvas);
+        
         for (ApricotElement e : canvas.getElements()) {
             Node n = e.getShape();
             if (n != null  && e.getElementType() == ElementType.ENTITY) {

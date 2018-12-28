@@ -5,6 +5,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
+import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 
 public class TopologyHelper {
     
@@ -53,5 +54,33 @@ public class TopologyHelper {
         double localY = shape.getFieldLocalY(fieldName);
         
         return localY + shape.getLayoutY() + shape.getTranslateY();
+    }
+    
+    public static double getExtremeXPosition(ApricotRelationship relationship, boolean isLeft) {
+        double ret = 0;
+        
+        if (isLeft) {
+            ret = Math.min(relationship.getParent().getEntityShape().getLayoutX() + relationship.getParent().getEntityShape().getTranslateX(),
+                    relationship.getChild().getEntityShape().getLayoutX() + relationship.getChild().getEntityShape().getTranslateX());
+        } else {
+            ret = Math.max(relationship.getParent().getEntityShape().getLayoutX() + relationship.getParent().getEntityShape().getTranslateX() + relationship.getParent().getEntityShape().getWidth(),
+                    relationship.getChild().getEntityShape().getLayoutX() + relationship.getChild().getEntityShape().getTranslateX() + relationship.getChild().getEntityShape().getWidth());
+        }
+        
+        return ret;
+    }
+    
+    public static double getExtremeYPosition(ApricotRelationship relationship, boolean isTop) {
+        double ret = 0;
+        
+        if (isTop) {
+            ret = Math.min(relationship.getParent().getEntityShape().getLayoutY() + relationship.getParent().getEntityShape().getTranslateY(),
+                    relationship.getChild().getEntityShape().getLayoutY() + relationship.getChild().getEntityShape().getTranslateY());
+        } else {
+            ret = Math.max(relationship.getParent().getEntityShape().getLayoutY() + relationship.getParent().getEntityShape().getTranslateY() + relationship.getParent().getEntityShape().getHeight(),
+                    relationship.getChild().getEntityShape().getLayoutY() + relationship.getChild().getEntityShape().getTranslateY() + relationship.getChild().getEntityShape().getHeight());
+        }
+        
+        return ret;
     }
 }

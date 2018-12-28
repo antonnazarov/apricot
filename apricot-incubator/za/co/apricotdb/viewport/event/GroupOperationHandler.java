@@ -29,12 +29,17 @@ public class GroupOperationHandler {
         }
     }
 
-    private void translateRelationshipRulers(ApricotCanvas canvas, double translateX, double translateY,
+    /**
+     * Translate the rulers of the relationships with the given status of element.
+     * If the parameter elementStatus is null, the operation will be applied for all entities/relationships.
+     */
+    public void translateRelationshipRulers(ApricotCanvas canvas, double translateX, double translateY,
             ElementStatus elementStatus) {
         // prepare a list of the selected Entities
         List<ApricotEntity> entities = new ArrayList<>();
         for (ApricotElement element : canvas.getElements()) {
-            if (element.getElementType() == ElementType.ENTITY && element.getElementStatus() == elementStatus) {
+            if (element.getElementType() == ElementType.ENTITY && 
+                    (element.getElementStatus() == elementStatus || elementStatus == null)) {
                 entities.add((ApricotEntity) element);
             }
         }
@@ -46,8 +51,7 @@ public class GroupOperationHandler {
                 if (entities.contains(child) && r.getShape() != null) {
                     ApricotRelationshipShape rShape = (ApricotRelationshipShape) r.getShape();
                     // this operation allows to keep topology of the relationship when both sides of
-                    // the
-                    // relationship have being moved simultaneously
+                    // the relationship have being moved simultaneously
                     rShape.translateRelationshipRulers(translateX, translateY);
                 }
             }
@@ -74,6 +78,14 @@ public class GroupOperationHandler {
             if (r.getShape() != null && r.getShape() instanceof ApricotRelationshipShape) {
                 ApricotRelationshipShape rShape = (ApricotRelationshipShape) r.getShape();
                 rShape.resetRelationshipRulers();
+            }
+        }
+    }
+    
+    public void resetRelationshipRulers(ApricotCanvas canvas) {
+        for (ApricotElement element : canvas.getElements()) {
+            if (element.getElementType() == ElementType.ENTITY) {
+                resetRelationshipRulers((ApricotEntity) element);
             }
         }
     }
