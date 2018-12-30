@@ -7,6 +7,7 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
 import javafx.scene.shape.VLineTo;
+import za.co.apricotdb.viewport.modifiers.ElementVisualModifier;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 import za.co.apricotdb.viewport.relationship.RelationshipType;
 
@@ -22,8 +23,8 @@ public class DadsHandShapeBuilder extends RelationshipShapeBuilderImpl {
     public static final double DH_VERTICAL_GAP = 10;
 
     public DadsHandShapeBuilder(RelationshipPrimitivesBuilder primitivesBuilder,
-            RelationshipTopology relationshipTopology) {
-        super(primitivesBuilder, relationshipTopology);
+            RelationshipTopology relationshipTopology, ElementVisualModifier[] shapeModifiers) {
+        super(primitivesBuilder, relationshipTopology, shapeModifiers);
     }
 
     @Override
@@ -37,6 +38,7 @@ public class DadsHandShapeBuilder extends RelationshipShapeBuilderImpl {
         shape.setRulerX(getDefaultRulerX(relationship, parentSide));
 
         addElements(relationship, parentStart, childEnd, parentSide, childSide, shape);
+        applyModifiers(shape);
 
         return shape;
     }
@@ -52,6 +54,7 @@ public class DadsHandShapeBuilder extends RelationshipShapeBuilderImpl {
             DadsHandRelationship shape = (DadsHandRelationship) relationship.getShape();
             shape.setRulerX(getDefaultRulerX(relationship, parentSide));
             addElements(relationship, parentStart, childEnd, parentSide, childSide, shape);
+            applyModifiers(shape);
         }
     }
 
@@ -74,10 +77,6 @@ public class DadsHandShapeBuilder extends RelationshipShapeBuilderImpl {
         path.getElements().add(new HLineTo(shape.getRulerX()));
         path.getElements().add(new VLineTo(childEnd.getY()));
         path.getElements().add(new HLineTo(childEnd.getX()));
-
-        if (type != RelationshipType.IDENTIFYING) {
-            path.getStrokeDashArray().addAll(5d, 5d);
-        }
 
         shape.setPath(path);
     }

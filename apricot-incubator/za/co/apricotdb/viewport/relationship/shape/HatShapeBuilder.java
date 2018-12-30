@@ -7,6 +7,7 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
 import javafx.scene.shape.VLineTo;
+import za.co.apricotdb.viewport.modifiers.ElementVisualModifier;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 import za.co.apricotdb.viewport.relationship.RelationshipType;
 
@@ -15,8 +16,9 @@ public class HatShapeBuilder extends RelationshipShapeBuilderImpl {
     public static final double HAT_HORIZONTAL_GAP = 30;
     public static final double HAT_VERTICAL_GAP = 10;
 
-    public HatShapeBuilder(RelationshipPrimitivesBuilder primitivesBuilder, RelationshipTopology relationshipTopology) {
-        super(primitivesBuilder, relationshipTopology);
+    public HatShapeBuilder(RelationshipPrimitivesBuilder primitivesBuilder, RelationshipTopology relationshipTopology,
+            ElementVisualModifier[] shapeModifiers) {
+        super(primitivesBuilder, relationshipTopology, shapeModifiers);
     }
 
     @Override
@@ -33,6 +35,7 @@ public class HatShapeBuilder extends RelationshipShapeBuilderImpl {
         shape.setCenterRulerY(getDefaultCenterRulerY(relationship));
 
         addElements(relationship, parentStart, childEnd, parentSide, childSide, shape);
+        applyModifiers(shape);
 
         return shape;
     }
@@ -48,6 +51,7 @@ public class HatShapeBuilder extends RelationshipShapeBuilderImpl {
             HatRelationship shape = (HatRelationship) relationship.getShape();
             correctRulers(parentStart, childEnd, shape, relationship);
             addElements(relationship, parentStart, childEnd, parentSide, childSide, shape);
+            applyModifiers(shape);
         }
     }
 
@@ -111,10 +115,6 @@ public class HatShapeBuilder extends RelationshipShapeBuilderImpl {
         path.getElements().add(new HLineTo(shape.getRightRulerX()));
         path.getElements().add(new VLineTo(right.getY()));
         path.getElements().add(new HLineTo(right.getX()));
-
-        if (type != RelationshipType.IDENTIFYING) {
-            path.getStrokeDashArray().addAll(5d, 5d);
-        }
 
         shape.setPath(path);
     }

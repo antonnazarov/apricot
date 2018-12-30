@@ -5,6 +5,7 @@ import javafx.geometry.Side;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Shape;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
+import za.co.apricotdb.viewport.modifiers.ElementVisualModifier;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 import za.co.apricotdb.viewport.relationship.RelationshipType;
 
@@ -19,11 +20,13 @@ public abstract class RelationshipShapeBuilderImpl implements RelationshipShapeB
 
     protected RelationshipPrimitivesBuilder primitivesBuilder = null;
     protected RelationshipTopology relationshipTopology = null;
+    protected ElementVisualModifier[] shapeModifiers = null;
 
     public RelationshipShapeBuilderImpl(RelationshipPrimitivesBuilder primitivesBuilder,
-            RelationshipTopology relationshipTopology) {
+            RelationshipTopology relationshipTopology, ElementVisualModifier[] shapeModifiers) {
         this.primitivesBuilder = primitivesBuilder;
         this.relationshipTopology = relationshipTopology;
+        this.shapeModifiers = shapeModifiers;
     }
 
     protected Point2D getParentStart(ApricotRelationship relationship, Side parentSide) {
@@ -115,5 +118,11 @@ public abstract class RelationshipShapeBuilderImpl implements RelationshipShapeB
             break;
         }
         shape.setEndElement(endElement);
+    }
+    
+    protected void applyModifiers(ApricotRelationshipShape shape) {
+        for (ElementVisualModifier modifier : shapeModifiers) {
+            modifier.modify(shape);
+        }
     }
 }

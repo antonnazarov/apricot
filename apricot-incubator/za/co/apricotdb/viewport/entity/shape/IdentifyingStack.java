@@ -12,7 +12,7 @@ public class IdentifyingStack extends PrimaryKeyStack {
 
     @Override
     public Side getSide() {
-        return Side.BOTTOM;
+        return Side.TOP;
     }
 
     @Override

@@ -1,12 +1,13 @@
 package za.co.apricotdb.viewport.relationship.shape;
 
+import za.co.apricotdb.viewport.modifiers.ElementVisualModifier;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 
 public class RoofShapeBuilder extends RelationshipShapeBuilderImpl {
 
     public RoofShapeBuilder(RelationshipPrimitivesBuilder primitivesBuilder, 
-            RelationshipTopology relationshipTopology) {
-        super(primitivesBuilder, relationshipTopology);
+            RelationshipTopology relationshipTopology, ElementVisualModifier[] shapeModifiers) {
+        super(primitivesBuilder, relationshipTopology, shapeModifiers);
     }
 
     @Override

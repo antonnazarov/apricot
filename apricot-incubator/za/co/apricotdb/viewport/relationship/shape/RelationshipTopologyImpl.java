@@ -2,6 +2,8 @@ package za.co.apricotdb.viewport.relationship.shape;
 
 import javafx.geometry.Side;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
+import za.co.apricotdb.viewport.modifiers.ElementVisualModifier;
+import za.co.apricotdb.viewport.modifiers.NonIdentifyingRelationshipShapeModifier;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 import za.co.apricotdb.viewport.relationship.RelationshipType;
 
@@ -14,10 +16,11 @@ public class RelationshipTopologyImpl implements RelationshipTopology {
 
     public RelationshipTopologyImpl() {
         RelationshipPrimitivesBuilder primitivesBuilder = new RelationshipPrimitivesBuilderImpl();
-        directBuilder = new DirectShapeBuilder(primitivesBuilder, this);
-        hatBuilder = new HatShapeBuilder(primitivesBuilder, this);
-        dadsHandBuilder = new DadsHandShapeBuilder(primitivesBuilder, this);
-        roofHandBuilder = new RoofShapeBuilder(primitivesBuilder, this);
+        ElementVisualModifier[] shapeModifiers = new ElementVisualModifier[] {new NonIdentifyingRelationshipShapeModifier()};
+        directBuilder = new DirectShapeBuilder(primitivesBuilder, this, shapeModifiers);
+        hatBuilder = new HatShapeBuilder(primitivesBuilder, this, shapeModifiers);
+        dadsHandBuilder = new DadsHandShapeBuilder(primitivesBuilder, this, shapeModifiers);
+        roofHandBuilder = new RoofShapeBuilder(primitivesBuilder, this, shapeModifiers);
     }
 
     @Override

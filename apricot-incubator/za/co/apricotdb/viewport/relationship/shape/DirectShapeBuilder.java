@@ -7,14 +7,15 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
 import javafx.scene.shape.VLineTo;
+import za.co.apricotdb.viewport.modifiers.ElementVisualModifier;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 import za.co.apricotdb.viewport.relationship.RelationshipType;
 
 public class DirectShapeBuilder extends RelationshipShapeBuilderImpl {
 
     public DirectShapeBuilder(RelationshipPrimitivesBuilder primitivesBuilder,
-            RelationshipTopology relationshipTopology) {
-        super(primitivesBuilder, relationshipTopology);
+            RelationshipTopology relationshipTopology, ElementVisualModifier[] shapeModifiers) {
+        super(primitivesBuilder, relationshipTopology, shapeModifiers);
     }
 
     @Override
@@ -30,6 +31,7 @@ public class DirectShapeBuilder extends RelationshipShapeBuilderImpl {
         shape.setRulerX(defaultRulerX);
 
         addElements(relationship, parentStart, childEnd, parentSide, childSide, defaultRulerX, shape);
+        applyModifiers(shape);
 
         return shape;
     }
@@ -48,6 +50,7 @@ public class DirectShapeBuilder extends RelationshipShapeBuilderImpl {
                 shape.setRulerX(correctedRulerX);
 
                 addElements(relationship, parentStart, childEnd, parentSide, childSide, correctedRulerX, shape);
+                applyModifiers(shape);
             }
         }
     }
@@ -108,10 +111,6 @@ public class DirectShapeBuilder extends RelationshipShapeBuilderImpl {
         path.getElements().add(new HLineTo(rulerX));
         path.getElements().add(new VLineTo(childEnd.getY()));
         path.getElements().add(new HLineTo(childEnd.getX()));
-
-        if (type != RelationshipType.IDENTIFYING) {
-            path.getStrokeDashArray().addAll(5d, 5d);
-        }
 
         shape.setPath(path);
     }
