@@ -57,7 +57,7 @@ public class DirectShapeBuilder extends RelationshipShapeBuilderImpl {
 
     private void addElements(ApricotRelationship relationship, Point2D parentStart, Point2D childEnd, Side parentSide,
             Side childSide, double rulerX, DirectRelationship shape) {
-        addPath(parentStart, childEnd, rulerX, relationship.getRelationshipType(), shape);
+        addPath(parentStart, childEnd, rulerX, shape);
         addStartElement(relationship.getRelationshipType(), parentStart, parentSide, shape);
         addEndElement(childEnd, childSide, shape);
         addRuler(parentStart, childEnd, rulerX, shape);
@@ -103,8 +103,7 @@ public class DirectShapeBuilder extends RelationshipShapeBuilderImpl {
         return ret;
     }
 
-    private void addPath(Point2D parentStart, Point2D childEnd, double rulerX, RelationshipType type,
-            DirectRelationship shape) {
+    private void addPath(Point2D parentStart, Point2D childEnd, double rulerX, DirectRelationship shape) {
         Path path = new Path();
 
         path.getElements().add(new MoveTo(parentStart.getX(), parentStart.getY()));

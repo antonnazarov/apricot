@@ -9,6 +9,8 @@ import javafx.util.Duration;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ApricotElement;
 import za.co.apricotdb.viewport.canvas.ElementType;
+import za.co.apricotdb.viewport.entity.ApricotEntity;
+import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
 
 public class SetMaxEqualWidth implements AlignCommand {
 
@@ -24,13 +26,14 @@ public class SetMaxEqualWidth implements AlignCommand {
         double maxWidth = 0;
         for (ApricotElement element : canvas.getElements()) {
             if (element.getElementType() == ElementType.ENTITY) {
-                VBox shape = (VBox) element.getShape();
+                ApricotEntity entity = (ApricotEntity) element;
+                ApricotEntityShape entityShape = entity.getEntityShape(); 
                 
-                if (maxWidth < shape.getWidth()) {
-                    maxWidth = shape.getWidth();
+                if (maxWidth < entityShape.getWidth()) {
+                    maxWidth = entityShape.getWidth();
                 }
                 
-                entities.add(shape);
+                entities.add(entityShape);
             }
         }
         

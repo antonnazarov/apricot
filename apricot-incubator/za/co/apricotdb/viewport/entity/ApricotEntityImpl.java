@@ -135,7 +135,7 @@ public final class ApricotEntityImpl implements ApricotEntity {
 
     @Override
     public Node getShape() {
-        return entityShape;
+        return entityShape.getEntityGroup();
     }
 
     @Override

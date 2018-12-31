@@ -37,10 +37,8 @@ public class RelationshipTopologyImpl implements RelationshipTopology {
             ret = dadsHandBuilder;
             break;
         case ROOF:
+            //  ROOF- type is exclusively for identifying primary links
             ret = roofHandBuilder;
-            break;
-        case HOOK:
-            ret = null;
             break;
         }
 
@@ -64,7 +62,7 @@ public class RelationshipTopologyImpl implements RelationshipTopology {
                 ret = RelationshipShapeType.DADS_HAND;
             }
         } else {
-            // identifying relationships: ROOF or HOOK
+            // identifying relationships: ROOF
             ret = RelationshipShapeType.ROOF;
         }
 
@@ -124,9 +122,6 @@ public class RelationshipTopologyImpl implements RelationshipTopology {
             }
             break;
         case ROOF:
-            ret = Side.TOP;
-            break;
-        case HOOK:
             ret = Side.TOP;
             break;
         }

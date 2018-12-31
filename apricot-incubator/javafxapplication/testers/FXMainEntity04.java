@@ -2,7 +2,6 @@ package javafxapplication.testers;
 
 import java.util.Set;
 
-import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
@@ -19,7 +18,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import za.co.apricotdb.viewport.align.AlignCommand;
 import za.co.apricotdb.viewport.align.CanvasSizeAjustor;
 import za.co.apricotdb.viewport.align.SetMaxEqualWidth;

@@ -65,13 +65,13 @@ public class DadsHandShapeBuilder extends RelationshipShapeBuilderImpl {
 
     private void addElements(ApricotRelationship relationship, Point2D parentStart, Point2D childEnd, Side parentSide,
             Side childSide, DadsHandRelationship shape) {
-        addPath(parentStart, childEnd, relationship.getRelationshipType(), shape);
+        addPath(parentStart, childEnd, shape);
         addStartElement(relationship.getRelationshipType(), parentStart, parentSide, shape);
         addEndElement(childEnd, childSide, shape);
         addRuler(parentStart, childEnd, shape);
     }
 
-    private void addPath(Point2D parentStart, Point2D childEnd, RelationshipType type, DadsHandRelationship shape) {
+    private void addPath(Point2D parentStart, Point2D childEnd, DadsHandRelationship shape) {
         Path path = new Path();
         path.getElements().add(new MoveTo(parentStart.getX(), parentStart.getY()));
         path.getElements().add(new HLineTo(shape.getRulerX()));

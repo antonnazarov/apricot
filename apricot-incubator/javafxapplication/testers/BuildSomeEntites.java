@@ -46,7 +46,7 @@ public class BuildSomeEntites implements TestEntityBuilder {
         List<FieldDetail> fields = entities.get(tableName);
         ApricotEntity entity = builder.buildEntity(tableName, fields, isSlave);
         erCanvas.addElement(entity);
-        Node n = entity.getShape();
+        Node n = entity.getEntityShape();
         n.setLayoutX(x);
         n.setLayoutY(y);
     }

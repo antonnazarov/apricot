@@ -70,8 +70,8 @@ public class HatShapeBuilder extends RelationshipShapeBuilderImpl {
         if (right.getX() + HAT_HORIZONTAL_GAP > shape.getRightRulerX()) {
             shape.setRightRulerX(right.getX() + HAT_HORIZONTAL_GAP);
         }
-        double highTop = Math.min(relationship.getParent().getShape().getLayoutY()+relationship.getParent().getShape().getTranslateY(),
-                relationship.getChild().getShape().getLayoutY()+relationship.getChild().getShape().getTranslateY());
+        double highTop = Math.min(relationship.getParent().getEntityShape().getLayoutY()+relationship.getParent().getEntityShape().getTranslateY(),
+                relationship.getChild().getEntityShape().getLayoutY()+relationship.getChild().getEntityShape().getTranslateY());
         if (highTop - HAT_VERTICAL_GAP < shape.getCenterRulerY()) {
             shape.setCenterRulerY(highTop - HAT_VERTICAL_GAP);
         }
@@ -87,9 +87,9 @@ public class HatShapeBuilder extends RelationshipShapeBuilderImpl {
 
     private double getDefaultCenterRulerY(ApricotRelationship relationship) {
         double ret = 0;
-        if (relationship.getParent().getShape() != null && relationship.getChild().getShape() != null) {
-            ret = Math.min(relationship.getParent().getShape().getLayoutY()+relationship.getParent().getShape().getTranslateY(),
-                    relationship.getChild().getShape().getLayoutY()) - HAT_VERTICAL_GAP;
+        if (relationship.getParent().getEntityShape() != null && relationship.getChild().getEntityShape() != null) {
+            ret = Math.min(relationship.getParent().getEntityShape().getLayoutY()+relationship.getParent().getEntityShape().getTranslateY(),
+                    relationship.getChild().getEntityShape().getLayoutY()) - HAT_VERTICAL_GAP;
         }
 
         return ret;
@@ -97,13 +97,13 @@ public class HatShapeBuilder extends RelationshipShapeBuilderImpl {
 
     private void addElements(ApricotRelationship relationship, Point2D parentStart, Point2D childEnd, Side parentSide,
             Side childSide, HatRelationship shape) {
-        addPath(parentStart, childEnd, relationship.getRelationshipType(), shape);
+        addPath(parentStart, childEnd, shape);
         addStartElement(relationship.getRelationshipType(), parentStart, parentSide, shape);
         addEndElement(childEnd, childSide, shape);
         addRulers(parentStart, childEnd, shape);
     }
 
-    private void addPath(Point2D parentStart, Point2D childEnd, RelationshipType type, HatRelationship shape) {
+    private void addPath(Point2D parentStart, Point2D childEnd, HatRelationship shape) {
         Path path = new Path();
 
         Point2D left = getPointOnSide(parentStart, childEnd, true);

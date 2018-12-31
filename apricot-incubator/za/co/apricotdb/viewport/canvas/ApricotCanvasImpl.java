@@ -13,6 +13,7 @@ import za.co.apricotdb.viewport.align.OrderManager;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 import za.co.apricotdb.viewport.entity.shape.DetailedEntityShape;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
+import za.co.apricotdb.viewport.relationship.RelationshipType;
 import za.co.apricotdb.viewport.relationship.shape.RelationshipTopology;
 import za.co.apricotdb.viewport.relationship.shape.RelationshipTopologyImpl;
 
@@ -100,7 +101,7 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
 
         for (String table : entities.keySet()) {
             ApricotEntity entity = entities.get(table);
-            Node n = entity.getShape();
+            Node n = entity.getEntityShape();
             ret.put(table, n.getBoundsInParent());
         }
 
@@ -119,10 +120,11 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
                     if (entity.getEntityShape() instanceof DetailedEntityShape) {
                         DetailedEntityShape entityShape = (DetailedEntityShape) entity.getEntityShape();
                         entityShape.resetAllStacks();
-                        this.getChildren().remove(entityShape.getLeftStack());
-                        this.getChildren().remove(entityShape.getRightStack());
-                        this.getChildren().remove(entityShape.getTopStack());
-                        if (entity.getPrimaryLinks().size() > 1) {
+                        entityShape.getEntityGroup().getChildren().remove(entityShape.getLeftStack());
+                        entityShape.getEntityGroup().getChildren().remove(entityShape.getRightStack());
+                        entityShape.getEntityGroup().getChildren().remove(entityShape.getTopStack());
+                        
+                        // if (entity.getPrimaryLinks().size() > 1) {
                             for (ApricotRelationship r : entity.getPrimaryLinks()) {
                                 Side side = topology.getRelationshipSide(r, true);
                                 switch (side) {
@@ -137,20 +139,27 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
                                     break;
                                 }
                             }
-                            
+
+                            //  add foreign identifying relationships (if any)
+                            for (ApricotRelationship r : entity.getForeignLinks()) {
+                                if (r.getRelationshipType() == RelationshipType.IDENTIFYING) {
+                                    entityShape.getTopStack().addRelationship(r);
+                                }
+                            }
+
                             if (entityShape.getLeftStack().hasRelationships()) {
                                 entityShape.getLeftStack().build();
-                                this.getChildren().add(entityShape.getLeftStack());
+                                entityShape.getEntityGroup().getChildren().add(entityShape.getLeftStack());
                             }
                             if (entityShape.getRightStack().hasRelationships()) {
                                 entityShape.getRightStack().build();
-                                this.getChildren().add(entityShape.getRightStack());
+                                entityShape.getEntityGroup().getChildren().add(entityShape.getRightStack());
                             }
                             if (entityShape.getTopStack().hasRelationships()) {
                                 entityShape.getTopStack().build();
-                                this.getChildren().add(entityShape.getTopStack());
+                                entityShape.getEntityGroup().getChildren().add(entityShape.getTopStack());
                             }
-                        }
+                        // }
                     }
                 }
             }

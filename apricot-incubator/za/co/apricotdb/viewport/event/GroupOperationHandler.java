@@ -3,7 +3,6 @@ package za.co.apricotdb.viewport.event;
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.scene.Node;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ApricotElement;
 import za.co.apricotdb.viewport.canvas.ElementStatus;
@@ -22,9 +21,10 @@ public class GroupOperationHandler {
 
         for (ApricotElement element : canvas.getElements()) {
             if (element.getElementType() == ElementType.ENTITY && element.getElementStatus() == elementStatus) {
-                Node shape = element.getShape();
-                shape.setTranslateX(translateX);
-                shape.setTranslateY(translateY);
+                ApricotEntity entity = (ApricotEntity) element; 
+                ApricotEntityShape entityShape = entity.getEntityShape();
+                entityShape.setTranslateX(translateX);
+                entityShape.setTranslateY(translateY);
             }
         }
     }
@@ -61,14 +61,15 @@ public class GroupOperationHandler {
     public void applyCurrentPosition(ApricotCanvas canvas, ElementStatus elementStatus) {
         for (ApricotElement element : canvas.getElements()) {
             if (element.getElementType() == ElementType.ENTITY && element.getElementStatus() == elementStatus) {
-                Node shape = element.getShape();
+                ApricotEntity entity = (ApricotEntity) element;  
+                ApricotEntityShape shape = entity.getEntityShape();
                 shape.setLayoutX(shape.getLayoutX() + shape.getTranslateX());
                 shape.setLayoutY(shape.getLayoutY() + shape.getTranslateY());
                 shape.setTranslateX(0);
                 shape.setTranslateY(0);
 
-                resetRelationshipRulers((ApricotEntity) element);
-                applyPrimaryKeyStacks((ApricotEntity) element);
+                resetRelationshipRulers(entity);
+                applyPrimaryKeyStacks(entity);
             }
         }
     }

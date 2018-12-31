@@ -17,6 +17,7 @@ import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 public abstract class ApricotEntityShape extends VBox implements ApricotShape {
 
     private ApricotEntity entity;
+    protected ApricotEntityGroup entityGroup = new ApricotEntityGroup();
 
     public ApricotEntityShape(ApricotEntity entity) {
         this.entity = entity;
@@ -34,4 +35,8 @@ public abstract class ApricotEntityShape extends VBox implements ApricotShape {
     public abstract void resetAllStacks();
     
     public abstract Point2D getStackRelationshipStart(ApricotRelationship relationship);
+
+    public ApricotEntityGroup getEntityGroup() {
+        return entityGroup;
+    }
 }

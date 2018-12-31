@@ -1,12 +1,12 @@
 package za.co.apricotdb.viewport.align;
 
 import javafx.geometry.Point2D;
-import javafx.scene.Node;
-import javafx.scene.layout.VBox;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ApricotCanvasImpl;
 import za.co.apricotdb.viewport.canvas.ApricotElement;
 import za.co.apricotdb.viewport.canvas.ElementType;
+import za.co.apricotdb.viewport.entity.ApricotEntity;
+import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
 import za.co.apricotdb.viewport.event.GroupOperationHandler;
 
 /**
@@ -42,13 +42,14 @@ public class CanvasSizeAjustor implements AlignCommand {
 
         for (ApricotElement e : canvas.getElements()) {
             if (e.getElementType() == ElementType.ENTITY) {
+                ApricotEntity entity = (ApricotEntity) e; 
 
-                VBox box = (VBox) e.getShape();
+                ApricotEntityShape entityShape = entity.getEntityShape();
 
-                double left = box.getLayoutX() + box.getTranslateX();
-                double right = left + box.getWidth();
-                double top = box.getLayoutY() + box.getTranslateY();
-                double bottom = top + box.getHeight();
+                double left = entityShape.getLayoutX() + entityShape.getTranslateX();
+                double right = left + entityShape.getWidth();
+                double top = entityShape.getLayoutY() + entityShape.getTranslateY();
+                double bottom = top + entityShape.getHeight();
 
                 if (c.getLeft() > left) {
                     c.setLeft(left);
@@ -94,10 +95,11 @@ public class CanvasSizeAjustor implements AlignCommand {
         groupHandler.resetRelationshipRulers(canvas);
         
         for (ApricotElement e : canvas.getElements()) {
-            Node n = e.getShape();
-            if (n != null  && e.getElementType() == ElementType.ENTITY) {
-                n.setLayoutX(n.getLayoutX() + bias.getX());
-                n.setLayoutY(n.getLayoutY() + bias.getY());
+            if (e.getShape() != null  && e.getElementType() == ElementType.ENTITY) {
+                ApricotEntity entity = (ApricotEntity) e;
+                ApricotEntityShape entityShape = entity.getEntityShape();
+                entityShape.setLayoutX(entityShape.getLayoutX() + bias.getX());
+                entityShape.setLayoutY(entityShape.getLayoutY() + bias.getY());
             }
         }
         

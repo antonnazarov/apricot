@@ -80,6 +80,7 @@ public abstract class DetailedEntityShape extends ApricotEntityShape {
 
     private void buildShape() {
         this.getChildren().addAll(header, primaryPanel, nonPrimaryPanel);
+        entityGroup.getChildren().add(this);
     }
 
     private void mapFields() {

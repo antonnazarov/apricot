@@ -3,11 +3,12 @@ package za.co.apricotdb.viewport.align;
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ApricotElement;
 import za.co.apricotdb.viewport.canvas.ElementType;
+import za.co.apricotdb.viewport.entity.ApricotEntity;
+import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
 
 /**
  * This Align Command performs a simple allocation of the entities on the
@@ -29,17 +30,14 @@ public class SimpleGridEntityAllocator implements AlignCommand {
 
     @Override
     public void align() {
-        List<VBox> entities = new ArrayList<>();
+        List<ApricotEntityShape> entities = new ArrayList<>();
         double totalHeight = 0;
         for (ApricotElement elm : canvas.getElements()) {
             if (elm.getElementType() == ElementType.ENTITY) {
-                Node n = elm.getShape();
-                if (n instanceof VBox) {
-                    VBox entity = (VBox) n;
-                    entities.add(entity);
-                    totalHeight += entity.getHeight();
-                }
-
+                ApricotEntity entity = (ApricotEntity) elm;
+                ApricotEntityShape entityShape = entity.getEntityShape();
+                entities.add(entityShape);
+                totalHeight += entityShape.getHeight();
             }
         }
 
