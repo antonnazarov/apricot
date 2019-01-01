@@ -469,6 +469,193 @@ public class TestEntityCreateHelper {
         return fields;
     }
     
+    //  contract_specification
+    public List<FieldDetail> getContractSpecification() {
+        List<FieldDetail> fields = new ArrayList<>();
+        fields.add(new FieldDetail("id", true, "bigint", true, "PK"));
+        fields.add(new FieldDetail("active_from", true, "datetime2", false, null));
+        fields.add(new FieldDetail("channel_type", true, "varchar (50)", false, null));
+        fields.add(new FieldDetail("contract_code", true, "varchar (50)", false, null));
+        fields.add(new FieldDetail("description", false, "varchar (250)", false, null));
+        fields.add(new FieldDetail("active_from", false, "datetime2", false, null));
+        fields.add(new FieldDetail("category_id", true, "bigint", false, "FK"));
+        fields.add(new FieldDetail("parent", false, "bigint", false, "FK1"));
+        fields.add(new FieldDetail("title_id", false, "bigint", false, "FK2"));
+        fields.add(new FieldDetail("mis_role", false, "varchar (50)", false, null));
+        fields.add(new FieldDetail("default_reserve_id", false, "bigint", false, "FK3"));
+        fields.add(new FieldDetail("payment_specification_id", false, "bigint", false, null));
+        fields.add(new FieldDetail("fsb_registration_specification_id", false, "bigint", false, "FK4"));
+        fields.add(new FieldDetail("party_type", false, "varchar (50)", false, null));
+        fields.add(new FieldDetail("rem_stmnt_tmpl_cat_id", false, "bigint", false, "FK5"));
+        fields.add(new FieldDetail("default_open_for_new_business", false, "bit", false, null));
+        fields.add(new FieldDetail("open_for_new_business_editable", false, "bit", false, null));
+        fields.add(new FieldDetail("organisation_manager", false, "bit", false, null));
+        fields.add(new FieldDetail("sub_status_specification_id", false, "bigint", false, "FK6"));
+        fields.add(new FieldDetail("termination_reason_specification_id", false, "bigint", false, "FK7"));
+        fields.add(new FieldDetail("default_graduation_phase_id", false, "bigint", false, "FK8"));
+        fields.add(new FieldDetail("sign_away_rights_enabled", false, "bit", false, null));
+        fields.add(new FieldDetail("succession_planning_enabled", false, "bit", false, null));
+        fields.add(new FieldDetail("proof_of_intent_enabled", false, "bit", false, null));
+        fields.add(new FieldDetail("late_activation_allowed", false, "bit", false, null));
+        fields.add(new FieldDetail("max_person_age_allowed_at_activation", false, "bigint", false, null));
+        fields.add(new FieldDetail("late_termination_allowed", false, "bit", false, null));
+        fields.add(new FieldDetail("contract_allowed_at_activation", false, "bit", false, null));
+        fields.add(new FieldDetail("contract_changeover_allowed", false, "bit", false, null));
+        fields.add(new FieldDetail("late_contract_changeover_allowed", false, "bit", false, null));
+        fields.add(new FieldDetail("vat_registration_allowed", false, "bit", false, null));
+        fields.add(new FieldDetail("historic_linking_allowed", false, "bit", false, null));
+        fields.add(new FieldDetail("buy_and_sell_allowed", false, "bit", false, null));
+        
+        return fields;
+    }
+    
+    //  category_scheme
+    public List<FieldDetail> getCategorySheme() {
+        List<FieldDetail> fields = new ArrayList<>();
+        fields.add(new FieldDetail("id", true, "bigint", true, "PK"));
+        fields.add(new FieldDetail("description", false, "varchar (250)", false, null));
+        fields.add(new FieldDetail("scheme_name", true, "varchar (50)", false, "UC"));
+
+        return fields;
+    }
+    
+    //  reserve_specification
+    public List<FieldDetail> getReserveSpecification() {
+        List<FieldDetail> fields = new ArrayList<>();
+        fields.add(new FieldDetail("id", true, "bigint", true, "PK"));
+        fields.add(new FieldDetail("additional_reserve_release_default", false, "int", false, null));
+        fields.add(new FieldDetail("has_additional_reserve_release", false, "bit", false, null));
+        fields.add(new FieldDetail("has_lapse", false, "bit", false, null));
+        fields.add(new FieldDetail("has_reserve_end_date", false, "bit", false, null));
+        fields.add(new FieldDetail("has_reserve_retention", false, "bit", false, null));
+        fields.add(new FieldDetail("reserve_type", true, "varchar (5)", false, "UC"));
+        fields.add(new FieldDetail("apply_lapse_percentage", false, "bit", false, null));
+        fields.add(new FieldDetail("reserve_type_description", true, "varchar (255)", false, null));
+
+        return fields;
+    }
+    
+    // fsb_registration_specification
+    public List<FieldDetail> getFsbRegistrationSpecification() {
+        List<FieldDetail> fields = new ArrayList<>();
+        fields.add(new FieldDetail("id", true, "bigint", true, "PK"));
+        fields.add(new FieldDetail("fsp_number", false, "varchar (255)", false, null));
+        fields.add(new FieldDetail("default_fais_role", false, "varchar (255)", false, null));
+
+        return fields;
+    }
+    
+    // sub_status_specification
+    public List<FieldDetail> getSubStatusSpecification() {
+        List<FieldDetail> fields = new ArrayList<>();
+        fields.add(new FieldDetail("id", true, "bigint", true, "PK"));
+
+        return fields;
+    }
+    
+    // termination_reason_specification
+    public List<FieldDetail> getTerminationReasonSpecification() {
+        List<FieldDetail> fields = new ArrayList<>();
+        fields.add(new FieldDetail("id", true, "bigint", true, "PK"));
+
+        return fields;
+    }
+    
+    // graduation_phase
+    public List<FieldDetail> getGraduationPhase() {
+        List<FieldDetail> fields = new ArrayList<>();
+        fields.add(new FieldDetail("id", true, "bigint", true, "PK"));
+        fields.add(new FieldDetail("graduation_phase", false, "varchar (255)", false, null));
+        fields.add(new FieldDetail("graduation_year", false, "int", false, null));
+        fields.add(new FieldDetail("next_graduation_phase_id", false, "bigint", false, "FK"));
+
+        return fields;
+    }
+    
+    // allowed_buy_and_sell_contract_specification
+    public List<FieldDetail> getAllowBuyAndSell() {
+        List<FieldDetail> fields = new ArrayList<>();
+        fields.add(new FieldDetail("contract_specification_id", true, "bigint", true, "PK"));
+        fields.add(new FieldDetail("allowed_buy_and_sell_contract_specification_id", true, "bigint", true, "PK, FK"));
+
+        return fields;
+    }
+    
+    //  allowed_change_contract_specification
+    public List<FieldDetail> getAllowedChangeContract() {
+        List<FieldDetail> fields = new ArrayList<>();
+        fields.add(new FieldDetail("contract_specification_id", true, "bigint", true, "PK"));
+        fields.add(new FieldDetail("allowed_change_contract_specification_id", true, "bigint", true, "PK, FK"));
+
+        return fields;
+    }
+    
+    //  commission_entitlement_specification
+    public List<FieldDetail> getCommissionEntitlementSpecification() {
+        List<FieldDetail> fields = new ArrayList<>();
+        fields.add(new FieldDetail("id", true, "bigint", true, "PK"));
+        fields.add(new FieldDetail("commission_entitlement_active_default", false, "bit", false, null));
+        fields.add(new FieldDetail("commission_entitlement_inactive_default", false, "bit", false, null));
+        fields.add(new FieldDetail("commission_entitlement_redirect_default", false, "bit", false, null));
+        fields.add(new FieldDetail("user_can_edit_active", false, "bit", false, null));
+        fields.add(new FieldDetail("user_can_edit_inactive", false, "bit", false, null));
+        fields.add(new FieldDetail("redirect_enabled", false, "bit", false, null));
+        fields.add(new FieldDetail("commission_entitlement_type_id", false, "bigint", false, "FK"));
+        fields.add(new FieldDetail("contract_specification_id", false, "bigint", false, "FK1"));
+
+        return fields;
+    }
+    
+    //  contract_specification_additional_product_category
+    public List<FieldDetail> getContractSpecificationAdditionalProductCategory() {
+        List<FieldDetail> fields = new ArrayList<>();
+        fields.add(new FieldDetail("contract_specification_id", true, "bigint", true, "PK, FK, FK1"));
+        fields.add(new FieldDetail("fsb_product_category_reg_map_key", true, "varchar (255)", true, "PK"));
+        fields.add(new FieldDetail("fsb_product_category_reg_id", true, "bigint", false, "FK2, UC"));
+
+        return fields;
+    }
+    
+    // contract_specification_award_type
+    public List<FieldDetail> getContractSpecificationAwardType() {
+        List<FieldDetail> fields = new ArrayList<>();
+        fields.add(new FieldDetail("id", true, "bigint", true, "PK"));
+        fields.add(new FieldDetail("contract_specification_id", true, "bigint", false, "FK, UIDX"));
+        fields.add(new FieldDetail("award_type_id", true, "bigint", false, "UIDX"));
+
+        return fields;
+    }
+    
+    // contract_specification_product_category
+    public List<FieldDetail> getContractSpecificationProductCategory() {
+        List<FieldDetail> fields = new ArrayList<>();
+        fields.add(new FieldDetail("contract_specification_id", true, "bigint", true, "PK, FK"));
+        fields.add(new FieldDetail("fsb_product_category_reg_map_key", true, "varchar (255)", true, "PK"));
+        fields.add(new FieldDetail("fsb_product_category_reg_id", true, "bigint", false, "FK1, UC"));
+
+        return fields;
+    }
+    
+    // redirect_balance_contract_specification
+    public List<FieldDetail> getRedirectBalanceContractSpecification() {
+        List<FieldDetail> fields = new ArrayList<>();
+        fields.add(new FieldDetail("contract_specification_id", true, "bigint", true, "PK, FK"));
+        fields.add(new FieldDetail("redirect_balance_contract_specification_id", true, "bigint", true, "PK, FK1"));
+
+        return fields;
+    }
+    
+    // relationship_specification
+    public List<FieldDetail> getRelationshipSpecification() {
+        List<FieldDetail> fields = new ArrayList<>();
+        fields.add(new FieldDetail("id", true, "bigint", true, "PK"));
+        fields.add(new FieldDetail("played_by_contract_spec_id", false, "bigint", false, "FK"));
+        fields.add(new FieldDetail("assigned_to_contract_spec_id", false, "bigint", false, "FK1"));
+        fields.add(new FieldDetail("relationship_system_name", false, "varchar (255)", false, null));
+
+        return fields;
+    }
+     
     public Map<String, List<FieldDetail>> getAllEntities() {
         Map<String, List<FieldDetail>> ret = new HashMap<>();
 
@@ -477,9 +664,51 @@ public class TestEntityCreateHelper {
 
         l = getIntermediaryAgreement();
         ret.put("intermediary_agreement", l);
+        
+        l = getRelationshipSpecification();
+        ret.put("relationship_specification", l);
+        
+        l = getRedirectBalanceContractSpecification();
+        ret.put("redirect_balance_contract_specification", l);
+        
+        l = getContractSpecificationProductCategory();
+        ret.put("contract_specification_product_category", l);
+        
+        l = getContractSpecificationAwardType();
+        ret.put("contract_specification_award_type", l);
+        
+        l = getContractSpecificationAdditionalProductCategory();
+        ret.put("contract_specification_additional_product_category", l);
+        
+        l = getCommissionEntitlementSpecification();
+        ret.put("commission_entitlement_specification", l);
+        
+        l = getAllowedChangeContract();
+        ret.put("allowed_change_contract_specification", l);
+        
+        l = getAllowBuyAndSell();
+        ret.put("allowed_buy_and_sell_contract_specification", l);
+        
+        l = getGraduationPhase();
+        ret.put("graduation_phase", l);
+        
+        l = getTerminationReasonSpecification();
+        ret.put("termination_reason_specification", l);
+        
+        l = getSubStatusSpecification();
+        ret.put("sub_status_specification", l);
+        
+        l = getFsbRegistrationSpecification();
+        ret.put("fsb_registration_specification", l);
+        
+        l = getReserveSpecification();
+        ret.put("reserve_specification", l);
 
         l = getCategory();
         ret.put("category", l);
+        
+        l = getCategorySheme();
+        ret.put("category_scheme", l);
 
         l = getEducationQualification();
         ret.put("education_qualification", l);
@@ -558,6 +787,9 @@ public class TestEntityCreateHelper {
         
         l = getEducationCertificate();
         ret.put("education_certificate", l);
+        
+        l = getContractSpecification();
+        ret.put("contract_specification", l);
         
         return ret;
     }
