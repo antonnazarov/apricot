@@ -9,7 +9,6 @@ import javafx.scene.shape.Shape;
 import javafx.scene.shape.VLineTo;
 import za.co.apricotdb.viewport.modifiers.ElementVisualModifier;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
-import za.co.apricotdb.viewport.relationship.RelationshipType;
 
 /**
  * This shape builder creates relationships of type DadsHandRelationship.
@@ -52,6 +51,7 @@ public class DadsHandShapeBuilder extends RelationshipShapeBuilderImpl {
 
         if (relationship.getShape() instanceof DadsHandRelationship) {
             DadsHandRelationship shape = (DadsHandRelationship) relationship.getShape();
+            //  TODO: the ruler needs to be corrected properly!
             shape.setRulerX(getDefaultRulerX(relationship, parentSide));
             addElements(relationship, parentStart, childEnd, parentSide, childSide, shape);
             applyModifiers(shape);

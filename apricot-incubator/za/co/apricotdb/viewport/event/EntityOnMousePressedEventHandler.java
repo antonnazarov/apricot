@@ -38,8 +38,6 @@ public class EntityOnMousePressedEventHandler implements EventHandler<MouseEvent
                 if (!event.isControlDown()) {
                     canvas.changeAllElementsStatus(ElementStatus.DEFAULT);
                     entity.setElementStatus(ElementStatus.SELECTED);
-                } else if (entity.getElementStatus() == ElementStatus.SELECTED) {
-                    // entity.setElementStatus(ElementStatus.DEFAULT);
                 } else {
                     entity.setElementStatus(ElementStatus.SELECTED);                    
                 }

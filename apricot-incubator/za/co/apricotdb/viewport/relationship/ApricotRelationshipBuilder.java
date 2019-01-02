@@ -13,7 +13,7 @@ public class ApricotRelationshipBuilder implements RelationshipBuilder {
     
     public ApricotRelationshipBuilder(ApricotCanvas canvas) {
         this.canvas = canvas;
-        topology = new RelationshipTopologyImpl();
+        topology = new RelationshipTopologyImpl(canvas);
     }
 
     @Override
@@ -26,8 +26,6 @@ public class ApricotRelationshipBuilder implements RelationshipBuilder {
         ApricotRelationship relationship = new ApricotRelationshipImpl(parentEntity, childEntity, 
                 primaryKeyName, foreignKeyName, type, topology, canvas);
         relationship.setElementStatus(ElementStatus.DEFAULT);
-        
-        // relationship.buildShape();
         
         parentEntity.addLink(relationship, true);
         childEntity.addLink(relationship, false);

@@ -9,6 +9,7 @@ public class DragInitPosition implements Serializable {
     private double orgSceneX, orgSceneY, orgTranslateX, orgTranslateY;
     private DraggingType draggingType;
     private double origWidth, origHeight;
+    private double initRuler;
 
     public DragInitPosition(double orgSceneX, double orgSceneY, double orgTranslateX, double orgTranslateY) {
         this.orgSceneX = orgSceneX;
@@ -55,5 +56,13 @@ public class DragInitPosition implements Serializable {
 
     public void setOrigHeight(double origHeight) {
         this.origHeight = origHeight;
+    }
+
+    public double getInitRuler() {
+        return initRuler;
+    }
+
+    public void setInitRuler(double initRuler) {
+        this.initRuler = initRuler;
     }
 }

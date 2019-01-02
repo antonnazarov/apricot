@@ -28,7 +28,7 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
     private final List<ApricotElement> elements = new ArrayList<>();
     private final Map<String, ApricotEntity> entities = new HashMap<>();
     private final List<ApricotRelationship> relationships = new ArrayList<>();
-    private final RelationshipTopology topology = new RelationshipTopologyImpl();
+    private final RelationshipTopology topology = new RelationshipTopologyImpl(this);
 
     /**
      * Register new Entity Shape into the canvas.

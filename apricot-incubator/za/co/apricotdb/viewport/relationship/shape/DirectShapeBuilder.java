@@ -9,7 +9,6 @@ import javafx.scene.shape.Shape;
 import javafx.scene.shape.VLineTo;
 import za.co.apricotdb.viewport.modifiers.ElementVisualModifier;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
-import za.co.apricotdb.viewport.relationship.RelationshipType;
 
 public class DirectShapeBuilder extends RelationshipShapeBuilderImpl {
 
@@ -50,7 +49,6 @@ public class DirectShapeBuilder extends RelationshipShapeBuilderImpl {
                 shape.setRulerX(correctedRulerX);
 
                 addElements(relationship, parentStart, childEnd, parentSide, childSide, correctedRulerX, shape);
-                applyModifiers(shape);
             }
         }
     }
@@ -65,14 +63,16 @@ public class DirectShapeBuilder extends RelationshipShapeBuilderImpl {
 
     private void addRuler(Point2D parentStart, Point2D childEnd, double rulerX, DirectRelationship shape) {
 
-        Shape ruler = primitivesBuilder.getRuler();
+        Shape ruler = shape.getRuler();
+        if (ruler == null) {
+            ruler = primitivesBuilder.getRuler();
+            shape.setRuler(ruler);
+        }
 
         ruler.setLayoutX(rulerX - RelationshipPrimitivesBuilderImpl.RULER_LENGTH / 2);
         double midY = Math.min(parentStart.getY(), childEnd.getY()) + Math.abs(parentStart.getY() - childEnd.getY()) / 2
                 - RelationshipPrimitivesBuilderImpl.RULER_LENGTH / 2;
         ruler.setLayoutY(midY);
-
-        shape.setRuler(ruler);
     }
 
     private double getDefaultRulerX(Point2D parentStart, Point2D childEnd, boolean isParentLeft) {
@@ -104,14 +104,18 @@ public class DirectShapeBuilder extends RelationshipShapeBuilderImpl {
     }
 
     private void addPath(Point2D parentStart, Point2D childEnd, double rulerX, DirectRelationship shape) {
-        Path path = new Path();
+        Path path = shape.getPath();
+        if (path == null) {
+            path = new Path();
+            shape.setPath(path);
+        } else {
+            path.getElements().clear();
+        }
 
         path.getElements().add(new MoveTo(parentStart.getX(), parentStart.getY()));
         path.getElements().add(new HLineTo(rulerX));
         path.getElements().add(new VLineTo(childEnd.getY()));
         path.getElements().add(new HLineTo(childEnd.getX()));
-
-        shape.setPath(path);
     }
 
     @Override

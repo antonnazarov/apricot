@@ -38,8 +38,26 @@ public class BuildSomeEntites implements TestEntityBuilder {
         build("accreditation_registration", false, 1550, 30);
         build("award_eagle_data", false, 1550, 200);
         build("criminal_record", false, 1550, 350);
-        build("education_certificate", false, 1550, 530); 
+        build("education_certificate", false, 1550, 530);
         
+        build("contract_specification", false, 700, 950);
+        build("category", false, 400, 950);
+        build("category_scheme", false, 250, 950);
+        build("translation", false, 250, 1050);
+        build("reserve_specification", false, 400, 1150);
+        build("fsb_registration_specification", false, 400, 1380);
+        build("sub_status_specification", false, 400, 1480);
+        build("termination_reason_specification", false, 400, 1580);
+        build("graduation_phase", false, 400, 1660);
+        
+        build("allowed_buy_and_sell_contract_specification", true, 1000, 850);
+        build("allowed_change_contract_specification", true, 1000, 950);
+        build("commission_entitlement_specification", false, 1000, 1050);
+        build("contract_specification_additional_product_category", true, 1000, 1285);
+        build("contract_specification_award_type", false, 1000, 1450);
+        build("contract_specification_product_category", true, 1000, 1550);
+        build("redirect_balance_contract_specification", true, 1000, 1650);
+        build("relationship_specification", false, 1000, 1750);
     }
 
     private void build(String tableName, boolean isSlave, double x, double y) {

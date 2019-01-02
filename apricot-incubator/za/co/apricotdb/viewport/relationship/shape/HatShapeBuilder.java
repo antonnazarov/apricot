@@ -9,7 +9,6 @@ import javafx.scene.shape.Shape;
 import javafx.scene.shape.VLineTo;
 import za.co.apricotdb.viewport.modifiers.ElementVisualModifier;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
-import za.co.apricotdb.viewport.relationship.RelationshipType;
 
 public class HatShapeBuilder extends RelationshipShapeBuilderImpl {
 
