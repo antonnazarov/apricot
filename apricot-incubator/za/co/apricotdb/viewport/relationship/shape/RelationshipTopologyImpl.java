@@ -31,10 +31,10 @@ public class RelationshipTopologyImpl implements RelationshipTopology {
         hatBuilder = new HatShapeBuilder(primitivesBuilder, this, shapeModifiers);
 
         shapeModifiers = new ElementVisualModifier[] {new NonIdentifyingRelationshipShapeModifier(), 
-                new DadsHandRelationshipEventModifier()};
+                new DadsHandRelationshipEventModifier(canvas)};
         dadsHandBuilder = new DadsHandShapeBuilder(primitivesBuilder, this, shapeModifiers);
 
-        shapeModifiers = new ElementVisualModifier[] {new RoofRelationshipEventModifier()};
+        shapeModifiers = new ElementVisualModifier[] {new RoofRelationshipEventModifier(canvas)};
         roofHandBuilder = new RoofShapeBuilder(primitivesBuilder, this, shapeModifiers);
     }
 
@@ -64,7 +64,8 @@ public class RelationshipTopologyImpl implements RelationshipTopology {
      * Calculate, which type of relationship should be drawn, depending on the
      * current entities mutual allocation.
      */
-    private RelationshipShapeType calculateRelationshipShapeType(ApricotRelationship relationship) {
+    @Override
+    public RelationshipShapeType calculateRelationshipShapeType(ApricotRelationship relationship) {
         RelationshipShapeType ret = null;
 
         double hDist = TopologyHelper.getHorizontalDistance(relationship.getParent(), relationship.getChild());

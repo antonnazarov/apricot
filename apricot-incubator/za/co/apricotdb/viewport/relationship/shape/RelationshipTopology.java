@@ -11,4 +11,6 @@ public interface RelationshipTopology {
     RelationshipShapeBuilder getRelationshipShapeBuilder(ApricotRelationship relationship);
     
     Side getRelationshipSide(ApricotRelationship relationship, boolean isPrimaryKey);
+    
+    RelationshipShapeType calculateRelationshipShapeType(ApricotRelationship relationship);
 }

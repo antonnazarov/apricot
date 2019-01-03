@@ -5,8 +5,10 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Shape;
 import za.co.apricotdb.viewport.relationship.shape.ApricotRelationshipShape;
+import za.co.apricotdb.viewport.relationship.shape.DadsHandRelationship;
 import za.co.apricotdb.viewport.relationship.shape.DirectRelationship;
 import za.co.apricotdb.viewport.relationship.shape.HatRelationship;
+import za.co.apricotdb.viewport.relationship.shape.RoofRelationship;
 
 public class RelationshipOnMousePressedRulerEventHandler implements EventHandler<MouseEvent> {
 
@@ -28,7 +30,6 @@ public class RelationshipOnMousePressedRulerEventHandler implements EventHandler
                 case DIRECT:
                     DirectRelationship rShape = (DirectRelationship) ruler.getParent();
                     initRuler = rShape.getRulerX();
-
                     break;
                 case HAT:
                     HatRelationship hShape = (HatRelationship) ruler.getParent();
@@ -39,7 +40,14 @@ public class RelationshipOnMousePressedRulerEventHandler implements EventHandler
                     } else if (rulerId.equals("centerRulerY")) {
                         initRuler = hShape.getCenterRulerY();
                     }
-                    
+                    break;
+                case DADS_HAND:
+                    DadsHandRelationship dShape = (DadsHandRelationship) ruler.getParent();
+                    initRuler = dShape.getRulerX();
+                    break;
+                case ROOF:
+                    RoofRelationship roShape = (RoofRelationship) ruler.getParent();
+                    initRuler = roShape.getRulerY();
                     break;
                 }
                 

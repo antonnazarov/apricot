@@ -7,6 +7,7 @@ import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import za.co.apricotdb.viewport.align.OrderManager;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
+import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 
 /**
  * The canvas on which the ER- diagram will be drawn.
@@ -35,4 +36,6 @@ public interface ApricotCanvas {
     Map<String, Bounds> getEntityBounds();
     
     void buildRelationships();
+    
+    List<ApricotRelationship> getRelationships();
 }

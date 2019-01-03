@@ -51,10 +51,8 @@ public class DadsHandShapeBuilder extends RelationshipShapeBuilderImpl {
 
         if (relationship.getShape() instanceof DadsHandRelationship) {
             DadsHandRelationship shape = (DadsHandRelationship) relationship.getShape();
-            //  TODO: the ruler needs to be corrected properly!
-            shape.setRulerX(getDefaultRulerX(relationship, parentSide));
+            correctRulerX(relationship, parentSide, shape);
             addElements(relationship, parentStart, childEnd, parentSide, childSide, shape);
-            applyModifiers(shape);
         }
     }
 
@@ -72,22 +70,29 @@ public class DadsHandShapeBuilder extends RelationshipShapeBuilderImpl {
     }
 
     private void addPath(Point2D parentStart, Point2D childEnd, DadsHandRelationship shape) {
-        Path path = new Path();
+        Path path = shape.getPath();
+        if (path == null) {
+            path = new Path();
+            shape.setPath(path);
+        } else {
+            path.getElements().clear();
+        }
+        
         path.getElements().add(new MoveTo(parentStart.getX(), parentStart.getY()));
         path.getElements().add(new HLineTo(shape.getRulerX()));
         path.getElements().add(new VLineTo(childEnd.getY()));
         path.getElements().add(new HLineTo(childEnd.getX()));
-
-        shape.setPath(path);
     }
 
     private void addRuler(Point2D parentStart, Point2D childEnd, DadsHandRelationship shape) {
-        Shape ruler = primitivesBuilder.getRuler();
+        Shape ruler = shape.getRuler();
+        if (ruler == null) {
+            ruler = primitivesBuilder.getRuler();
+            shape.setRuler(ruler);
+        }
         ruler.setLayoutX(shape.getRulerX() - RelationshipPrimitivesBuilderImpl.RULER_LENGTH / 2);
-
         double minY = Math.min(parentStart.getY(), childEnd.getY());
         ruler.setLayoutY(minY + Math.abs(parentStart.getY() - childEnd.getY()) / 2);
-        shape.setRuler(ruler);
     }
 
     private double getDefaultRulerX(ApricotRelationship relationship, Side parentSide) {
@@ -100,5 +105,17 @@ public class DadsHandShapeBuilder extends RelationshipShapeBuilderImpl {
         }
 
         return ret;
+    }
+
+    private void correctRulerX(ApricotRelationship relationship, Side parentSide, DadsHandRelationship shape) {
+        if (parentSide == Side.RIGHT) {
+            if (shape.getRulerX() < TopologyHelper.getExtremeXPosition(relationship, false) + DH_HORIZONTAL_GAP) {
+                shape.setRulerX(TopologyHelper.getExtremeXPosition(relationship, false) + DH_HORIZONTAL_GAP);
+            }
+        } else {
+            if (shape.getRulerX() > TopologyHelper.getExtremeXPosition(relationship, true) - DH_HORIZONTAL_GAP) {
+                shape.setRulerX(TopologyHelper.getExtremeXPosition(relationship, true) - DH_HORIZONTAL_GAP);
+            }
+        }
     }
 }

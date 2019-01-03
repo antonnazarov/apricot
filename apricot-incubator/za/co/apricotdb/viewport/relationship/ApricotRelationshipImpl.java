@@ -7,6 +7,7 @@ import za.co.apricotdb.viewport.canvas.ElementType;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 import za.co.apricotdb.viewport.relationship.shape.ApricotRelationshipShape;
 import za.co.apricotdb.viewport.relationship.shape.RelationshipShapeBuilder;
+import za.co.apricotdb.viewport.relationship.shape.RelationshipShapeType;
 import za.co.apricotdb.viewport.relationship.shape.RelationshipTopology;
 
 /**
@@ -136,5 +137,10 @@ public class ApricotRelationshipImpl implements ApricotRelationship {
         StringBuilder sb = new StringBuilder("ApricotRelationship: ");
         sb.append(parent.getTableName()).append(" (").append(primaryKeyName).append("), ").append(child.getTableName()).append(" (").append(foreignKeyName).append(")");
         return sb.toString();
+    }
+
+    @Override
+    public RelationshipShapeType getRelationshipShapeType() {
+        return topology.calculateRelationshipShapeType(this);
     }
 }

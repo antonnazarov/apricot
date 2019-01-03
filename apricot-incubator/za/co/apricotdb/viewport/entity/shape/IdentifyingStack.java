@@ -30,8 +30,7 @@ public class IdentifyingStack extends PrimaryKeyStack {
 
     @Override
     public void sortRelationships() {
-        // TODO Auto-generated method stub
-        
+        //  Collections.sort(relationships, new RelationshipInStackComparator());
     }
 
     @Override

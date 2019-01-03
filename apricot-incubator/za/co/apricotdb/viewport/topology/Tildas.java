@@ -16,7 +16,7 @@ public class Tildas {
     public void buildTilda(Point2D pos, boolean isHorisontal, Path path, List<Rectangle2D> rectangles) {
 
         if (rectangles != null) {
-            // don't draw tilda if it is included into any rectangle
+            // don't draw the tilda if it is included into any rectangle
             for (Rectangle2D r : rectangles) {
                 if (r.contains(pos)) {
                     return;

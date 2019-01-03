@@ -2,6 +2,7 @@ package za.co.apricotdb.viewport.relationship;
 
 import za.co.apricotdb.viewport.canvas.ApricotElement;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
+import za.co.apricotdb.viewport.relationship.shape.RelationshipShapeType;
 
 public interface ApricotRelationship extends ApricotElement {
     
@@ -14,4 +15,6 @@ public interface ApricotRelationship extends ApricotElement {
     String getForeignKeyName();
     
     RelationshipType getRelationshipType();
+    
+    RelationshipShapeType getRelationshipShapeType();
 }

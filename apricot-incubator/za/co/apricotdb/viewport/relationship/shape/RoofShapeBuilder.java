@@ -43,7 +43,6 @@ public class RoofShapeBuilder extends RelationshipShapeBuilderImpl {
             RoofRelationship shape = (RoofRelationship) relationship.getShape();
             correctRulerY(parentStart, childEnd, shape);
             addElements(relationship, parentStart, childEnd, shape);
-            applyModifiers(shape);
         }
     }
 
@@ -59,12 +58,14 @@ public class RoofShapeBuilder extends RelationshipShapeBuilderImpl {
     }
 
     private void addRuler(Point2D parentStart, Point2D childEnd, RoofRelationship shape) {
-        Shape ruler = primitivesBuilder.getRuler();
+        Shape ruler = shape.getRuler();
+        if (ruler == null) {
+            ruler = primitivesBuilder.getRuler();
+            shape.setRuler(ruler);
+        }
         ruler.setLayoutY(shape.getRulerY() - RelationshipPrimitivesBuilderImpl.RULER_LENGTH / 2);
-
         double minX = Math.min(parentStart.getX(), childEnd.getX());
         ruler.setLayoutX(minX + Math.abs(parentStart.getX() - childEnd.getX()) / 2);
-        shape.setRuler(ruler);
     }
     
     private double getDefaultRulerY(Point2D parentStart, Point2D childEnd) {
@@ -72,13 +73,18 @@ public class RoofShapeBuilder extends RelationshipShapeBuilderImpl {
     }
     
     private void addPath(Point2D parentStart, Point2D childEnd, RoofRelationship shape) {
-        Path path = new Path();
+        Path path = shape.getPath();
+        if (path == null) {
+            path = new Path();
+            shape.setPath(path);
+        } else {
+            path.getElements().clear();
+        }
+
         path.getElements().add(new MoveTo(parentStart.getX(), parentStart.getY()));
         path.getElements().add(new VLineTo(shape.getRulerY()));
         path.getElements().add(new HLineTo(childEnd.getX()));
         path.getElements().add(new VLineTo(childEnd.getY()));
-
-        shape.setPath(path);
     }
     
     private void correctRulerY(Point2D parentStart, Point2D childEnd, RoofRelationship shape) {

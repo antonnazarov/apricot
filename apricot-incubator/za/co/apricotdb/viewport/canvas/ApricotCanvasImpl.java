@@ -123,43 +123,42 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
                         entityShape.getEntityGroup().getChildren().remove(entityShape.getLeftStack());
                         entityShape.getEntityGroup().getChildren().remove(entityShape.getRightStack());
                         entityShape.getEntityGroup().getChildren().remove(entityShape.getTopStack());
-                        
+
                         // if (entity.getPrimaryLinks().size() > 1) {
-                            for (ApricotRelationship r : entity.getPrimaryLinks()) {
-                                Side side = topology.getRelationshipSide(r, true);
-                                switch (side) {
-                                case LEFT:
-                                    entityShape.getLeftStack().addRelationship(r);
-                                    break;
-                                case RIGHT:
-                                    entityShape.getRightStack().addRelationship(r);
-                                    break;
-                                case TOP:
-                                    entityShape.getTopStack().addRelationship(r);
-                                    break;
-                                }
+                        for (ApricotRelationship r : entity.getPrimaryLinks()) {
+                            Side side = topology.getRelationshipSide(r, true);
+                            switch (side) {
+                            case LEFT:
+                                entityShape.getLeftStack().addRelationship(r);
+                                break;
+                            case RIGHT:
+                                entityShape.getRightStack().addRelationship(r);
+                                break;
+                            case TOP:
+                                entityShape.getTopStack().addRelationship(r);
+                                break;
                             }
+                        }
 
-                            //  add foreign identifying relationships (if any)
-                            for (ApricotRelationship r : entity.getForeignLinks()) {
-                                if (r.getRelationshipType() == RelationshipType.IDENTIFYING) {
-                                    entityShape.getTopStack().addRelationship(r);
-                                }
+                        // add foreign identifying relationships (if any)
+                        for (ApricotRelationship r : entity.getForeignLinks()) {
+                            if (r.getRelationshipType() == RelationshipType.IDENTIFYING) {
+                                entityShape.getTopStack().addRelationship(r);
                             }
+                        }
 
-                            if (entityShape.getLeftStack().hasRelationships()) {
-                                entityShape.getLeftStack().build();
-                                entityShape.getEntityGroup().getChildren().add(entityShape.getLeftStack());
-                            }
-                            if (entityShape.getRightStack().hasRelationships()) {
-                                entityShape.getRightStack().build();
-                                entityShape.getEntityGroup().getChildren().add(entityShape.getRightStack());
-                            }
-                            if (entityShape.getTopStack().hasRelationships()) {
-                                entityShape.getTopStack().build();
-                                entityShape.getEntityGroup().getChildren().add(entityShape.getTopStack());
-                            }
-                        // }
+                        if (entityShape.getLeftStack().hasRelationships()) {
+                            entityShape.getLeftStack().build();
+                            entityShape.getEntityGroup().getChildren().add(entityShape.getLeftStack());
+                        }
+                        if (entityShape.getRightStack().hasRelationships()) {
+                            entityShape.getRightStack().build();
+                            entityShape.getEntityGroup().getChildren().add(entityShape.getRightStack());
+                        }
+                        if (entityShape.getTopStack().hasRelationships()) {
+                            entityShape.getTopStack().build();
+                            entityShape.getEntityGroup().getChildren().add(entityShape.getTopStack());
+                        }
                     }
                 }
             }
@@ -168,5 +167,10 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
         for (ApricotRelationship r : relationships) {
             r.buildShape();
         }
+    }
+
+    @Override
+    public List<ApricotRelationship> getRelationships() {
+        return relationships;
     }
 }

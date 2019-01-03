@@ -1,11 +1,14 @@
 package za.co.apricotdb.viewport.entity.shape;
 
+import java.util.Collections;
+
 import javafx.geometry.Point2D;
 import javafx.geometry.Side;
 import javafx.scene.shape.HLineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.VLineTo;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
+import za.co.apricotdb.viewport.relationship.RelationshipsInNonIdentifyingStackComparator;
 
 public class NonIdentifyingStack extends PrimaryKeyStack {
 
@@ -18,8 +21,7 @@ public class NonIdentifyingStack extends PrimaryKeyStack {
 
     @Override
     public void sortRelationships() {
-        // TODO Auto-generated method stub
-
+        Collections.sort(relationships, new RelationshipsInNonIdentifyingStackComparator());
     }
 
     @Override
@@ -89,5 +91,7 @@ public class NonIdentifyingStack extends PrimaryKeyStack {
         }
         
         this.getElements().add(new VLineTo(start.getY() + relationships.size() * STACK_PARTICLE_LENGTH));
+        
+        sortRelationships();
     }
 }

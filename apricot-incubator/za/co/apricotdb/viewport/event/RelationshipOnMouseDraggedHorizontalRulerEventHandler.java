@@ -8,6 +8,7 @@ import javafx.scene.shape.Shape;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ApricotElement;
 import za.co.apricotdb.viewport.relationship.shape.ApricotRelationshipShape;
+import za.co.apricotdb.viewport.relationship.shape.DadsHandRelationship;
 import za.co.apricotdb.viewport.relationship.shape.DirectRelationship;
 import za.co.apricotdb.viewport.relationship.shape.HatRelationship;
 
@@ -43,6 +44,10 @@ public class RelationshipOnMouseDraggedHorizontalRulerEventHandler implements Ev
                     } else if (rulerId.equals("rightRulerX")) {
                         hs.setRightRulerX(pos.getInitRuler() + newTranslateX);
                     }
+                    break;
+                case DADS_HAND:
+                    DadsHandRelationship dhr = (DadsHandRelationship) shape;
+                    dhr.setRulerX(pos.getInitRuler() + newTranslateX);
                     break;
                 }
 
