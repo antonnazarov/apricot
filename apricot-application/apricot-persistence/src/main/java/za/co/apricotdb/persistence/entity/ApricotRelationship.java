@@ -1,6 +1,7 @@
 package za.co.apricotdb.persistence.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,6 +22,8 @@ import javax.persistence.Table;
 @Table(name = "apricot_relationship")
 @NamedQuery(name="ApricotRelationship.getRelationshipsForTables", query="SELECT rl FROM ApricotRelationship rl WHERE rl.child.table.name IN (:tables) OR rl.parent.table.name IN (:tables)")
 public class ApricotRelationship implements Serializable {
+
+    private static final long serialVersionUID = 2135283859031176938L;
 
     public ApricotRelationship() {}
     

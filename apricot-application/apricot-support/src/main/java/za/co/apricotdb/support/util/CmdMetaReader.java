@@ -1,9 +1,11 @@
 package za.co.apricotdb.support.util;
 
 import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
 import za.co.apricotdb.persistence.data.DataReader;
 import za.co.apricotdb.persistence.data.MetaData;
 

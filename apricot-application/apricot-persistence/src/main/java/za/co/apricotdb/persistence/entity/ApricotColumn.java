@@ -2,6 +2,7 @@ package za.co.apricotdb.persistence.entity;
 
 import java.io.Serializable;
 import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,6 +21,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "apricot_column")
 public class ApricotColumn implements Serializable {
+
+    private static final long serialVersionUID = 7415678971662772902L;
 
     public ApricotColumn() {
     }

@@ -1,9 +1,10 @@
 package za.co.apricotdb.metascan;
 
-import za.co.apricotdb.persistence.data.MetaData;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+
+import za.co.apricotdb.persistence.data.MetaData;
 
 /**
  * The main interface of Meta Scan - the scanner of the DB- structure.

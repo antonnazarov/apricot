@@ -3,8 +3,9 @@ package za.co.apricotdb.persistence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import za.co.apricotdb.persistence.repository.TestDataBuilder;
+
 import za.co.apricotdb.persistence.data.DataCleaner;
+import za.co.apricotdb.persistence.repository.TestDataBuilder;
 
 /**
  * Spring based runner.

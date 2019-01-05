@@ -1,10 +1,13 @@
 package za.co.apricotdb.support.util;
 
 import java.util.Properties;
+
 import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
 import za.co.apricotdb.metascan.MetaDataScanner;
 import za.co.apricotdb.metascan.ScannerRecognizer;
 import za.co.apricotdb.persistence.data.DataSaver;

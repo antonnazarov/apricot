@@ -2,6 +2,7 @@ package za.co.apricotdb.metascan;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import za.co.apricotdb.metascan.h2.H2Scanner;
 import za.co.apricotdb.metascan.mysql.MySqlScanner;
 import za.co.apricotdb.metascan.oracle.OracleScanner;

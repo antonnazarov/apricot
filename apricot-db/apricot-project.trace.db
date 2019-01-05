@@ -1,0 +1,15 @@
+2019-01-04 15:47:04 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Table "APRICOT_OBJECT_LAYOUT" not found; SQL statement:
+drop table apricot_object_layout [42102-195]
+2019-01-04 15:47:04 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Table "APRICOT_VIEW" not found; SQL statement:
+drop table apricot_view [42102-195]
+2019-01-04 15:47:04 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Table "APRICOT_SNAPSHOT" not found; SQL statement:
+drop table apricot_snapshot [42102-195]
+2019-01-04 15:47:04 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Table "APRICOT_PROJECT_PARAMETER" not found; SQL statement:
+drop table apricot_project_parameter [42102-195]
+2019-01-04 15:47:04 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Table "APRICOT_PROJECT" not found; SQL statement:
+drop table apricot_project [42102-195]

@@ -2,6 +2,7 @@ package za.co.apricotdb.persistence.entity;
 
 import java.io.Serializable;
 import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -20,6 +21,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "apricot_column_in_constraint")
 public class ApricotColumnConstraint implements Serializable {
+
+    private static final long serialVersionUID = -4404654225693095401L;
 
     @EmbeddedId
     private ColumnConstraintId id;

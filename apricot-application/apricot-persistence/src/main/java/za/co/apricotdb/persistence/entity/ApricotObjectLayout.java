@@ -1,0 +1,93 @@
+package za.co.apricotdb.persistence.entity;
+
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+/**
+ * The apricot_object_layout table.
+ * 
+ * @author Anton Nazarov
+ * @since 05/01/2018
+ */
+@Entity
+@Table(name = "apricot_object_layout")
+public class ApricotObjectLayout implements Serializable {
+
+    private static final long serialVersionUID = -7584762504719191646L;
+    
+    public ApricotObjectLayout() {}
+    
+    public ApricotObjectLayout(String objectType, String objectName, 
+            String objectLayout, ApricotView view) {
+        this.objectType = objectType;
+        this.objectName = objectName;
+        this.objectLayout = objectLayout;
+        this.view = view;
+    }
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "layout_id")
+    private long id;
+    
+    @Column(name = "object_type")
+    private String objectType;    
+
+    @Column(name = "object_name")
+    private String objectName;  
+    
+    @Column(name = "object_layout")
+    private String objectLayout; 
+    
+    @ManyToOne
+    @JoinColumn(name = "view_id")
+    private ApricotView view;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getObjectType() {
+        return objectType;
+    }
+
+    public void setObjectType(String objectType) {
+        this.objectType = objectType;
+    }
+
+    public String getObjectName() {
+        return objectName;
+    }
+
+    public void setObjectName(String objectName) {
+        this.objectName = objectName;
+    }
+
+    public String getObjectLayout() {
+        return objectLayout;
+    }
+
+    public void setObjectLayout(String objectLayout) {
+        this.objectLayout = objectLayout;
+    }
+
+    public ApricotView getView() {
+        return view;
+    }
+
+    public void setView(ApricotView view) {
+        this.view = view;
+    }
+}

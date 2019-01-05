@@ -1,7 +1,9 @@
 package za.co.apricotdb.persistence.data;
 
 import javax.annotation.Resource;
+
 import org.springframework.stereotype.Component;
+
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.repository.ApricotRelationshipRepository;

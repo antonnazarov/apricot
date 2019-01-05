@@ -3,12 +3,15 @@ package za.co.apricotdb.persistence.entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -24,13 +27,17 @@ import javax.persistence.Table;
 @NamedQuery(name="ApricotTable.getTablesByName", query="SELECT at FROM ApricotTable at WHERE at.name IN (:tables)")
 public class ApricotTable implements Serializable {
 
+    private static final long serialVersionUID = 7279471522618380758L;
+
     public ApricotTable() {
     }
 
-    public ApricotTable(String name, List<ApricotColumn> columns, List<ApricotConstraint> constraints) {
+    public ApricotTable(String name, List<ApricotColumn> columns, 
+            List<ApricotConstraint> constraints, ApricotSnapshot snapshot) {
         this.name = name;
         this.columns = columns;
         this.constraints = constraints;
+        this.snapshot = snapshot;
     }
 
     @Id
@@ -46,6 +53,10 @@ public class ApricotTable implements Serializable {
 
     @OneToMany(mappedBy = "table", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ApricotConstraint> constraints = new ArrayList<>();
+    
+    @ManyToOne
+    @JoinColumn(name = "snapshot_id")
+    private ApricotSnapshot snapshot;
 
     public long getId() {
         return id;
@@ -79,6 +90,14 @@ public class ApricotTable implements Serializable {
         this.constraints = constraints;
     }
 
+    public ApricotSnapshot getSnapshot() {
+        return snapshot;
+    }
+
+    public void setSnapshot(ApricotSnapshot snapshot) {
+        this.snapshot = snapshot;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("\nApricotTable: ");
@@ -86,6 +105,7 @@ public class ApricotTable implements Serializable {
         sb.append("name=[").append(name).append("], ");
         sb.append("\ncolumns=[").append(columns).append("], ");
         sb.append("\nconstraints=[").append(constraints).append("]\n");
+        sb.append("\nproject=[").append(snapshot.getName()).append("]\n");
 
         return sb.toString();
     }

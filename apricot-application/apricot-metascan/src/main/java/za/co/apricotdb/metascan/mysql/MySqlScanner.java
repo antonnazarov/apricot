@@ -1,6 +1,7 @@
 package za.co.apricotdb.metascan.mysql;
 
 import org.springframework.stereotype.Component;
+
 import za.co.apricotdb.metascan.MetaDataScanner;
 import za.co.apricotdb.persistence.data.MetaData;
 

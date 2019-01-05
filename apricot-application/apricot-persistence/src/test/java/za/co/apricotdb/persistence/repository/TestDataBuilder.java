@@ -2,11 +2,17 @@ package za.co.apricotdb.persistence.repository;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.annotation.Resource;
+
 import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
+import za.co.apricotdb.persistence.entity.ApricotProject;
+import za.co.apricotdb.persistence.entity.ApricotProjectParameter;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
+import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
+import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.persistence.entity.ConstraintType;
 
 /**
@@ -33,10 +39,20 @@ public class TestDataBuilder {
             throw new TestDataBuilderException("The database is not empty!");
         }
         
-        ApricotTable person = createPerson();
-        ApricotTable department = createDepartment();
-        ApricotTable language = createLanguage();
-        ApricotTable languageRef = createLanguageRef();
+        List<ApricotSnapshot> snapshots = new ArrayList<>();
+        List<ApricotProjectParameter> parameters = new ArrayList<>();
+        List<ApricotView> views = new ArrayList<>();
+        ApricotProject project = new ApricotProject("TEST_PROJ", "The test project description", 
+                "MSSQL", true, new java.util.Date(), snapshots, parameters, views);
+        List<ApricotTable> tables = new ArrayList<>();
+        ApricotSnapshot snapshot = new ApricotSnapshot("Test snapshot", new java.util.Date(), new java.util.Date(), 
+                "Test comment", true, project, tables);
+        snapshots.add(snapshot);
+
+        ApricotTable person = createPerson(snapshot);
+        ApricotTable department = createDepartment(snapshot);
+        ApricotTable language = createLanguage(snapshot);
+        ApricotTable languageRef = createLanguageRef(snapshot);
 
         tableRepository.save(person);
         tableRepository.save(department);
@@ -53,10 +69,10 @@ public class TestDataBuilder {
         relationshipRepository.save(rLanguage);
     }
 
-    private ApricotTable createPerson() {
+    private ApricotTable createPerson(ApricotSnapshot snapshot) {
         List<ApricotColumn> columns = new ArrayList<>();
         List<ApricotConstraint> constraints = new ArrayList<>();
-        ApricotTable table = new ApricotTable("Person", columns, constraints);
+        ApricotTable table = new ApricotTable("Person", columns, constraints, snapshot);
 
         ApricotColumn column = new ApricotColumn("person_id", 1, false, "long", null, table);
         columns.add(column);
@@ -83,10 +99,10 @@ public class TestDataBuilder {
         return table;
     }
 
-    private ApricotTable createDepartment() {
+    private ApricotTable createDepartment(ApricotSnapshot snapshot) {
         List<ApricotColumn> columns = new ArrayList<>();
         List<ApricotConstraint> constraints = new ArrayList<>();
-        ApricotTable table = new ApricotTable("Department", columns, constraints);
+        ApricotTable table = new ApricotTable("Department", columns, constraints, snapshot);
         ApricotColumn column = new ApricotColumn("department_id", 1, false, "long", null, table);
         columns.add(column);
         column = new ApricotColumn("department_name", 2, false, "varchar", "100", table);
@@ -98,10 +114,10 @@ public class TestDataBuilder {
         return table;
     }
 
-    private ApricotTable createLanguage() {
+    private ApricotTable createLanguage(ApricotSnapshot snapshot) {
         List<ApricotColumn> columns = new ArrayList<>();
         List<ApricotConstraint> constraints = new ArrayList<>();
-        ApricotTable table = new ApricotTable("Language", columns, constraints);
+        ApricotTable table = new ApricotTable("Language", columns, constraints, snapshot);
         ApricotColumn column = new ApricotColumn("language_id", 1, false, "long", null, table);
         columns.add(column);
         column = new ApricotColumn("language_name", 2, false, "varchar", "30", table);
@@ -119,10 +135,10 @@ public class TestDataBuilder {
         return table;
     }
 
-    private ApricotTable createLanguageRef() {
+    private ApricotTable createLanguageRef(ApricotSnapshot snapshot) {
         List<ApricotColumn> columns = new ArrayList<>();
         List<ApricotConstraint> constraints = new ArrayList<>();
-        ApricotTable table = new ApricotTable("Language_Ref", columns, constraints);
+        ApricotTable table = new ApricotTable("Language_Ref", columns, constraints, snapshot);
         ApricotColumn column = new ApricotColumn("ref_prefix", 1, false, "int", null, table);
         columns.add(column);
         column = new ApricotColumn("ref_suffix", 2, false, "int", null, table);

@@ -1,6 +1,7 @@
 package za.co.apricotdb.persistence.data;
 
 import javax.annotation.Resource;
+
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +23,12 @@ public class DataCleaner {
                 "delete from apricot_relationship;",
                 "delete from apricot_constraint;",
                 "delete from apricot_column;",
-                "delete from apricot_table;"
+                "delete from apricot_table;",
+                
+                "delete from apricot_view;",
+                "delete from apricot_snapshot;",
+                "delete from apricot_project_parameter;",
+                "delete from apricot_project;"
         );
     }
 }

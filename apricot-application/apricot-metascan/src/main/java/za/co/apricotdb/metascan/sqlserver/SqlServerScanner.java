@@ -4,14 +4,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.stereotype.Component;
-import za.co.apricotdb.persistence.entity.ApricotColumn;
-import za.co.apricotdb.persistence.entity.ApricotTable;
+
 import za.co.apricotdb.metascan.MetaDataScanner;
 import za.co.apricotdb.persistence.data.MetaData;
+import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
+import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ConstraintType;
 
 /**
