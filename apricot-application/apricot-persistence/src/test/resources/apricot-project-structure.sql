@@ -1,8 +1,91 @@
+--
 -- tables of the metamodel
+--
+-- 04/01/2019 v.1.1, the apricot_project was added
+--
+
+--
+-- PROJECT
+--
+create table apricot_project (
+   project_id long identity primary key,
+   project_name varchar(250) not null,
+   project_description varchar(2000),
+   target_database varchar(50) not null,
+   is_current boolean not null,
+   project_created datetime not null
+);
+
+create table apricot_project_parameter (
+   parameter_id long identity primary key,
+   project_id long not null,
+   parameter_name varchar(500) not null,
+   parameter_value varchar(2000) not null
+);
+
+alter table apricot_project_parameter
+   add foreign key(project_id)
+   references apricot_project(project_id);
+
+--
+-- SNAPSHOT
+--
+create table apricot_snapshot (
+   snapshot_id long identity primary key,
+   project_id long not null,
+   snapshot_name varchar(250) not null,
+   snapshot_created datetime not null,
+   snapshot_updated datetime,
+   snapshot_comment varchar(500) not null,
+   is_default boolean not null
+);
+
+alter table apricot_snapshot 
+   add foreign key(project_id)
+   references apricot_project(project_id);
+
+--
+-- LAYOUT
+--
+create table apricot_view (
+   view_id long identity primary key,
+   project_id long not null,
+   view_name varchar(100) not null,
+   view_comment varchar(2000),
+   view_created datetime not null,
+   view_updated datetime,
+   is_general boolean not null,
+   ordinal_position int not null
+);
+
+alter table apricot_view
+   add foreign key(project_id)
+   references apricot_project(project_id);
+
+create table apricot_object_layout (
+   layout_id long identity primary key,
+   view_id long not null,
+   object_type varchar(25) not null,
+   object_name varchar(250) not null,
+   object_layout varchar(1000) not null
+);
+
+alter table apricot_object_layout
+   add foreign key(view_id)
+   references apricot_view(view_id);
+
+--
+-- TABLE
+--
 create table apricot_table (
    table_id long identity primary key,
-   table_name varchar(100) not null
+   table_name varchar(100) not null,
+   snapshot_id long not null
 );
+
+alter table apricot_table 
+   add foreign key(snapshot_id)
+   references apricot_snapshot(snapshot_id);
 -------------------------
 
 -- columns of the metamodel

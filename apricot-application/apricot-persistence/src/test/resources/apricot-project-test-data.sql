@@ -6,12 +6,20 @@ delete from apricot_relationship;
 delete from apricot_constraint;
 delete from apricot_column;
 delete from apricot_table;
+delete from apricot_view;
+delete from apricot_snapshot;
+delete from apricot_project_parameter;
+delete from apricot_project;
 
 -------------------------
 -- add test data
 -------------------------
-insert into apricot_table values (10, 'MY TABLE 1');
+insert into apricot_project values (1, 'test_project_001', 'This is the test project', 'MSSQLServer', true, '2019-01-04');
+insert into apricot_project_parameter values (1, 1, 'test', 'test');
+insert into apricot_snapshot values (1, 1, '2019-01-04', '2019-01-04', 'test comment', true);
+insert into apricot_view values (1, 1, 'main view', null, '2019-01-04', '2019-01-04', true, 0);
 
+insert into apricot_table values (10, 'MY TABLE 1', 1);
 insert into apricot_column values (101, 10, 'aggre_1', 1, false, 'int', null);
 insert into apricot_column values (102, 10, 'aggre_2', 2, false, 'int', null);
 insert into apricot_column values (103, 10, 'name', 3, false, 'varchar', '45');
@@ -36,7 +44,7 @@ insert into apricot_column_in_constraint values (1003, 107, 1);
 insert into apricot_column_in_constraint values (1004, 108, 1);
 
 -------------------------
-insert into apricot_table values (11, 'REF_SHIP');
+insert into apricot_table values (11, 'REF_SHIP', 1);
 
 insert into apricot_column values (201, 11, 'ship_id', 1, false, 'int', null);
 insert into apricot_column values (202, 11, 'ship_name', 2, false, 'varchar', '200');
@@ -52,7 +60,7 @@ insert into apricot_column_in_constraint values (2001, 202, 1);
 insert into apricot_relationship values (1, 2000, 1003);
 -------------------------
 
-insert into apricot_table values (12, 'CALC_METHOD');
+insert into apricot_table values (12, 'CALC_METHOD', 1);
 insert into apricot_column values (301, 12, 'method_id', 1, false, 'int', null);
 insert into apricot_column values (302, 12, 'method_name', 2, false, 'varchar', '200');
 insert into apricot_column values (303, 12, 'method_comment', 3, false, 'varchar', '1000');
@@ -62,7 +70,7 @@ insert into apricot_column_in_constraint values (3000, 301, 1);
 insert into apricot_relationship values (2, 3000, 1004);
 -------------------------
 
-insert into apricot_table values (13, 'COMBINED_REFERENCE');
+insert into apricot_table values (13, 'COMBINED_REFERENCE', 1);
 insert into apricot_column values (401, 13, 'ref_prefix', 1, false, 'varchar', '10');
 insert into apricot_column values (402, 13, 'ref_postfix', 2, false, 'varchar', '20');
 insert into apricot_column values (403, 13, 'reference_comment', 3, false, 'varchar', '1000');
@@ -70,7 +78,7 @@ insert into apricot_constraint values (4000, 'COMBINED_REFERENCE_PK', 'PRIMARY_K
 insert into apricot_column_in_constraint values (4000, 401, 1);
 insert into apricot_column_in_constraint values (4000, 402, 2);
 
-insert into apricot_table values (14, 'COMBINED_RFCHILD');
+insert into apricot_table values (14, 'COMBINED_RFCHILD', 1);
 insert into apricot_column values (501, 14, 'id', 1, false, 'int', null);
 insert into apricot_column values (502, 14, 'ref_prefix', 2, false, 'varchar', '10');
 insert into apricot_column values (503, 14, 'ref_postfix', 3, false, 'varchar', '20');

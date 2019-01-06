@@ -2,4 +2,5 @@
 **/.settings
 .classpath
 .project
-*.trace.db
+apricot-db/apricot-project.trace.db
+
