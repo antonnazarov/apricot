@@ -14,7 +14,6 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 @Configuration
-// @ComponentScan(basePackages = "za.co.apricotdb")
 @EnableAutoConfiguration
 @SpringBootApplication(scanBasePackages = "za.co.apricotdb")
 public class ApricotMainApp extends Application {
