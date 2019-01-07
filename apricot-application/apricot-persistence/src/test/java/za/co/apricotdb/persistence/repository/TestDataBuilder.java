@@ -29,6 +29,12 @@ public class TestDataBuilder {
     @Resource
     private ApricotRelationshipRepository relationshipRepository;
 
+    @Resource
+    private ApricotProjectRepository projectRepository;
+    
+    @Resource
+    private ApricotSnapshotRepository snapshotRepository;
+    
     /**
      * Create the testing data.
      */
@@ -48,11 +54,19 @@ public class TestDataBuilder {
         ApricotSnapshot snapshot = new ApricotSnapshot("Test snapshot", new java.util.Date(), new java.util.Date(), 
                 "Test comment", true, project, tables);
         snapshots.add(snapshot);
-
+        
+        projectRepository.save(project);
+        snapshotRepository.save(snapshot);
+        
         ApricotTable person = createPerson(snapshot);
         ApricotTable department = createDepartment(snapshot);
         ApricotTable language = createLanguage(snapshot);
         ApricotTable languageRef = createLanguageRef(snapshot);
+        tables.add(person);
+        tables.add(department);
+        tables.add(language);
+        tables.add(languageRef);
+        
 
         tableRepository.save(person);
         tableRepository.save(department);
