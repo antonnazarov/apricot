@@ -13,6 +13,7 @@ import za.co.apricotdb.persistence.data.MetaData;
 import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
+import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ConstraintType;
 
@@ -26,10 +27,10 @@ import za.co.apricotdb.persistence.entity.ConstraintType;
 public class SqlServerScanner implements MetaDataScanner {
 
     @Override
-    public MetaData scan(String driverClassName, String url, String userName, String password) {
+    public MetaData scan(String driverClassName, String url, String userName, String password, ApricotSnapshot snapshot) {
         JdbcOperations jdbc = MetaDataScanner.getTargetJdbcOperations(driverClassName, url, userName, password);
 
-        Map<String, ApricotTable> tables = getTables(jdbc);
+        Map<String, ApricotTable> tables = getTables(jdbc, snapshot);
         getColumns(jdbc, tables);
         Map<String, ApricotConstraint> constraints = getConstraints(jdbc, tables);
         addIndexes(jdbc, tables, constraints);
@@ -37,13 +38,13 @@ public class SqlServerScanner implements MetaDataScanner {
         List<ApricotRelationship> relationships = getRelationships(jdbc, constraints);
         
         MetaData ret = new MetaData();
-        ret.setTables(new ArrayList(tables.values()));
+        ret.setTables(new ArrayList<ApricotTable>(tables.values()));
         ret.setRelationships(relationships);
 
         return ret;
     }
 
-    private Map<String, ApricotTable> getTables(JdbcOperations jdbc) {
+    private Map<String, ApricotTable> getTables(JdbcOperations jdbc, ApricotSnapshot snapshot) {
 
         List<ApricotTable> tables = jdbc.query("select table_name "
                 + "from INFORMATION_SCHEMA.tables "
@@ -52,6 +53,7 @@ public class SqlServerScanner implements MetaDataScanner {
                 (rs, rowNum) -> {
                     ApricotTable t = new ApricotTable();
                     t.setName(rs.getString("table_name"));
+                    t.setSnapshot(snapshot);
 
                     return t;
                 }

@@ -12,6 +12,8 @@ import za.co.apricotdb.metascan.MetaDataScanner;
 import za.co.apricotdb.metascan.ScannerRecognizer;
 import za.co.apricotdb.persistence.data.DataSaver;
 import za.co.apricotdb.persistence.data.MetaData;
+import za.co.apricotdb.persistence.entity.ApricotSnapshot;
+import za.co.apricotdb.persistence.repository.ApricotSnapshotRepository;
 
 /**
  * This component calls the meta- scanner.
@@ -28,6 +30,9 @@ public class CmdMetaScanner implements CommandLineRunner {
     
     @Autowired
     DataSaver dataSaver;
+    
+    @Autowired
+    ApricotSnapshotRepository snapshotRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -45,6 +50,7 @@ public class CmdMetaScanner implements CommandLineRunner {
                 String url = props.getProperty("url");
                 String user = props.getProperty("user");
                 String password = props.getProperty("password");
+                String snapshot = props.getProperty("snapshot");
                 
                 MetaDataScanner scanner = scannerRecognizer.getScanner(url);
                 if (scanner == null) {
@@ -52,8 +58,9 @@ public class CmdMetaScanner implements CommandLineRunner {
                     return;
                 }
                 
-                System.out.println("Scanning the database for the following parameters: driver=[" + driver + "], url=[" + url + "], user=[" + user + "], password=[" + password + "]");                
-                MetaData result = scanner.scan(driver, url, user, password);
+                System.out.println("Scanning the database for the following parameters: driver=[" + driver + "], url=[" + url + 
+                        "], user=[" + user + "], password=[" + password + "], snapshot=[" + snapshot + "]");                
+                MetaData result = scanner.scan(driver, url, user, password, getSnapshot(Long.parseLong(snapshot)));
                 System.out.println("The scanned results:");                
                 System.out.println(result);
                 
@@ -65,13 +72,17 @@ public class CmdMetaScanner implements CommandLineRunner {
         }
     }
     
+    private ApricotSnapshot getSnapshot(long snapshotId) {
+        return snapshotRepository.getOne(snapshotId);
+    }
+    
     /**
      * Read the properties of the database connection from the command line.
      */
     private Properties getConnectionParameters(String... args) {
         Properties props = new Properties();
         for (String c : args) {
-            if (c.startsWith("driver=") || c.startsWith("user=") || c.startsWith("password=")) {
+            if (c.startsWith("driver=") || c.startsWith("user=") || c.startsWith("password=") || c.startsWith("snapshot=")) {
                 String[] r = c.split("=");
                 props.setProperty(r[0], r[1]);
             } else if (c.startsWith("url=")) {
@@ -83,7 +94,9 @@ public class CmdMetaScanner implements CommandLineRunner {
     }
     
     private boolean checkConnectionParameters(Properties props) {
-        if (props.getProperty("driver") == null || props.getProperty("url") == null || props.getProperty("user") == null || props.getProperty("password") == null) {
+        if (props.getProperty("driver") == null || props.getProperty("url") == null || 
+                props.getProperty("user") == null || props.getProperty("password") == null ||
+                props.getProperty("snapshot") == null) {
             return false;
         }
         

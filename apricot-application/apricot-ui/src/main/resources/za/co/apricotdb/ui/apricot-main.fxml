@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -18,7 +19,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <bottom>
       <AnchorPane prefHeight="35.0" prefWidth="600.0" style="-fx-background-color: lightgray;" BorderPane.alignment="CENTER" />
    </bottom>
@@ -53,7 +54,15 @@
                   <Menu mnemonicParsing="false" text="Operations">
                      <items>
                         <MenuItem mnemonicParsing="false" text="Reverse Engineering" />
+                        <MenuItem mnemonicParsing="false" text="Compare Snapshots" />
                         <MenuItem mnemonicParsing="false" text="Excel Report" />
+                        <Menu mnemonicParsing="false" text="Scripts">
+                          <items>
+                            <MenuItem mnemonicParsing="false" text="Generate &quot;Create&quot; Script" />
+                              <MenuItem mnemonicParsing="false" text="Generate &quot;Delete&quot; Script" />
+                              <MenuItem mnemonicParsing="false" text="Generate &quot;Drop&quot; Script" />
+                          </items>
+                        </Menu>
                         <MenuItem mnemonicParsing="false" text="Print Diagram" />
                      </items>
                   </Menu>
@@ -74,9 +83,12 @@
               <buttons>
                   <Button minWidth="34.0" mnemonicParsing="false" prefHeight="25.0" text="Save" />
                 <Button minWidth="34.0" mnemonicParsing="false" prefHeight="25.0" text="Undo" />
+                  <Label alignment="CENTER_RIGHT" text="Snapshot:" />
+                  <ComboBox />
                   <Label alignment="CENTER_RIGHT" minWidth="44.0" prefHeight="17.0" text="Scale:" />
                   <TextField />
                   <Label alignment="CENTER_RIGHT" minWidth="44.0" prefHeight="17.0" text="New:" />
+                  <Button layoutX="455.0" layoutY="10.0" minWidth="34.0" mnemonicParsing="false" prefHeight="25.0" text="Snapshot" />
                   <Button minWidth="34.0" mnemonicParsing="false" prefHeight="25.0" text="Entity" />
                   <Button minWidth="34.0" mnemonicParsing="false" prefHeight="25.0" text="Relationship" />
                   <Button layoutX="540.0" layoutY="10.0" minWidth="34.0" mnemonicParsing="false" prefHeight="25.0" text="View" />
@@ -93,7 +105,7 @@
         <items>
             <ScrollPane prefHeight="730.0" prefWidth="239.0">
                <content>
-                  <TreeView maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
+                  <TreeView fx:id="projectsTreeView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
                </content>
             </ScrollPane>
             <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">

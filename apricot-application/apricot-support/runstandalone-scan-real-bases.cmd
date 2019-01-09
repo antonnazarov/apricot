@@ -1,14 +1,14 @@
 # Intermediary_Account
-mvn -e exec:java -Dexec.mainClass="za.co.apricotdb.support.util.ApricotUtils" -Dexec.args="scan driver=com.microsoft.sqlserver.jdbc.SQLServerDriver url=jdbc:sqlserver://POC000472:53199;databaseName=intermediary_account user=Intermediary_Account_Mig password=!n+3rm34!@ry@cc0un+MIG"
+mvn -e exec:java -Dexec.mainClass="za.co.apricotdb.support.util.ApricotUtils" -Dexec.args="scan driver=com.microsoft.sqlserver.jdbc.SQLServerDriver url=jdbc:sqlserver://POC000472:53199;databaseName=intermediary_account user=Intermediary_Account_Mig password=!n+3rm34!@ry@cc0un+MIG snapshot=1"
 
 # Intermediary_Party
-mvn -e exec:java -Dexec.mainClass="za.co.apricotdb.support.util.ApricotUtils" -Dexec.args="scan driver=com.microsoft.sqlserver.jdbc.SQLServerDriver url=jdbc:sqlserver://POC000472:53199;databaseName=intermediary_party user=Intermediary_Party_Mig password=!n+3rm34!@ry9@r+yMIG"
+mvn -e exec:java -Dexec.mainClass="za.co.apricotdb.support.util.ApricotUtils" -Dexec.args="scan driver=com.microsoft.sqlserver.jdbc.SQLServerDriver url=jdbc:sqlserver://POC000472:53199;databaseName=intermediary_party user=Intermediary_Party_Mig password=!n+3rm34!@ry9@r+yMIG snapshot=3"
 
 # Intermediary_Agreement
-mvn -e exec:java -Dexec.mainClass="za.co.apricotdb.support.util.ApricotUtils" -Dexec.args="scan driver=com.microsoft.sqlserver.jdbc.SQLServerDriver url=jdbc:sqlserver://POC000472:53199;databaseName=intermediary_agreement user=Intermediary_Agreement_Mig password=!n+3rm34!@ry@9r33m3n+MIG"
+mvn -e exec:java -Dexec.mainClass="za.co.apricotdb.support.util.ApricotUtils" -Dexec.args="scan driver=com.microsoft.sqlserver.jdbc.SQLServerDriver url=jdbc:sqlserver://POC000472:53199;databaseName=intermediary_agreement user=Intermediary_Agreement_Mig password=!n+3rm34!@ry@9r33m3n+MIG snapshot=2"
 
 # Intermediary_Compensation
-mvn -e exec:java -Dexec.mainClass="za.co.apricotdb.support.util.ApricotUtils" -Dexec.args="scan driver=com.microsoft.sqlserver.jdbc.SQLServerDriver url=jdbc:sqlserver://POC000472:53199;databaseName=intermediary_compensation user=Intermediary_Compensation_Mig password=!n+3rm34!@ryc0m93n$@710nMIG"
+mvn -e exec:java -Dexec.mainClass="za.co.apricotdb.support.util.ApricotUtils" -Dexec.args="scan driver=com.microsoft.sqlserver.jdbc.SQLServerDriver url=jdbc:sqlserver://POC000472:53199;databaseName=intermediary_compensation user=Intermediary_Compensation_Mig password=!n+3rm34!@ryc0m93n$@710nMIG snapshot=4"
 
 
 #ACC_DATABASE=intermediary_account
