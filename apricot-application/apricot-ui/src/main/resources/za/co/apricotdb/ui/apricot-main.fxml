@@ -26,7 +26,7 @@
    <top>
       <HBox prefHeight="22.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <MenuBar prefHeight="35.0" prefWidth="239.0">
+            <MenuBar prefHeight="35.0" prefWidth="250.0">
               <menus>
                 <Menu mnemonicParsing="false" text="Project">
                   <items>
@@ -79,14 +79,20 @@
                   <Insets />
                </HBox.margin>
             </MenuBar>
-            <ButtonBar nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="90.0">
+            <Label alignment="CENTER_RIGHT" text="Snapshot:">
+               <HBox.margin>
+                  <Insets left="10.0" right="5.0" top="9.0" />
+               </HBox.margin>
+            </Label>
+            <ComboBox id="snapshot_dropdown" prefWidth="250.0">
+               <HBox.margin>
+                  <Insets top="6.0" />
+               </HBox.margin>
+            </ComboBox>
+            <ButtonBar nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="300.0">
               <buttons>
                   <Button minWidth="34.0" mnemonicParsing="false" prefHeight="25.0" text="Save" />
                 <Button minWidth="34.0" mnemonicParsing="false" prefHeight="25.0" text="Undo" />
-                  <Label alignment="CENTER_RIGHT" text="Snapshot:" />
-                  <ComboBox />
-                  <Label alignment="CENTER_RIGHT" minWidth="44.0" prefHeight="17.0" text="Scale:" />
-                  <TextField />
                   <Label alignment="CENTER_RIGHT" minWidth="44.0" prefHeight="17.0" text="New:" />
                   <Button layoutX="455.0" layoutY="10.0" minWidth="34.0" mnemonicParsing="false" prefHeight="25.0" text="Snapshot" />
                   <Button minWidth="34.0" mnemonicParsing="false" prefHeight="25.0" text="Entity" />
@@ -97,15 +103,25 @@
                   <Insets bottom="5.0" right="5.0" top="5.0" />
                </HBox.margin>
             </ButtonBar>
+            <Label alignment="CENTER_RIGHT" minWidth="44.0" prefHeight="17.0" text="Scale:">
+               <HBox.margin>
+                  <Insets left="10.0" right="5.0" top="9.0" />
+               </HBox.margin>
+            </Label>
+            <TextField prefHeight="25.0" prefWidth="54.0">
+               <HBox.margin>
+                  <Insets top="6.0" />
+               </HBox.margin>
+            </TextField>
          </children>
       </HBox>
    </top>
    <center>
-      <SplitPane dividerPositions="0.1" BorderPane.alignment="CENTER">
+      <SplitPane dividerPositions="0.07" BorderPane.alignment="CENTER">
         <items>
-            <ScrollPane prefHeight="730.0" prefWidth="239.0">
+            <ScrollPane prefHeight="900.0" prefWidth="200.0">
                <content>
-                  <TreeView fx:id="projectsTreeView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
+                  <TreeView fx:id="projectsTreeView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="696.0" prefWidth="248.0" />
                </content>
             </ScrollPane>
             <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">

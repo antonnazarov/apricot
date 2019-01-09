@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -25,6 +26,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "apricot_snapshot")
+@NamedQuery(name="ApricotSnapshot.getDefaultSnapshot", query="SELECT sn FROM ApricotSnapshot sn WHERE sn.project = :project AND sn.defaultSnapshot = true")
 public class ApricotSnapshot implements Serializable {
 
     private static final long serialVersionUID = -8750109610659026590L;

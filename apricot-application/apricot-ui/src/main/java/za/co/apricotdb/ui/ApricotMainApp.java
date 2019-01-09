@@ -1,11 +1,9 @@
 package za.co.apricotdb.ui;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import javafx.application.Application;
@@ -18,7 +16,6 @@ import za.co.apricotdb.ui.controller.ApplicationInitializer;
 
 @Configuration
 @EnableAutoConfiguration
-@ComponentScan(basePackages = "za.co.apricotdb")
 @SpringBootApplication(scanBasePackages = "za.co.apricotdb")
 public class ApricotMainApp extends Application {
     
@@ -39,8 +36,9 @@ public class ApricotMainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        ParentWindow pw = new ParentWindow(rootNode);
         primaryStage.setOnShown(event -> {
-            initializer.initialize();
+            initializer.initialize(pw);
         });
         primaryStage.setScene(new Scene(rootNode));
         primaryStage.centerOnScreen();
