@@ -1,5 +1,8 @@
 package za.co.apricotdb.ui.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,8 +14,10 @@ import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
+import za.co.apricotdb.persistence.data.TableManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
+import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.ui.ParentWindow;
 
 /**
@@ -30,18 +35,40 @@ public class ApplicationInitializer {
 
     @Autowired
     SnapshotManager snapshotManager;
-
-    public void initialize(ParentWindow pw) {
+    
+    @Autowired
+    TableManager tableManager;
+    
+    public void initializeDefault(ParentWindow pw) {
         ApricotProject currentProject = projectManager.findCurrentProject();
-
-        System.out.println("The application was started. The current project: " + currentProject.getName());
-
-        pw.getProjectTreeView().setRoot(new TreeItem<String>(currentProject.getName()));
         ApricotSnapshot defaultSnapshot = snapshotManager.getDefaultSnapshot(currentProject);
-        System.out.println("The default snapshot: " + defaultSnapshot.getName());
+        
+        initialize(pw, currentProject, defaultSnapshot);
+    }
 
-        ComboBox<String> combo = pw.getSnapshotCombo();
-        combo.getItems().addAll(defaultSnapshot.getName());
-        combo.setValue(defaultSnapshot.getName());
+    public void initialize(ParentWindow pw, ApricotProject project, ApricotSnapshot snapshot) {
+        List<ApricotTable> tables = tableManager.getTablesForSnapshot(snapshot);
+        TreeItem<String> root = new TreeItem<>(project.getName());
+        root.getChildren().addAll(getTables(tables));
+        root.setExpanded(true);
+        pw.getProjectTreeView().setRoot(root);
+        
+        ComboBox<String> combo = pw.getSnapshotCombo();        
+        List<ApricotSnapshot> snapshots = snapshotManager.getAllSnapshots(project);
+        List<String> snapNames = new ArrayList<>();
+        for (ApricotSnapshot s : snapshots) {
+            snapNames.add(s.getName());
+        }
+        combo.getItems().addAll(snapNames);
+        combo.setValue(snapshot.getName());
+    }
+    
+    private List<TreeItem<String>> getTables(List<ApricotTable> tables) {
+        List<TreeItem<String>> ret = new ArrayList<>();
+        for (ApricotTable t : tables) {
+            ret.add(new TreeItem<String>(t.getName()));
+        }
+        
+        return ret;
     }
 }

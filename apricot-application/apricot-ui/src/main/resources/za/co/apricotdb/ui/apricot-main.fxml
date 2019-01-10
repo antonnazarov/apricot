@@ -8,7 +8,6 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
@@ -21,12 +20,12 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <bottom>
-      <AnchorPane prefHeight="35.0" prefWidth="600.0" style="-fx-background-color: lightgray;" BorderPane.alignment="CENTER" />
+      <AnchorPane prefHeight="25.0" prefWidth="1400.0" style="-fx-background-color: lightgray;" BorderPane.alignment="CENTER" />
    </bottom>
    <top>
       <HBox prefHeight="22.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <MenuBar prefHeight="35.0" prefWidth="250.0">
+            <MenuBar prefHeight="35.0" prefWidth="284.0">
               <menus>
                 <Menu mnemonicParsing="false" text="Project">
                   <items>
@@ -117,13 +116,9 @@
       </HBox>
    </top>
    <center>
-      <SplitPane dividerPositions="0.07" BorderPane.alignment="CENTER">
+      <SplitPane dividerPositions="0.2" BorderPane.alignment="CENTER">
         <items>
-            <ScrollPane prefHeight="900.0" prefWidth="200.0">
-               <content>
-                  <TreeView fx:id="projectsTreeView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="696.0" prefWidth="248.0" />
-               </content>
-            </ScrollPane>
+            <TreeView fx:id="projectsTreeView" maxHeight="1.7976931348623157E308" maxWidth="280.0" prefHeight="696.0" prefWidth="279.0" />
             <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
               <tabs>
                 <Tab text="Main View" />

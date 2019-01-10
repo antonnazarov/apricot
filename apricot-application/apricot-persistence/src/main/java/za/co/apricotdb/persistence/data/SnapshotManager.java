@@ -1,5 +1,6 @@
 package za.co.apricotdb.persistence.data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
+import za.co.apricotdb.persistence.repository.ApricotSnapshotRepository;
 
 /**
  * The SNAPSHOT- related operations.
@@ -31,6 +33,19 @@ public class SnapshotManager {
         List<ApricotSnapshot> res = query.getResultList();
         if (res != null && res.size() > 0) {
             ret = res.get(0);
+        }
+        
+        return ret;
+    }
+    
+    public List<ApricotSnapshot> getAllSnapshots(ApricotProject project) {
+        List<ApricotSnapshot> ret = new ArrayList<>();
+        
+        TypedQuery<ApricotSnapshot> query = em.createNamedQuery("ApricotSnapshot.getAllSnapshotsInProject", ApricotSnapshot.class);
+        query.setParameter("project", project);
+        List<ApricotSnapshot> res = query.getResultList();
+        if (res != null && res.size()>0) {
+            ret = res;
         }
         
         return ret;

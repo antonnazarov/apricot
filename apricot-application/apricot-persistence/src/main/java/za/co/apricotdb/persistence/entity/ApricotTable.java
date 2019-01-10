@@ -25,7 +25,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "apricot_table")
 @NamedQuery(name="ApricotTable.getTablesByName", query="SELECT at FROM ApricotTable at WHERE at.name IN (:tables)")
-@NamedQuery(name="ApricotTable.getTablesBySnapshot", query="SELECT at FROM ApricotTable at WHERE at.snapshot = :snapshot ORDER BY at.name")
+@NamedQuery(name="ApricotTable.getTablesBySnapshot", query="SELECT at FROM ApricotTable at WHERE at.snapshot = :snapshot ORDER BY LOWER(at.name)")
 public class ApricotTable implements Serializable {
 
     private static final long serialVersionUID = 7279471522618380758L;

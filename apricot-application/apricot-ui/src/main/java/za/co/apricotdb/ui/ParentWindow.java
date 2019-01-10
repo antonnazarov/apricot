@@ -4,7 +4,6 @@ import java.util.List;
 
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
@@ -19,9 +18,9 @@ import javafx.scene.layout.HBox;
  * @since 09/01/2019
  */
 public class ParentWindow {
-    
+
     private final BorderPane mainPane;
-    
+
     public ParentWindow(Parent parent) {
         if (parent instanceof BorderPane) {
             this.mainPane = (BorderPane) parent;
@@ -29,27 +28,22 @@ public class ParentWindow {
             this.mainPane = null;
         }
     }
-    
+
     public TreeView<String> getProjectTreeView() {
         TreeView<String> ret = null;
-        
+
         List<Node> l = getCenterNode().getItems();
-        
-        if (l != null && l.size() == 2) {
-            if (l.get(0) instanceof ScrollPane) {
-                ScrollPane scroll = (ScrollPane) l.get(0); 
-                if (scroll.getContent() instanceof TreeView) {
-                    ret = (TreeView) scroll.getContent();
-                }
-            }
+
+        if (l != null && l.size() == 2 && l.get(0) instanceof TreeView) {
+            ret = (TreeView) l.get(0);
         }
-        
+
         return ret;
     }
-    
+
     public ComboBox<String> getSnapshotCombo() {
         ComboBox<String> ret = null;
-        
+
         HBox h = getTopNode();
         for (Node n : h.getChildren()) {
             if ("snapshot_dropdown".equals(n.getId())) {
@@ -57,29 +51,28 @@ public class ParentWindow {
                 break;
             }
         }
-        
-        return ret;
-    }
-    
-    private SplitPane getCenterNode() {
-        SplitPane ret = null;
-        
-        if (mainPane.getCenter() instanceof SplitPane) {
-            ret = (SplitPane) mainPane.getCenter();
-        }
-        
+
         return ret;
     }
 
-    private HBox getTopNode() {
+    public SplitPane getCenterNode() {
+        SplitPane ret = null;
+
+        if (mainPane.getCenter() instanceof SplitPane) {
+            ret = (SplitPane) mainPane.getCenter();
+        }
+
+        return ret;
+    }
+
+    public HBox getTopNode() {
         HBox ret = null;
-        
+
         if (mainPane.getTop() instanceof HBox) {
             ret = (HBox) mainPane.getTop();
         }
-        
+
         return ret;
     }
-    
-    
+
 }

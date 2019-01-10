@@ -7,28 +7,32 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Configuration;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import za.co.apricotdb.ui.controller.ApplicationInitializer;
+import za.co.apricotdb.ui.controller.SplitPaneAjustor;
 
 @Configuration
 @EnableAutoConfiguration
 @SpringBootApplication(scanBasePackages = "za.co.apricotdb")
 public class ApricotMainApp extends Application {
-    
-    private ConfigurableApplicationContext  context;
+
+    private ConfigurableApplicationContext context;
     private Parent rootNode;
-    
+
     ApplicationInitializer initializer;
-    
+    SplitPaneAjustor paneAdjustor;
+
     @Override
     public void init() throws Exception {
         context = SpringApplication.run(ApricotMainApp.class);
         initializer = context.getBean(ApplicationInitializer.class);
-        
+        paneAdjustor = context.getBean(SplitPaneAjustor.class);
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("apricot-main.fxml"));
         loader.setControllerFactory(context::getBean);
         rootNode = loader.load();
@@ -38,21 +42,32 @@ public class ApricotMainApp extends Application {
     public void start(Stage primaryStage) throws Exception {
         ParentWindow pw = new ParentWindow(rootNode);
         primaryStage.setOnShown(event -> {
-            initializer.initialize(pw);
+            initializer.initializeDefault(pw);
         });
+        // setOnStageResize(primaryStage, pw);
+
         primaryStage.setScene(new Scene(rootNode));
         primaryStage.centerOnScreen();
         primaryStage.setTitle("Apricot DB");
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("favicon-32x32.png")));
         primaryStage.show();
     }
-    
+
     @Override
     public void stop() throws Exception {
         context.close();
     }
-    
+
     public static void main(String[] args) {
         launch(args);
+    }
+
+    private void setOnStageResize(Stage stage, ParentWindow pw) {
+        ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) -> {
+            paneAdjustor.adjustSplitPaneWidth(pw.getCenterNode(), stage.getWidth());
+        };
+
+        stage.widthProperty().addListener(stageSizeListener);
+        stage.heightProperty().addListener(stageSizeListener);
     }
 }
