@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
-import za.co.apricotdb.persistence.repository.ApricotSnapshotRepository;
 
 /**
  * The SNAPSHOT- related operations.

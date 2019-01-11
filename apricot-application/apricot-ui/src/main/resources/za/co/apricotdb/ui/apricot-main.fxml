@@ -107,7 +107,7 @@
                   <Insets left="10.0" right="5.0" top="9.0" />
                </HBox.margin>
             </Label>
-            <TextField prefHeight="25.0" prefWidth="54.0">
+            <TextField editable="false" prefHeight="25.0" prefWidth="54.0" text="100%">
                <HBox.margin>
                   <Insets top="6.0" />
                </HBox.margin>
