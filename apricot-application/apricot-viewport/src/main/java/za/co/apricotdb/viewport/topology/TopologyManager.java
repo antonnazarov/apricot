@@ -3,6 +3,8 @@ package za.co.apricotdb.viewport.topology;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.shape.HLineTo;
@@ -17,6 +19,7 @@ import javafx.scene.shape.VLineTo;
  * @author Anton Nazarov
  * @since 06/12/2018
  */
+@Component
 public class TopologyManager {
 
     private IntersectionManager im = new IntersectionManager();

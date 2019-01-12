@@ -14,7 +14,6 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import za.co.apricotdb.ui.controller.ApplicationInitializer;
-import za.co.apricotdb.ui.controller.SplitPaneAjustor;
 
 @Configuration
 @EnableAutoConfiguration
@@ -25,13 +24,11 @@ public class ApricotMainApp extends Application {
     private Parent rootNode;
 
     ApplicationInitializer initializer;
-    SplitPaneAjustor paneAdjustor;
 
     @Override
     public void init() throws Exception {
         context = SpringApplication.run(ApricotMainApp.class);
         initializer = context.getBean(ApplicationInitializer.class);
-        paneAdjustor = context.getBean(SplitPaneAjustor.class);
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("apricot-main.fxml"));
         loader.setControllerFactory(context::getBean);
@@ -44,7 +41,6 @@ public class ApricotMainApp extends Application {
         primaryStage.setOnShown(event -> {
             initializer.initializeDefault(pw);
         });
-        // setOnStageResize(primaryStage, pw);
 
         primaryStage.setScene(new Scene(rootNode));
         primaryStage.centerOnScreen();
@@ -62,9 +58,12 @@ public class ApricotMainApp extends Application {
         launch(args);
     }
 
+    /**
+     * @deprecated
+     */
     private void setOnStageResize(Stage stage, ParentWindow pw) {
         ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) -> {
-            paneAdjustor.adjustSplitPaneWidth(pw.getCenterNode(), stage.getWidth());
+//            paneAdjustor.adjustSplitPaneWidth(pw.getCenterNode(), stage.getWidth());
         };
 
         stage.widthProperty().addListener(stageSizeListener);

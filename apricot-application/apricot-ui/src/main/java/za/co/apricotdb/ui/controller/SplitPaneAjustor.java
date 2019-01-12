@@ -7,6 +7,9 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TreeView;
 
+/**
+ * @deprecated
+ */
 @Component
 public class SplitPaneAjustor {
 

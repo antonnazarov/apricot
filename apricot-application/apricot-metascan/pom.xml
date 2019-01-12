@@ -7,8 +7,9 @@
     <parent>
         <groupId>za.co.apricot</groupId>
         <artifactId>apricotdb</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>0.1</version>
     </parent>
+
     <artifactId>apricot-metascan</artifactId>
     <packaging>jar</packaging>
     <name>apricot-metascan</name>
@@ -17,7 +18,7 @@
         <dependency>
             <groupId>za.co.apricot</groupId>
             <artifactId>apricot-persistence</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>0.1</version>
         </dependency>
     </dependencies>
 </project>

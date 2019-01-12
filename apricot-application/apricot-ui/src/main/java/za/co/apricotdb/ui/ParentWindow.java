@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -37,6 +38,18 @@ public class ParentWindow {
             ret = (TreeView) l.get(0);
         }
 
+        return ret;
+    }
+    
+    public TabPane getProjectTabPane() {
+        TabPane ret = null;
+        
+        List<Node> l = getCenterNode().getItems();
+
+        if (l != null && l.size() == 2 && l.get(1) instanceof TabPane) {
+            ret = (TabPane) l.get(1);
+        }
+        
         return ret;
     }
 
