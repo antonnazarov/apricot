@@ -41,8 +41,7 @@ public class TabViewController {
         Tab tab = new Tab();
         
         ApricotCanvas canvas = canvasBuilder.buildCanvas();
-        setCanvas(canvas);
-        
+
         ScrollPane scroll = buildScrollPane();
         scroll.setContent((Pane)canvas);
         
@@ -51,16 +50,8 @@ public class TabViewController {
         return tab;
     }
     
-    private void setCanvas(ApricotCanvas canvas) {
-        ((Pane)canvas).setBorder(new Border(
-                new BorderStroke(Color.BLACK, BorderStrokeStyle.DOTTED, new CornerRadii(0), new BorderWidths(1))));
-    }
-    
     private ScrollPane buildScrollPane() {
         ScrollPane scroll = new ScrollPane();
-        
-        scroll.setBorder(new Border(
-                new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(0), new BorderWidths(1))));
         
         Set<Node> nodes = scroll.lookupAll(".scroll-bar");
         for (final Node node : nodes) {

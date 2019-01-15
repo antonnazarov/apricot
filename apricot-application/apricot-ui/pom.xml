@@ -29,6 +29,10 @@
             <artifactId>apricot-viewport</artifactId>
             <version>0.1</version>
         </dependency>
+        <dependency>
+            <groupId>za.co.apricot</groupId>
+            <artifactId>apricot-support</artifactId>
+            <version>0.1</version>
+        </dependency>
     </dependencies>
-
 </project>

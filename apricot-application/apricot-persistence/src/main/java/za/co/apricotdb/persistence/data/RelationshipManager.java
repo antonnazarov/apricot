@@ -21,7 +21,7 @@ public class RelationshipManager {
     public List<ApricotRelationship> getRelationshipsForTables(List<ApricotTable> tables) {
         List<ApricotRelationship> ret = new ArrayList<>();
         
-        TypedQuery<ApricotRelationship> query = em.createNamedQuery("ApricotRelationship.getRelationshipsForTables", ApricotRelationship.class);
+        TypedQuery<ApricotRelationship> query = em.createNamedQuery("ApricotRelationship.getRelationshipsForTableList", ApricotRelationship.class);
         query.setParameter("tables", tables);
         ret = query.getResultList();
         

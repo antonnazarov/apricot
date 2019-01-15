@@ -20,13 +20,15 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "apricot_relationship")
-@NamedQuery(name="ApricotRelationship.getRelationshipsForTables", query="SELECT rl FROM ApricotRelationship rl WHERE rl.child.table.name IN (:tables) OR rl.parent.table.name IN (:tables)")
+@NamedQuery(name = "ApricotRelationship.getRelationshipsForTables", query = "SELECT DISTINCT rl FROM ApricotRelationship rl WHERE rl.child.table.name IN (:tables) OR rl.parent.table.name IN (:tables)")
+@NamedQuery(name = "ApricotRelationship.getRelationshipsForTableList", query = "SELECT DISTINCT rl FROM ApricotRelationship rl WHERE rl.child.table IN (:tables) OR rl.parent.table IN (:tables)")
 public class ApricotRelationship implements Serializable {
 
     private static final long serialVersionUID = 2135283859031176938L;
 
-    public ApricotRelationship() {}
-    
+    public ApricotRelationship() {
+    }
+
     public ApricotRelationship(ApricotConstraint parent, ApricotConstraint child) {
         this.parent = parent;
         this.child = child;
@@ -76,5 +78,19 @@ public class ApricotRelationship implements Serializable {
         sb.append("child table=[").append(child.getTable().getName()).append("]");
 
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object rel) {
+        if (rel instanceof ApricotRelationship) {
+            return ((ApricotRelationship) rel).getId() == this.getId();
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return 1;
     }
 }

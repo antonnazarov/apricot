@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -25,6 +26,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "apricot_view")
+@NamedQuery(name="ApricotView.getGeneralView", query="SELECT vw FROM ApricotView vw WHERE vw.project = :project AND vw.general = true")
 public class ApricotView implements Serializable {
 
     private static final long serialVersionUID = 8705614293066261879L;

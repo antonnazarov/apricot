@@ -142,7 +142,7 @@ public class TableWrapper {
         }
     }
 
-    class ReportRow {
+    public class ReportRow {
 
         String parentTable;
         int ordinalPosition;
@@ -151,6 +151,27 @@ public class TableWrapper {
         String constraints;
         String childTable;
         boolean isColumnDefinition;
+        public String getParentTable() {
+            return parentTable;
+        }
+        public int getOrdinalPosition() {
+            return ordinalPosition;
+        }
+        public String getColumnName() {
+            return columnName;
+        }
+        public String getColumnType() {
+            return columnType;
+        }
+        public String getConstraints() {
+            return constraints;
+        }
+        public String getChildTable() {
+            return childTable;
+        }
+        public boolean isColumnDefinition() {
+            return isColumnDefinition;
+        }
     }
 
     public String getTableName() {
@@ -163,6 +184,10 @@ public class TableWrapper {
 
     public Map<String, String> getConstraintsLegend() {
         return constraintsLegend;
+    }
+    
+    public Map<String, ReportRow> getRowMap() {
+        return rows;
     }
 
     @Override

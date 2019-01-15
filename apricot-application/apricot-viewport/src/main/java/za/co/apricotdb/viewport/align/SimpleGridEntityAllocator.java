@@ -19,7 +19,7 @@ import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
  */
 public class SimpleGridEntityAllocator implements AlignCommand {
 
-    public static final int COLUMNS_ON_CANVAS = 5;
+    public static final int COLUMNS_ON_CANVAS = 20;
     public static final double COLUMN_SPACING = 50;
 
     private ApricotCanvas canvas = null;
