@@ -68,10 +68,8 @@ public class ApricotCanvasController {
             za.co.apricotdb.viewport.relationship.ApricotRelationship wpar = convertRelationship(ar, fieldDetails, rBuilder);
             canvas.addElement(wpar);
         }
-        canvas.buildRelationships();
 
-        AlignCommand aligner = new SimpleGridEntityAllocator(canvas);
-        runAlignerAfterDelay(aligner);
+        runAlignerAfterDelay(canvas);
     }
 
     private za.co.apricotdb.viewport.relationship.ApricotRelationship convertRelationship(ApricotRelationship r, Map<String, List<FieldDetail>> fieldDetails,
@@ -102,7 +100,7 @@ public class ApricotCanvasController {
         return ret;
     }
 
-    private void runAlignerAfterDelay(AlignCommand aligner) {
+    private void runAlignerAfterDelay(ApricotCanvas canvas) {
         Task<Void> sleeper = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
@@ -113,10 +111,13 @@ public class ApricotCanvasController {
                 return null;
             }
         };
+        
         sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(WorkerStateEvent event) {
+                AlignCommand aligner = new SimpleGridEntityAllocator(canvas);
                 aligner.align();
+                canvas.buildRelationships();
             }
         });
         new Thread(sleeper).start();

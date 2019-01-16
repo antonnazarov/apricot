@@ -19,7 +19,6 @@ import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
  */
 public class SimpleGridEntityAllocator implements AlignCommand {
 
-    public static final int COLUMNS_ON_CANVAS = 20;
     public static final double COLUMN_SPACING = 50;
 
     private ApricotCanvas canvas = null;
@@ -37,13 +36,14 @@ public class SimpleGridEntityAllocator implements AlignCommand {
                 ApricotEntity entity = (ApricotEntity) elm;
                 ApricotEntityShape entityShape = entity.getEntityShape();
                 entities.add(entityShape);
-                totalHeight += entityShape.getHeight();
+                totalHeight += entityShape.getHeight() + COLUMN_SPACING;
             }
         }
 
         entities.sort((VBox v1, VBox v2) -> Double.compare(v2.getHeight(), v1.getHeight()));
+        long numOfColumns = (long) Math.sqrt(entities.size());
 
-        double maxColumnHeight = totalHeight / COLUMNS_ON_CANVAS;
+        double maxColumnHeight = totalHeight / numOfColumns;
         double columnMaxWidth = 0;
         double currentColumnHeight = COLUMN_SPACING;
         double currentColumnTransX = COLUMN_SPACING;

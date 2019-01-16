@@ -10,6 +10,8 @@ mvn -e exec:java -Dexec.mainClass="za.co.apricotdb.support.util.ApricotUtils" -D
 # Intermediary_Compensation
 mvn -e exec:java -Dexec.mainClass="za.co.apricotdb.support.util.ApricotUtils" -Dexec.args="scan driver=com.microsoft.sqlserver.jdbc.SQLServerDriver url=jdbc:sqlserver://POC000472:53199;databaseName=intermediary_compensation user=Intermediary_Compensation_Mig password=!n+3rm34!@ryc0m93n$@710nMIG snapshot=4"
 
+# Apricot Testing Database
+mvn -e exec:java -Dexec.mainClass="za.co.apricotdb.support.util.ApricotUtils" -Dexec.args="scan driver=com.microsoft.sqlserver.jdbc.SQLServerDriver url=jdbc:sqlserver://DST15404:1433;databaseName=apricot-tests user=apricot-test password=12345 snapshot=5"
 
 #ACC_DATABASE=intermediary_account
 #ACC_HOST=POC000472
