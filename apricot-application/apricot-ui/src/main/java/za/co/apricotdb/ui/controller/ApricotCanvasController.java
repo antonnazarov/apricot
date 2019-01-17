@@ -45,13 +45,22 @@ public class ApricotCanvasController {
 
     @Autowired
     RelationshipManager relationshipManager;
+    
+    @Autowired
+    ApricotViewController viewController;
 
     /**
      * Populate the given canvas with the information of snapshot, using the
      * provided skin.
      */
     public void populateCanvas(ApricotSnapshot snapshot, ApricotView view, ApricotCanvas canvas) {
-        List<ApricotTable> tables = tableManager.getTablesForSnapshot(snapshot);
+        List<ApricotTable> tables = null;
+        if (view.isGeneral()) {
+            tables = tableManager.getTablesForSnapshot(snapshot);
+        } else {
+            tables = viewController.getTablesForView(snapshot, view);
+        }
+        
         List<ApricotRelationship> relationships = relationshipManager.getRelationshipsForTables(tables);
 
         Map<String, List<FieldDetail>> fieldDetails = new HashMap<>();
@@ -65,21 +74,29 @@ public class ApricotCanvasController {
 
         RelationshipBuilder rBuilder = new ApricotRelationshipBuilder(canvas);
         for (ApricotRelationship ar : relationships) {
-            za.co.apricotdb.viewport.relationship.ApricotRelationship wpar = convertRelationship(ar, fieldDetails, rBuilder);
+            za.co.apricotdb.viewport.relationship.ApricotRelationship wpar = convertRelationship(ar, fieldDetails,
+                    rBuilder);
             canvas.addElement(wpar);
         }
 
-        runAlignerAfterDelay(canvas);
+        //  if view does not contain layout definitions, do default alignment
+        if (view.getObjectLayouts().size() == 0) {
+            runAlignerAfterDelay(canvas);
+        } else {
+            //  use actual alignment of the view
+            // @TODO !!
+        }
     }
-
-    private za.co.apricotdb.viewport.relationship.ApricotRelationship convertRelationship(ApricotRelationship r, Map<String, List<FieldDetail>> fieldDetails,
-            RelationshipBuilder rBuilder) {
+    
+    private za.co.apricotdb.viewport.relationship.ApricotRelationship convertRelationship(ApricotRelationship r,
+            Map<String, List<FieldDetail>> fieldDetails, RelationshipBuilder rBuilder) {
         String parentTable = r.getParent().getTable().getName();
         String childTable = r.getChild().getTable().getName();
         String parentColumn = r.getParent().getColumns().get(0).getColumn().getName();
         String childColumn = r.getChild().getColumns().get(0).getColumn().getName();
 
-        return rBuilder.buildRelationship(parentTable, childTable, parentColumn, childColumn, getRelationshipType(childColumn, fieldDetails.get(childTable)));
+        return rBuilder.buildRelationship(parentTable, childTable, parentColumn, childColumn,
+                getRelationshipType(childColumn, fieldDetails.get(childTable)));
     }
 
     private RelationshipType getRelationshipType(String childColumn, List<FieldDetail> childFields) {
@@ -111,7 +128,7 @@ public class ApricotCanvasController {
                 return null;
             }
         };
-        
+
         sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(WorkerStateEvent event) {

@@ -38,4 +38,6 @@ public interface ApricotCanvas {
     void buildRelationships();
     
     List<ApricotRelationship> getRelationships();
+    
+    CanvasAllocationMap getAllocationMap();
 }

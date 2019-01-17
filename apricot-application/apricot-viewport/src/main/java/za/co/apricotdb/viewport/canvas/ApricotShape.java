@@ -18,4 +18,8 @@ public interface ApricotShape {
     void setHidden();
 
     ApricotElement getElement();
+    
+    CanvasAllocationItem getAllocation();
+    
+    void applyAllocation(CanvasAllocationItem item);
 }

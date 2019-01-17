@@ -4,11 +4,14 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -19,13 +22,14 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "apricot_object_layout")
+@NamedQuery(name="ApricotObjectLayout.getLayoutsByType", query="SELECT ol FROM ApricotObjectLayout ol WHERE ol.view = :view AND ol.objectType = :objectType")
 public class ApricotObjectLayout implements Serializable {
 
     private static final long serialVersionUID = -7584762504719191646L;
     
     public ApricotObjectLayout() {}
     
-    public ApricotObjectLayout(String objectType, String objectName, 
+    public ApricotObjectLayout(LayoutObjectType objectType, String objectName, 
             String objectLayout, ApricotView view) {
         this.objectType = objectType;
         this.objectName = objectName;
@@ -38,8 +42,9 @@ public class ApricotObjectLayout implements Serializable {
     @Column(name = "layout_id")
     private long id;
     
+    @Enumerated(EnumType.STRING)
     @Column(name = "object_type")
-    private String objectType;    
+    private LayoutObjectType objectType;    
 
     @Column(name = "object_name")
     private String objectName;  
@@ -59,11 +64,11 @@ public class ApricotObjectLayout implements Serializable {
         this.id = id;
     }
 
-    public String getObjectType() {
+    public LayoutObjectType getObjectType() {
         return objectType;
     }
 
-    public void setObjectType(String objectType) {
+    public void setObjectType(LayoutObjectType objectType) {
         this.objectType = objectType;
     }
 

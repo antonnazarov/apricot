@@ -1,6 +1,10 @@
 package za.co.apricotdb.viewport.relationship.shape;
 
+import java.util.Properties;
+
 import javafx.scene.shape.Shape;
+import za.co.apricotdb.viewport.canvas.CanvasAllocationItem;
+import za.co.apricotdb.viewport.canvas.ElementType;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 
 public class RoofRelationship extends ApricotRelationshipShape {
@@ -58,5 +62,36 @@ public class RoofRelationship extends ApricotRelationshipShape {
 
     public void setRulerY(double rulerY) {
         this.rulerY = rulerY;
+    }
+    
+    @Override
+    public CanvasAllocationItem getAllocation() {
+        CanvasAllocationItem ret = new CanvasAllocationItem();
+        ApricotRelationship r = (ApricotRelationship) getElement();
+        ret.setName(r.getRelationshipName());
+        ret.setType(ElementType.RELATIONSHIP);
+
+        Properties props = new Properties();
+        props.setProperty("relationshipType", RelationshipShapeType.ROOF.toString());
+        props.setProperty("rulerY", String.valueOf(rulerY));
+        ret.setProperties(props);
+
+        return ret;
+    }
+
+    @Override
+    public void applyAllocation(CanvasAllocationItem item) {
+        if (item.getProperties() != null) {
+            String relationshipType = item.getProperties().getProperty("relationshipType");
+            if (!RelationshipShapeType.ROOF.toString().equals(relationshipType)) {
+                return;
+            }
+        }
+        
+        ApricotRelationship r = (ApricotRelationship) getElement();
+        if (item.getName().equals(r.getRelationshipName()) && item.getType() == ElementType.RELATIONSHIP) {
+            double rulerY = Double.parseDouble(item.getProperties().getProperty("rulerY"));
+            this.rulerY = rulerY;
+        }
     }
 }
