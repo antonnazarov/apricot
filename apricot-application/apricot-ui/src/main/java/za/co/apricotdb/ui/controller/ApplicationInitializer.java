@@ -15,7 +15,6 @@ import javafx.scene.control.TreeItem;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.TableManager;
-import za.co.apricotdb.persistence.data.ViewManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
@@ -47,7 +46,7 @@ public class ApplicationInitializer {
     TabViewController tabViewController;
     
     @Autowired
-    ViewManager viewManager;
+    ApricotViewController viewController;
     
     @Autowired
     CanvasBuilder canvasBuilder;
@@ -59,13 +58,12 @@ public class ApplicationInitializer {
     public void initializeDefault(ParentWindow pw) {
         ApricotProject currentProject = projectManager.findCurrentProject();
         ApricotSnapshot defaultSnapshot = snapshotManager.getDefaultSnapshot(currentProject);
-        ApricotView generalView = viewManager.getGeneralView(currentProject);
         
-        initialize(pw, currentProject, defaultSnapshot, generalView);
+        initialize(pw, currentProject, defaultSnapshot);
     }
 
     @Transactional
-    public void initialize(ParentWindow pw, ApricotProject project, ApricotSnapshot snapshot, ApricotView view) {
+    public void initialize(ParentWindow pw, ApricotProject project, ApricotSnapshot snapshot) {
         List<ApricotTable> tables = tableManager.getTablesForSnapshot(snapshot);
         TreeItem<String> root = new TreeItem<>(project.getName());
         root.getChildren().addAll(getTables(tables));
@@ -82,14 +80,15 @@ public class ApplicationInitializer {
         combo.setValue(snapshot.getName());
         
         TabPane tabPane = pw.getProjectTabPane();
-        Tab tab = tabViewController.buildTab(snapshot, view);
-        tab.setText(view.getName());
         tabPane.getTabs().clear();
-        tabPane.getTabs().add(tab);
-        
-        ApricotCanvas canvas = canvasBuilder.buildCanvas();
-        
-        canvasController.populateCanvas(snapshot, view, canvas);
+        for (ApricotView view : viewController.getAllViews(project)) {
+            Tab tab = tabViewController.buildTab(snapshot, view);
+            tab.setText(view.getName());
+            tabPane.getTabs().add(tab);
+            
+            ApricotCanvas canvas = canvasBuilder.buildCanvas();
+            canvasController.populateCanvas(snapshot, view, canvas);
+        }
     }
     
     private List<TreeItem<String>> getTables(List<ApricotTable> tables) {

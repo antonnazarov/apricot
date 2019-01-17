@@ -8,6 +8,7 @@ import javafx.geometry.Side;
 import javafx.scene.shape.Path;
 import za.co.apricotdb.viewport.canvas.ApricotElement;
 import za.co.apricotdb.viewport.canvas.ApricotShape;
+import za.co.apricotdb.viewport.canvas.CanvasAllocationItem;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 import za.co.apricotdb.viewport.relationship.shape.ApricotRelationshipShape;
 
@@ -82,5 +83,13 @@ public abstract class PrimaryKeyStack extends Path implements ApricotShape {
     @Override
     public void setHidden() {
         // TODO Auto-generated method stub
-    }    
+    }
+
+    @Override
+    public CanvasAllocationItem getAllocation() {
+        return null;
+    }
+    
+    @Override
+    public void applyAllocation(CanvasAllocationItem item) {}
 }

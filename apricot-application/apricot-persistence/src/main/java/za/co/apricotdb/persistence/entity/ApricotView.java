@@ -27,6 +27,7 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "apricot_view")
 @NamedQuery(name="ApricotView.getGeneralView", query="SELECT vw FROM ApricotView vw WHERE vw.project = :project AND vw.general = true")
+@NamedQuery(name="ApricotView.getAllViewsOrdered", query="SELECT vw FROM ApricotView vw WHERE vw.project = :project ORDER by vw.ordinalPosition")
 public class ApricotView implements Serializable {
 
     private static final long serialVersionUID = 8705614293066261879L;

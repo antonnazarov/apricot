@@ -1,10 +1,14 @@
 package za.co.apricotdb.viewport.entity.shape;
 
+import java.util.Properties;
+
 import javafx.geometry.Point2D;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import za.co.apricotdb.viewport.canvas.ApricotElement;
 import za.co.apricotdb.viewport.canvas.ApricotShape;
+import za.co.apricotdb.viewport.canvas.CanvasAllocationItem;
+import za.co.apricotdb.viewport.canvas.ElementType;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 
@@ -31,12 +35,41 @@ public abstract class ApricotEntityShape extends VBox implements ApricotShape {
     public abstract Text getFieldByName(String fieldName);
 
     public abstract double getFieldLocalY(String name);
-    
+
     public abstract void resetAllStacks();
-    
+
     public abstract Point2D getStackRelationshipStart(ApricotRelationship relationship);
 
     public ApricotEntityGroup getEntityGroup() {
         return entityGroup;
+    }
+
+    @Override
+    public CanvasAllocationItem getAllocation() {
+        CanvasAllocationItem ret = new CanvasAllocationItem();
+        ret.setName(entity.getTableName());
+        ret.setType(ElementType.ENTITY);
+        Properties props = new Properties();
+        props.setProperty("layoutX", String.valueOf(this.getLayoutX()));
+        props.setProperty("layoutY", String.valueOf(this.getLayoutY()));
+        props.setProperty("width", String.valueOf(this.getWidth()));
+        ret.setProperties(props);
+
+        return ret;
+    }
+
+    @Override
+    public void applyAllocation(CanvasAllocationItem item) {
+        if (item.getName().equals(entity.getTableName()) && item.getType() == ElementType.ENTITY
+                && item.getProperties() != null) {
+            Properties p = item.getProperties();
+            double layoutX = Double.parseDouble(p.getProperty("layoutX"));
+            double layoutY = Double.parseDouble(p.getProperty("layoutY"));
+            double width = Double.parseDouble(p.getProperty("width"));
+
+            setLayoutX(layoutX);
+            setLayoutY(layoutY);
+            setWidth(width);
+        }
     }
 }

@@ -143,4 +143,15 @@ public class ApricotRelationshipImpl implements ApricotRelationship {
     public RelationshipShapeType getRelationshipShapeType() {
         return topology.calculateRelationshipShapeType(this);
     }
+
+    @Override
+    public String getRelationshipName() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getParent().getTableName()).append("|");
+        sb.append(getChild().getTableName()).append("|");
+        sb.append(getPrimaryKeyName()).append("|");
+        sb.append(getForeignKeyName()).append("|");
+        
+        return sb.toString();
+    }
 }

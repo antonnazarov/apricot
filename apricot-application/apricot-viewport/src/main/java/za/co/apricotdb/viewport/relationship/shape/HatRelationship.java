@@ -2,8 +2,11 @@ package za.co.apricotdb.viewport.relationship.shape;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import javafx.scene.shape.Shape;
+import za.co.apricotdb.viewport.canvas.CanvasAllocationItem;
+import za.co.apricotdb.viewport.canvas.ElementType;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 
 public class HatRelationship extends ApricotRelationshipShape {
@@ -131,5 +134,42 @@ public class HatRelationship extends ApricotRelationshipShape {
 
     public Shape getCenterRuler() {
         return centerRuler;
+    }
+    
+    @Override
+    public CanvasAllocationItem getAllocation() {
+        CanvasAllocationItem ret = new CanvasAllocationItem();
+        ApricotRelationship r = (ApricotRelationship) getElement();
+        ret.setName(r.getRelationshipName());
+        ret.setType(ElementType.RELATIONSHIP);
+
+        Properties props = new Properties();
+        props.setProperty("relationshipType", RelationshipShapeType.HAT.toString());
+        props.setProperty("leftRulerX", String.valueOf(leftRulerX));
+        props.setProperty("rightRulerX", String.valueOf(rightRulerX));
+        props.setProperty("centerRulerY", String.valueOf(centerRulerY));
+        ret.setProperties(props);
+
+        return ret;
+    }
+    
+    @Override
+    public void applyAllocation(CanvasAllocationItem item) {
+        if (item.getProperties() != null) {
+            String relationshipType = item.getProperties().getProperty("relationshipType");
+            if (!RelationshipShapeType.HAT.toString().equals(relationshipType)) {
+                return;
+            }
+        }
+        
+        ApricotRelationship r = (ApricotRelationship) getElement();
+        if (item.getName().equals(r.getRelationshipName()) && item.getType() == ElementType.RELATIONSHIP) {
+            double leftRulerX = Double.parseDouble(item.getProperties().getProperty("leftRulerX"));
+            double rightRulerX = Double.parseDouble(item.getProperties().getProperty("rightRulerX"));
+            double centerRulerY = Double.parseDouble(item.getProperties().getProperty("centerRulerY"));
+            this.leftRulerX = leftRulerX;
+            this.rightRulerX = rightRulerX;
+            this.centerRulerY = centerRulerY;
+        }
     }
 }

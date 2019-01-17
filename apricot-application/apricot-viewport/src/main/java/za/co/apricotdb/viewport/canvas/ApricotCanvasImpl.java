@@ -172,4 +172,22 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
     public List<ApricotRelationship> getRelationships() {
         return relationships;
     }
+
+    /**
+     * Create and return the current  allocation map.
+     */
+    @Override
+    public CanvasAllocationMap getAllocationMap() {
+        CanvasAllocationMap allocationMap = new CanvasAllocationMap();
+        for (ApricotElement ae : elements) {
+            Node s = ae.getShape();
+            if (s != null && s instanceof ApricotShape) {
+                ApricotShape shape = (ApricotShape) s;
+                CanvasAllocationItem item = shape.getAllocation();
+                allocationMap.addCanvasAllocationItem(item);
+            }
+        }
+        
+        return allocationMap;
+    }
 }
