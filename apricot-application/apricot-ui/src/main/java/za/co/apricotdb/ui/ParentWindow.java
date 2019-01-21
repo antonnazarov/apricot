@@ -2,6 +2,8 @@ package za.co.apricotdb.ui;
 
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ComboBox;
@@ -17,11 +19,12 @@ import javafx.scene.layout.HBox;
  * @author Anton Nazarov
  * @since 09/01/2019
  */
+@Component
 public class ParentWindow {
 
-    private final BorderPane mainPane;
+    private BorderPane mainPane;
 
-    public ParentWindow(Parent parent) {
+    public void setParentPane(Parent parent) {
         if (parent instanceof BorderPane) {
             this.mainPane = (BorderPane) parent;
         } else {

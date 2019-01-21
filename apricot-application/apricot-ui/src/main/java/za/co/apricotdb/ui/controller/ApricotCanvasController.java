@@ -21,9 +21,12 @@ import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.support.excel.TableWrapper;
 import za.co.apricotdb.support.excel.TableWrapper.ReportRow;
 import za.co.apricotdb.viewport.align.AlignCommand;
+import za.co.apricotdb.viewport.align.CanvasSizeAjustor;
 import za.co.apricotdb.viewport.align.SimpleGridEntityAllocator;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ApricotElement;
+import za.co.apricotdb.viewport.canvas.CanvasAllocationMap;
+import za.co.apricotdb.viewport.canvas.ElementType;
 import za.co.apricotdb.viewport.entity.ApricotEntityBuilder;
 import za.co.apricotdb.viewport.entity.EntityBuilder;
 import za.co.apricotdb.viewport.entity.FieldDetail;
@@ -48,6 +51,9 @@ public class ApricotCanvasController {
     
     @Autowired
     ApricotViewController viewController;
+    
+    @Autowired
+    TabViewController tabViewController;
 
     /**
      * Populate the given canvas with the information of snapshot, using the
@@ -83,8 +89,7 @@ public class ApricotCanvasController {
         if (view.getObjectLayouts().size() == 0) {
             runAlignerAfterDelay(canvas);
         } else {
-            //  use actual alignment of the view
-            // @TODO !!
+            runAllocationAfterDelay(canvas, view);
         }
     }
     
@@ -140,6 +145,33 @@ public class ApricotCanvasController {
         new Thread(sleeper).start();
     }
 
+    private void runAllocationAfterDelay(ApricotCanvas canvas, ApricotView view) {
+        Task<Void> sleeper = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                }
+                return null;
+            }
+        };
+
+        sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+            @Override
+            public void handle(WorkerStateEvent event) {
+                CanvasAllocationMap map = tabViewController.readCanvasAllocationMap(view);
+                canvas.applyAllocationMap(map, ElementType.ENTITY);
+                canvas.buildRelationships();
+                canvas.applyAllocationMap(map, ElementType.RELATIONSHIP);
+                AlignCommand aligner = new CanvasSizeAjustor(canvas);
+                aligner.align();
+                canvas.buildRelationships();
+            }
+        });
+        new Thread(sleeper).start();
+    }
+    
     private List<FieldDetail> getFieldDetails(ApricotTable table, List<ApricotRelationship> relationships) {
         List<FieldDetail> ret = new ArrayList<>();
         TableWrapper wrapper = new TableWrapper(table, relationships);

@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.controller.MainApplicationWindowController">
    <bottom>
       <AnchorPane prefHeight="25.0" prefWidth="1400.0" style="-fx-background-color: lightgray;" BorderPane.alignment="CENTER" />
    </bottom>
@@ -90,7 +90,7 @@
             </ComboBox>
             <ButtonBar nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="300.0">
               <buttons>
-                  <Button minWidth="34.0" mnemonicParsing="false" prefHeight="25.0" text="Save" />
+                  <Button minWidth="34.0" mnemonicParsing="false" onAction="#save" prefHeight="25.0" text="Save" />
                 <Button minWidth="34.0" mnemonicParsing="false" prefHeight="25.0" text="Undo" />
                   <Label alignment="CENTER_RIGHT" minWidth="44.0" prefHeight="17.0" text="New:" />
                   <Button layoutX="455.0" layoutY="10.0" minWidth="34.0" mnemonicParsing="false" prefHeight="25.0" text="Snapshot" />

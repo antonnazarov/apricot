@@ -1,6 +1,8 @@
 package za.co.apricotdb.viewport.canvas;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,5 +21,14 @@ public class CanvasAllocationMap {
     
     public CanvasAllocationItem getAllocation(String name) {
         return allocations.get(name);
+    }
+    
+    public List<CanvasAllocationItem> getAllocations() {
+        return new ArrayList<CanvasAllocationItem>(allocations.values());
+    }
+    
+    @Override
+    public String toString() {
+        return allocations.toString();
     }
 }

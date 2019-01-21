@@ -37,7 +37,8 @@ public class ApricotMainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        ParentWindow pw = new ParentWindow(rootNode);
+        ParentWindow pw = context.getBean(ParentWindow.class);
+        pw.setParentPane(rootNode);
         primaryStage.setOnShown(event -> {
             initializer.initializeDefault(pw);
         });

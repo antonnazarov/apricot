@@ -69,6 +69,7 @@ public abstract class ApricotEntityShape extends VBox implements ApricotShape {
 
             setLayoutX(layoutX);
             setLayoutY(layoutY);
+            setPrefWidth(width);
             setWidth(width);
         }
     }

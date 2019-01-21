@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Side;
@@ -11,9 +12,11 @@ import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import za.co.apricotdb.viewport.align.OrderManager;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
+import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
 import za.co.apricotdb.viewport.entity.shape.DetailedEntityShape;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 import za.co.apricotdb.viewport.relationship.RelationshipType;
+import za.co.apricotdb.viewport.relationship.shape.ApricotRelationshipShape;
 import za.co.apricotdb.viewport.relationship.shape.RelationshipTopology;
 import za.co.apricotdb.viewport.relationship.shape.RelationshipTopologyImpl;
 
@@ -174,20 +177,68 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
     }
 
     /**
-     * Create and return the current  allocation map.
+     * Create and return the current allocation map.
      */
     @Override
     public CanvasAllocationMap getAllocationMap() {
         CanvasAllocationMap allocationMap = new CanvasAllocationMap();
         for (ApricotElement ae : elements) {
-            Node s = ae.getShape();
-            if (s != null && s instanceof ApricotShape) {
-                ApricotShape shape = (ApricotShape) s;
-                CanvasAllocationItem item = shape.getAllocation();
-                allocationMap.addCanvasAllocationItem(item);
+            ApricotShape shape = null;
+            if (ae.getElementType() == ElementType.ENTITY) {
+                shape = ((ApricotEntity) ae).getEntityShape();
+            } else {
+                shape = (ApricotShape) ae.getShape();
+            }
+
+            CanvasAllocationItem item = shape.getAllocation();
+            allocationMap.addCanvasAllocationItem(item);
+        }
+
+        return allocationMap;
+    }
+
+    @Override
+    public void applyAllocationMap(CanvasAllocationMap map, ElementType elementType) {
+        Map<String, ApricotRelationship> relMap = getRelationshipMap();
+        List<CanvasAllocationItem> allocations = map.getAllocations();
+        allocations.sort((o1, o2) -> {
+            if (o1.getType() == ElementType.ENTITY && o2.getType() == ElementType.RELATIONSHIP) {
+                return -1;
+            } else if (o1.getType() == ElementType.RELATIONSHIP && o2.getType() == ElementType.ENTITY) {
+                return 1;
+            }
+            return 0;
+        });
+        for (CanvasAllocationItem item : allocations) {
+            if (item.getType() == elementType) {
+                if (item.getType() == ElementType.ENTITY) {
+                    ApricotEntity entity = entities.get(item.getName());
+                    if (entity != null) {
+                        ApricotEntityShape shape = entity.getEntityShape();
+                        shape.applyAllocation(item);
+                    }
+                } else {
+                    ApricotRelationship relationship = relMap.get(item.getName());
+                    if (relationship != null) {
+                        ApricotRelationshipShape shape = (ApricotRelationshipShape) relationship.getShape();
+
+                        System.out.println(shape.getClass().getName() + "   " + item.getName() + "  "
+                                + item.getPropertiesAsString());
+
+                        shape.applyAllocation(item);
+                    }
+                }
             }
         }
-        
-        return allocationMap;
+    }
+
+    private Map<String, ApricotRelationship> getRelationshipMap() {
+        Map<String, ApricotRelationship> map = new HashMap<>();
+
+        for (ApricotRelationship r : relationships) {
+            map.put(r.getRelationshipName(), r);
+        }
+
+        return map;
     }
 }

@@ -62,4 +62,8 @@ public class ViewManager {
             }
         }
     }
+    
+    public void saveView(ApricotView view) {
+        viewRepository.save(view);
+    }
 }

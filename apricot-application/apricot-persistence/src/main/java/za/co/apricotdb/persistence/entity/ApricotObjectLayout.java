@@ -23,6 +23,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "apricot_object_layout")
 @NamedQuery(name="ApricotObjectLayout.getLayoutsByType", query="SELECT ol FROM ApricotObjectLayout ol WHERE ol.view = :view AND ol.objectType = :objectType")
+@NamedQuery(name="ApricotObjectLayout.getLayoutByName", query="SELECT ol FROM ApricotObjectLayout ol WHERE ol.view = :view AND ol.objectName = :objectName")
+@NamedQuery(name="ApricotObjectLayout.getLayoutsForView", query="SELECT ol FROM ApricotObjectLayout ol WHERE ol.view = :view")
 public class ApricotObjectLayout implements Serializable {
 
     private static final long serialVersionUID = -7584762504719191646L;

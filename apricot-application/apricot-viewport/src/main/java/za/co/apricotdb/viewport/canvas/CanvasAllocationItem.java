@@ -1,5 +1,10 @@
 package za.co.apricotdb.viewport.canvas;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.Properties;
 
 /**
@@ -11,7 +16,7 @@ import java.util.Properties;
 public class CanvasAllocationItem {
     private String name;
     private ElementType type;
-    private Properties properties;
+    private Properties properties = new Properties();
     
     public String getName() {
         return name;
@@ -37,14 +42,32 @@ public class CanvasAllocationItem {
         this.properties = properties;
     }
     
+    /**
+     * Save the allocation properties into a String  
+     */
     public String getPropertiesAsString() {
-        // @TODO implement!
-        return null;
+        String ret = null;
+        Writer w = new StringWriter();
+        try {
+            properties.store(w, "CanvasAllocationItem");
+            ret = w.toString();
+        } catch (IOException ex) {
+            ret = "error: " + ex.getMessage();
+        }
+
+        return ret;
     }
     
     public void setPropertiesFromString(String props) {
-        // @TODO implement!
-    }
+        if (!props.startsWith("error:")) {
+            Reader r = new StringReader(props);
+            try {
+                properties.load(r);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }   
     
     @Override
     public int hashCode() {
