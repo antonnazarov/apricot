@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Side;
@@ -221,9 +220,6 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
                     ApricotRelationship relationship = relMap.get(item.getName());
                     if (relationship != null) {
                         ApricotRelationshipShape shape = (ApricotRelationshipShape) relationship.getShape();
-
-                        System.out.println(shape.getClass().getName() + "   " + item.getName() + "  "
-                                + item.getPropertiesAsString());
 
                         shape.applyAllocation(item);
                     }

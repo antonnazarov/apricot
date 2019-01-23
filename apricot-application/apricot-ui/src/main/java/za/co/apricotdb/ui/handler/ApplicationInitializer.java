@@ -1,4 +1,4 @@
-package za.co.apricotdb.ui.controller;
+package za.co.apricotdb.ui.handler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,16 +43,16 @@ public class ApplicationInitializer {
     TableManager tableManager;
     
     @Autowired
-    TabViewController tabViewController;
+    TabViewHandler tabViewHandler;
     
     @Autowired
-    ApricotViewController viewController;
+    ApricotViewHandler viewHandler;
     
     @Autowired
     CanvasBuilder canvasBuilder;
     
     @Autowired
-    ApricotCanvasController canvasController;
+    ApricotCanvasHandler canvasHandler;
     
     @Transactional
     public void initializeDefault(ParentWindow pw) {
@@ -81,13 +81,13 @@ public class ApplicationInitializer {
         
         TabPane tabPane = pw.getProjectTabPane();
         tabPane.getTabs().clear();
-        for (ApricotView view : viewController.getAllViews(project)) {
-            Tab tab = tabViewController.buildTab(snapshot, view);
+        for (ApricotView view : viewHandler.getAllViews(project)) {
+            Tab tab = tabViewHandler.buildTab(snapshot, view);
             tab.setText(view.getName());
             tabPane.getTabs().add(tab);
             
             ApricotCanvas canvas = canvasBuilder.buildCanvas();
-            canvasController.populateCanvas(snapshot, view, canvas);
+            canvasHandler.populateCanvas(snapshot, view, canvas);
         }
     }
     

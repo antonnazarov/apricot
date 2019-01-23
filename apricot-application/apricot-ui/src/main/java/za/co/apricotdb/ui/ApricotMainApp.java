@@ -7,13 +7,12 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Configuration;
 
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import za.co.apricotdb.ui.controller.ApplicationInitializer;
+import za.co.apricotdb.ui.handler.ApplicationInitializer;
 
 @Configuration
 @EnableAutoConfiguration
@@ -57,17 +56,5 @@ public class ApricotMainApp extends Application {
 
     public static void main(String[] args) {
         launch(args);
-    }
-
-    /**
-     * @deprecated
-     */
-    private void setOnStageResize(Stage stage, ParentWindow pw) {
-        ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) -> {
-//            paneAdjustor.adjustSplitPaneWidth(pw.getCenterNode(), stage.getWidth());
-        };
-
-        stage.widthProperty().addListener(stageSizeListener);
-        stage.heightProperty().addListener(stageSizeListener);
     }
 }

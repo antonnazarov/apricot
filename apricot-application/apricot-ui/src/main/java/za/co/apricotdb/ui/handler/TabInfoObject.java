@@ -1,4 +1,4 @@
-package za.co.apricotdb.ui.controller;
+package za.co.apricotdb.ui.handler;
 
 import java.io.Serializable;
 

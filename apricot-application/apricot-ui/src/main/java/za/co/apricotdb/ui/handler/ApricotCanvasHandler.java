@@ -1,4 +1,4 @@
-package za.co.apricotdb.ui.controller;
+package za.co.apricotdb.ui.handler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +41,7 @@ import za.co.apricotdb.viewport.relationship.RelationshipType;
  * @since 12/01/2019
  */
 @Component
-public class ApricotCanvasController {
+public class ApricotCanvasHandler {
 
     @Autowired
     TableManager tableManager;
@@ -50,10 +50,10 @@ public class ApricotCanvasController {
     RelationshipManager relationshipManager;
     
     @Autowired
-    ApricotViewController viewController;
+    ApricotViewHandler viewHandler;
     
     @Autowired
-    TabViewController tabViewController;
+    TabViewHandler tabViewHandler;
 
     /**
      * Populate the given canvas with the information of snapshot, using the
@@ -64,7 +64,7 @@ public class ApricotCanvasController {
         if (view.isGeneral()) {
             tables = tableManager.getTablesForSnapshot(snapshot);
         } else {
-            tables = viewController.getTablesForView(snapshot, view);
+            tables = viewHandler.getTablesForView(snapshot, view);
         }
         
         List<ApricotRelationship> relationships = relationshipManager.getRelationshipsForTables(tables);
@@ -160,7 +160,7 @@ public class ApricotCanvasController {
         sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(WorkerStateEvent event) {
-                CanvasAllocationMap map = tabViewController.readCanvasAllocationMap(view);
+                CanvasAllocationMap map = tabViewHandler.readCanvasAllocationMap(view);
                 canvas.applyAllocationMap(map, ElementType.ENTITY);
                 canvas.buildRelationships();
                 canvas.applyAllocationMap(map, ElementType.RELATIONSHIP);

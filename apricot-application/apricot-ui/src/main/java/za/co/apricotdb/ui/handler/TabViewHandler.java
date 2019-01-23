@@ -1,4 +1,4 @@
-package za.co.apricotdb.ui.controller;
+package za.co.apricotdb.ui.handler;
 
 import java.util.Set;
 
@@ -30,7 +30,7 @@ import za.co.apricotdb.viewport.canvas.ElementType;
  * @since 12/01/2019
  */
 @Component
-public class TabViewController {
+public class TabViewHandler {
 
     @Autowired
     CanvasBuilder canvasBuilder;

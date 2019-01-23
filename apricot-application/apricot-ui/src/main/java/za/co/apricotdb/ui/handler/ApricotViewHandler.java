@@ -1,4 +1,4 @@
-package za.co.apricotdb.ui.controller;
+package za.co.apricotdb.ui.handler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,8 +6,14 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import za.co.apricotdb.persistence.data.ObjectLayoutManager;
 import za.co.apricotdb.persistence.data.TableManager;
 import za.co.apricotdb.persistence.data.ViewManager;
@@ -26,8 +32,11 @@ import za.co.apricotdb.persistence.repository.ApricotViewRepository;
  * @since 12/01/2019
  */
 @Component
-public class ApricotViewController {
+public class ApricotViewHandler {
     
+    @Resource
+    ApplicationContext context;
+
     @Resource
     ApricotViewRepository viewRepository;
     
@@ -83,5 +92,19 @@ public class ApricotViewController {
             viewManager.removeGeneralView(project);
             createGeneralView(project);
         }
+    }
+    
+    public void createPopUpWindow(Stage primaryStage) throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-view-editor.fxml"));
+        loader.setControllerFactory(context::getBean);
+        Pane window = loader.load();
+
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(primaryStage);
+
+        Scene addViewScene = new Scene(window);
+        dialog.setScene(addViewScene);
+        dialog.show();
     }
 }
