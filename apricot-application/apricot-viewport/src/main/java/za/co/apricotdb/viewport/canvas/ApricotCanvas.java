@@ -42,4 +42,6 @@ public interface ApricotCanvas {
     CanvasAllocationMap getAllocationMap();
     
     void applyAllocationMap(CanvasAllocationMap map, ElementType elementType);
+    
+    List<ApricotEntity> getSelectedEntities();
 }

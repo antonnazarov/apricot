@@ -36,9 +36,11 @@ public class MainAppController {
     BorderPane mainBorderPane;
     
     @FXML
+    TabPane viewsTabPane;
+    
+    @FXML
     public void save(ActionEvent event) {
-        TabPane tabs = parentWindow.getProjectTabPane();
-        for(Tab t : tabs.getTabs()) {
+        for(Tab t : viewsTabPane.getTabs()) {
             if (t.getUserData() instanceof TabInfoObject) {
                 TabInfoObject o = (TabInfoObject) t.getUserData();
                 CanvasAllocationMap allocationMap = o.getCanvas().getAllocationMap();
@@ -51,6 +53,6 @@ public class MainAppController {
     @FXML
     public void newView(ActionEvent event) throws Exception {
         Stage primaryStage = (Stage) mainBorderPane.getScene().getWindow();
-        viewHandler.createPopUpWindow(primaryStage);
+        viewHandler.createViewEditor(primaryStage, viewsTabPane, null);
     }
 }

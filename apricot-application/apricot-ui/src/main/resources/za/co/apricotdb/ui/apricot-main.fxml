@@ -119,7 +119,7 @@
       <SplitPane dividerPositions="0.2" BorderPane.alignment="CENTER">
         <items>
             <TreeView fx:id="projectsTreeView" maxHeight="1.7976931348623157E308" maxWidth="280.0" prefHeight="696.0" prefWidth="279.0" />
-            <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+            <TabPane fx:id="viewsTabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
               <tabs>
                 <Tab text="Main View" />
               </tabs>

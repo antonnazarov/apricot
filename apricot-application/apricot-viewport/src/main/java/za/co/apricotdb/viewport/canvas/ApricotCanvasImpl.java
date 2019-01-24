@@ -237,4 +237,16 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
 
         return map;
     }
+    
+    public List<ApricotEntity> getSelectedEntities() {
+        List<ApricotEntity> ret = new ArrayList<>();
+        
+        for (ApricotElement e : elements) {
+            if (e.getElementType() == ElementType.ENTITY && e.getElementStatus() == ElementStatus.SELECTED) {
+                ret.add((ApricotEntity)e);
+            }
+        }
+        
+        return ret;
+    }
 }

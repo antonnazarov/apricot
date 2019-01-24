@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -24,6 +25,10 @@ import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.persistence.entity.LayoutObjectType;
 import za.co.apricotdb.persistence.repository.ApricotViewRepository;
+import za.co.apricotdb.ui.ViewFormController;
+import za.co.apricotdb.ui.model.EditViewModelBuilder;
+import za.co.apricotdb.ui.model.NewViewModelBuilder;
+import za.co.apricotdb.ui.model.ViewFormModel;
 
 /**
  * The view- related operations.
@@ -33,68 +38,73 @@ import za.co.apricotdb.persistence.repository.ApricotViewRepository;
  */
 @Component
 public class ApricotViewHandler {
-    
+
     @Resource
     ApplicationContext context;
 
     @Resource
     ApricotViewRepository viewRepository;
-    
+
     @Autowired
     ViewManager viewManager;
-    
+
     @Autowired
     TableManager tableManager;
-    
+
     @Autowired
     ObjectLayoutManager objectLayoutManager;
+
+    @Autowired
+    NewViewModelBuilder newViewModelBuilder;
+
+    @Autowired
+    EditViewModelBuilder editViewModelBuilder;
 
     public List<ApricotView> getAllViews(ApricotProject project) {
         checkGeneralView(project);
 
         return viewManager.getAllViews(project);
     }
-    
+
     /**
      * Find all tables of the given snapshot, which have associated Layout Object.
      */
     public List<ApricotTable> getTablesForView(ApricotSnapshot snapshot, ApricotView view) {
         List<ApricotTable> ret = new ArrayList<>();
-        
-        //  get all tables first
+
+        // get all tables first
         List<ApricotTable> tables = tableManager.getTablesForSnapshot(snapshot);
-        
+
         List<ApricotObjectLayout> layouts = objectLayoutManager.getObjectLayoutsByType(view, LayoutObjectType.TABLE);
         for (ApricotObjectLayout l : layouts) {
-            ApricotTable t = tables.stream()
-                    .filter(table -> l.getObjectName().equals(table.getName()))
-                    .findFirst()
+            ApricotTable t = tables.stream().filter(table -> l.getObjectName().equals(table.getName())).findFirst()
                     .orElse(null);
             if (t != null) {
                 ret.add(t);
             }
         }
-        
+
         return ret;
     }
-    
+
     private ApricotView createGeneralView(ApricotProject project) {
-        ApricotView generalView = new ApricotView("Main View", "The main (general) view of the project " + project.getName(), 
-                new java.util.Date(), null, true, 0, project, null);
+        ApricotView generalView = new ApricotView("Main View",
+                "The main (general) view of the project " + project.getName(), new java.util.Date(), null, true, 0,
+                project, null);
         return viewRepository.save(generalView);
     }
-    
+
     private void checkGeneralView(ApricotProject project) {
         try {
             viewManager.getGeneralView(project);
         } catch (Exception e) {
-            //  if exception of any type takes place, try to re-create the General View
+            // if exception of any type takes place, try to re-create the General View
             viewManager.removeGeneralView(project);
             createGeneralView(project);
         }
     }
-    
-    public void createPopUpWindow(Stage primaryStage) throws Exception {
+
+    public void createViewEditor(Stage primaryStage, TabPane viewsTabPane, ApricotView view) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-view-editor.fxml"));
         loader.setControllerFactory(context::getBean);
         Pane window = loader.load();
@@ -103,8 +113,39 @@ public class ApricotViewHandler {
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(primaryStage);
 
+        ViewFormModel model = null;
+        if (view == null) {
+            dialog.setTitle("Create view");
+            model = newViewModelBuilder.buildModel(viewsTabPane);
+        } else {
+            model = editViewModelBuilder.buildModel(viewsTabPane);
+        }
+
         Scene addViewScene = new Scene(window);
         dialog.setScene(addViewScene);
+
+        ViewFormController controller = loader.<ViewFormController>getController();
+        controller.init(model);
+
         dialog.show();
+    }
+
+    /**
+     * Generate a list of ApricotObjectLayout based on the provided list of tables,
+     * included into view and the pattern view, which ApricotObjectLayout's will be
+     * re-used.
+     */
+    public List<ApricotObjectLayout> getObjectLayoutsFromPatternView(List<String> viewTables, ApricotView patternView) {
+        List<ApricotObjectLayout> ret = new ArrayList<>();
+        
+        //  scan through the view tables
+        for (String t : viewTables) {
+            ApricotObjectLayout layout = objectLayoutManager.findLayoutByName(patternView, t);
+            if (layout != null) {
+                ret.add(layout);
+            }
+        }
+
+        return ret;
     }
 }

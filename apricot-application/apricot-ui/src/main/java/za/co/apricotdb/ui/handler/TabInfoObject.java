@@ -2,6 +2,7 @@ package za.co.apricotdb.ui.handler;
 
 import java.io.Serializable;
 
+import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 
@@ -17,6 +18,7 @@ public class TabInfoObject implements Serializable {
     
     private ApricotCanvas canvas = null;
     private ApricotView view = null;
+    private ApricotSnapshot snapshot = null;
     
     public ApricotCanvas getCanvas() {
         return canvas;
@@ -29,5 +31,11 @@ public class TabInfoObject implements Serializable {
     }
     public void setView(ApricotView view) {
         this.view = view;
+    }
+    public ApricotSnapshot getSnapshot() {
+        return snapshot;
+    }
+    public void setSnapshot(ApricotSnapshot snapshot) {
+        this.snapshot = snapshot;
     }
 }

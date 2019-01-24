@@ -57,6 +57,7 @@ public class TabViewHandler {
         TabInfoObject o = new TabInfoObject();
         o.setCanvas(canvas);
         o.setView(view);
+        o.setSnapshot(snapshot);
         tab.setUserData(o);
 
         return tab;

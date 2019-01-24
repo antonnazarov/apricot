@@ -66,4 +66,12 @@ public class ViewManager {
     public void saveView(ApricotView view) {
         viewRepository.save(view);
     }
+    
+    public List<ApricotView> getViewByName(ApricotProject project, String name) {
+        TypedQuery<ApricotView> query = em.createNamedQuery("ApricotView.getViewByName", ApricotView.class);
+        query.setParameter("project", project);
+        query.setParameter("name", name);
+        
+        return query.getResultList();
+    }
 }
