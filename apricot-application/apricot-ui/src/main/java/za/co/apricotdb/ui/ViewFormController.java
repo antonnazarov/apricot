@@ -98,6 +98,7 @@ public class ViewFormController {
     @FXML
     public void ok(ActionEvent event) {
         model.setViewName(viewName.getText());
+        model.setComment(comment.getText());
         
         if (!viewSerializer.validate(model)) {
             return;

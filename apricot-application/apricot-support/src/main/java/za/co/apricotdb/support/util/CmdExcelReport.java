@@ -42,7 +42,7 @@ public class CmdExcelReport implements CommandLineRunner {
             if (c.equals("report")) {
                 ReportParameters params = getReportParameters(args);
                 System.out.println("Generating report for the following parameters: " + params);
-                MetaData result = dataReader.readTablesByList(params.tables);
+                MetaData result = dataReader.readTablesByList(params.tables, params.snapshotId);
                 List<ApricotTable> tables = result.getTables();
                 if (params.sortBy.equals("alphabetically")) {
                     sortAlphabetically(tables);
@@ -89,6 +89,9 @@ public class CmdExcelReport implements CommandLineRunner {
             } else if (c.contains("file=")) {
                 String file = c.substring(5);
                 ret.file = file;
+            } else if (c.contains("snapshot=")) {
+                String snap = c.substring(9);
+                ret.snapshotId = Long.parseLong(snap);
             }
         }
         
@@ -101,13 +104,15 @@ public class CmdExcelReport implements CommandLineRunner {
         List<String> tables;
         String sortBy = "alphabetically";
         String file;
+        long snapshotId;
         
         @Override
         public String toString() {
             StringBuilder sb = new StringBuilder();
             sb.append("tables=").append(tables)
                     .append(", file=[").append(file).append("]")
-                    .append(", sortBy=[").append(sortBy).append("]");
+                    .append(", sortBy=[").append(sortBy).append("]")
+                    .append(", snapshot=[").append(snapshotId).append("]");
             
             return sb.toString();
         }

@@ -82,11 +82,11 @@ public class ApplicationInitializer {
         TabPane tabPane = pw.getProjectTabPane();
         tabPane.getTabs().clear();
         for (ApricotView view : viewHandler.getAllViews(project)) {
-            Tab tab = tabViewHandler.buildTab(snapshot, view);
+            ApricotCanvas canvas = canvasBuilder.buildCanvas();
+            Tab tab = tabViewHandler.buildTab(snapshot, view, canvas);
             tab.setText(view.getName());
             tabPane.getTabs().add(tab);
             
-            ApricotCanvas canvas = canvasBuilder.buildCanvas();
             canvasHandler.populateCanvas(snapshot, view, canvas);
         }
     }

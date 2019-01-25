@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
+import za.co.apricotdb.persistence.repository.ApricotSnapshotRepository;
 
 /**
  * The SNAPSHOT- related operations.
@@ -23,6 +24,9 @@ public class SnapshotManager {
     
     @Resource
     EntityManager em;
+    
+    @Resource
+    ApricotSnapshotRepository snapshotRepository;
     
     public ApricotSnapshot getDefaultSnapshot(ApricotProject project) {
         ApricotSnapshot ret = null;
@@ -48,5 +52,9 @@ public class SnapshotManager {
         }
         
         return ret;
+    }
+    
+    public ApricotSnapshot getSnapshotById(long id) {
+        return snapshotRepository.getOne(id);
     }
 }

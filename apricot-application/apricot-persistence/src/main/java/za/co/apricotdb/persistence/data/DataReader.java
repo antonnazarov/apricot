@@ -2,16 +2,12 @@ package za.co.apricotdb.persistence.data;
 
 import java.util.List;
 
-import javax.annotation.Resource;
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
+import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
-import za.co.apricotdb.persistence.repository.ApricotRelationshipRepository;
-import za.co.apricotdb.persistence.repository.ApricotTableRepository;
 
 /**
  * The utility- class that reads the current Meta Data in the Apricot-
@@ -23,42 +19,27 @@ import za.co.apricotdb.persistence.repository.ApricotTableRepository;
 @Component
 public class DataReader {
 
-    @Resource
-    ApricotTableRepository tableRepository;
+    @Autowired
+    SnapshotManager snapshotManager;
 
-    @Resource
-    ApricotRelationshipRepository relationshipRepository;
+    @Autowired
+    TableManager tableManager;
+    
+    @Autowired
+    RelationshipManager relationshipManager;
 
-    @Resource
-    EntityManager em;
-
-    public MetaData readMetaData() {
+    public MetaData readTablesByList(List<String> tableNames, long snapshotId) {
+        ApricotSnapshot snapshot = snapshotManager.getSnapshotById(snapshotId);
         MetaData ret = new MetaData();
-        List<ApricotTable> tables = tableRepository.findAll();
-        List<ApricotRelationship> relationships = relationshipRepository.findAll();
-
+        List<ApricotTable> tables = null;
+        if (tableNames.contains("*")) {
+            tables = tableManager.getTablesForSnapshot(snapshot);
+        } else {
+            tables = tableManager.getTablesByNames(tableNames, snapshot);
+        }
+        List<ApricotRelationship> relationships = relationshipManager.getRelationshipsForTables(tables);
         ret.setTables(tables);
         ret.setRelationships(relationships);
-
-        return ret;
-    }
-
-    public MetaData readTablesByList(List<String> tableNames) {
-        MetaData ret = new MetaData();
-        if (tableNames.contains("*")) {
-            ret = readMetaData();
-        } else {
-            TypedQuery<ApricotTable> queryTbls = em.createNamedQuery("ApricotTable.getTablesByName", ApricotTable.class);
-            queryTbls.setParameter("tables", tableNames);
-            List<ApricotTable> tables = queryTbls.getResultList();
-
-            TypedQuery<ApricotRelationship> queryRel = em.createNamedQuery("ApricotRelationship.getRelationshipsForTables", ApricotRelationship.class);
-            queryRel.setParameter("tables", tableNames);
-            List<ApricotRelationship> relationships = queryRel.getResultList();
-            
-            ret.setTables(tables);
-            ret.setRelationships(relationships);
-        }
 
         return ret;
     }

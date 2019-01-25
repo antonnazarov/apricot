@@ -74,4 +74,11 @@ public class ViewManager {
         
         return query.getResultList();
     }
+    
+    public int getMaxOrdinalPosition(ApricotProject project) {
+        TypedQuery<Integer> query = em.createNamedQuery("ApricotView.getViewMaxOrdinalPosition", Integer.class);
+        query.setParameter("project", project);
+        
+        return query.getSingleResult();
+    }
 }

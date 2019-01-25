@@ -23,11 +23,9 @@ public class ApricotCanvasBuilder implements CanvasBuilder {
     @Qualifier("CanvasOnMouseDraggedEventHandler")
     private EventHandler<MouseEvent> canvasOnMouseDraggedEventHandler;
     
-    @Autowired
-    private ApricotCanvas canvas;
-    
     @Override
     public ApricotCanvas buildCanvas() {
+        ApricotCanvas canvas = new ApricotCanvasImpl();
         Pane p = (Pane) canvas;
         p.setOnMousePressed(canvasOnMousePressedEventHandler);
         p.setOnMouseReleased(canvasOnMouseReleasedEventHandler);

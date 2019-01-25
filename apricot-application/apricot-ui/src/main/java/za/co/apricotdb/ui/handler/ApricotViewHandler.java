@@ -16,10 +16,12 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import za.co.apricotdb.persistence.data.ObjectLayoutManager;
+import za.co.apricotdb.persistence.data.RelationshipManager;
 import za.co.apricotdb.persistence.data.TableManager;
 import za.co.apricotdb.persistence.data.ViewManager;
 import za.co.apricotdb.persistence.entity.ApricotObjectLayout;
 import za.co.apricotdb.persistence.entity.ApricotProject;
+import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ApricotView;
@@ -59,6 +61,9 @@ public class ApricotViewHandler {
 
     @Autowired
     EditViewModelBuilder editViewModelBuilder;
+
+    @Autowired
+    RelationshipManager relationshipManager;
 
     public List<ApricotView> getAllViews(ApricotProject project) {
         checkGeneralView(project);
@@ -135,12 +140,22 @@ public class ApricotViewHandler {
      * included into view and the pattern view, which ApricotObjectLayout's will be
      * re-used.
      */
-    public List<ApricotObjectLayout> getObjectLayoutsFromPatternView(List<String> viewTables, ApricotView patternView) {
+    public List<ApricotObjectLayout> getObjectLayoutsFromPatternView(List<String> viewTables, ApricotView patternView,
+            ApricotSnapshot snapshot) {
         List<ApricotObjectLayout> ret = new ArrayList<>();
-        
-        //  scan through the view tables
+
+        // scan through the view tables
         for (String t : viewTables) {
             ApricotObjectLayout layout = objectLayoutManager.findLayoutByName(patternView, t);
+            if (layout != null) {
+                ret.add(layout);
+            }
+        }
+
+        List<ApricotTable> tables = tableManager.getTablesByNames(viewTables, snapshot);
+        List<ApricotRelationship> relationships = relationshipManager.getRelationshipsForTables(tables);
+        for (ApricotRelationship r : relationships) {
+            ApricotObjectLayout layout = objectLayoutManager.findLayoutByName(patternView, r.getName());
             if (layout != null) {
                 ret.add(layout);
             }

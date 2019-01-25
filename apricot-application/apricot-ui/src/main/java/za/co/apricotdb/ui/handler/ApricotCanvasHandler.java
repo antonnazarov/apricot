@@ -70,9 +70,9 @@ public class ApricotCanvasHandler {
         List<ApricotRelationship> relationships = relationshipManager.getRelationshipsForTables(tables);
 
         Map<String, List<FieldDetail>> fieldDetails = new HashMap<>();
+        EntityBuilder eBuilder = new ApricotEntityBuilder(canvas);
         for (ApricotTable t : tables) {
             List<FieldDetail> fd = getFieldDetails(t, relationships);
-            EntityBuilder eBuilder = new ApricotEntityBuilder(canvas);
             ApricotElement element = eBuilder.buildEntity(t.getName(), fd, isSlave(fd));
             canvas.addElement(element);
             fieldDetails.put(t.getName(), fd);

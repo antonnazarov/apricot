@@ -1,5 +1,8 @@
 package za.co.apricotdb.support.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +27,22 @@ public class CmdMetaReader implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) throws Exception {
+        long snapshotId = -1;
+        boolean isRead = false;
         for (String c : args) {
             if (c.equals("read")) {
-                MetaData metaData = dataReader.readMetaData();
-                System.out.println(metaData.toString());
+                isRead = true;
+            } else if (c.startsWith("snapshot=")) {
+                snapshotId = Long.parseLong(c.substring(9));
             }
         }
+        
+        if (isRead && snapshotId != -1) {
+            List<String> tbls = new ArrayList<>();
+            tbls.add("*");
+            MetaData metaData = dataReader.readTablesByList(tbls, snapshotId);
+            System.out.println(metaData.toString());
+        }
+
     }
 }

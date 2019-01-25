@@ -20,8 +20,8 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "apricot_relationship")
-@NamedQuery(name = "ApricotRelationship.getRelationshipsForTables", query = "SELECT DISTINCT rl FROM ApricotRelationship rl WHERE rl.child.table.name IN (:tables) OR rl.parent.table.name IN (:tables)")
-@NamedQuery(name = "ApricotRelationship.getRelationshipsForTableList", query = "SELECT DISTINCT rl FROM ApricotRelationship rl WHERE rl.child.table IN (:tables) OR rl.parent.table IN (:tables)")
+@NamedQuery(name = "ApricotRelationship.getRelationshipsForTables", query = "SELECT DISTINCT rl FROM ApricotRelationship rl WHERE rl.child.table.name IN (:tables) AND rl.parent.table.name IN (:tables)")
+@NamedQuery(name = "ApricotRelationship.getRelationshipsForTableList", query = "SELECT DISTINCT rl FROM ApricotRelationship rl WHERE rl.child.table IN (:tables) AND rl.parent.table IN (:tables)")
 public class ApricotRelationship implements Serializable {
 
     private static final long serialVersionUID = 2135283859031176938L;
@@ -92,5 +92,20 @@ public class ApricotRelationship implements Serializable {
     @Override
     public int hashCode() {
         return 1;
+    }
+    
+    /**
+     * The "logical" name of the constraint composed as 
+     * <parent_table>|<child_table>|<primary_key_field>|<foreign_key_field>
+     */
+    public String getName() {
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append(parent.getTable().getName()).append("|")
+            .append(child.getTable().getName()).append("|")
+            .append(parent.getColumns().get(0).getColumn().getName()).append("|")
+            .append(child.getColumns().get(0).getColumn().getName()).append("|");
+        
+        return sb.toString();
     }
 }

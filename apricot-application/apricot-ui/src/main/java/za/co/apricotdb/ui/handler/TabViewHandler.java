@@ -44,10 +44,8 @@ public class TabViewHandler {
     /**
      * Build a new Tab and populate it with the initial data.
      */
-    public Tab buildTab(ApricotSnapshot snapshot, ApricotView view) {
+    public Tab buildTab(ApricotSnapshot snapshot, ApricotView view, ApricotCanvas canvas) {
         Tab tab = new Tab();
-
-        ApricotCanvas canvas = canvasBuilder.buildCanvas();
 
         ScrollPane scroll = buildScrollPane();
         scroll.setContent((Pane) canvas);
@@ -59,6 +57,9 @@ public class TabViewHandler {
         o.setView(view);
         o.setSnapshot(snapshot);
         tab.setUserData(o);
+        
+        //  TODO use where needed and remove 
+        // tab.setStyle("-fx-font-weight: bold;"); normal
 
         return tab;
     }
