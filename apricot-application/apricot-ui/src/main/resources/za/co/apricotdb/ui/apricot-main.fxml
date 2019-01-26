@@ -90,7 +90,7 @@
             </ComboBox>
             <ButtonBar nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="300.0">
               <buttons>
-                  <Button minWidth="34.0" mnemonicParsing="false" onAction="#save" prefHeight="25.0" text="Save" />
+                  <Button fx:id="saveButton" minWidth="34.0" mnemonicParsing="false" onAction="#save" prefHeight="25.0" text="Save" />
                 <Button minWidth="34.0" mnemonicParsing="false" prefHeight="25.0" text="Undo" />
                   <Label alignment="CENTER_RIGHT" minWidth="44.0" prefHeight="17.0" text="New:" />
                   <Button layoutX="455.0" layoutY="10.0" minWidth="34.0" mnemonicParsing="false" prefHeight="25.0" text="Snapshot" />

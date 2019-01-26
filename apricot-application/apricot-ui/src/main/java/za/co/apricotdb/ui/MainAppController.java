@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
@@ -24,9 +25,6 @@ import za.co.apricotdb.viewport.canvas.CanvasAllocationMap;
 public class MainAppController {
     
     @Autowired
-    ParentWindow parentWindow;
-    
-    @Autowired
     TabViewHandler tabViewHandler;
     
     @Autowired
@@ -39,6 +37,9 @@ public class MainAppController {
     TabPane viewsTabPane;
     
     @FXML
+    Button saveButton;
+    
+    @FXML
     public void save(ActionEvent event) {
         for(Tab t : viewsTabPane.getTabs()) {
             if (t.getUserData() instanceof TabInfoObject) {
@@ -46,6 +47,8 @@ public class MainAppController {
                 CanvasAllocationMap allocationMap = o.getCanvas().getAllocationMap();
                 
                 tabViewHandler.saveCanvasAllocationMap(allocationMap, o.getView());
+                
+                o.getCanvas().resetCanvasChange();
             }
         }
     }

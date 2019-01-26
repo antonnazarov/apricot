@@ -1,5 +1,6 @@
 package za.co.apricotdb.viewport.canvas;
 
+import java.beans.PropertyChangeListener;
 import java.util.List;
 import java.util.Map;
 
@@ -44,4 +45,10 @@ public interface ApricotCanvas {
     void applyAllocationMap(CanvasAllocationMap map, ElementType elementType);
     
     List<ApricotEntity> getSelectedEntities();
+    
+    void notifyCanvasChange();
+    
+    void resetCanvasChange();
+    
+    void addCanvasChangeListener(PropertyChangeListener canvasChangeListener);
 }

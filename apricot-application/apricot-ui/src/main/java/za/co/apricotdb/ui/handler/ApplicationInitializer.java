@@ -1,5 +1,6 @@
 package za.co.apricotdb.ui.handler;
 
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,39 +39,40 @@ public class ApplicationInitializer {
 
     @Autowired
     SnapshotManager snapshotManager;
-    
+
     @Autowired
     TableManager tableManager;
-    
+
     @Autowired
     TabViewHandler tabViewHandler;
-    
+
     @Autowired
     ApricotViewHandler viewHandler;
-    
+
     @Autowired
     CanvasBuilder canvasBuilder;
-    
+
     @Autowired
     ApricotCanvasHandler canvasHandler;
-    
+
     @Transactional
-    public void initializeDefault(ParentWindow pw) {
+    public void initializeDefault(ParentWindow pw, PropertyChangeListener canvasChangeListener) {
         ApricotProject currentProject = projectManager.findCurrentProject();
         ApricotSnapshot defaultSnapshot = snapshotManager.getDefaultSnapshot(currentProject);
-        
-        initialize(pw, currentProject, defaultSnapshot);
+
+        initialize(pw, currentProject, defaultSnapshot, canvasChangeListener);
     }
 
     @Transactional
-    public void initialize(ParentWindow pw, ApricotProject project, ApricotSnapshot snapshot) {
+    public void initialize(ParentWindow pw, ApricotProject project, ApricotSnapshot snapshot,
+            PropertyChangeListener canvasChangeListener) {
         List<ApricotTable> tables = tableManager.getTablesForSnapshot(snapshot);
         TreeItem<String> root = new TreeItem<>(project.getName());
         root.getChildren().addAll(getTables(tables));
         root.setExpanded(true);
         pw.getProjectTreeView().setRoot(root);
-        
-        ComboBox<String> combo = pw.getSnapshotCombo();        
+
+        ComboBox<String> combo = pw.getSnapshotCombo();
         List<ApricotSnapshot> snapshots = snapshotManager.getAllSnapshots(project);
         List<String> snapNames = new ArrayList<>();
         for (ApricotSnapshot s : snapshots) {
@@ -78,25 +80,25 @@ public class ApplicationInitializer {
         }
         combo.getItems().addAll(snapNames);
         combo.setValue(snapshot.getName());
-        
+
         TabPane tabPane = pw.getProjectTabPane();
         tabPane.getTabs().clear();
         for (ApricotView view : viewHandler.getAllViews(project)) {
-            ApricotCanvas canvas = canvasBuilder.buildCanvas();
+            ApricotCanvas canvas = canvasBuilder.buildCanvas(canvasChangeListener);
             Tab tab = tabViewHandler.buildTab(snapshot, view, canvas);
             tab.setText(view.getName());
             tabPane.getTabs().add(tab);
-            
+
             canvasHandler.populateCanvas(snapshot, view, canvas);
         }
     }
-    
+
     private List<TreeItem<String>> getTables(List<ApricotTable> tables) {
         List<TreeItem<String>> ret = new ArrayList<>();
         for (ApricotTable t : tables) {
             ret.add(new TreeItem<String>(t.getName()));
         }
-        
+
         return ret;
     }
 }

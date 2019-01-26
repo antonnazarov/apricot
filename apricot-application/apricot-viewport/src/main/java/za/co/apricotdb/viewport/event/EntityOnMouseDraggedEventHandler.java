@@ -68,6 +68,8 @@ public class EntityOnMouseDraggedEventHandler implements EventHandler<MouseEvent
                         break;
                     }
 
+                    canvas.notifyCanvasChange();
+                    
                     event.consume();
                 }
             }

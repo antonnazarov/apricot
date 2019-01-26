@@ -58,9 +58,6 @@ public class TabViewHandler {
         o.setSnapshot(snapshot);
         tab.setUserData(o);
         
-        //  TODO use where needed and remove 
-        // tab.setStyle("-fx-font-weight: bold;"); normal
-
         return tab;
     }
 

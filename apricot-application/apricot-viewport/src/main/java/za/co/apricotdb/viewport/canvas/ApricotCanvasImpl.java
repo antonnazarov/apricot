@@ -1,5 +1,6 @@
 package za.co.apricotdb.viewport.canvas;
 
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,7 @@ import za.co.apricotdb.viewport.align.OrderManager;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
 import za.co.apricotdb.viewport.entity.shape.DetailedEntityShape;
+import za.co.apricotdb.viewport.notification.CanvasChangeProperty;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 import za.co.apricotdb.viewport.relationship.RelationshipType;
 import za.co.apricotdb.viewport.relationship.shape.ApricotRelationshipShape;
@@ -31,7 +33,18 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
     private final Map<String, ApricotEntity> entities = new HashMap<>();
     private final List<ApricotRelationship> relationships = new ArrayList<>();
     private final RelationshipTopology topology = new RelationshipTopologyImpl(this);
+    
+    private CanvasChangeProperty canvasChangeProperty;
 
+    public ApricotCanvasImpl() {
+        this.canvasChangeProperty = new CanvasChangeProperty();
+    }
+    
+    @Override
+    public void addCanvasChangeListener(PropertyChangeListener canvasChangeListener) {
+        canvasChangeProperty.addPropertyChangeListener(canvasChangeListener);
+    }
+    
     /**
      * Register new Entity Shape into the canvas.
      */
@@ -248,5 +261,15 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
         }
         
         return ret;
+    }
+
+    @Override
+    public void notifyCanvasChange() {
+        canvasChangeProperty.setChanged(true);
+    }
+
+    @Override
+    public void resetCanvasChange() {
+        canvasChangeProperty.setChanged(false);
     }
 }
