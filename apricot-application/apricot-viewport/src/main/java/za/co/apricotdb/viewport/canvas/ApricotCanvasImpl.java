@@ -272,4 +272,9 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
     public void resetCanvasChange() {
         canvasChangeProperty.setChanged(false);
     }
+
+    @Override
+    public boolean isCanvasChanged() {
+        return canvasChangeProperty.isChanged();
+    }
 }

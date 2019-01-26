@@ -39,6 +39,7 @@ public class ApricotMainApp extends Application {
         
         MainAppController controller = loader.<MainAppController>getController();
         canvasChangeListener = new CanvasChangeListener(controller.viewsTabPane, controller.saveButton);
+        controller.setCanvasChangeListener(canvasChangeListener);
     }
 
     @Override

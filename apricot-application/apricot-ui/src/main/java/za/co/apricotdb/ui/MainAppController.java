@@ -1,5 +1,7 @@
 package za.co.apricotdb.ui;
 
+import java.beans.PropertyChangeListener;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,39 +25,52 @@ import za.co.apricotdb.viewport.canvas.CanvasAllocationMap;
  */
 @Component
 public class MainAppController {
-    
+
     @Autowired
     TabViewHandler tabViewHandler;
-    
+
     @Autowired
     ApricotViewHandler viewHandler;
-    
+
     @FXML
     BorderPane mainBorderPane;
-    
+
     @FXML
     TabPane viewsTabPane;
-    
+
     @FXML
     Button saveButton;
-    
+
+    private PropertyChangeListener canvasChangeListener;
+
     @FXML
     public void save(ActionEvent event) {
-        for(Tab t : viewsTabPane.getTabs()) {
+        for (Tab t : viewsTabPane.getTabs()) {
             if (t.getUserData() instanceof TabInfoObject) {
                 TabInfoObject o = (TabInfoObject) t.getUserData();
-                CanvasAllocationMap allocationMap = o.getCanvas().getAllocationMap();
-                
-                tabViewHandler.saveCanvasAllocationMap(allocationMap, o.getView());
-                
-                o.getCanvas().resetCanvasChange();
+                //  save only changed canvas
+                if (o.getCanvas().isCanvasChanged()) {
+                    CanvasAllocationMap allocationMap = o.getCanvas().getAllocationMap();
+
+                    tabViewHandler.saveCanvasAllocationMap(allocationMap, o.getView());
+
+                    o.getCanvas().resetCanvasChange();
+                }
             }
         }
     }
-    
+
     @FXML
     public void newView(ActionEvent event) throws Exception {
         Stage primaryStage = (Stage) mainBorderPane.getScene().getWindow();
-        viewHandler.createViewEditor(primaryStage, viewsTabPane, null);
+        viewHandler.createViewEditor(primaryStage, viewsTabPane, null, canvasChangeListener);
+    }
+
+    public PropertyChangeListener getCanvasChangeListener() {
+        return canvasChangeListener;
+    }
+
+    public void setCanvasChangeListener(PropertyChangeListener canvasChangeListener) {
+        this.canvasChangeListener = canvasChangeListener;
     }
 }

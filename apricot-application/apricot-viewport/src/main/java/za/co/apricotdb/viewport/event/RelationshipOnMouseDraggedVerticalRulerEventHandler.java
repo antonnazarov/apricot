@@ -50,6 +50,8 @@ public class RelationshipOnMouseDraggedVerticalRulerEventHandler implements Even
                 Pane pane = (Pane) canvas;
                 pane.getScene().setCursor(Cursor.N_RESIZE);
 
+                canvas.notifyCanvasChange();
+                
                 event.consume();
             }
         }

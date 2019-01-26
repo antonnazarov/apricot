@@ -51,4 +51,6 @@ public interface ApricotCanvas {
     void resetCanvasChange();
     
     void addCanvasChangeListener(PropertyChangeListener canvasChangeListener);
+    
+    boolean isCanvasChanged();
 }

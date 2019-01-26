@@ -54,18 +54,21 @@ public class ApricotViewSerializer {
     }
 
     @Transactional
-    public void serializeView(ViewFormModel model) {
+    public ApricotView serializeView(ViewFormModel model) {
+        ApricotView ret = null;
         if (model.isNewView()) {
-            serializeNewView(model);
+            ret = serializeNewView(model);
         } else {
-            serializeEditedView(model);
+            ret = serializeEditedView(model);
         }
+        
+        return ret;
     }
 
     /**
      * Serialize the new view.
      */
-    private void serializeNewView(ViewFormModel model) {
+    private ApricotView serializeNewView(ViewFormModel model) {
         ApricotProject project = model.getSnapshot().getProject();
         ApricotView view = new ApricotView();
         view.setName(model.getViewName());
@@ -86,11 +89,12 @@ public class ApricotViewSerializer {
         }
         
         view.setObjectLayouts(targetLayouts);
-        viewManager.saveView(view);
+        
+        return viewManager.saveView(view);
     }
 
-    private void serializeEditedView(ViewFormModel model) {
-
+    private ApricotView serializeEditedView(ViewFormModel model) {
+        return null;
     }
 
     /**

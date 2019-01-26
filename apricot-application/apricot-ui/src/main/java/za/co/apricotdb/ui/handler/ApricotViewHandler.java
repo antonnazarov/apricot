@@ -1,9 +1,11 @@
 package za.co.apricotdb.ui.handler;
 
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
@@ -31,6 +34,8 @@ import za.co.apricotdb.ui.ViewFormController;
 import za.co.apricotdb.ui.model.EditViewModelBuilder;
 import za.co.apricotdb.ui.model.NewViewModelBuilder;
 import za.co.apricotdb.ui.model.ViewFormModel;
+import za.co.apricotdb.viewport.canvas.ApricotCanvas;
+import za.co.apricotdb.viewport.canvas.CanvasBuilder;
 
 /**
  * The view- related operations.
@@ -64,6 +69,15 @@ public class ApricotViewHandler {
 
     @Autowired
     RelationshipManager relationshipManager;
+
+    @Autowired
+    CanvasBuilder canvasBuilder;
+
+    @Autowired
+    ApricotCanvasHandler canvasHandler;
+
+    @Autowired
+    TabViewHandler tabViewHandler;
 
     public List<ApricotView> getAllViews(ApricotProject project) {
         checkGeneralView(project);
@@ -109,7 +123,8 @@ public class ApricotViewHandler {
         }
     }
 
-    public void createViewEditor(Stage primaryStage, TabPane viewsTabPane, ApricotView view) throws Exception {
+    public void createViewEditor(Stage primaryStage, TabPane viewsTabPane, ApricotView view,
+            PropertyChangeListener canvasChangeListener) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-view-editor.fxml"));
         loader.setControllerFactory(context::getBean);
         Pane window = loader.load();
@@ -130,7 +145,7 @@ public class ApricotViewHandler {
         dialog.setScene(addViewScene);
 
         ViewFormController controller = loader.<ViewFormController>getController();
-        controller.init(model);
+        controller.init(model, viewsTabPane, canvasChangeListener);
 
         dialog.show();
     }
@@ -162,5 +177,18 @@ public class ApricotViewHandler {
         }
 
         return ret;
+    }
+
+    @Transactional
+    public Tab createViewTab(ApricotSnapshot snapshot, ApricotView view, TabPane tabPane,
+            PropertyChangeListener canvasChangeListener) {
+        ApricotCanvas canvas = canvasBuilder.buildCanvas(canvasChangeListener);
+        Tab tab = tabViewHandler.buildTab(snapshot, view, canvas);
+        tab.setText(view.getName());
+        tabPane.getTabs().add(tab);
+
+        canvasHandler.populateCanvas(snapshot, view, canvas);
+        
+        return tab;
     }
 }

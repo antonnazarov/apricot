@@ -30,5 +30,9 @@ public class CanvasChangeProperty {
     public void setChanged(boolean value) {
         support.firePropertyChange("changed", this.changed, value);
         this.changed = value;
-    }    
+    }
+    
+    public boolean isChanged() {
+        return changed;
+    }
 }

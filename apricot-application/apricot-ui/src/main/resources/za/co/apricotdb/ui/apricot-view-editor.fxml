@@ -107,17 +107,17 @@
                         <Insets top="3.0" />
                      </HBox.margin>
                   </Label>
-                  <RadioButton fx:id="initEmptyOption" mnemonicParsing="false" text="Empty">
+                  <RadioButton fx:id="initEmptyOption" mnemonicParsing="false" onAction="#selectEmpty" text="Empty">
                      <HBox.margin>
                         <Insets top="3.0" />
                      </HBox.margin>
                   </RadioButton>
-                  <RadioButton fx:id="initSelectedOption" mnemonicParsing="false" text="Selected">
+                  <RadioButton fx:id="initSelectedOption" mnemonicParsing="false" onAction="#selectSelected" text="Selected">
                      <HBox.margin>
                         <Insets top="3.0" />
                      </HBox.margin>
                   </RadioButton>
-                  <RadioButton fx:id="initFromViewOption" mnemonicParsing="false" text="View:">
+                  <RadioButton fx:id="initFromViewOption" mnemonicParsing="false" onAction="#selectView" text="View:">
                      <HBox.margin>
                         <Insets top="3.0" />
                      </HBox.margin>

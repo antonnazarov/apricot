@@ -12,6 +12,8 @@ import javafx.scene.control.TabPane;
 import za.co.apricotdb.persistence.data.TableManager;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
+import za.co.apricotdb.persistence.entity.ApricotView;
+import za.co.apricotdb.ui.handler.ApricotViewHandler;
 import za.co.apricotdb.ui.handler.TabInfoObject;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
@@ -21,6 +23,9 @@ public class NewViewModelBuilder {
 
     @Autowired
     TableManager tableManager;
+    
+    @Autowired
+    ApricotViewHandler viewHandler;
 
     public ViewFormModel buildModel(TabPane viewsTabPane) {
         ViewFormModel model = new ViewFormModel();
@@ -44,14 +49,26 @@ public class NewViewModelBuilder {
                 // there are selected entities in the current view
                 availableTables = getAvailableTables(snapTables, selectedEntites);
                 List<String> viewTables = getSelectedTables(selectedEntites);
+                model.setSelectedInCanvas(new ArrayList<String>(viewTables));
                 model.addViewTables(viewTables);
             } else {
                 availableTables = getAvailableTables(snapTables, null);
             }
             model.addAvailableTables(availableTables);
+            model.addFromViews(getViews(tabInfo));
         }
 
         return model;
+    }
+    
+    private List<String> getViews(TabInfoObject tabInfo) {
+        List<String> ret = new ArrayList<>();
+        List<ApricotView> views = viewHandler.getAllViews(tabInfo.getSnapshot().getProject());
+        for (ApricotView v : views) {
+            ret.add(v.getName());
+        }
+        
+        return ret;
     }
 
     private List<String> getAvailableTables(List<ApricotTable> snapTables, List<ApricotEntity> selectedEntites) {

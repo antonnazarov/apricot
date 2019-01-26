@@ -63,8 +63,8 @@ public class ViewManager {
         }
     }
     
-    public void saveView(ApricotView view) {
-        viewRepository.save(view);
+    public ApricotView saveView(ApricotView view) {
+        return viewRepository.save(view);
     }
     
     public List<ApricotView> getViewByName(ApricotProject project, String name) {

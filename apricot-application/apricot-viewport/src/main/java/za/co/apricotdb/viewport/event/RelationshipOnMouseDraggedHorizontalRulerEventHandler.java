@@ -55,7 +55,9 @@ public class RelationshipOnMouseDraggedHorizontalRulerEventHandler implements Ev
                 element.buildShape();
                 
                 Pane pane = (Pane) canvas;
-                pane.getScene().setCursor(Cursor.E_RESIZE);                
+                pane.getScene().setCursor(Cursor.E_RESIZE);
+                
+                canvas.notifyCanvasChange();
 
                 event.consume();
             }

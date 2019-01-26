@@ -20,6 +20,7 @@ public class ViewFormModel {
     private final List<String> availableTables = new ArrayList<>();
     private final List<String> viewTables = new ArrayList<>();
     private final List<String> fromViews = new ArrayList<>();
+    private List<String> selectedInCanvas = new ArrayList<>();
     private ApricotSnapshot snapshot = null; 
 
     public String getViewName() {
@@ -108,5 +109,13 @@ public class ViewFormModel {
         
         Collections.sort(availableTables);
         Collections.sort(viewTables);
+    }
+
+    public List<String> getSelectedInCanvas() {
+        return selectedInCanvas;
+    }
+    
+    public void setSelectedInCanvas(List<String> selectedInCanvas) {
+        this.selectedInCanvas = selectedInCanvas;
     }
 }
