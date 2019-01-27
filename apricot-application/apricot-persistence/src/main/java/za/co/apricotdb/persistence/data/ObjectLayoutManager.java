@@ -53,4 +53,8 @@ public class ObjectLayoutManager {
     public void saveObjectLayout(ApricotObjectLayout layout) {
         layoutRepository.save(layout);
     }
+    
+    public void deleteObjectLayout(ApricotObjectLayout layout) {
+        layoutRepository.delete(layout);
+    }
 }

@@ -62,8 +62,7 @@ public class MainAppController {
 
     @FXML
     public void newView(ActionEvent event) throws Exception {
-        Stage primaryStage = (Stage) mainBorderPane.getScene().getWindow();
-        viewHandler.createViewEditor(primaryStage, viewsTabPane, null, canvasChangeListener);
+        viewHandler.createViewEditor(viewsTabPane, null, canvasChangeListener, null);
     }
 
     public PropertyChangeListener getCanvasChangeListener() {

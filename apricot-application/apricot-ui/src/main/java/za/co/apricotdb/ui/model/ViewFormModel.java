@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javafx.scene.control.Tab;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 
 /**
@@ -21,7 +22,9 @@ public class ViewFormModel {
     private final List<String> viewTables = new ArrayList<>();
     private final List<String> fromViews = new ArrayList<>();
     private List<String> selectedInCanvas = new ArrayList<>();
-    private ApricotSnapshot snapshot = null; 
+    private List<String> snapshotTables = new ArrayList<>();
+    private ApricotSnapshot snapshot = null;
+    private Tab tab = null;
 
     public String getViewName() {
         return viewName;
@@ -117,5 +120,21 @@ public class ViewFormModel {
     
     public void setSelectedInCanvas(List<String> selectedInCanvas) {
         this.selectedInCanvas = selectedInCanvas;
+    }
+
+    public List<String> getSnapshotTables() {
+        return snapshotTables;
+    }
+
+    public void setSnapshotTables(List<String> snapshotTables) {
+        this.snapshotTables = snapshotTables;
+    }
+
+    public Tab getTab() {
+        return tab;
+    }
+
+    public void setTab(Tab tab) {
+        this.tab = tab;
     }
 }

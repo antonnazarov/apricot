@@ -23,7 +23,7 @@ public class NewViewModelBuilder {
 
     @Autowired
     TableManager tableManager;
-    
+
     @Autowired
     ApricotViewHandler viewHandler;
 
@@ -42,7 +42,10 @@ public class NewViewModelBuilder {
             ApricotCanvas canvas = tabInfo.getCanvas();
             ApricotSnapshot snapshot = tabInfo.getSnapshot();
             model.setSnapshot(snapshot);
+
             List<ApricotTable> snapTables = tableManager.getTablesForSnapshot(snapshot);
+            model.setSnapshotTables(getTableNames(snapTables));
+
             List<ApricotEntity> selectedEntites = canvas.getSelectedEntities();
             List<String> availableTables = null;
             if (selectedEntites != null && selectedEntites.size() > 0) {
@@ -60,26 +63,22 @@ public class NewViewModelBuilder {
 
         return model;
     }
-    
+
     private List<String> getViews(TabInfoObject tabInfo) {
         List<String> ret = new ArrayList<>();
         List<ApricotView> views = viewHandler.getAllViews(tabInfo.getSnapshot().getProject());
         for (ApricotView v : views) {
             ret.add(v.getName());
         }
-        
+
         return ret;
     }
 
-    private List<String> getAvailableTables(List<ApricotTable> snapTables, List<ApricotEntity> selectedEntites) {
-        List<String> ret = new ArrayList<>();
+    public List<String> getAvailableTablesFromSnapshotAndSelected(List<String> snapTables,
+            List<String> selectedTables) {
+        List<String> ret = new ArrayList<>(snapTables);
 
-        for (ApricotTable table : snapTables) {
-            ret.add(table.getName());
-        }
-
-        if (selectedEntites != null && selectedEntites.size() > 0) {
-            List<String> selectedTables = getSelectedTables(selectedEntites);
+        if (selectedTables != null && selectedTables.size() > 0) {
             for (String t : selectedTables) {
                 ret.remove(t);
             }
@@ -90,14 +89,33 @@ public class NewViewModelBuilder {
         return ret;
     }
 
+    private List<String> getAvailableTables(List<ApricotTable> snapTables, List<ApricotEntity> selectedEntites) {
+        List<String> sTables = getTableNames(snapTables);
+        List<String> selectedTables = getSelectedTables(selectedEntites);
+
+        return getAvailableTablesFromSnapshotAndSelected(sTables, selectedTables);
+    }
+
+    private List<String> getTableNames(List<ApricotTable> tables) {
+        List<String> ret = new ArrayList<>();
+        for (ApricotTable table : tables) {
+            ret.add(table.getName());
+        }
+        Collections.sort(ret);
+
+        return ret;
+    }
+
     private List<String> getSelectedTables(List<ApricotEntity> selectedEntites) {
         List<String> ret = new ArrayList<>();
 
-        for (ApricotEntity entity : selectedEntites) {
-            ret.add(entity.getTableName());
-        }
+        if (selectedEntites != null && selectedEntites.size() > 0) {
+            for (ApricotEntity entity : selectedEntites) {
+                ret.add(entity.getTableName());
+            }
 
-        Collections.sort(ret);
+            Collections.sort(ret);
+        }
 
         return ret;
     }

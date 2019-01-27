@@ -277,4 +277,12 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
     public boolean isCanvasChanged() {
         return canvasChangeProperty.isChanged();
     }
+
+    @Override
+    public void cleanCanvas() {
+        getChildren().clear();
+        elements.clear();
+        entities.clear();
+        relationships.clear();
+    }
 }

@@ -29,7 +29,6 @@ import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.persistence.entity.LayoutObjectType;
-import za.co.apricotdb.persistence.repository.ApricotViewRepository;
 import za.co.apricotdb.ui.ViewFormController;
 import za.co.apricotdb.ui.model.EditViewModelBuilder;
 import za.co.apricotdb.ui.model.NewViewModelBuilder;
@@ -48,9 +47,6 @@ public class ApricotViewHandler {
 
     @Resource
     ApplicationContext context;
-
-    @Resource
-    ApricotViewRepository viewRepository;
 
     @Autowired
     ViewManager viewManager;
@@ -110,7 +106,7 @@ public class ApricotViewHandler {
         ApricotView generalView = new ApricotView("Main View",
                 "The main (general) view of the project " + project.getName(), new java.util.Date(), null, true, 0,
                 project, null);
-        return viewRepository.save(generalView);
+        return viewManager.saveView(generalView);
     }
 
     private void checkGeneralView(ApricotProject project) {
@@ -123,22 +119,22 @@ public class ApricotViewHandler {
         }
     }
 
-    public void createViewEditor(Stage primaryStage, TabPane viewsTabPane, ApricotView view,
-            PropertyChangeListener canvasChangeListener) throws Exception {
+    public void createViewEditor(TabPane viewsTabPane, ApricotView view,
+            PropertyChangeListener canvasChangeListener, Tab tab) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-view-editor.fxml"));
         loader.setControllerFactory(context::getBean);
         Pane window = loader.load();
 
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.initOwner(primaryStage);
 
         ViewFormModel model = null;
         if (view == null) {
             dialog.setTitle("Create view");
             model = newViewModelBuilder.buildModel(viewsTabPane);
         } else {
-            model = editViewModelBuilder.buildModel(viewsTabPane);
+            dialog.setTitle("Edit view");
+            model = editViewModelBuilder.buildModel(tab);
         }
 
         Scene addViewScene = new Scene(window);
@@ -184,11 +180,21 @@ public class ApricotViewHandler {
             PropertyChangeListener canvasChangeListener) {
         ApricotCanvas canvas = canvasBuilder.buildCanvas(canvasChangeListener);
         Tab tab = tabViewHandler.buildTab(snapshot, view, canvas);
-        tab.setText(view.getName());
         tabPane.getTabs().add(tab);
 
         canvasHandler.populateCanvas(snapshot, view, canvas);
-        
+
         return tab;
+    }
+
+    public ApricotView getViewByName(ApricotProject project, String name) {
+        ApricotView ret = null;
+
+        List<ApricotView> views = viewManager.getViewByName(project, name);
+        if (views != null && views.size() > 0) {
+            ret = views.get(0);
+        }
+
+        return ret;
     }
 }

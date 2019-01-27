@@ -2,6 +2,7 @@ package za.co.apricotdb.ui;
 
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +21,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.handler.ApricotViewHandler;
 import za.co.apricotdb.ui.model.ApricotViewSerializer;
+import za.co.apricotdb.ui.model.NewViewModelBuilder;
 import za.co.apricotdb.ui.model.ViewFormModel;
 import za.co.apricotdb.ui.util.TextLimiter;
 
@@ -41,6 +44,9 @@ public class ViewFormController {
 
     @Autowired
     ApricotViewHandler viewHandler;
+
+    @Autowired
+    NewViewModelBuilder newViewModelBuilder;
 
     @FXML
     TextField viewName;
@@ -86,7 +92,7 @@ public class ViewFormController {
 
         availableTables.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         viewTables.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        
+
         fromViewList.getItems().clear();
         fromViewList.getItems().add("<none>");
         fromViewList.getItems().addAll(model.getFromViews());
@@ -95,9 +101,14 @@ public class ViewFormController {
         if (model.isNewView()) {
             final ToggleGroup group = new ToggleGroup();
             initEmptyOption.setToggleGroup(group);
-            initEmptyOption.setSelected(true);
             initSelectedOption.setToggleGroup(group);
             initFromViewOption.setToggleGroup(group);
+            if (model.getSelectedInCanvas() == null || model.getSelectedInCanvas().size() == 0) {
+                initSelectedOption.setDisable(true);
+                initEmptyOption.setSelected(true);
+            } else {
+                initSelectedOption.setSelected(true);
+            }
         } else {
             initEmptyOption.setDisable(true);
             initSelectedOption.setDisable(true);
@@ -124,6 +135,8 @@ public class ViewFormController {
         if (model.isNewView()) {
             Tab tab = viewHandler.createViewTab(model.getSnapshot(), view, viewsTabPane, canvasChangeListener);
             viewsTabPane.getSelectionModel().select(tab);
+        } else {
+            model.getTab().setText(viewName.getText());
         }
 
         stage.close();
@@ -165,14 +178,14 @@ public class ViewFormController {
             availableTables.getSelectionModel().select(s);
         }
     }
-    
+
     /**
      * The "empty" option has been selected.
      */
     @FXML
     public void selectEmpty(ActionEvent event) {
         removeAllItems(event);
-        fromViewList.setDisable(true);
+        disableFromViewList();
     }
 
     /**
@@ -180,10 +193,26 @@ public class ViewFormController {
      */
     @FXML
     public void selectSelected(ActionEvent event) {
-        fromViewList.setDisable(true);
-        
+        List<String> availableTables = newViewModelBuilder
+                .getAvailableTablesFromSnapshotAndSelected(model.getSnapshotTables(), model.getSelectedInCanvas());
+        model.getAvailableTables().clear();
+        model.addAvailableTables(availableTables);
+        model.getViewTables().clear();
+        model.addViewTables(model.getSelectedInCanvas());
+
+        applyModel(model);
+
+        disableFromViewList();
     }
-    
+
+    private void disableFromViewList() {
+        fromViewList.getSelectionModel().select(0);
+        fromViewList.setDisable(true);
+    }
+
+    /**
+     * The "From View" option.
+     */
     @FXML
     public void selectView(ActionEvent event) {
         fromViewList.setDisable(false);
@@ -191,11 +220,34 @@ public class ViewFormController {
 
     private void applyModel(ViewFormModel model) {
         viewName.setText(model.getViewName());
+        comment.setText(model.getComment());
 
         availableTables.getItems().clear();
         viewTables.getItems().clear();
 
         availableTables.getItems().addAll(model.getAvailableTables());
         viewTables.getItems().addAll(model.getViewTables());
+    }
+
+    @FXML
+    public void viewSelectedFromList(ActionEvent event) {
+        String viewName = fromViewList.getSelectionModel().getSelectedItem();
+        ApricotView view = viewHandler.getViewByName(model.getSnapshot().getProject(), viewName);
+
+        List<ApricotTable> tables = viewHandler.getTablesForView(model.getSnapshot(), view);
+        List<String> tableNames = new ArrayList<>();
+        for (ApricotTable t : tables) {
+            tableNames.add(t.getName());
+        }
+        Collections.sort(tableNames);
+
+        List<String> availableTables = newViewModelBuilder
+                .getAvailableTablesFromSnapshotAndSelected(model.getSnapshotTables(), tableNames);
+        model.getAvailableTables().clear();
+        model.addAvailableTables(availableTables);
+        model.getViewTables().clear();
+        model.addViewTables(tableNames);
+
+        applyModel(model);
     }
 }

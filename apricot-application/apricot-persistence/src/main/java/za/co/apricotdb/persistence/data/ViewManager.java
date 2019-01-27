@@ -63,6 +63,11 @@ public class ViewManager {
         }
     }
     
+    public void removeView(ApricotView view) {
+        objectLayoutRepository.delete(view.getObjectLayouts());
+        viewRepository.delete(view);
+    }
+    
     public ApricotView saveView(ApricotView view) {
         return viewRepository.save(view);
     }

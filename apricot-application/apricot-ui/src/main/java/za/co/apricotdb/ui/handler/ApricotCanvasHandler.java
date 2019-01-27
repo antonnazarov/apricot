@@ -60,6 +60,8 @@ public class ApricotCanvasHandler {
      * provided skin.
      */
     public void populateCanvas(ApricotSnapshot snapshot, ApricotView view, ApricotCanvas canvas) {
+        canvas.cleanCanvas();
+        
         List<ApricotTable> tables = null;
         if (view.isGeneral()) {
             tables = tableManager.getTablesForSnapshot(snapshot);

@@ -11,12 +11,15 @@ import org.springframework.stereotype.Component;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import za.co.apricotdb.persistence.data.ObjectLayoutManager;
 import za.co.apricotdb.persistence.data.ViewManager;
 import za.co.apricotdb.persistence.entity.ApricotObjectLayout;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
+import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.handler.ApricotViewHandler;
+import za.co.apricotdb.ui.handler.TabInfoObject;
 
 @Component
 public class ApricotViewSerializer {
@@ -26,6 +29,9 @@ public class ApricotViewSerializer {
 
     @Autowired
     ApricotViewHandler viewHandler;
+
+    @Autowired
+    ObjectLayoutManager layoutManager;
 
     public boolean validate(ViewFormModel model) {
         if (!validateName(model)) {
@@ -61,7 +67,7 @@ public class ApricotViewSerializer {
         } else {
             ret = serializeEditedView(model);
         }
-        
+
         return ret;
     }
 
@@ -81,20 +87,90 @@ public class ApricotViewSerializer {
         ApricotView generalView = viewManager.getGeneralView(project);
         List<ApricotObjectLayout> layouts = viewHandler.getObjectLayoutsFromPatternView(model.getViewTables(),
                 generalView, model.getSnapshot());
-        
+
         List<ApricotObjectLayout> targetLayouts = new ArrayList<>();
         for (ApricotObjectLayout l : layouts) {
-            ApricotObjectLayout layout = new ApricotObjectLayout(l.getObjectType(), l.getObjectName(), l.getObjectLayout(), view);
+            ApricotObjectLayout layout = new ApricotObjectLayout(l.getObjectType(), l.getObjectName(),
+                    l.getObjectLayout(), view);
             targetLayouts.add(layout);
         }
-        
+
         view.setObjectLayouts(targetLayouts);
-        
+
         return viewManager.saveView(view);
     }
 
+    /**
+     * Serialize the existing view.
+     */
     private ApricotView serializeEditedView(ViewFormModel model) {
-        return null;
+        ApricotView ret = null;
+
+        Object o = model.getTab().getUserData();
+        if (o != null && o instanceof TabInfoObject) {
+            TabInfoObject tabInfo = (TabInfoObject) o;
+            ApricotView view = tabInfo.getView();
+            view.setName(model.getViewName());
+            view.setComment(model.getComment());
+            view.setUpdated(new java.util.Date());
+
+            List<String> original = getOriginalViewTables(tabInfo.getSnapshot(), tabInfo.getView());
+            handleDeletedTables(original, model.getViewTables(), tabInfo.getView());
+            handleNewTables(original, model.getViewTables(), tabInfo.getSnapshot().getProject(), model, tabInfo.getView());
+            
+            ret = viewManager.saveView(view);
+        }
+
+        return ret;
+    }
+
+    private List<String> getOriginalViewTables(ApricotSnapshot snapshot, ApricotView view) {
+        List<String> ret = new ArrayList<>();
+
+        List<ApricotTable> origViewTables = viewHandler.getTablesForView(snapshot, view);
+        for (ApricotTable t : origViewTables) {
+            ret.add(t.getName());
+        }
+
+        return ret;
+    }
+
+    /**
+     * Handle those tables, which were removed from the right side- list.
+     */
+    private void handleDeletedTables(List<String> origTables, List<String> newTables, ApricotView view) {
+        for (String orig : origTables) {
+            if (!newTables.contains(orig)) {
+                // delete all layout artifacts, related to the original table
+                for (ApricotObjectLayout layout : view.getObjectLayouts()) {
+                    if (layout.getObjectName().contains(orig)) {
+                        layoutManager.deleteObjectLayout(layout);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Handle tables and relationships, which were added in the editing session.
+     */
+    private void handleNewTables(List<String> origTables, List<String> newTables, ApricotProject project,
+            ViewFormModel model, ApricotView view) {
+        ApricotView generalView = viewManager.getGeneralView(project);
+        List<ApricotObjectLayout> layouts = viewHandler.getObjectLayoutsFromPatternView(model.getViewTables(),
+                generalView, model.getSnapshot());
+
+        for (String nt : newTables) {
+            if (!origTables.contains(nt)) {
+                for (ApricotObjectLayout l : layouts) {
+                    if (l.getObjectName().contains(nt)) {
+                        ApricotObjectLayout layout = new ApricotObjectLayout(l.getObjectType(), l.getObjectName(),
+                                l.getObjectLayout(), view);
+                        view.getObjectLayouts().add(layout);
+                    }
+                }
+            }
+        }
     }
 
     /**

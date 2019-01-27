@@ -1,16 +1,26 @@
 package za.co.apricotdb.ui.handler;
 
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.Pane;
+import javafx.stage.WindowEvent;
 import za.co.apricotdb.persistence.data.ObjectLayoutManager;
 import za.co.apricotdb.persistence.data.ViewManager;
 import za.co.apricotdb.persistence.entity.ApricotObjectLayout;
@@ -40,12 +50,16 @@ public class TabViewHandler {
 
     @Autowired
     ViewManager viewManager;
+    
+    @Autowired
+    ApricotViewHandler viewHandler;
 
     /**
      * Build a new Tab and populate it with the initial data.
      */
     public Tab buildTab(ApricotSnapshot snapshot, ApricotView view, ApricotCanvas canvas) {
         Tab tab = new Tab();
+        tab.setText(view.getName());
 
         ScrollPane scroll = buildScrollPane();
         scroll.setContent((Pane) canvas);
@@ -57,6 +71,8 @@ public class TabViewHandler {
         o.setView(view);
         o.setSnapshot(snapshot);
         tab.setUserData(o);
+        
+        createTabContextMenu(tab, o);
         
         return tab;
     }
@@ -117,5 +133,53 @@ public class TabViewHandler {
         }
 
         return scroll;
+    }
+    
+    private void createTabContextMenu(Tab tab, TabInfoObject tabInfo) {
+        if (tab.getText().equals("Main View")) {
+            //  not for the Main (General) view
+            return;
+        }
+        
+        final ContextMenu contextMenu = new ContextMenu();
+        MenuItem edit = new MenuItem("Edit View");
+        MenuItem delete = new MenuItem("Delete View          ");
+        contextMenu.getItems().addAll(edit, delete);
+        contextMenu.setOnShown(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                tab.getTabPane().getSelectionModel().select(tab);
+            }
+        });
+
+        edit.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                viewHandler.createViewEditor(tab.getTabPane(), tabInfo.getView(), null, tab);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        delete.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                ButtonType yes = new ButtonType("Delete", ButtonData.OK_DONE);
+                ButtonType no = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+                Alert alert = new Alert(AlertType.WARNING,
+                        "You are about to delete the View \"" + tab.getText() + "\"", yes, no);
+                alert.setTitle("Delete View");
+                Optional<ButtonType> result = alert.showAndWait();
+
+                if (result.orElse(no) == yes) {
+                    viewManager.removeView(tabInfo.getView());
+                    tab.getTabPane().getTabs().remove(tab);
+                }
+            }
+        });
+
+        tab.setContextMenu(contextMenu);
     }
 }
