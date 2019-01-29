@@ -6,6 +6,7 @@ import java.util.List;
 
 import javafx.scene.control.Tab;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
+import za.co.apricotdb.ui.handler.TabInfoObject;
 
 /**
  * The model of the New/Edit View Form.
@@ -136,5 +137,14 @@ public class ViewFormModel {
 
     public void setTab(Tab tab) {
         this.tab = tab;
+    }
+    
+    public TabInfoObject getTabInfo() {
+        TabInfoObject ret = null; 
+        if (tab.getUserData() != null && tab.getUserData() instanceof TabInfoObject) {
+            ret = (TabInfoObject) tab.getUserData(); 
+        }
+        
+        return ret;
     }
 }

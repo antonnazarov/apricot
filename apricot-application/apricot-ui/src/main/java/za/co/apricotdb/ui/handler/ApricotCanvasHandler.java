@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +15,7 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import za.co.apricotdb.persistence.data.RelationshipManager;
 import za.co.apricotdb.persistence.data.TableManager;
+import za.co.apricotdb.persistence.data.ViewManager;
 import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
@@ -54,12 +57,17 @@ public class ApricotCanvasHandler {
     
     @Autowired
     TabViewHandler tabViewHandler;
+    
+    @Autowired
+    ViewManager viewManager;
 
     /**
      * Populate the given canvas with the information of snapshot, using the
      * provided skin.
      */
+    @Transactional
     public void populateCanvas(ApricotSnapshot snapshot, ApricotView view, ApricotCanvas canvas) {
+        //  clean the canvas first
         canvas.cleanCanvas();
         
         List<ApricotTable> tables = null;

@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Component;
 
@@ -63,13 +64,21 @@ public class ViewManager {
         }
     }
     
+    @Transactional
     public void removeView(ApricotView view) {
-        objectLayoutRepository.delete(view.getObjectLayouts());
-        viewRepository.delete(view);
+        ApricotView v = viewRepository.getOne(view.getId());
+        objectLayoutRepository.delete(v.getObjectLayouts());
+        viewRepository.delete(v);
     }
     
+    @Transactional
     public ApricotView saveView(ApricotView view) {
-        return viewRepository.save(view);
+        return viewRepository.saveAndFlush(view);
+    }
+    
+    @Transactional
+    public ApricotView findViewById(long id) {
+        return viewRepository.getOne(id);
     }
     
     public List<ApricotView> getViewByName(ApricotProject project, String name) {

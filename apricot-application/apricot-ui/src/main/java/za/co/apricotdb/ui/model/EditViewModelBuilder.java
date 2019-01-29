@@ -31,8 +31,8 @@ public class EditViewModelBuilder {
         model.setNewView(false);
         model.setTab(tab);
         
-        if (tab.getUserData() instanceof TabInfoObject) {
-            TabInfoObject tabInfo = (TabInfoObject) tab.getUserData();
+        if (model.getTabInfo() != null) {
+            TabInfoObject tabInfo = model.getTabInfo();
             ApricotView view = tabInfo.getView();
             
             model.setViewName(view.getName());

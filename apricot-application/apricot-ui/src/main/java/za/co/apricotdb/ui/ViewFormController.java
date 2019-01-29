@@ -23,6 +23,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ApricotView;
+import za.co.apricotdb.ui.handler.ApricotCanvasHandler;
 import za.co.apricotdb.ui.handler.ApricotViewHandler;
 import za.co.apricotdb.ui.model.ApricotViewSerializer;
 import za.co.apricotdb.ui.model.NewViewModelBuilder;
@@ -47,6 +48,9 @@ public class ViewFormController {
 
     @Autowired
     NewViewModelBuilder newViewModelBuilder;
+
+    @Autowired
+    ApricotCanvasHandler canvasHandler;
 
     @FXML
     TextField viewName;
@@ -123,8 +127,7 @@ public class ViewFormController {
 
     @FXML
     public void ok(ActionEvent event) {
-        model.setViewName(viewName.getText());
-        model.setComment(comment.getText());
+        setModelValues();
 
         if (!viewSerializer.validate(model)) {
             return;
@@ -137,9 +140,18 @@ public class ViewFormController {
             viewsTabPane.getSelectionModel().select(tab);
         } else {
             model.getTab().setText(viewName.getText());
+            if (model.getTabInfo() != null) {
+                model.getTabInfo().setView(view);
+                canvasHandler.populateCanvas(model.getSnapshot(), view, model.getTabInfo().getCanvas());
+            }
         }
 
         stage.close();
+    }
+
+    private void setModelValues() {
+        model.setViewName(viewName.getText());
+        model.setComment(comment.getText());
     }
 
     @FXML
@@ -149,18 +161,21 @@ public class ViewFormController {
 
     @FXML
     public void addAllItems(ActionEvent event) {
+        setModelValues();
         model.addAllItems();
         applyModel(model);
     }
 
     @FXML
     public void removeAllItems(ActionEvent event) {
+        setModelValues();
         model.removeAllItems();
         applyModel(model);
     }
 
     @FXML
     public void addSelectedItems(ActionEvent event) {
+        setModelValues();
         List<String> items = new ArrayList<>(availableTables.getSelectionModel().getSelectedItems());
         model.addSelectedItems(items);
         applyModel(model);
@@ -171,6 +186,7 @@ public class ViewFormController {
 
     @FXML
     public void removeSelectedItems(ActionEvent event) {
+        setModelValues();
         List<String> items = new ArrayList<>(viewTables.getSelectionModel().getSelectedItems());
         model.removeSelectedItems(items);
         applyModel(model);

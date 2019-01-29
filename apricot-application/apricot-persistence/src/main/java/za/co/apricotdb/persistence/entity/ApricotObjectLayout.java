@@ -97,4 +97,14 @@ public class ApricotObjectLayout implements Serializable {
     public void setView(ApricotView view) {
         this.view = view;
     }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("ApricotObjectLayout: ")
+            .append("objectName=[").append(objectName).append("], ")
+            .append("objectLayout=[").append(objectLayout).append("]");
+        
+        return sb.toString();
+    }
 }

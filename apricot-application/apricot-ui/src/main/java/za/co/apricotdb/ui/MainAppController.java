@@ -11,7 +11,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
 import za.co.apricotdb.ui.handler.ApricotViewHandler;
 import za.co.apricotdb.ui.handler.TabInfoObject;
 import za.co.apricotdb.ui.handler.TabViewHandler;
@@ -31,7 +30,7 @@ public class MainAppController {
 
     @Autowired
     ApricotViewHandler viewHandler;
-
+    
     @FXML
     BorderPane mainBorderPane;
 
@@ -53,11 +52,12 @@ public class MainAppController {
                     CanvasAllocationMap allocationMap = o.getCanvas().getAllocationMap();
 
                     tabViewHandler.saveCanvasAllocationMap(allocationMap, o.getView());
-
+                    
                     o.getCanvas().resetCanvasChange();
                 }
             }
         }
+        saveButton.setStyle("-fx-font-weight: normal;");
     }
 
     @FXML

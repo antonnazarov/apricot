@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Component;
 
@@ -50,10 +51,12 @@ public class ObjectLayoutManager {
         return ret;
     }
     
+    @Transactional
     public void saveObjectLayout(ApricotObjectLayout layout) {
-        layoutRepository.save(layout);
+        layoutRepository.saveAndFlush(layout);
     }
     
+    @Transactional
     public void deleteObjectLayout(ApricotObjectLayout layout) {
         layoutRepository.delete(layout);
     }

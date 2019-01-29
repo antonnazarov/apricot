@@ -33,7 +33,6 @@ public class CanvasChangeListener implements PropertyChangeListener {
             saveButton.setStyle("-fx-font-weight: bold;");
         } else {
             // reset all tabs
-            saveButton.setStyle("-fx-font-weight: normal;");
             for (Tab tab : viewsTabPane.getTabs()) {
                 tab.setStyle("-fx-font-weight: normal;");
             }

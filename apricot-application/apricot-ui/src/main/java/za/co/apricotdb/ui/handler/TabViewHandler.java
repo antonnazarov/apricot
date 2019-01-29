@@ -83,6 +83,9 @@ public class TabViewHandler {
 
             if (layout != null) {
                 layout.setObjectLayout(alloc.getPropertiesAsString());
+                layoutManager.saveObjectLayout(layout);
+                //  the view needs to be updated artificially after the layout was saved
+                updateLayoutInView(view, layout);
             } else {
                 // a new layout needs to be added
                 LayoutObjectType objectType = LayoutObjectType.TABLE;
@@ -91,14 +94,23 @@ public class TabViewHandler {
                 }
 
                 layout = new ApricotObjectLayout(objectType, alloc.getName(), alloc.getPropertiesAsString(), view);
+                view.getObjectLayouts().add(layout);
+                viewManager.saveView(view);
             }
-
-            layoutManager.saveObjectLayout(layout);
+        }
+    }
+    
+    private void updateLayoutInView(ApricotView view, ApricotObjectLayout layout) {
+        for (ApricotObjectLayout l : view.getObjectLayouts()) {
+            if (l.getId() == layout.getId()) {
+                l.setObjectLayout(layout.getObjectLayout());
+            }
         }
     }
     
     public CanvasAllocationMap readCanvasAllocationMap(ApricotView view) {
         CanvasAllocationMap map = new CanvasAllocationMap();
+        
         for (ApricotObjectLayout layout : view.getObjectLayouts()) {
             CanvasAllocationItem alloc = new CanvasAllocationItem();
             alloc.setName(layout.getObjectName());
@@ -156,7 +168,7 @@ public class TabViewHandler {
             @Override
             public void handle(ActionEvent event) {
                 try {
-                viewHandler.createViewEditor(tab.getTabPane(), tabInfo.getView(), null, tab);
+                    viewHandler.createViewEditor(tab.getTabPane(), tabInfo.getView(), null, tab);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
