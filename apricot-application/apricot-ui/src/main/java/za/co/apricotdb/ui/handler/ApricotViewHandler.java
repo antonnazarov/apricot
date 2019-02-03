@@ -15,6 +15,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -139,6 +140,7 @@ public class ApricotViewHandler {
 
         Scene addViewScene = new Scene(window);
         dialog.setScene(addViewScene);
+        dialog.getIcons().add(new Image(getClass().getResourceAsStream("view-s1.jpg")));
 
         ViewFormController controller = loader.<ViewFormController>getController();
         controller.init(model, viewsTabPane, canvasChangeListener);

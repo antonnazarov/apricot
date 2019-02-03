@@ -62,6 +62,13 @@ public class ApplicationInitializer {
     }
 
     @Transactional
+    public void initializeForProject(ApricotProject project, ParentWindow pw,
+            PropertyChangeListener canvasChangeListener) {
+        ApricotSnapshot defaultSnapshot = snapshotManager.getDefaultSnapshot(project);
+        initialize(pw, project, defaultSnapshot, canvasChangeListener);
+    }
+
+    @Transactional
     public void initialize(ParentWindow pw, ApricotProject project, ApricotSnapshot snapshot,
             PropertyChangeListener canvasChangeListener) {
         List<ApricotTable> tables = tableManager.getTablesForSnapshot(snapshot);
@@ -76,13 +83,17 @@ public class ApplicationInitializer {
         for (ApricotSnapshot s : snapshots) {
             snapNames.add(s.getName());
         }
+        combo.getItems().clear();
         combo.getItems().addAll(snapNames);
         combo.setValue(snapshot.getName());
 
         TabPane tabPane = pw.getProjectTabPane();
         tabPane.getTabs().clear();
         for (ApricotView view : viewHandler.getAllViews(project)) {
-            viewHandler.createViewTab(snapshot, view, tabPane, canvasChangeListener);
+            //  create Tabs for General view and for other views with the Layout Objects
+            if (view.isGeneral() || view.getObjectLayouts().size() != 0) {
+                viewHandler.createViewTab(snapshot, view, tabPane, canvasChangeListener);
+            }
         }
     }
 

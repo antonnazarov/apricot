@@ -1,5 +1,7 @@
 package za.co.apricotdb.ui.handler;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -94,10 +96,17 @@ public class TabViewHandler {
                 }
 
                 layout = new ApricotObjectLayout(objectType, alloc.getName(), alloc.getPropertiesAsString(), view);
-                view.getObjectLayouts().add(layout);
-                viewManager.saveView(view);
+                if (view.getObjectLayouts() != null) {
+                    view.getObjectLayouts().add(layout);
+                } else {
+                    List<ApricotObjectLayout> l = new ArrayList<>();
+                    l.add(layout);
+                    view.setObjectLayouts(l);
+                }
             }
         }
+        
+        viewManager.saveView(view);
     }
     
     private void updateLayoutInView(ApricotView view, ApricotObjectLayout layout) {

@@ -96,8 +96,8 @@ public class ApricotCanvasHandler {
         }
 
         //  if view does not contain layout definitions, do default alignment
-        if (view.getObjectLayouts().size() == 0) {
-            runAlignerAfterDelay(canvas);
+        if ((view.getObjectLayouts() == null || view.getObjectLayouts().size() == 0) && view.isGeneral()) {
+            runAlignerAfterDelay(canvas, view);
         } else {
             runAllocationAfterDelay(canvas, view);
         }
@@ -132,12 +132,12 @@ public class ApricotCanvasHandler {
         return ret;
     }
 
-    private void runAlignerAfterDelay(ApricotCanvas canvas) {
+    private void runAlignerAfterDelay(ApricotCanvas canvas, ApricotView view) {
         Task<Void> sleeper = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(100);
                 } catch (InterruptedException e) {
                 }
                 return null;
@@ -150,6 +150,9 @@ public class ApricotCanvasHandler {
                 AlignCommand aligner = new SimpleGridEntityAllocator(canvas);
                 aligner.align();
                 canvas.buildRelationships();
+                
+                CanvasAllocationMap allocationMap = canvas.getAllocationMap();
+                tabViewHandler.saveCanvasAllocationMap(allocationMap, view);
             }
         });
         new Thread(sleeper).start();
@@ -160,7 +163,7 @@ public class ApricotCanvasHandler {
             @Override
             protected Void call() throws Exception {
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(100);
                 } catch (InterruptedException e) {
                 }
                 return null;

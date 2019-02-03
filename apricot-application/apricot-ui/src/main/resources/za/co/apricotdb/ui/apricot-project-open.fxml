@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+
+<Pane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="342.0" prefWidth="804.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.OpenProjectController">
+   <children>
+      <VBox prefHeight="348.0" prefWidth="804.0">
+         <children>
+            <HBox prefHeight="366.0" prefWidth="804.0">
+               <children>
+                  <VBox prefHeight="309.0" prefWidth="404.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="85.0" text="Select from:">
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" top="5.0" />
+                           </VBox.margin>
+                        </Label>
+                        <TableView fx:id="projectsList" prefHeight="282.0" prefWidth="384.0">
+                          <columns>
+                            <TableColumn fx:id="projectNameColumn" editable="false" prefWidth="247.0" text="Project Name" />
+                            <TableColumn fx:id="dbTypeColumn" editable="false" prefWidth="79.0" text="DB Type" />
+                              <TableColumn fx:id="createdColumn" editable="false" prefWidth="75.0" text="Created" />
+                          </columns>
+                        </TableView>
+                     </children>
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </VBox>
+                  <VBox prefHeight="243.0" prefWidth="382.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="85.0" text="Description:">
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" top="5.0" />
+                           </VBox.margin>
+                        </Label>
+                        <TextArea fx:id="projectDescription" editable="false" prefHeight="270.0" prefWidth="381.0" wrapText="true" />
+                     </children>
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#cancel" prefWidth="90.0" text="Cancel" />
+                  <Button mnemonicParsing="false" onAction="#openProject" prefWidth="90.0" text="Open" />
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="10.0" top="5.0" />
+               </padding>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</Pane>

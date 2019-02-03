@@ -1,6 +1,7 @@
 package za.co.apricotdb.persistence.entity;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -23,6 +25,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "apricot_project")
+@NamedQuery(name="ApricotProject.getAllProjects", query="SELECT p FROM ApricotProject p ORDER BY p.created DESC")
 public class ApricotProject implements Serializable {
 
     private static final long serialVersionUID = -8732917531930595931L;
@@ -142,5 +145,10 @@ public class ApricotProject implements Serializable {
 
     public void setViews(List<ApricotView> views) {
         this.views = views;
+    }
+    
+    public String getFormattedCreatedDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        return sdf.format(created);
     }
 }

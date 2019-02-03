@@ -3,6 +3,8 @@ package za.co.apricotdb.persistence.data;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Component;
 
@@ -20,6 +22,9 @@ public class ProjectManager {
 
     @Resource
     private ApricotProjectRepository projectRepository;
+    
+    @Resource
+    EntityManager em;
 
     public void setProjectCurrent(ApricotProject project) {
         List<ApricotProject> projects = projectRepository.findAll();
@@ -54,5 +59,10 @@ public class ProjectManager {
         }
 
         return ret;
+    }
+    
+    public List<ApricotProject> getAllProjects() {
+        TypedQuery<ApricotProject> query = em.createNamedQuery("ApricotProject.getAllProjects", ApricotProject.class);
+        return query.getResultList();
     }
 }

@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
+import za.co.apricotdb.ui.handler.ApricotProjectHandler;
 import za.co.apricotdb.ui.handler.ApricotViewHandler;
 import za.co.apricotdb.ui.handler.TabInfoObject;
 import za.co.apricotdb.ui.handler.TabViewHandler;
@@ -30,6 +31,9 @@ public class MainAppController {
 
     @Autowired
     ApricotViewHandler viewHandler;
+    
+    @Autowired
+    ApricotProjectHandler projectHandler;
     
     @FXML
     BorderPane mainBorderPane;
@@ -63,6 +67,18 @@ public class MainAppController {
     @FXML
     public void newView(ActionEvent event) throws Exception {
         viewHandler.createViewEditor(viewsTabPane, null, canvasChangeListener, null);
+    }
+    
+    /**
+     * Show a list of the projects, registered in the system.
+     */
+    @FXML
+    public void openProject(ActionEvent event) {
+        try {
+            projectHandler.createOpenProjectForm(mainBorderPane, canvasChangeListener);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public PropertyChangeListener getCanvasChangeListener() {
