@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -52,7 +54,7 @@ public class TabViewHandler {
 
     @Autowired
     ViewManager viewManager;
-    
+
     @Autowired
     ApricotViewHandler viewHandler;
 
@@ -73,20 +75,22 @@ public class TabViewHandler {
         o.setView(view);
         o.setSnapshot(snapshot);
         tab.setUserData(o);
-        
+
         createTabContextMenu(tab, o);
-        
+
         return tab;
     }
 
-    public void saveCanvasAllocationMap(CanvasAllocationMap map, ApricotView view) {
+    @Transactional
+    public ApricotView saveCanvasAllocationMap(CanvasAllocationMap map, ApricotView view) {
+        view = viewHandler.readApricotView(view);
         for (CanvasAllocationItem alloc : map.getAllocations()) {
             ApricotObjectLayout layout = layoutManager.findLayoutByName(view, alloc.getName());
 
             if (layout != null) {
                 layout.setObjectLayout(alloc.getPropertiesAsString());
                 layoutManager.saveObjectLayout(layout);
-                //  the view needs to be updated artificially after the layout was saved
+                // the view needs to be updated artificially after the layout was saved
                 updateLayoutInView(view, layout);
             } else {
                 // a new layout needs to be added
@@ -105,10 +109,10 @@ public class TabViewHandler {
                 }
             }
         }
-        
-        viewManager.saveView(view);
+
+        return viewManager.saveView(view);
     }
-    
+
     private void updateLayoutInView(ApricotView view, ApricotObjectLayout layout) {
         for (ApricotObjectLayout l : view.getObjectLayouts()) {
             if (l.getId() == layout.getId()) {
@@ -116,10 +120,10 @@ public class TabViewHandler {
             }
         }
     }
-    
+
     public CanvasAllocationMap readCanvasAllocationMap(ApricotView view) {
         CanvasAllocationMap map = new CanvasAllocationMap();
-        
+
         for (ApricotObjectLayout layout : view.getObjectLayouts()) {
             CanvasAllocationItem alloc = new CanvasAllocationItem();
             alloc.setName(layout.getObjectName());
@@ -131,10 +135,10 @@ public class TabViewHandler {
             }
             alloc.setType(type);
             alloc.setPropertiesFromString(layout.getObjectLayout());
-            
+
             map.addCanvasAllocationItem(alloc);
         }
-        
+
         return map;
     }
 
@@ -155,13 +159,13 @@ public class TabViewHandler {
 
         return scroll;
     }
-    
+
     private void createTabContextMenu(Tab tab, TabInfoObject tabInfo) {
         if (tab.getText().equals("Main View")) {
-            //  not for the Main (General) view
+            // not for the Main (General) view
             return;
         }
-        
+
         final ContextMenu contextMenu = new ContextMenu();
         MenuItem edit = new MenuItem("Edit View");
         MenuItem delete = new MenuItem("Delete View          ");
@@ -189,8 +193,8 @@ public class TabViewHandler {
             public void handle(ActionEvent event) {
                 ButtonType yes = new ButtonType("Delete", ButtonData.OK_DONE);
                 ButtonType no = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
-                Alert alert = new Alert(AlertType.WARNING,
-                        "You are about to delete the View \"" + tab.getText() + "\"", yes, no);
+                Alert alert = new Alert(AlertType.WARNING, "You are about to delete the View \"" + tab.getText() + "\"",
+                        yes, no);
                 alert.setTitle("Delete View");
                 Optional<ButtonType> result = alert.showAndWait();
 

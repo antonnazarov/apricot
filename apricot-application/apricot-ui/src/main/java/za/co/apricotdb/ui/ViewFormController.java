@@ -126,7 +126,7 @@ public class ViewFormController {
     }
 
     @FXML
-    public void ok(ActionEvent event) {
+    public void save(ActionEvent event) {
         setModelValues();
 
         if (!viewSerializer.validate(model)) {

@@ -71,6 +71,8 @@ public class OpenProjectController {
         
         applicationInitializer.initializeForProject(selectedProject, parentWindow, canvasChangeListener);
         
+        projectManager.setProjectCurrent(selectedProject);
+        
         getStage().close();
     }
 

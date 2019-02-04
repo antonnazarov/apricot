@@ -45,4 +45,8 @@ public class ApricotProjectHandler {
 
         dialog.show();
     }
+    
+    public void createEditProjectForm() {
+        
+    }
 }

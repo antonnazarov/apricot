@@ -199,4 +199,8 @@ public class ApricotViewHandler {
 
         return ret;
     }
+    
+    public ApricotView readApricotView(ApricotView view) {
+        return viewManager.findViewById(view.getId());
+    }
 }

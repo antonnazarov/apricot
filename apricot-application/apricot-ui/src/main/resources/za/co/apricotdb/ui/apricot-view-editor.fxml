@@ -133,8 +133,8 @@
                <children>
                   <GridPane hgap="10.0" prefHeight="43.0" prefWidth="649.0">
                      <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="533.0" minWidth="10.0" prefWidth="520.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="479.0" minWidth="10.0" prefWidth="109.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="533.0" minWidth="10.0" prefWidth="419.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="479.0" minWidth="10.0" prefWidth="210.0" />
                      </columnConstraints>
                      <rowConstraints>
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -143,10 +143,10 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
                      <children>
-                        <HBox prefHeight="33.0" prefWidth="327.0" spacing="20.0" GridPane.columnIndex="1">
+                        <HBox alignment="TOP_RIGHT" prefHeight="33.0" prefWidth="134.0" spacing="20.0" GridPane.columnIndex="1">
                            <children>
-                              <Button mnemonicParsing="false" onAction="#cancel" text="Cancel" />
-                              <Button mnemonicParsing="false" onAction="#ok" text="OK" />
+                              <Button mnemonicParsing="false" onAction="#cancel" prefHeight="25.0" prefWidth="90.0" text="Cancel" />
+                              <Button mnemonicParsing="false" onAction="#save" prefWidth="90.0" text="Save" />
                            </children>
                         </HBox>
                      </children>

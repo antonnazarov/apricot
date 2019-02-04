@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
+import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.handler.ApricotProjectHandler;
 import za.co.apricotdb.ui.handler.ApricotViewHandler;
 import za.co.apricotdb.ui.handler.TabInfoObject;
@@ -55,7 +56,8 @@ public class MainAppController {
                 if (o.getCanvas().isCanvasChanged()) {
                     CanvasAllocationMap allocationMap = o.getCanvas().getAllocationMap();
 
-                    tabViewHandler.saveCanvasAllocationMap(allocationMap, o.getView());
+                    ApricotView view = tabViewHandler.saveCanvasAllocationMap(allocationMap, o.getView());
+                    o.setView(view);
                     
                     o.getCanvas().resetCanvasChange();
                 }
