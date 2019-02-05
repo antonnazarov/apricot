@@ -12,10 +12,12 @@ public class ProjectFormModel implements Serializable {
 
     private static final long serialVersionUID = -5353358137642361288L;
     
+    private boolean newView;
     private String projectName;
     private String projectDescription;
     private String projectDatabase;
     private String projectBlackList;
+    private long projectId;
     
     public String getProjectName() {
         return projectName;
@@ -47,5 +49,21 @@ public class ProjectFormModel implements Serializable {
     
     public void setProjectBlackList(String projectBlackList) {
         this.projectBlackList = projectBlackList;
+    }
+
+    public long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(long projectId) {
+        this.projectId = projectId;
+    }
+
+    public boolean isNewView() {
+        return newView;
+    }
+
+    public void setNewView(boolean newView) {
+        this.newView = newView;
     }
 }

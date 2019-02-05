@@ -14,7 +14,7 @@ public class ApricotSnapshotHandler {
 
     public void createDefaultSnapshot(ApricotProject project) {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        ApricotSnapshot snapshot = new ApricotSnapshot("Initial snapshot from " + df.format(new java.util.Date()),
+        ApricotSnapshot snapshot = new ApricotSnapshot("Initial snapshot, created " + df.format(new java.util.Date()),
                 new java.util.Date(), null, "The snapshot, created by default", true, project,
                 new ArrayList<ApricotTable>());
         project.getSnapshots().add(snapshot);

@@ -187,10 +187,12 @@ public class ApricotViewSerializer {
             return false;
         }
 
-        ApricotSnapshot snapshot = model.getSnapshot();
-        List<ApricotView> sameViews = viewManager.getViewByName(snapshot.getProject(), model.getViewName());
-        if (sameViews != null && sameViews.size() > 0) {
-            return false;
+        if (model.isNewView()) {
+            ApricotSnapshot snapshot = model.getSnapshot();
+            List<ApricotView> sameViews = viewManager.getViewByName(snapshot.getProject(), model.getViewName());
+            if (sameViews != null && sameViews.size() > 0) {
+                return false;
+            }
         }
 
         return true;

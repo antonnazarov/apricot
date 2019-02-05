@@ -83,4 +83,8 @@ public class ProjectManager {
     public ApricotProject saveApricotProject(ApricotProject project) {
         return projectRepository.saveAndFlush(project);
     }
+    
+    public ApricotProject getProject(long projectId) {
+        return projectRepository.findOne(projectId);
+    }
 }

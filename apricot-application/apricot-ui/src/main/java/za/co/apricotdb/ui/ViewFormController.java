@@ -263,6 +263,9 @@ public class ViewFormController {
         model.addAvailableTables(availableTables);
         model.getViewTables().clear();
         model.addViewTables(tableNames);
+        
+        model.setViewName(this.viewName.getText());
+        model.setComment(this.comment.getText());
 
         applyModel(model);
     }

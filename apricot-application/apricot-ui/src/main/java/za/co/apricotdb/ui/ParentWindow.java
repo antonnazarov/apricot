@@ -89,5 +89,21 @@ public class ParentWindow {
 
         return ret;
     }
-
+    
+    public void setApplicationData(ApplicationData appData) {
+        mainPane.setUserData(appData);
+    }
+    
+    public ApplicationData getApplicationData() {
+        ApplicationData ret = null;
+        
+        if (mainPane.getUserData() != null) {
+            ret = (ApplicationData) mainPane.getUserData(); 
+        } else {
+            ret = new ApplicationData();
+            mainPane.setUserData(ret);
+        }
+        
+        return ret;
+    }
 }

@@ -95,6 +95,9 @@ public class ApplicationInitializer {
                 viewHandler.createViewTab(snapshot, view, tabPane, canvasChangeListener);
             }
         }
+        
+        //  remember the current project
+        pw.getApplicationData().setCurrentProject(project);
     }
 
     private List<TreeItem<String>> getTables(List<ApricotTable> tables) {

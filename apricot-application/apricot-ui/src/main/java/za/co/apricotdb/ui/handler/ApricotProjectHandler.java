@@ -17,6 +17,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import za.co.apricotdb.ui.EditProjectController;
 import za.co.apricotdb.ui.OpenProjectController;
+import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.model.EditProjectModelBuilder;
 import za.co.apricotdb.ui.model.NewProjectModelBuilder;
 import za.co.apricotdb.ui.model.ProjectFormModel;
@@ -35,7 +36,10 @@ public class ApricotProjectHandler {
     NewProjectModelBuilder newProjectModelBuilder;
     
     @Autowired
-    EditProjectModelBuilder editProjectModelBuilder; 
+    EditProjectModelBuilder editProjectModelBuilder;
+    
+    @Autowired
+    ParentWindow parentWindow;
     
     public void createOpenProjectForm(BorderPane mainBorderPane, PropertyChangeListener canvasChangeListener)
             throws Exception {
@@ -72,7 +76,8 @@ public class ApricotProjectHandler {
             model = newProjectModelBuilder.buildModel();
         } else {
             dialog.setTitle("Edit Project");
-            model = editProjectModelBuilder.buildModel();
+            parentWindow.setParentPane(mainBorderPane);
+            model = editProjectModelBuilder.buildModel(parentWindow.getApplicationData().getCurrentProject());
         }
         
         dialog.getIcons().add(new Image(getClass().getResourceAsStream("project-2-s1.JPG")));

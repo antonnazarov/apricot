@@ -23,11 +23,11 @@ public class ApricotProjectSerializer {
 
     @Autowired
     ProjectManager projectManager;
-    
-    @Autowired 
+
+    @Autowired
     ApricotSnapshotHandler snapshotHandler;
-    
-    @Autowired 
+
+    @Autowired
     ApricotViewHandler viewHandler;
 
     @Transactional
@@ -35,17 +35,22 @@ public class ApricotProjectSerializer {
         ApricotProject p = new ApricotProject(model.getProjectName(), model.getProjectDescription(),
                 model.getProjectDatabase(), true, new java.util.Date(), new ArrayList<ApricotSnapshot>(),
                 new ArrayList<ApricotProjectParameter>(), new ArrayList<ApricotView>());
-        
+
         snapshotHandler.createDefaultSnapshot(p);
         viewHandler.createDefaultView(p);
         ApricotProject ret = projectManager.saveApricotProject(p);
-        
+
         return ret;
     }
 
+    @Transactional
     public ApricotProject serializeEditedProject(ProjectFormModel model) {
-        
-        return null;
+        ApricotProject project = projectManager.getProject(model.getProjectId());
+        project.setName(model.getProjectName());
+        project.setDescription(model.getProjectDescription());
+        project.setTargetDatabase(model.getProjectDatabase());
+
+        return projectManager.saveApricotProject(project);
     }
 
     public boolean validate(ProjectFormModel model) {
@@ -69,9 +74,11 @@ public class ApricotProjectSerializer {
             return false;
         }
 
-        ApricotProject p = projectManager.getProjectByName(model.getProjectName());
-        if (p != null) {
-            return false;
+        if (model.isNewView()) {
+            ApricotProject p = projectManager.getProjectByName(model.getProjectName());
+            if (p != null) {
+                return false;
+            }
         }
 
         return true;

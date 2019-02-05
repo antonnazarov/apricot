@@ -81,11 +81,23 @@
                   <Insets />
                </HBox.margin>
             </MenuBar>
-            <Label alignment="CENTER_RIGHT" text="Snapshot:">
-               <HBox.margin>
-                  <Insets left="10.0" right="5.0" top="9.0" />
-               </HBox.margin>
-            </Label>
+            <MenuBar prefHeight="36.0" prefWidth="68.0">
+              <menus>
+                <Menu mnemonicParsing="false" text="Snapshot:">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Edit" />
+                        <MenuItem mnemonicParsing="false" text="Copy" />
+                        <MenuItem mnemonicParsing="false" text="Delete             " />
+                  </items>
+                </Menu>
+              </menus>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <padding>
+                  <Insets top="5.0" />
+               </padding>
+            </MenuBar>
             <ComboBox id="snapshot_dropdown" prefWidth="250.0">
                <HBox.margin>
                   <Insets top="6.0" />
