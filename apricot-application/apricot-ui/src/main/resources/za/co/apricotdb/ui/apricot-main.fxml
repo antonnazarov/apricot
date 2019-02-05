@@ -29,8 +29,9 @@
               <menus>
                 <Menu mnemonicParsing="false" text="Project">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="New                     " />
+                    <MenuItem mnemonicParsing="false" onAction="#newProject" text="New                     " />
                         <MenuItem mnemonicParsing="false" onAction="#openProject" text="Open" />
+                        <MenuItem mnemonicParsing="false" onAction="#editProject" text="Edit" />
                         <MenuItem mnemonicParsing="false" text="Close" />
                         <MenuItem mnemonicParsing="false" text="Export" />
                         <MenuItem mnemonicParsing="false" text="Import" />

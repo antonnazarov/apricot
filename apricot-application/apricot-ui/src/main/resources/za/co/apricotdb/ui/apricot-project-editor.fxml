@@ -52,7 +52,7 @@
                               <Button layoutY="76.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="143.0" text="Edit Black List" />
                            </children>
                         </AnchorPane>
-                        <TextArea fx:id="projectDescription1" editable="false" layoutX="162.0" layoutY="87.0" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <TextArea fx:id="blackList" editable="false" layoutX="162.0" layoutY="87.0" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                      </children>
                   </GridPane>
                </children>

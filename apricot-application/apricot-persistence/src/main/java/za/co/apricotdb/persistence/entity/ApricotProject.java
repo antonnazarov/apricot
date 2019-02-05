@@ -26,6 +26,7 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "apricot_project")
 @NamedQuery(name="ApricotProject.getAllProjects", query="SELECT p FROM ApricotProject p ORDER BY p.created DESC")
+@NamedQuery(name="ApricotProject.getProjectByName", query="SELECT p FROM ApricotProject p WHERE p.name = :name")
 public class ApricotProject implements Serializable {
 
     private static final long serialVersionUID = -8732917531930595931L;

@@ -65,4 +65,22 @@ public class ProjectManager {
         TypedQuery<ApricotProject> query = em.createNamedQuery("ApricotProject.getAllProjects", ApricotProject.class);
         return query.getResultList();
     }
+    
+    public ApricotProject getProjectByName(String name) {
+        ApricotProject ret = null;
+        
+        TypedQuery<ApricotProject> query = em.createNamedQuery("ApricotProject.getProjectByName", ApricotProject.class);
+        query.setParameter("name", name);
+        
+        List<ApricotProject> p = query.getResultList();
+        if (p != null && p.size() > 0) {
+            ret = p.get(0);
+        }
+        
+        return ret;
+    }
+    
+    public ApricotProject saveApricotProject(ApricotProject project) {
+        return projectRepository.saveAndFlush(project);
+    }
 }

@@ -1,0 +1,87 @@
+package za.co.apricotdb.ui.model;
+
+import java.util.ArrayList;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import za.co.apricotdb.persistence.data.ProjectManager;
+import za.co.apricotdb.persistence.entity.ApricotProject;
+import za.co.apricotdb.persistence.entity.ApricotProjectParameter;
+import za.co.apricotdb.persistence.entity.ApricotSnapshot;
+import za.co.apricotdb.persistence.entity.ApricotView;
+import za.co.apricotdb.ui.handler.ApricotSnapshotHandler;
+import za.co.apricotdb.ui.handler.ApricotViewHandler;
+
+@Component
+public class ApricotProjectSerializer {
+
+    @Autowired
+    ProjectManager projectManager;
+    
+    @Autowired 
+    ApricotSnapshotHandler snapshotHandler;
+    
+    @Autowired 
+    ApricotViewHandler viewHandler;
+
+    @Transactional
+    public ApricotProject serializeNewProject(ProjectFormModel model) {
+        ApricotProject p = new ApricotProject(model.getProjectName(), model.getProjectDescription(),
+                model.getProjectDatabase(), true, new java.util.Date(), new ArrayList<ApricotSnapshot>(),
+                new ArrayList<ApricotProjectParameter>(), new ArrayList<ApricotView>());
+        
+        snapshotHandler.createDefaultSnapshot(p);
+        viewHandler.createDefaultView(p);
+        ApricotProject ret = projectManager.saveApricotProject(p);
+        
+        return ret;
+    }
+
+    public ApricotProject serializeEditedProject(ProjectFormModel model) {
+        
+        return null;
+    }
+
+    public boolean validate(ProjectFormModel model) {
+        if (!validateName(model)) {
+            Alert alert = getAlert("Please enter a unique and non empty name of the project");
+            alert.showAndWait();
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if the project- name is correct.
+     */
+    private boolean validateName(ProjectFormModel model) {
+
+        if (model.getProjectName() == null || model.getProjectName().equals("")
+                || model.getProjectName().equals("<New Project>")) {
+            return false;
+        }
+
+        ApricotProject p = projectManager.getProjectByName(model.getProjectName());
+        if (p != null) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private Alert getAlert(String text) {
+        Alert alert = new Alert(AlertType.ERROR, text, ButtonType.OK);
+        alert.setTitle("Save Project");
+        alert.setHeaderText("Unable to save the project");
+
+        return alert;
+    }
+}

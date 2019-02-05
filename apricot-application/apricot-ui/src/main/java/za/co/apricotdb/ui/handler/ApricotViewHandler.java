@@ -120,8 +120,8 @@ public class ApricotViewHandler {
         }
     }
 
-    public void createViewEditor(TabPane viewsTabPane, ApricotView view,
-            PropertyChangeListener canvasChangeListener, Tab tab) throws Exception {
+    public void createViewEditor(TabPane viewsTabPane, ApricotView view, PropertyChangeListener canvasChangeListener,
+            Tab tab) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-view-editor.fxml"));
         loader.setControllerFactory(context::getBean);
         Pane window = loader.load();
@@ -199,8 +199,14 @@ public class ApricotViewHandler {
 
         return ret;
     }
-    
+
     public ApricotView readApricotView(ApricotView view) {
         return viewManager.findViewById(view.getId());
+    }
+
+    public void createDefaultView(ApricotProject project) {
+        ApricotView v = new ApricotView("Main View", "The main view of the project", new java.util.Date(), null, true,
+                0, project, new ArrayList<ApricotObjectLayout>());
+        project.getViews().add(v);
     }
 }

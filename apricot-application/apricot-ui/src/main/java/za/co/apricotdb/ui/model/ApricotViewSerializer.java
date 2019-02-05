@@ -35,13 +35,11 @@ public class ApricotViewSerializer {
     ObjectLayoutManager layoutManager;
 
     public boolean validate(ViewFormModel model) {
-        if (model.isNewView()) {
-            if (!validateName(model)) {
-                Alert alert = getAlert("Please enter a unique name of the view");
-                alert.showAndWait();
+        if (!validateName(model)) {
+            Alert alert = getAlert("Please enter a unique name of the view");
+            alert.showAndWait();
 
-                return false;
-            }
+            return false;
         }
 
         if (!validateViewTables(model)) {
@@ -154,7 +152,7 @@ public class ApricotViewSerializer {
                 }
             }
         }
-        
+
         view.setObjectLayouts(targetLayouts);
     }
 
@@ -184,7 +182,8 @@ public class ApricotViewSerializer {
      * Check if the view- name is unique.
      */
     private boolean validateName(ViewFormModel model) {
-        if (model.getViewName().equals("<New View>")) {
+
+        if (model.getViewName() == null || model.getViewName().equals("") || model.getViewName().equals("<New View>")) {
             return false;
         }
 

@@ -82,6 +82,30 @@ public class MainAppController {
             e.printStackTrace();
         }
     }
+    
+    /**
+     * Run the form of creation of the new project.
+     */
+    @FXML
+    public void newProject(ActionEvent event) {
+        try {
+            projectHandler.createEditProjectForm(true, mainBorderPane, canvasChangeListener);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Edit the currently selected project.
+     */
+    @FXML
+    public void editProject(ActionEvent event) {
+        try {
+            projectHandler.createEditProjectForm(false, mainBorderPane, canvasChangeListener);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public PropertyChangeListener getCanvasChangeListener() {
         return canvasChangeListener;
