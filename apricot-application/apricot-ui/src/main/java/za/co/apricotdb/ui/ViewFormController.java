@@ -85,7 +85,7 @@ public class ViewFormController {
     private PropertyChangeListener canvasChangeListener;
 
     /**
-     * Initialize the form
+     * Initialise the form
      */
     public void init(ViewFormModel model, TabPane viewsTabPane, PropertyChangeListener canvasChangeListener) {
         this.model = model;

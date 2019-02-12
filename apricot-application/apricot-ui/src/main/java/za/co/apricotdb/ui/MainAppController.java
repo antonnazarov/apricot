@@ -13,6 +13,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.handler.ApricotProjectHandler;
+import za.co.apricotdb.ui.handler.ApricotSnapshotHandler;
 import za.co.apricotdb.ui.handler.ApricotViewHandler;
 import za.co.apricotdb.ui.handler.TabInfoObject;
 import za.co.apricotdb.ui.handler.TabViewHandler;
@@ -35,6 +36,9 @@ public class MainAppController {
     
     @Autowired
     ApricotProjectHandler projectHandler;
+    
+    @Autowired
+    ApricotSnapshotHandler snapshotHandler;
     
     @FXML
     BorderPane mainBorderPane;
@@ -102,6 +106,18 @@ public class MainAppController {
     public void editProject(ActionEvent event) {
         try {
             projectHandler.createEditProjectForm(false, mainBorderPane, canvasChangeListener);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Create a new snapshot.
+     */
+    @FXML
+    public void newSnapshot(ActionEvent event) {
+        try {
+            snapshotHandler.createEditSnapshotForm(true, mainBorderPane, canvasChangeListener);
         } catch (Exception e) {
             e.printStackTrace();
         }
