@@ -3,7 +3,7 @@ package za.co.apricotdb.ui.model;
 import java.io.Serializable;
 
 /**
- * The model of teh snapshot form.
+ * The model of the snapshot form.
  * 
  * @author Anton Nazarov
  * @since 11/02/2019
@@ -14,7 +14,7 @@ public class SnapshotFormModel implements Serializable {
     
     private String snapshotName;
     private String snapshotDescription;
-    private boolean initializedFromSnapshot;
+    private String initSourceSnapshot;
     private boolean newSnapshot;
     
     public String getSnapshotName() {
@@ -33,19 +33,19 @@ public class SnapshotFormModel implements Serializable {
         this.snapshotDescription = snapshotDescription;
     }
 
-    public boolean isInitializedFromSnapshot() {
-        return initializedFromSnapshot;
-    }
-
-    public void setInitializedFromSnapshot(boolean initializedFromSnapshot) {
-        this.initializedFromSnapshot = initializedFromSnapshot;
-    }
-
     public boolean isNewSnapshot() {
         return newSnapshot;
     }
 
     public void setNewSnapshot(boolean newSnapshot) {
         this.newSnapshot = newSnapshot;
+    }
+
+    public String getInitSourceSnapshot() {
+        return initSourceSnapshot;
+    }
+
+    public void setInitSourceSnapshot(String initSourceSnapshot) {
+        this.initSourceSnapshot = initSourceSnapshot;
     }
 }

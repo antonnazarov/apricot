@@ -17,6 +17,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
@@ -37,12 +38,24 @@ public class ApricotSnapshotHandler {
     @Autowired
     EditSnapshotModelBuilder editSnapshotModelBuilder;
     
+    @Autowired
+    SnapshotManager snapshotManager;
+    
     public void createDefaultSnapshot(ApricotProject project) {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         ApricotSnapshot snapshot = new ApricotSnapshot("Initial snapshot, created " + df.format(new java.util.Date()),
                 new java.util.Date(), null, "The snapshot, created by default", true, project,
                 new ArrayList<ApricotTable>());
         project.getSnapshots().add(snapshot);
+    }
+    
+    public void setDefaultSnapshot(ApricotSnapshot snapshot) {
+        for (ApricotSnapshot s : snapshot.getProject().getSnapshots()) {
+            s.setDefaultSnapshot(false);
+            snapshotManager.saveSnapshot(s);
+        }
+        snapshot.setDefaultSnapshot(true);
+        snapshotManager.saveSnapshot(snapshot);
     }
 
     /**
@@ -72,8 +85,7 @@ public class ApricotSnapshotHandler {
         dialog.setScene(openProjectScene);
 
         EditSnapshotController controller = loader.<EditSnapshotController>getController();
-        controller.init(model);
-        // controller.init(isCreateNew, model, mainBorderPane, canvasChangeListener);
+        controller.init(model, canvasChangeListener);
 
         dialog.show();
     }

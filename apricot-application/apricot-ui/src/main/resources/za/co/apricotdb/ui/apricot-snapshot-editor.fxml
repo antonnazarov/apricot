@@ -17,9 +17,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="431.0" prefWidth="567.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.EditSnapshotController">
+<Pane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="396.0" prefWidth="567.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.EditSnapshotController">
    <children>
-      <VBox prefHeight="431.0" prefWidth="566.0" spacing="10.0">
+      <VBox prefHeight="403.0" prefWidth="566.0" spacing="10.0">
          <children>
             <HBox prefHeight="251.0" prefWidth="561.0">
                <children>
@@ -68,7 +68,7 @@
             <HBox alignment="CENTER_LEFT" prefHeight="26.0" prefWidth="546.0">
                <children>
                   <RadioButton fx:id="initFromSnapOption" mnemonicParsing="false" onAction="#initFromSnapOptionSelected" prefHeight="17.0" prefWidth="79.0" text="Snapshot:" />
-                  <ComboBox fx:id="initFromSnapCombo" onAction="#initFromSnapList" prefHeight="25.0" prefWidth="358.0" />
+                  <ComboBox fx:id="initFromSnapCombo" prefHeight="25.0" prefWidth="358.0" />
                   <RadioButton fx:id="initEmptyOption" mnemonicParsing="false" onAction="#initEmptyOptionSelected" text="Empty">
                      <padding>
                         <Insets left="45.0" />
@@ -76,13 +76,8 @@
                   </RadioButton>
                </children>
             </HBox>
-            <HBox alignment="CENTER_LEFT" prefHeight="21.0" prefWidth="546.0">
-               <children>
-                  <Button mnemonicParsing="false" onAction="#reverseDatabase" prefHeight="25.0" prefWidth="548.0" text="Reverse From Database" />
-               </children>
-            </HBox>
             <Separator prefWidth="200.0" />
-            <HBox alignment="TOP_RIGHT" prefHeight="30.0" prefWidth="546.0" spacing="10.0">
+            <HBox alignment="TOP_RIGHT" prefHeight="41.0" prefWidth="546.0" spacing="10.0">
                <children>
                   <Button mnemonicParsing="false" onAction="#cancel" prefWidth="90.0" text="Cancel" />
                   <Button mnemonicParsing="false" onAction="#save" prefWidth="90.0" text="Save" />

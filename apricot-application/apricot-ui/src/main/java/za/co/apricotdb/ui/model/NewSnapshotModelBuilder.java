@@ -16,7 +16,7 @@ public class NewSnapshotModelBuilder {
         SnapshotFormModel model = new SnapshotFormModel();
         
         model.setSnapshotName("<New Snapshot>");
-        model.setInitializedFromSnapshot(false);
+        model.setInitSourceSnapshot(null);
         model.setNewSnapshot(true);
         
         return model;

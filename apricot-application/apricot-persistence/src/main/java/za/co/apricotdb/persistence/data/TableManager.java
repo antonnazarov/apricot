@@ -11,12 +11,16 @@ import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
+import za.co.apricotdb.persistence.repository.ApricotTableRepository;
 
 @Component
 public class TableManager {
 
     @Resource
     EntityManager em;
+    
+    @Resource
+    ApricotTableRepository tableRep;
 
     public List<ApricotTable> getTablesForSnapshot(ApricotSnapshot snapshot) {
         List<ApricotTable> ret = new ArrayList<>();
@@ -33,5 +37,9 @@ public class TableManager {
         query.setParameter("tables", tableNames);
         query.setParameter("snapshot", snapshot);
         return query.getResultList();
+    }
+    
+    public ApricotTable saveTable(ApricotTable table) {
+        return tableRep.save(table);
     }
 }
