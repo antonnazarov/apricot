@@ -3,8 +3,10 @@ package za.co.apricotdb.ui.handler;
 import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -49,11 +51,14 @@ public class ApricotSnapshotHandler {
         project.getSnapshots().add(snapshot);
     }
     
+    @Transactional
     public void setDefaultSnapshot(ApricotSnapshot snapshot) {
-        for (ApricotSnapshot s : snapshot.getProject().getSnapshots()) {
+        List<ApricotSnapshot> snapshots = snapshotManager.getAllSnapshots(snapshot.getProject());
+        for (ApricotSnapshot s : snapshots) {
             s.setDefaultSnapshot(false);
             snapshotManager.saveSnapshot(s);
         }
+        
         snapshot.setDefaultSnapshot(true);
         snapshotManager.saveSnapshot(snapshot);
     }

@@ -115,7 +115,7 @@ public class EditSnapshotController {
         }
         
         ApricotSnapshot snapshot = snapshotSerializer.serializeSnapshot(model);
-        applicationInitializer.initializeForProject(snapshot.getProject(), parentWindow, canvasChangeListener);
+        applicationInitializer.initializeForProject(snapshot.getProject(), canvasChangeListener);
         
         getStage().close();
     }

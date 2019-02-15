@@ -27,8 +27,8 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "apricot_snapshot")
 @NamedQuery(name="ApricotSnapshot.getDefaultSnapshot", query="SELECT sn FROM ApricotSnapshot sn WHERE sn.project = :project AND sn.defaultSnapshot = true")
-@NamedQuery(name="ApricotSnapshot.getAllSnapshotsInProject", query="SELECT sn FROM ApricotSnapshot sn WHERE sn.project = :project ORDER by sn.name")
-@NamedQuery(name="ApricotSnapshot.getSnapshotByName", query="SELECT sn FROM ApricotSnapshot sn WHERE sn.name = :name")
+@NamedQuery(name="ApricotSnapshot.getAllSnapshotsInProject", query="SELECT sn FROM ApricotSnapshot sn WHERE sn.project = :project ORDER by sn.created")
+@NamedQuery(name="ApricotSnapshot.getSnapshotByName", query="SELECT sn FROM ApricotSnapshot sn WHERE sn.name = :name AND sn.project = :project")
 public class ApricotSnapshot implements Serializable {
 
     private static final long serialVersionUID = -8750109610659026590L;

@@ -5,13 +5,13 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
-import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import za.co.apricotdb.persistence.data.SnapshotCloneManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.TableManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
@@ -31,15 +31,18 @@ public class ApricotSnapshotSerializer {
 
     @Autowired
     SnapshotManager snapshotManager;
-    
+
     @Autowired
     ApricotSnapshotHandler snapshotHandler;
 
     @Autowired
     ParentWindow parentWindow;
-    
+
     @Autowired
     TableManager tableManager;
+
+    @Autowired
+    SnapshotCloneManager snapshotCloneManager;
 
     public boolean validate(SnapshotFormModel model) {
         if (!validateName(model)) {
@@ -68,42 +71,20 @@ public class ApricotSnapshotSerializer {
         ApricotProject project = parentWindow.getApplicationData().getCurrentProject();
         List<ApricotTable> tables = new ArrayList<>();
 
-        ApricotSnapshot snapshot = new ApricotSnapshot(model.getSnapshotName(), new java.util.Date(), null,
-                model.getSnapshotDescription(), true, project, tables);
-        snapshot = snapshotManager.saveSnapshot(snapshot);
-        
-        if(model.getInitSourceSnapshot() != null) {
-            tables = cloneSnapshotTables(model.getInitSourceSnapshot(), snapshot);
-            if (tables != null) {
-                for (ApricotTable t : tables) {
-                    // ApricotTable table = tableManager.saveTable(t);
-                    System.out.println(t);
-                }
-            }
+        ApricotSnapshot snapshot = null;
+        if (model.getInitSourceSnapshot() != null) {
+            ApricotSnapshot sourceSnapshot = snapshotManager.getSnapshotByName(project, model.getInitSourceSnapshot());
+            snapshot = snapshotCloneManager.cloneSnapshot(model.getSnapshotName(), model.getSnapshotDescription(),
+                    project, sourceSnapshot);
+        } else {
+            snapshot = new ApricotSnapshot(model.getSnapshotName(), new java.util.Date(), null,
+                    model.getSnapshotDescription(), false, project, tables);
+            snapshot = snapshotManager.saveSnapshot(snapshot);
         }
-        
-        // snapshotManager.saveSnapshot(snapshot);
-        // snapshotHandler.setDefaultSnapshot(snapshot);
+
+        snapshotHandler.setDefaultSnapshot(snapshot);
 
         return snapshot;
-    }
-    
-    /**
-     * Make a deep copy of the snapshot tables.
-     */
-    private List<ApricotTable> cloneSnapshotTables(String snapshotName, ApricotSnapshot snapshot) {
-        List<ApricotTable> ret = new ArrayList<>();
-        ApricotSnapshot source = snapshotManager.getSnapshotByName(snapshotName);
-        
-        for (ApricotTable t : source.getTables()) {
-            ApricotTable clonedTable = SerializationUtils.clone(t);
-            clonedTable.setId(0);
-            clonedTable.setSnapshot(snapshot);
-            
-            ret.add(clonedTable);
-        }
-        
-        return ret;
     }
 
     private ApricotSnapshot serializeEditedSnapshot(SnapshotFormModel model) {
@@ -129,7 +110,9 @@ public class ApricotSnapshotSerializer {
             return false;
         }
 
-        if (model.isNewSnapshot() && snapshotManager.getSnapshotByName(model.getSnapshotName()) != null) {
+        if (model.isNewSnapshot()
+                && snapshotManager.getSnapshotByName(parentWindow.getApplicationData().getCurrentProject(),
+                        model.getSnapshotName()) != null) {
             return false;
         }
 

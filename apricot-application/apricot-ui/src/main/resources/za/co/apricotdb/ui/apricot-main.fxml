@@ -101,7 +101,7 @@
                   <Insets right="3.0" top="1.0" />
                </HBox.margin>
             </MenuBar>
-            <ComboBox id="snapshot_dropdown" prefWidth="250.0">
+            <ComboBox id="snapshot_dropdown" fx:id="snapshotCombo" onAction="#selectSnapshot" prefWidth="250.0">
                <HBox.margin>
                   <Insets top="6.0" />
                </HBox.margin>

@@ -47,7 +47,7 @@ public class ApricotMainApp extends Application {
         ParentWindow pw = context.getBean(ParentWindow.class);
         pw.setParentPane(rootNode);
         primaryStage.setOnShown(event -> {
-            initializer.initializeDefault(pw, canvasChangeListener);
+            initializer.initializeDefault(canvasChangeListener);
         });
 
         primaryStage.setScene(new Scene(rootNode));

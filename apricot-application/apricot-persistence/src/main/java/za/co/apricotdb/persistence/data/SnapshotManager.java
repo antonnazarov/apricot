@@ -59,10 +59,11 @@ public class SnapshotManager {
     }
     
     
-    public ApricotSnapshot getSnapshotByName(String name) {
+    public ApricotSnapshot getSnapshotByName(ApricotProject project, String name) {
         ApricotSnapshot ret = null;
         TypedQuery<ApricotSnapshot> query = em.createNamedQuery("ApricotSnapshot.getSnapshotByName", ApricotSnapshot.class);
         query.setParameter("name", name);
+        query.setParameter("project", project);
         List<ApricotSnapshot> res = query.getResultList();
         if (res != null && res.size()>0) {
             ret = res.get(0);
@@ -72,6 +73,6 @@ public class SnapshotManager {
     }
     
     public ApricotSnapshot saveSnapshot(ApricotSnapshot snapshot) {
-        return snapshotRepository.save(snapshot);
+        return snapshotRepository.saveAndFlush(snapshot);
     }
 }

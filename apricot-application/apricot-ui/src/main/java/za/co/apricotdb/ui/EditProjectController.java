@@ -77,7 +77,7 @@ public class EditProjectController {
             project = projectSerializer.serializeEditedProject(model);
         }
 
-        applicationInitializer.initializeForProject(project, parentWindow, canvasChangeListener);
+        applicationInitializer.initializeForProject(project, canvasChangeListener);
         if (isCreateNew) {
             projectManager.setProjectCurrent(project);
         }

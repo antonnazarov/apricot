@@ -172,5 +172,5 @@ public class ApricotTable implements Serializable {
     @Override
     public int hashCode() {
         return name.hashCode();
-    }    
+    }
 }

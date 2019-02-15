@@ -52,42 +52,47 @@ public class ApplicationInitializer {
 
     @Autowired
     ApricotCanvasHandler canvasHandler;
+    
+    @Autowired
+    ParentWindow parentWindow;
 
     @Transactional
-    public void initializeDefault(ParentWindow pw, PropertyChangeListener canvasChangeListener) {
+    public void initializeDefault(PropertyChangeListener canvasChangeListener) {
         ApricotProject currentProject = projectManager.findCurrentProject();
         ApricotSnapshot defaultSnapshot = snapshotManager.getDefaultSnapshot(currentProject);
 
-        initialize(pw, currentProject, defaultSnapshot, canvasChangeListener);
+        initialize(currentProject, defaultSnapshot, canvasChangeListener);
     }
 
     @Transactional
-    public void initializeForProject(ApricotProject project, ParentWindow pw,
+    public void initializeForProject(ApricotProject project,
             PropertyChangeListener canvasChangeListener) {
         ApricotSnapshot defaultSnapshot = snapshotManager.getDefaultSnapshot(project);
-        initialize(pw, project, defaultSnapshot, canvasChangeListener);
+        initialize(project, defaultSnapshot, canvasChangeListener);
     }
 
     @Transactional
-    public void initialize(ParentWindow pw, ApricotProject project, ApricotSnapshot snapshot,
+    public void initialize(ApricotProject project, ApricotSnapshot snapshot,
             PropertyChangeListener canvasChangeListener) {
+        //  remember the current project
+        parentWindow.getApplicationData().setCurrentProject(project);
+
         List<ApricotTable> tables = tableManager.getTablesForSnapshot(snapshot);
         TreeItem<String> root = new TreeItem<>(project.getName());
         root.getChildren().addAll(getTables(tables));
         root.setExpanded(true);
-        pw.getProjectTreeView().setRoot(root);
+        parentWindow.getProjectTreeView().setRoot(root);
 
-        ComboBox<String> combo = pw.getSnapshotCombo();
-        List<ApricotSnapshot> snapshots = snapshotManager.getAllSnapshots(project);
-        List<String> snapNames = new ArrayList<>();
-        for (ApricotSnapshot s : snapshots) {
-            snapNames.add(s.getName());
+        ComboBox<String> combo = parentWindow.getSnapshotCombo();
+        if (combo.getUserData() != null && 
+                combo.getUserData().equals("snapshotCombo.selectSnapshot")) {
+            combo.setUserData("reset");
+        } else {
+            combo.setUserData("AppInitialize");
+            initCombo(project, snapshot, combo);
         }
-        combo.getItems().clear();
-        combo.getItems().addAll(snapNames);
-        combo.setValue(snapshot.getName());
 
-        TabPane tabPane = pw.getProjectTabPane();
+        TabPane tabPane = parentWindow.getProjectTabPane();
         tabPane.getTabs().clear();
         for (ApricotView view : viewHandler.getAllViews(project)) {
             //  create Tabs for General view and for other views with the Layout Objects
@@ -95,9 +100,15 @@ public class ApplicationInitializer {
                 viewHandler.createViewTab(snapshot, view, tabPane, canvasChangeListener);
             }
         }
-        
-        //  remember the current project
-        pw.getApplicationData().setCurrentProject(project);
+    }
+    
+    private void initCombo(ApricotProject project, ApricotSnapshot snapshot, ComboBox<String> combo) {
+        combo.getItems().clear();
+        List<ApricotSnapshot> snapshots = snapshotManager.getAllSnapshots(project);
+        for (ApricotSnapshot s : snapshots) {
+            combo.getItems().add(s.getName());
+        }
+        combo.setValue(snapshot.getName());
     }
 
     private List<TreeItem<String>> getTables(List<ApricotTable> tables) {

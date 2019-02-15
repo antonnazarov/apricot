@@ -8,10 +8,14 @@ import org.springframework.stereotype.Component;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
+import za.co.apricotdb.persistence.data.SnapshotManager;
+import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotView;
+import za.co.apricotdb.ui.handler.ApplicationInitializer;
 import za.co.apricotdb.ui.handler.ApricotProjectHandler;
 import za.co.apricotdb.ui.handler.ApricotSnapshotHandler;
 import za.co.apricotdb.ui.handler.ApricotViewHandler;
@@ -33,13 +37,22 @@ public class MainAppController {
 
     @Autowired
     ApricotViewHandler viewHandler;
-    
+
     @Autowired
     ApricotProjectHandler projectHandler;
-    
+
     @Autowired
     ApricotSnapshotHandler snapshotHandler;
-    
+
+    @Autowired
+    ApplicationInitializer applicationInitializer;
+
+    @Autowired
+    ParentWindow parentWindow;
+
+    @Autowired
+    SnapshotManager snapshotManager;
+
     @FXML
     BorderPane mainBorderPane;
 
@@ -49,6 +62,9 @@ public class MainAppController {
     @FXML
     Button saveButton;
 
+    @FXML
+    ComboBox<String> snapshotCombo;
+
     private PropertyChangeListener canvasChangeListener;
 
     @FXML
@@ -56,13 +72,13 @@ public class MainAppController {
         for (Tab t : viewsTabPane.getTabs()) {
             if (t.getUserData() instanceof TabInfoObject) {
                 TabInfoObject o = (TabInfoObject) t.getUserData();
-                //  save only changed canvas
+                // save only changed canvas
                 if (o.getCanvas().isCanvasChanged()) {
                     CanvasAllocationMap allocationMap = o.getCanvas().getAllocationMap();
 
                     ApricotView view = tabViewHandler.saveCanvasAllocationMap(allocationMap, o.getView());
                     o.setView(view);
-                    
+
                     o.getCanvas().resetCanvasChange();
                 }
             }
@@ -74,7 +90,7 @@ public class MainAppController {
     public void newView(ActionEvent event) throws Exception {
         viewHandler.createViewEditor(viewsTabPane, null, canvasChangeListener, null);
     }
-    
+
     /**
      * Show a list of the projects, registered in the system.
      */
@@ -86,7 +102,7 @@ public class MainAppController {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Run the form of creation of the new project.
      */
@@ -110,7 +126,7 @@ public class MainAppController {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Create a new snapshot.
      */
@@ -120,6 +136,24 @@ public class MainAppController {
             snapshotHandler.createEditSnapshotForm(true, mainBorderPane, canvasChangeListener);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * The snapshot was selected.
+     */
+    @FXML
+    public void selectSnapshot(ActionEvent event) {
+        if (snapshotCombo.getUserData() != null && snapshotCombo.getUserData().equals("AppInitialize")) {
+            snapshotCombo.setUserData("reset");
+        } else {
+            snapshotCombo.setUserData("snapshotCombo.selectSnapshot");
+
+            String snapshotSelected = snapshotCombo.getSelectionModel().getSelectedItem();
+            ApricotSnapshot snapshot = snapshotManager
+                    .getSnapshotByName(parentWindow.getApplicationData().getCurrentProject(), snapshotSelected);
+            snapshotHandler.setDefaultSnapshot(snapshot);
+            applicationInitializer.initialize(snapshot.getProject(), snapshot, canvasChangeListener);
         }
     }
 

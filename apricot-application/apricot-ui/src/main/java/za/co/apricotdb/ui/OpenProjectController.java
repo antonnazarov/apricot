@@ -31,10 +31,10 @@ public class OpenProjectController {
 
     @Autowired
     ProjectManager projectManager;
-    
+
     @Autowired
     ApplicationInitializer applicationInitializer;
-    
+
     @Autowired
     ParentWindow parentWindow;
 
@@ -55,7 +55,7 @@ public class OpenProjectController {
 
     @FXML
     TableColumn<ApricotProject, String> createdColumn;
-    
+
     private BorderPane mainBorderPane;
     private PropertyChangeListener canvasChangeListener;
 
@@ -63,16 +63,14 @@ public class OpenProjectController {
     public void cancel(ActionEvent event) {
         getStage().close();
     }
-    
+
     @FXML
     public void openProject(ActionEvent event) {
         parentWindow.setParentPane(mainBorderPane);
         ApricotProject selectedProject = projectsList.getSelectionModel().getSelectedItem();
-        
-        applicationInitializer.initializeForProject(selectedProject, parentWindow, canvasChangeListener);
-        
         projectManager.setProjectCurrent(selectedProject);
-        
+        applicationInitializer.initializeDefault(canvasChangeListener);
+
         getStage().close();
     }
 
@@ -84,7 +82,16 @@ public class OpenProjectController {
         this.mainBorderPane = mainBorderPane;
         this.canvasChangeListener = canvasChangeListener;
 
+        ApricotProject currentProject = parentWindow.getApplicationData().getCurrentProject();
         List<ApricotProject> projects = projectManager.getAllProjects();
+        for (ApricotProject p : projects) {
+            if (p.getName().equals(currentProject.getName())) {
+                int idx = projects.indexOf(p);
+                projects.remove(p);
+                projects.add(idx, currentProject);
+                break;
+            }
+        }
         projectsList.getItems().addAll(projects);
         projectNameColumn.setCellValueFactory(new PropertyValueFactory<ApricotProject, String>("name"));
         dbTypeColumn.setCellValueFactory(new PropertyValueFactory<ApricotProject, String>("targetDatabase"));
@@ -96,7 +103,7 @@ public class OpenProjectController {
             }
         });
 
-        projectDescription.setText(projects.get(0).getDescription());
-        projectsList.getSelectionModel().select(projects.get(0));
+        projectsList.getSelectionModel().select(currentProject);
+        projectDescription.setText(currentProject.getDescription());
     }
 }
