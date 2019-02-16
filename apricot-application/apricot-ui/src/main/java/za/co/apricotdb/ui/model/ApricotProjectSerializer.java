@@ -17,6 +17,7 @@ import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.handler.ApricotSnapshotHandler;
 import za.co.apricotdb.ui.handler.ApricotViewHandler;
+import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
 @Component
 public class ApricotProjectSerializer {
@@ -29,6 +30,9 @@ public class ApricotProjectSerializer {
 
     @Autowired
     ApricotViewHandler viewHandler;
+    
+    @Autowired
+    AlertMessageDecorator alertDecorator;
 
     @Transactional
     public ApricotProject serializeNewProject(ProjectFormModel model) {
@@ -85,9 +89,10 @@ public class ApricotProjectSerializer {
     }
 
     private Alert getAlert(String text) {
-        Alert alert = new Alert(AlertType.ERROR, text, ButtonType.OK);
+        Alert alert = new Alert(AlertType.ERROR, null, ButtonType.OK);
         alert.setTitle("Save Project");
-        alert.setHeaderText("Unable to save the project");
+        alert.setHeaderText(text);
+        alertDecorator.decorateAlert(alert);
 
         return alert;
     }

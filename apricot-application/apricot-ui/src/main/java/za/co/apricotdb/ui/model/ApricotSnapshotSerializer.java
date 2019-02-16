@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.SnapshotCloneManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.TableManager;
@@ -19,9 +20,10 @@ import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.handler.ApricotSnapshotHandler;
+import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
 /**
- * All snapshot serialisation operations have been contained in this component.
+ * All snapshot serialization operations have been contained in this component.
  * 
  * @author Anton Nazarov
  * @since 13/02/2019
@@ -43,6 +45,9 @@ public class ApricotSnapshotSerializer {
 
     @Autowired
     SnapshotCloneManager snapshotCloneManager;
+    
+    @Autowired
+    AlertMessageDecorator alertDecorator;
 
     public boolean validate(SnapshotFormModel model) {
         if (!validateName(model)) {
@@ -72,13 +77,18 @@ public class ApricotSnapshotSerializer {
         List<ApricotTable> tables = new ArrayList<>();
 
         ApricotSnapshot snapshot = null;
+        String snapshotDescription = (model.getSnapshotDescription() == null
+                || model.getSnapshotDescription().length() == 0 ? "" : model.getSnapshotDescription() + "\n");
+
         if (model.getInitSourceSnapshot() != null) {
+            snapshotDescription += "The Snapshot was created as a copy of \"" + model.getInitSourceSnapshot() + "\".";
             ApricotSnapshot sourceSnapshot = snapshotManager.getSnapshotByName(project, model.getInitSourceSnapshot());
-            snapshot = snapshotCloneManager.cloneSnapshot(model.getSnapshotName(), model.getSnapshotDescription(),
-                    project, sourceSnapshot);
+            snapshot = snapshotCloneManager.cloneSnapshot(model.getSnapshotName(), snapshotDescription, project,
+                    sourceSnapshot);
         } else {
-            snapshot = new ApricotSnapshot(model.getSnapshotName(), new java.util.Date(), null,
-                    model.getSnapshotDescription(), false, project, tables);
+            snapshotDescription += "The Snapshot was created as empty";
+            snapshot = new ApricotSnapshot(model.getSnapshotName(), new java.util.Date(), null, snapshotDescription,
+                    false, project, tables);
             snapshot = snapshotManager.saveSnapshot(snapshot);
         }
 
@@ -88,15 +98,19 @@ public class ApricotSnapshotSerializer {
     }
 
     private ApricotSnapshot serializeEditedSnapshot(SnapshotFormModel model) {
-        ApricotSnapshot snapshot = null;
+        ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
+        snapshot.setName(model.getSnapshotName());
+        snapshot.setComment(model.getSnapshotDescription());
+        snapshot.setUpdated(new java.util.Date());
 
-        return snapshot;
+        return snapshotManager.saveSnapshot(snapshot);
     }
 
     private Alert getAlert(String text) {
-        Alert alert = new Alert(AlertType.ERROR, text, ButtonType.OK);
+        Alert alert = new Alert(AlertType.ERROR, null, ButtonType.OK);
         alert.setTitle("Save Snapshot");
-        alert.setHeaderText("Unable to save the snapshot");
+        alert.setHeaderText(text);
+        alertDecorator.decorateAlert(alert);
 
         return alert;
     }

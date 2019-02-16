@@ -36,7 +36,7 @@ create table apricot_snapshot (
    snapshot_name varchar(250) not null,
    snapshot_created datetime not null,
    snapshot_updated datetime,
-   snapshot_comment varchar(500) not null,
+   snapshot_comment varchar(500),
    is_default boolean not null
 );
 

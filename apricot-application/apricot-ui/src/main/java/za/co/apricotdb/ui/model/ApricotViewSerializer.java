@@ -21,6 +21,7 @@ import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.persistence.entity.LayoutObjectType;
 import za.co.apricotdb.ui.handler.ApricotViewHandler;
 import za.co.apricotdb.ui.handler.TabInfoObject;
+import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
 @Component
 public class ApricotViewSerializer {
@@ -33,6 +34,9 @@ public class ApricotViewSerializer {
 
     @Autowired
     ObjectLayoutManager layoutManager;
+    
+    @Autowired
+    AlertMessageDecorator alertDecorator;
 
     public boolean validate(ViewFormModel model) {
         if (!validateName(model)) {
@@ -43,7 +47,7 @@ public class ApricotViewSerializer {
         }
 
         if (!validateViewTables(model)) {
-            Alert alert = getAlert("Please choose some tables for the view");
+            Alert alert = getAlert("Please choose some tables to be included into the view");
             alert.showAndWait();
 
             return false;
@@ -53,9 +57,10 @@ public class ApricotViewSerializer {
     }
 
     private Alert getAlert(String text) {
-        Alert alert = new Alert(AlertType.ERROR, text, ButtonType.OK);
+        Alert alert = new Alert(AlertType.ERROR, null, ButtonType.OK);
         alert.setTitle("Save View");
-        alert.setHeaderText("Unable to save the view");
+        alert.setHeaderText(text);
+        alertDecorator.decorateAlert(alert);
 
         return alert;
     }

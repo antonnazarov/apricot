@@ -31,6 +31,7 @@ import za.co.apricotdb.persistence.entity.ApricotObjectLayout;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.persistence.entity.LayoutObjectType;
+import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.CanvasAllocationItem;
 import za.co.apricotdb.viewport.canvas.CanvasAllocationMap;
@@ -57,6 +58,9 @@ public class TabViewHandler {
 
     @Autowired
     ApricotViewHandler viewHandler;
+    
+    @Autowired
+    AlertMessageDecorator alertDecorator;
 
     /**
      * Build a new Tab and populate it with the initial data.
@@ -193,9 +197,11 @@ public class TabViewHandler {
             public void handle(ActionEvent event) {
                 ButtonType yes = new ButtonType("Delete", ButtonData.OK_DONE);
                 ButtonType no = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
-                Alert alert = new Alert(AlertType.WARNING, "You are about to delete the View \"" + tab.getText() + "\"",
-                        yes, no);
+                Alert alert = new Alert(AlertType.WARNING, null, yes, no);
                 alert.setTitle("Delete View");
+                alert.setHeaderText("Do you really want to delete the view \"" + tab.getText() + "\"?");
+                alertDecorator.decorateAlert(alert);                
+
                 Optional<ButtonType> result = alert.showAndWait();
 
                 if (result.orElse(no) == yes) {

@@ -156,6 +156,18 @@ public class MainAppController {
             applicationInitializer.initialize(snapshot.getProject(), snapshot, canvasChangeListener);
         }
     }
+    
+    /**
+     * Open the form of editing of the snapshot.
+     */
+    @FXML
+    public void editSnapshot(ActionEvent event) {
+        try {
+            snapshotHandler.createEditSnapshotForm(false, mainBorderPane, canvasChangeListener);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public PropertyChangeListener getCanvasChangeListener() {
         return canvasChangeListener;

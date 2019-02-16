@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.persistence.entity.ApricotProject;
@@ -28,6 +29,9 @@ public class SnapshotManager {
     @Resource
     ApricotSnapshotRepository snapshotRepository;
     
+    @Autowired
+    ProjectManager projectManager;
+    
     public ApricotSnapshot getDefaultSnapshot(ApricotProject project) {
         ApricotSnapshot ret = null;
         
@@ -39,6 +43,12 @@ public class SnapshotManager {
         }
         
         return ret;
+    }
+    
+    public ApricotSnapshot getDefaultSnapshot() {
+        
+        ApricotProject project = projectManager.findCurrentProject();
+        return getDefaultSnapshot(project);
     }
     
     public List<ApricotSnapshot> getAllSnapshots(ApricotProject project) {
