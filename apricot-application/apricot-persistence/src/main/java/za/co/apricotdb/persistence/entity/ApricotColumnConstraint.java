@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -20,6 +21,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "apricot_column_in_constraint")
+@NamedQuery(name = "ApricotColumnConstraint.getColumnsByConstraint", query="SELECT acc FROM ApricotColumnConstraint acc WHERE acc.constraint = :constraint")
 public class ApricotColumnConstraint implements Serializable {
 
     private static final long serialVersionUID = -4404654225693095401L;

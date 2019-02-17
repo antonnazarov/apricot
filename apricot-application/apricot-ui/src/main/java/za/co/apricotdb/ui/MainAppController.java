@@ -7,7 +7,11 @@ import org.springframework.stereotype.Component;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -21,6 +25,7 @@ import za.co.apricotdb.ui.handler.ApricotSnapshotHandler;
 import za.co.apricotdb.ui.handler.ApricotViewHandler;
 import za.co.apricotdb.ui.handler.TabInfoObject;
 import za.co.apricotdb.ui.handler.TabViewHandler;
+import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.viewport.canvas.CanvasAllocationMap;
 
 /**
@@ -156,7 +161,7 @@ public class MainAppController {
             applicationInitializer.initialize(snapshot.getProject(), snapshot, canvasChangeListener);
         }
     }
-    
+
     /**
      * Open the form of editing of the snapshot.
      */
@@ -166,6 +171,16 @@ public class MainAppController {
             snapshotHandler.createEditSnapshotForm(false, mainBorderPane, canvasChangeListener);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Delete the chosen snapshot.
+     */
+    @FXML
+    public void deleteSnapshot(ActionEvent event) {
+        if (snapshotHandler.deleteSnapshot()) {
+            applicationInitializer.initializeDefault(canvasChangeListener);
         }
     }
 

@@ -4,6 +4,7 @@ import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
@@ -14,11 +15,16 @@ import org.springframework.stereotype.Component;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
@@ -27,6 +33,7 @@ import za.co.apricotdb.ui.EditSnapshotController;
 import za.co.apricotdb.ui.model.EditSnapshotModelBuilder;
 import za.co.apricotdb.ui.model.NewSnapshotModelBuilder;
 import za.co.apricotdb.ui.model.SnapshotFormModel;
+import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
 @Component
 public class ApricotSnapshotHandler {
@@ -42,6 +49,12 @@ public class ApricotSnapshotHandler {
     
     @Autowired
     SnapshotManager snapshotManager;
+    
+    @Autowired
+    ProjectManager projectManager;
+    
+    @Autowired
+    AlertMessageDecorator alertDecorator;
     
     public void createDefaultSnapshot(ApricotProject project) {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
@@ -93,5 +106,29 @@ public class ApricotSnapshotHandler {
         controller.init(model, canvasChangeListener);
 
         dialog.show();
+    }
+    
+    public boolean deleteSnapshot() {
+        ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
+        
+        ButtonType yes = new ButtonType("Delete", ButtonData.OK_DONE);
+        ButtonType no = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+        Alert alert = new Alert(AlertType.WARNING, null, yes, no);
+        alert.setTitle("Delete Snapshot");
+        alert.setHeaderText("Do you really want to delete the snapshot \"" + snapshot.getName() + "\"?");
+        alertDecorator.decorateAlert(alert);
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.orElse(no) == yes) {
+            snapshotManager.deleteSnapshot(snapshot);
+            ApricotProject project = projectManager.findCurrentProject();
+            List<ApricotSnapshot> snapshots = snapshotManager.getAllSnapshots(project);
+            ApricotSnapshot defSnapshot = snapshots.get(snapshots.size()-1);
+            setDefaultSnapshot(defSnapshot);
+            
+            return true;
+        }
+        
+        return false;
     }
 }

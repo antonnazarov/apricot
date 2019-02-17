@@ -15,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -26,6 +27,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "apricot_constraint")
+@NamedQuery(name="ApricotConstraint.getConstraintsByTable", query="SELECT cnst FROM ApricotConstraint cnst WHERE cnst.table = :table")
 public class ApricotConstraint implements Serializable {
 
     private static final long serialVersionUID = 3862015345366091286L;

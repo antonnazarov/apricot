@@ -86,8 +86,7 @@
                 <Menu mnemonicParsing="false" text="Snapshot:">
                   <items>
                     <MenuItem mnemonicParsing="false" onAction="#editSnapshot" text="Edit" />
-                        <MenuItem mnemonicParsing="false" text="Copy" />
-                        <MenuItem mnemonicParsing="false" text="Delete             " />
+                        <MenuItem mnemonicParsing="false" onAction="#deleteSnapshot" text="Delete             " />
                   </items>
                 </Menu>
               </menus>
