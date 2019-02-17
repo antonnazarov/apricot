@@ -23,6 +23,7 @@ import za.co.apricotdb.ui.handler.ApplicationInitializer;
 import za.co.apricotdb.ui.handler.ApricotProjectHandler;
 import za.co.apricotdb.ui.handler.ApricotSnapshotHandler;
 import za.co.apricotdb.ui.handler.ApricotViewHandler;
+import za.co.apricotdb.ui.handler.ReverseEngineHandler;
 import za.co.apricotdb.ui.handler.TabInfoObject;
 import za.co.apricotdb.ui.handler.TabViewHandler;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
@@ -57,6 +58,9 @@ public class MainAppController {
 
     @Autowired
     SnapshotManager snapshotManager;
+    
+    @Autowired
+    ReverseEngineHandler reverseEngineHandler;
 
     @FXML
     BorderPane mainBorderPane;
@@ -182,6 +186,14 @@ public class MainAppController {
         if (snapshotHandler.deleteSnapshot()) {
             applicationInitializer.initializeDefault(canvasChangeListener);
         }
+    }
+    
+    /**
+     * Reverse engineer into the current project/snapshot. 
+     */
+    @FXML
+    public void reverseEngineer(ActionEvent event) {
+        reverseEngineHandler.startReverseEngineering();
     }
 
     public PropertyChangeListener getCanvasChangeListener() {

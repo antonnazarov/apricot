@@ -2,7 +2,7 @@ package za.co.apricotdb.ui.model;
 
 import org.springframework.stereotype.Component;
 
-import za.co.apricotdb.metascan.ApricotTargetDatabases;
+import za.co.apricotdb.metascan.ApricotTargetDatabase;
 
 @Component
 public class NewProjectModelBuilder {
@@ -12,7 +12,7 @@ public class NewProjectModelBuilder {
         ProjectFormModel model = new ProjectFormModel();
         model.setProjectName("<New Project>");
         //  MS SQL Server by default
-        model.setProjectDatabase(ApricotTargetDatabases.MSSQLServer.toString());
+        model.setProjectDatabase(ApricotTargetDatabase.MSSQLServer.toString());
         
         return model;
     }

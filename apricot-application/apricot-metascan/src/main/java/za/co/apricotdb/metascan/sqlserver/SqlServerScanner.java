@@ -218,7 +218,7 @@ public class SqlServerScanner implements MetaDataScanner {
                         throw new IllegalArgumentException("Unable to find the parent exception with the name=[" + sParent + "]");
                     }
                     ApricotConstraint child = constraints.get(sChild);
-                    if (parent == null) {
+                    if (child == null) {
                         throw new IllegalArgumentException("Unable to find the child exception with the name=[" + sChild + "]");
                     }
                     

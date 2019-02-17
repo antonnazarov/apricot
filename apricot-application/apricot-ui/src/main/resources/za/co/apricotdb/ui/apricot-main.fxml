@@ -55,7 +55,7 @@
                 </Menu>
                   <Menu mnemonicParsing="false" text="Operations">
                      <items>
-                        <MenuItem mnemonicParsing="false" text="Reverse Engineering" />
+                        <MenuItem mnemonicParsing="false" onAction="#reverseEngineer" text="Reverse Engineering" />
                         <MenuItem mnemonicParsing="false" text="Compare Snapshots" />
                         <MenuItem mnemonicParsing="false" text="Excel Report" />
                         <Menu mnemonicParsing="false" text="Scripts">

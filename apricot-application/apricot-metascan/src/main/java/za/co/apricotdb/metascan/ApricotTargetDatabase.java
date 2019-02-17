@@ -6,6 +6,6 @@ package za.co.apricotdb.metascan;
  * @author Anton Nazarov
  * @since 05/02/2019
  */
-public enum ApricotTargetDatabases {
+public enum ApricotTargetDatabase {
     MSSQLServer, Oracle, MySQL, H2
 }

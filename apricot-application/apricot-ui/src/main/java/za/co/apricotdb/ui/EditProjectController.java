@@ -13,7 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import za.co.apricotdb.metascan.ApricotTargetDatabases;
+import za.co.apricotdb.metascan.ApricotTargetDatabase;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
@@ -98,7 +98,7 @@ public class EditProjectController {
         this.canvasChangeListener = canvasChangeListener;
 
         // initialize the project target database
-        for (ApricotTargetDatabases d : ApricotTargetDatabases.values()) {
+        for (ApricotTargetDatabase d : ApricotTargetDatabase.values()) {
             projectDatabase.getItems().add(d.toString());
         }
 
