@@ -1,6 +1,7 @@
 package za.co.apricotdb.ui.handler;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -25,6 +26,7 @@ import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.ui.ConnectionSqlServerController;
+import za.co.apricotdb.ui.ReversedTablesController;
 import za.co.apricotdb.ui.model.DatabaseConnectionModel;
 import za.co.apricotdb.ui.model.DatabaseConnectionModelBuilder;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
@@ -70,6 +72,38 @@ public class ReverseEngineHandler {
         }
 
         return false;
+    }
+    
+    public void openScanResultForm() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-re-tables-list.fxml"));
+        loader.setControllerFactory(context::getBean);
+        Pane window = loader.load();
+        ReversedTablesController controller = loader.<ReversedTablesController>getController();
+        
+        // @TODO fake 
+        List<ApricotTable> ftab = new ArrayList<>();
+        ApricotTable t = new ApricotTable("test_table_one", null, null, null);
+        ftab.add(t);
+        t = new ApricotTable("test_table_two", null, null, null);
+        ftab.add(t);
+        t = new ApricotTable("test_table_three", null, null, null);
+        ftab.add(t);
+        t = new ApricotTable("test_table_four", null, null, null);
+        ftab.add(t);
+        t = new ApricotTable("test_table_five", null, null, null);
+        ftab.add(t);
+        
+        String[] fbl = new String[] {"test_table_three", "test_table_five"};
+        controller.init(ftab, fbl);
+        
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setTitle("Result of the scan");
+        dialog.getIcons().add(new Image(getClass().getResourceAsStream("bw-reverse-s1.jpg")));
+        Scene openProjectScene = new Scene(window);
+        dialog.setScene(openProjectScene);
+
+        dialog.show();
     }
 
     private Alert getAlert(String text) {

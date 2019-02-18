@@ -1,5 +1,7 @@
 package za.co.apricotdb.ui;
 
+import java.io.IOException;
+
 import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcOperations;
@@ -15,6 +17,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.Alert.AlertType;
 import za.co.apricotdb.metascan.MetaDataScanner;
 import za.co.apricotdb.metascan.sqlserver.SqlServerUrlBuilder;
+import za.co.apricotdb.ui.handler.ReverseEngineHandler;
 import za.co.apricotdb.ui.model.DatabaseConnectionModel;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
@@ -32,6 +35,9 @@ public class ConnectionSqlServerController {
 
     @Autowired
     AlertMessageDecorator alertDecorator;
+
+    @Autowired
+    ReverseEngineHandler reverseEngineHandler;
 
     @FXML
     ComboBox<String> server;
@@ -70,7 +76,8 @@ public class ConnectionSqlServerController {
 
             alert = getAlert(AlertType.INFORMATION, "The connection was successfully established");
         } catch (Exception e) {
-            alert = getAlert(AlertType.ERROR, "Unable to connect to the database server:\n" + WordUtils.wrap(e.getMessage(), 60));
+            alert = getAlert(AlertType.ERROR,
+                    "Unable to connect to the database server:\n" + WordUtils.wrap(e.getMessage(), 60));
         }
         alert.showAndWait();
     }
@@ -82,7 +89,11 @@ public class ConnectionSqlServerController {
 
     @FXML
     public void forward(ActionEvent event) {
-
+        try {
+            reverseEngineHandler.openScanResultForm();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML

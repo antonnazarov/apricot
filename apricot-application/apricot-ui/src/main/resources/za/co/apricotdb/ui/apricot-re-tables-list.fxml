@@ -8,15 +8,14 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="593.0" prefWidth="385.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.ReversedTablesController">
    <children>
       <VBox layoutX="14.0" layoutY="14.0" prefHeight="574.0" prefWidth="360.0">
          <children>
             <TableView fx:id="reversedTablesList" prefHeight="571.0" prefWidth="360.0">
               <columns>
-                <TableColumn fx:id="tableColumn" prefWidth="271.0" text="Table" />
-                <TableColumn fx:id="includedColumn" minWidth="0.0" prefWidth="88.0" text="Include" />
+                <TableColumn fx:id="tableColumn" prefWidth="255.0" text="Table" />
+                <TableColumn fx:id="includedColumn" minWidth="0.0" prefWidth="93.0" text="Include" />
               </columns>
             </TableView>
             <HBox alignment="CENTER_RIGHT" prefHeight="81.0" prefWidth="360.0" spacing="10.0">

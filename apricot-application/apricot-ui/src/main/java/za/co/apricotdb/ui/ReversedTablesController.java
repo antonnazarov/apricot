@@ -36,10 +36,10 @@ public class ReversedTablesController {
         for (ApricotTable t : tables) {
             ReversedTableRow r = null;
             if (Arrays.stream(blackList).anyMatch(t.getName()::equals)) {
-                tableColumn.setStyle("-fx-text-fill:lighgray;");
+                // tableColumn.setStyle("-fx-text-fill: gray;");
                 r = new ReversedTableRow(t, false);
             } else {
-                tableColumn.setStyle("-fx-text-fill:black;");
+                // tableColumn.setStyle("-fx-text-fill: black;");
                 r = new ReversedTableRow(t, true);
             }
             reversedTablesList.getItems().add(r);
@@ -55,6 +55,7 @@ public class ReversedTablesController {
         };
         includedColumn.setCellValueFactory(new PropertyValueFactory<ReversedTableRow, Boolean>("included"));
         includedColumn.setCellFactory(booleanCellFactory);
+        includedColumn.setStyle( "-fx-alignment: CENTER;");
     }
 
     @FXML
