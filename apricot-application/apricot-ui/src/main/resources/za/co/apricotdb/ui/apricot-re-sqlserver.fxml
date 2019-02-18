@@ -28,7 +28,7 @@
          <children>
             <Label text="Server:" />
             <Label text="Port:" GridPane.rowIndex="1" />
-            <ComboBox fx:id="server" editable="true" prefHeight="25.0" prefWidth="315.0" GridPane.columnIndex="1" />
+            <ComboBox fx:id="server" editable="true" onAction="#serverSelected" prefHeight="25.0" prefWidth="315.0" GridPane.columnIndex="1" />
             <Label text="Database:" GridPane.rowIndex="2" />
             <ComboBox fx:id="database" editable="true" prefHeight="25.0" prefWidth="315.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <ComboBox fx:id="port" editable="true" prefHeight="25.0" prefWidth="160.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />

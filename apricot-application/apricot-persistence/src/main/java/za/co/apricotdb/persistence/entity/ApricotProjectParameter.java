@@ -9,10 +9,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "apricot_project_parameter")
+@NamedQuery(name="ApricotProjectParameter.getParametersWithPrefix", query="SELECT app FROM ApricotProjectParameter app WHERE app.project = :project AND app.name LIKE CONCAT(:prefix,'%') ORDER BY app.name DESC")
 public class ApricotProjectParameter implements Serializable {
 
     private static final long serialVersionUID = -2298570920305929909L;

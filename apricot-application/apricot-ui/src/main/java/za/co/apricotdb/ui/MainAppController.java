@@ -7,11 +7,7 @@ import org.springframework.stereotype.Component;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -26,7 +22,6 @@ import za.co.apricotdb.ui.handler.ApricotViewHandler;
 import za.co.apricotdb.ui.handler.ReverseEngineHandler;
 import za.co.apricotdb.ui.handler.TabInfoObject;
 import za.co.apricotdb.ui.handler.TabViewHandler;
-import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.viewport.canvas.CanvasAllocationMap;
 
 /**

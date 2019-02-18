@@ -37,7 +37,7 @@ public class ReverseEngineHandler {
 
     @Resource
     ApplicationContext context;
-    
+
     @Autowired
     SnapshotManager snapshotManager;
 
@@ -46,7 +46,7 @@ public class ReverseEngineHandler {
 
     @Autowired
     AlertMessageDecorator alertDecorator;
-    
+
     @Autowired
     DatabaseConnectionModelBuilder databaseConnectionModelBuilder;
 
@@ -57,14 +57,14 @@ public class ReverseEngineHandler {
         if (tables != null && tables.size() > 0) {
             // the reverse eng operation cannot be performed of the non empty snapshot
             Alert alert = getAlert("The snapshot \"" + snapshot.getName() + "\" contains entities.\n"
-                    + "You can perform the database reverse engineering into the EMPTY snapshot only.");
+                    + "You only can perform the database reverse engineering into the EMPTY snapshot.");
             alert.showAndWait();
 
             return false;
         }
-        
+
         try {
-        openDatabaseConnectionForm(snapshot.getProject());
+            openDatabaseConnectionForm(snapshot.getProject());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -93,7 +93,7 @@ public class ReverseEngineHandler {
             loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-re-sqlserver.fxml"));
             loader.setControllerFactory(context::getBean);
             window = loader.load();
-            
+
             title = "Connect to SQLServer database";
             ConnectionSqlServerController controller = loader.<ConnectionSqlServerController>getController();
             controller.init(model);
