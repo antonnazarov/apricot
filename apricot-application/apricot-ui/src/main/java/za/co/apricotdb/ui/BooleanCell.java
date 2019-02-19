@@ -1,7 +1,11 @@
 package za.co.apricotdb.ui;
 
+import java.util.List;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.TableCell;
@@ -16,16 +20,25 @@ public class BooleanCell extends TableCell<ReversedTableRow, Boolean> {
         checkBox = new CheckBox();
         checkBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                System.out.println("--------------" + checkBox.getParent());
                 if (checkBox.getParent() != null) {
-                    System.out.println("--------------" + checkBox.getParent().getParent());
-                    TableRow<ReversedTableRow> tr = (TableRow) checkBox.getParent().getParent();
-                    TableView<ReversedTableRow> tv = tr.getTableView();
-                    ReversedTableRow r = tv.getSelectionModel().getSelectedItem();
-                    System.out.println("--------------table: " + r.getTableName());
+                    Parent p1 = checkBox.getParent();
+                    if (p1.getParent() != null) {
+                        TableRow<ReversedTableRow> tr = (TableRow) p1.getParent();
+                        List<Node> cols = tr.getChildrenUnmodifiable();
+                        Node tc = cols.get(0);
+                        String s = tc.toString();
+                        String tableName = s.substring(s.indexOf("'")+1, s.length()-1);
+                        TableView<ReversedTableRow> tv = tr.getTableView();
+                        for (ReversedTableRow rtr : tv.getItems()) {
+                            if (rtr.getTableName().equals(tableName)) {
+                                rtr.setIncluded(newValue);
+                                tv.getSelectionModel().select(rtr);
+                                break;
+                            }
+                        }
+                    }
                 }
-                // ReversedTableRow row = tv.getSelectionModel().getSelectedItem();
-                // System.out.println("--------------ReversedTableRow.tableName: " + row.getTableName());
+                
                 if (isEditing()) {
                     commitEdit(newValue == null ? false : newValue);
                 }

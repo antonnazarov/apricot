@@ -14,9 +14,18 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import javafx.scene.control.Alert.AlertType;
 import za.co.apricotdb.metascan.MetaDataScanner;
+import za.co.apricotdb.metascan.sqlserver.SqlServerScanner;
 import za.co.apricotdb.metascan.sqlserver.SqlServerUrlBuilder;
+import za.co.apricotdb.persistence.data.MetaData;
+import za.co.apricotdb.persistence.data.ProjectManager;
+import za.co.apricotdb.persistence.data.SnapshotManager;
+import za.co.apricotdb.persistence.entity.ApricotProject;
+import za.co.apricotdb.persistence.entity.ApricotSnapshot;
+import za.co.apricotdb.ui.handler.BlackListHandler;
 import za.co.apricotdb.ui.handler.ReverseEngineHandler;
 import za.co.apricotdb.ui.model.DatabaseConnectionModel;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
@@ -39,6 +48,21 @@ public class ConnectionSqlServerController {
     @Autowired
     ReverseEngineHandler reverseEngineHandler;
 
+    @Autowired
+    SqlServerScanner sqlServerScanner;
+
+    @Autowired
+    SnapshotManager snapshotManager;
+
+    @Autowired
+    ProjectManager projectManager;
+
+    @Autowired
+    BlackListHandler blackListHandler;
+
+    @FXML
+    Pane mainPane;
+
     @FXML
     ComboBox<String> server;
 
@@ -59,38 +83,70 @@ public class ConnectionSqlServerController {
     }
 
     @FXML
-    public void testConnection(ActionEvent event) {
-        String driverClass = sqlServerUrlBuilder.getDriverClass();
-        String url = sqlServerUrlBuilder.getUrl(server.getSelectionModel().getSelectedItem(),
-                port.getSelectionModel().getSelectedItem(), database.getSelectionModel().getSelectedItem());
-
+    public boolean testConnection(ActionEvent event) {
         Alert alert = null;
         try {
-            JdbcOperations op = MetaDataScanner.getTargetJdbcOperations(driverClass, url,
-                    user.getSelectionModel().getSelectedItem(), password.getText());
+            testConnection(server.getSelectionModel().getSelectedItem(), port.getSelectionModel().getSelectedItem(),
+                    database.getSelectionModel().getSelectedItem(), user.getSelectionModel().getSelectedItem(),
+                    password.getText());
+            alert = getAlert(AlertType.INFORMATION, "The connection was successfully established");
+            alert.showAndWait();
+        } catch (Exception e) {
+            alert = getAlert(AlertType.ERROR, e.getMessage());
+            alert.showAndWait();
+            return false;
+        }
+
+        return true;
+    }
+
+    private void testConnection(String server, String port, String database, String user, String password)
+            throws Exception {
+        String driverClass = sqlServerUrlBuilder.getDriverClass();
+        String url = sqlServerUrlBuilder.getUrl(server, port, database);
+
+        try {
+            JdbcOperations op = MetaDataScanner.getTargetJdbcOperations(driverClass, url, user, password);
 
             RowMapper<String> rowMapper = (rs, rowNum) -> {
                 return rs.getString("name");
             };
             op.query("select name from sys.tables;", rowMapper);
-
-            alert = getAlert(AlertType.INFORMATION, "The connection was successfully established");
         } catch (Exception e) {
-            alert = getAlert(AlertType.ERROR,
-                    "Unable to connect to the database server:\n" + WordUtils.wrap(e.getMessage(), 60));
+            throw new Exception("Unable to connect to the database server:\n" + WordUtils.wrap(e.getMessage(), 60));
         }
-        alert.showAndWait();
     }
 
     @FXML
     public void cancel(ActionEvent event) {
-
+        getStage().close();
     }
 
     @FXML
     public void forward(ActionEvent event) {
+        // check the connection firstly
         try {
-            reverseEngineHandler.openScanResultForm();
+            testConnection(server.getSelectionModel().getSelectedItem(), port.getSelectionModel().getSelectedItem(),
+                    database.getSelectionModel().getSelectedItem(), user.getSelectionModel().getSelectedItem(),
+                    password.getText());
+        } catch (Exception e) {
+            Alert alert = getAlert(AlertType.ERROR, e.getMessage());
+            alert.showAndWait();
+            return;
+        }
+
+        String driverClass = sqlServerUrlBuilder.getDriverClass();
+        String url = sqlServerUrlBuilder.getUrl(server.getSelectionModel().getSelectedItem(),
+                port.getSelectionModel().getSelectedItem(), database.getSelectionModel().getSelectedItem());
+        ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
+        ApricotProject project = projectManager.findCurrentProject();
+
+        MetaData metaData = sqlServerScanner.scan(driverClass, url, user.getSelectionModel().getSelectedItem(),
+                password.getText(), snapshot);
+        String[] blackList = blackListHandler.getBlackListTables(project);
+        try {
+            getStage().close();
+            reverseEngineHandler.openScanResultForm(metaData, blackList);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -142,4 +198,7 @@ public class ConnectionSqlServerController {
         return alert;
     }
 
+    private Stage getStage() {
+        return (Stage) mainPane.getScene().getWindow();
+    }
 }

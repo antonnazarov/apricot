@@ -70,6 +70,21 @@ public class ProjectParameterManager {
 
         return ret;
     }
+    
+    public ApricotProjectParameter getParameterByName(ApricotProject project, String name) {
+        ApricotProjectParameter ret = null;
+        TypedQuery<ApricotProjectParameter> query = em
+                .createNamedQuery("ApricotProjectParameter.getParameterByName", ApricotProjectParameter.class);
+        query.setParameter("project", project);
+        query.setParameter("name", name);
+        
+        List<ApricotProjectParameter> params = query.getResultList();
+        if (params != null && params.size() > 0) {
+            ret = params.get(0);
+        }
+
+        return ret;
+    }
 
     private List<ApricotProjectParameter> getConnectionParametersForTargetDb(ApricotProject project, String targetDb) {
         TypedQuery<ApricotProjectParameter> query = em

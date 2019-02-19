@@ -1,17 +1,25 @@
 package za.co.apricotdb.ui;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import javafx.util.Callback;
+import za.co.apricotdb.persistence.data.MetaData;
 import za.co.apricotdb.persistence.entity.ApricotTable;
+import za.co.apricotdb.ui.handler.ReverseEngineHandler;
 
 /**
  * The controller of the apricot-re-tables-list.fxml form.
@@ -22,6 +30,9 @@ import za.co.apricotdb.persistence.entity.ApricotTable;
 @Component
 public class ReversedTablesController {
 
+    @Autowired
+    ReverseEngineHandler reverseEngineHandler;
+
     @FXML
     TableView<ReversedTableRow> reversedTablesList;
 
@@ -31,23 +42,35 @@ public class ReversedTablesController {
     @FXML
     TableColumn<ReversedTableRow, Boolean> includedColumn;
 
-    public void init(List<ApricotTable> tables, String[] blackList) {
+    @FXML
+    Label summaryInfo;
+
+    @FXML
+    Pane mainPane;
+
+    private MetaData metaData = null;
+    private String[] blackList = null;
+
+    public void init(MetaData metaData, String[] blackList) {
+        this.metaData = metaData;
+        this.blackList = blackList;
+
         reversedTablesList.getItems().clear();
-        for (ApricotTable t : tables) {
+        List<ApricotTable> tables = metaData.getTables();
+        Collections.sort(tables, (t1, t2) -> t1.getName().compareTo(t2.getName()));
+        for (ApricotTable t : metaData.getTables()) {
             ReversedTableRow r = null;
             if (Arrays.stream(blackList).anyMatch(t.getName()::equals)) {
-                // tableColumn.setStyle("-fx-text-fill: gray;");
                 r = new ReversedTableRow(t, false);
             } else {
-                // tableColumn.setStyle("-fx-text-fill: black;");
                 r = new ReversedTableRow(t, true);
             }
             reversedTablesList.getItems().add(r);
         }
+        reversedTablesList.getSelectionModel().select(0);
 
         tableColumn.setCellValueFactory(new PropertyValueFactory<ReversedTableRow, String>("tableName"));
-        Callback<TableColumn<ReversedTableRow, Boolean>, TableCell<ReversedTableRow, Boolean>> booleanCellFactory =         
-        new Callback<TableColumn<ReversedTableRow, Boolean>, TableCell<ReversedTableRow, Boolean>>() {
+        Callback<TableColumn<ReversedTableRow, Boolean>, TableCell<ReversedTableRow, Boolean>> booleanCellFactory = new Callback<TableColumn<ReversedTableRow, Boolean>, TableCell<ReversedTableRow, Boolean>>() {
             @Override
             public TableCell<ReversedTableRow, Boolean> call(TableColumn<ReversedTableRow, Boolean> p) {
                 return new BooleanCell();
@@ -55,16 +78,35 @@ public class ReversedTablesController {
         };
         includedColumn.setCellValueFactory(new PropertyValueFactory<ReversedTableRow, Boolean>("included"));
         includedColumn.setCellFactory(booleanCellFactory);
-        includedColumn.setStyle( "-fx-alignment: CENTER;");
+        includedColumn.setStyle("-fx-alignment: CENTER;");
+
+        summaryInfo.setText(metaData.getTables().size() + " tables were scanned; " + blackList.length
+                + " tables in the black list");
     }
 
     @FXML
     public void cancel() {
-
+        getStage().close();
     }
 
     @FXML
     public void finish() {
+        List<ApricotTable> included = new ArrayList<>();
+        List<ApricotTable> excluded = new ArrayList<>();
+        for (ReversedTableRow r : reversedTablesList.getItems()) {
+            if (r.isIncluded()) {
+                included.add(r.getTable());
+            } else {
+                excluded.add(r.getTable());
+            }
+        }
 
+        if (reverseEngineHandler.saveReversedObjects(included, excluded, metaData.getRelationships())) {
+            getStage().close();
+        }
+    }
+
+    private Stage getStage() {
+        return (Stage) mainPane.getScene().getWindow();
     }
 }

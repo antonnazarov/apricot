@@ -1,8 +1,12 @@
 package za.co.apricotdb.ui.handler;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
@@ -14,15 +18,18 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import za.co.apricotdb.metascan.ApricotTargetDatabase;
+import za.co.apricotdb.persistence.data.MetaData;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.TableManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
+import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.ui.ConnectionSqlServerController;
@@ -51,9 +58,11 @@ public class ReverseEngineHandler {
 
     @Autowired
     DatabaseConnectionModelBuilder databaseConnectionModelBuilder;
-
+    
+    @Autowired
+    ConsistencyHandler consistencyHandler;
+    
     public boolean startReverseEngineering() {
-
         ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
         List<ApricotTable> tables = tableManager.getTablesForSnapshot(snapshot);
         if (tables != null && tables.size() > 0) {
@@ -74,38 +83,60 @@ public class ReverseEngineHandler {
         return false;
     }
     
-    public void openScanResultForm() throws IOException {
+    public void openScanResultForm(MetaData metaData, String[] blackList) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-re-tables-list.fxml"));
         loader.setControllerFactory(context::getBean);
         Pane window = loader.load();
         ReversedTablesController controller = loader.<ReversedTablesController>getController();
-        
-        // @TODO fake 
-        List<ApricotTable> ftab = new ArrayList<>();
-        ApricotTable t = new ApricotTable("test_table_one", null, null, null);
-        ftab.add(t);
-        t = new ApricotTable("test_table_two", null, null, null);
-        ftab.add(t);
-        t = new ApricotTable("test_table_three", null, null, null);
-        ftab.add(t);
-        t = new ApricotTable("test_table_four", null, null, null);
-        ftab.add(t);
-        t = new ApricotTable("test_table_five", null, null, null);
-        ftab.add(t);
-        
-        String[] fbl = new String[] {"test_table_three", "test_table_five"};
-        controller.init(ftab, fbl);
+        controller.init(metaData, blackList);
         
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.setTitle("Result of the scan");
+        dialog.setTitle("Result of the database scan");
         dialog.getIcons().add(new Image(getClass().getResourceAsStream("bw-reverse-s1.jpg")));
         Scene openProjectScene = new Scene(window);
         dialog.setScene(openProjectScene);
 
         dialog.show();
     }
+    
+    public boolean saveReversedObjects(List<ApricotTable> included, List<ApricotTable> excluded,  List<ApricotRelationship> relationships) {
+        boolean ret = true;
+        Map<ApricotTable, ApricotTable> extraExclude = consistencyHandler.getFullConsistentExclude(excluded, relationships);
+        if (!extraExclude.isEmpty()) {
+            ButtonType yes = new ButtonType("Ok, exclude", ButtonData.OK_DONE);
+            ButtonType no = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+            Alert alert = new Alert(AlertType.WARNING, null, yes, no);
+            alert.setTitle("Delete Snapshot");
+            alert.setHeaderText("There are child- tables, which parents were excluded from the list.\n" +
+                    "I am going to exclude these child- tables as well:\n" +
+                    getMessageForExtraExclude(extraExclude));
+            alertDecorator.decorateAlert(alert);
+            Optional<ButtonType> result = alert.showAndWait();
 
+            if (result.orElse(no) == yes) {
+                
+            } else {
+                ret = false;
+            }
+        }
+        
+        return ret;
+    }
+    
+    private String getMessageForExtraExclude(Map<ApricotTable, ApricotTable> extraExclude) {
+        StringBuilder sb = new StringBuilder();
+        
+        Set<ApricotTable> keys = extraExclude.keySet();
+        List<ApricotTable> children = keys.stream().collect(Collectors.toList());
+        Collections.sort(children, (t1, t2) -> t1.getName().compareTo(t2.getName()));
+        for (ApricotTable t : children) {
+            sb.append(t.getName()).append(" (").append(extraExclude.get(t).getName()).append(")\n");
+        }
+        
+        return sb.toString();
+    }
+    
     private Alert getAlert(String text) {
         Alert alert = new Alert(AlertType.ERROR, null, ButtonType.OK);
         alert.setTitle("Start Reverse Engineering process");
