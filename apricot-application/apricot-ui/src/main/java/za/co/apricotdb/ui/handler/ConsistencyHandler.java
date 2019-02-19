@@ -87,9 +87,9 @@ public class ConsistencyHandler {
         Map<ApricotTable, ApricotTable> ret = new HashMap<>();
         
         Map<ApricotTable, ApricotTable> result = getConsistentExclude(excluded, relationships);
+        List<ApricotTable> newExcluded = new ArrayList<>(excluded);
         while (!result.isEmpty()) {
             ret.putAll(result);
-            List<ApricotTable> newExcluded = new ArrayList<>(excluded);
             Set<ApricotTable> childen = result.keySet();
             for (ApricotTable t : childen) {
                 newExcluded.add(t);

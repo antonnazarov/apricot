@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.text.WordUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -58,10 +60,10 @@ public class ReverseEngineHandler {
 
     @Autowired
     DatabaseConnectionModelBuilder databaseConnectionModelBuilder;
-    
+
     @Autowired
     ConsistencyHandler consistencyHandler;
-    
+
     public boolean startReverseEngineering() {
         ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
         List<ApricotTable> tables = tableManager.getTablesForSnapshot(snapshot);
@@ -82,14 +84,14 @@ public class ReverseEngineHandler {
 
         return false;
     }
-    
+
     public void openScanResultForm(MetaData metaData, String[] blackList) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-re-tables-list.fxml"));
         loader.setControllerFactory(context::getBean);
         Pane window = loader.load();
         ReversedTablesController controller = loader.<ReversedTablesController>getController();
         controller.init(metaData, blackList);
-        
+
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setTitle("Result of the database scan");
@@ -99,44 +101,48 @@ public class ReverseEngineHandler {
 
         dialog.show();
     }
-    
-    public boolean saveReversedObjects(List<ApricotTable> included, List<ApricotTable> excluded,  List<ApricotRelationship> relationships) {
+
+    public boolean saveReversedObjects(List<ApricotTable> included, List<ApricotTable> excluded,
+            List<ApricotRelationship> relationships) {
         boolean ret = true;
-        Map<ApricotTable, ApricotTable> extraExclude = consistencyHandler.getFullConsistentExclude(excluded, relationships);
+        Map<ApricotTable, ApricotTable> extraExclude = consistencyHandler.getFullConsistentExclude(excluded,
+                relationships);
         if (!extraExclude.isEmpty()) {
             ButtonType yes = new ButtonType("Ok, exclude", ButtonData.OK_DONE);
             ButtonType no = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
-            Alert alert = new Alert(AlertType.WARNING, null, yes, no);
+            Alert alert = new Alert(AlertType.WARNING, null, no, yes);
             alert.setTitle("Delete Snapshot");
-            alert.setHeaderText("There are child- tables, which parents were excluded from the list.\n" +
-                    "I am going to exclude these child- tables as well:\n" +
-                    getMessageForExtraExclude(extraExclude));
+            alert.setHeaderText(WordUtils.wrap(
+                    "Some Parent tables were excluded from the resulting list. "
+                            + "In order to maintain consistency of the scanned database structure, "
+                            + "the corresponding Child tables will be excluded from the result:\n\n", 60)
+                            + getMessageForExtraExclude(extraExclude));
             alertDecorator.decorateAlert(alert);
             Optional<ButtonType> result = alert.showAndWait();
 
             if (result.orElse(no) == yes) {
-                
+
             } else {
                 ret = false;
             }
         }
-        
+
         return ret;
     }
-    
+
     private String getMessageForExtraExclude(Map<ApricotTable, ApricotTable> extraExclude) {
         StringBuilder sb = new StringBuilder();
-        
+
         Set<ApricotTable> keys = extraExclude.keySet();
         List<ApricotTable> children = keys.stream().collect(Collectors.toList());
         Collections.sort(children, (t1, t2) -> t1.getName().compareTo(t2.getName()));
         for (ApricotTable t : children) {
-            sb.append(t.getName()).append(" (").append(extraExclude.get(t).getName()).append(")\n");
+            sb.append(t.getName()).append(" [").append(extraExclude.get(t).getName()).append("]\n");
         }
-        
+
         return sb.toString();
     }
-    
+
     private Alert getAlert(String text) {
         Alert alert = new Alert(AlertType.ERROR, null, ButtonType.OK);
         alert.setTitle("Start Reverse Engineering process");
