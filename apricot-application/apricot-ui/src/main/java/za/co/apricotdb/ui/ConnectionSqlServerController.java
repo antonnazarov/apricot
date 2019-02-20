@@ -2,6 +2,7 @@ package za.co.apricotdb.ui;
 
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.util.Properties;
 
 import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +24,16 @@ import za.co.apricotdb.metascan.sqlserver.SqlServerScanner;
 import za.co.apricotdb.metascan.sqlserver.SqlServerUrlBuilder;
 import za.co.apricotdb.persistence.data.MetaData;
 import za.co.apricotdb.persistence.data.ProjectManager;
+import za.co.apricotdb.persistence.data.ProjectParameterManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.ui.handler.BlackListHandler;
 import za.co.apricotdb.ui.handler.ReverseEngineHandler;
+import za.co.apricotdb.ui.handler.SqlServerParametersHandler;
 import za.co.apricotdb.ui.model.DatabaseConnectionModel;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
+import za.co.apricotdb.ui.util.StringEncoder;
 
 /**
  * The controller of SQL Server- specific connection.
@@ -60,6 +64,9 @@ public class ConnectionSqlServerController {
 
     @Autowired
     BlackListHandler blackListHandler;
+    
+    @Autowired
+    SqlServerParametersHandler parametersHandler;
 
     @FXML
     Pane mainPane;
@@ -116,9 +123,25 @@ public class ConnectionSqlServerController {
                 return rs.getString("name");
             };
             op.query("select name from sys.tables;", rowMapper);
+            
+            //  Success! Save the connection parameters in the project- parameter
+            Properties params = getConnectionParameters();
+            parametersHandler.saveConnectionParameters(params);
         } catch (Exception e) {
             throw new Exception("Unable to connect to the database server:\n" + WordUtils.wrap(e.getMessage(), 60));
         }
+    }
+    
+    private Properties getConnectionParameters() {
+        Properties params = new Properties();
+        
+        params.setProperty(ProjectParameterManager.CONNECTION_SERVER, server.getSelectionModel().getSelectedItem());
+        params.setProperty(ProjectParameterManager.CONNECTION_PORT, port.getSelectionModel().getSelectedItem());
+        params.setProperty(ProjectParameterManager.CONNECTION_DATABASE, database.getSelectionModel().getSelectedItem());
+        params.setProperty(ProjectParameterManager.CONNECTION_USER, user.getSelectionModel().getSelectedItem());
+        params.setProperty(ProjectParameterManager.CONNECTION_PASSWORD, StringEncoder.encode(password.getText()));
+        
+        return params;
     }
 
     @FXML

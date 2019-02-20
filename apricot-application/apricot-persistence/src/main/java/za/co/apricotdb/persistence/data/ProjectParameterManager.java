@@ -120,7 +120,7 @@ public class ProjectParameterManager {
         return query.getResultList();
     }
 
-    private String getPropertiesAsString(Properties properties, String propName) {
+    public String getPropertiesAsString(Properties properties, String propName) {
         String ret = null;
         Writer w = new StringWriter();
         try {
@@ -133,7 +133,7 @@ public class ProjectParameterManager {
         return ret;
     }
 
-    private Properties restorePropertiesFromString(String props) {
+    public Properties restorePropertiesFromString(String props) {
         Properties properties = new Properties();
         if (!props.startsWith("error:")) {
             Reader r = new StringReader(props);
