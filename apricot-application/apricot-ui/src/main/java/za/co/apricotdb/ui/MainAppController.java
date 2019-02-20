@@ -188,7 +188,7 @@ public class MainAppController {
      */
     @FXML
     public void reverseEngineer(ActionEvent event) {
-        reverseEngineHandler.startReverseEngineering();
+        reverseEngineHandler.startReverseEngineering(canvasChangeListener);
     }
 
     public PropertyChangeListener getCanvasChangeListener() {

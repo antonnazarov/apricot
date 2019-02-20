@@ -1,5 +1,6 @@
 package za.co.apricotdb.ui.handler;
 
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +28,9 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import za.co.apricotdb.metascan.ApricotTargetDatabase;
+import za.co.apricotdb.persistence.data.DataSaver;
 import za.co.apricotdb.persistence.data.MetaData;
+import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.TableManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
@@ -53,6 +56,9 @@ public class ReverseEngineHandler {
     SnapshotManager snapshotManager;
 
     @Autowired
+    ProjectManager projectManager;
+
+    @Autowired
     TableManager tableManager;
 
     @Autowired
@@ -64,7 +70,13 @@ public class ReverseEngineHandler {
     @Autowired
     ConsistencyHandler consistencyHandler;
 
-    public boolean startReverseEngineering() {
+    @Autowired
+    BlackListHandler blackListHandler;
+
+    @Autowired
+    DataSaver dataSaver;
+
+    public boolean startReverseEngineering(PropertyChangeListener canvasChangeListener) {
         ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
         List<ApricotTable> tables = tableManager.getTablesForSnapshot(snapshot);
         if (tables != null && tables.size() > 0) {
@@ -77,7 +89,7 @@ public class ReverseEngineHandler {
         }
 
         try {
-            openDatabaseConnectionForm(snapshot.getProject());
+            openDatabaseConnectionForm(snapshot.getProject(), canvasChangeListener);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -85,12 +97,13 @@ public class ReverseEngineHandler {
         return false;
     }
 
-    public void openScanResultForm(MetaData metaData, String[] blackList) throws IOException {
+    public void openScanResultForm(MetaData metaData, String[] blackList, PropertyChangeListener canvasChangeListener)
+            throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-re-tables-list.fxml"));
         loader.setControllerFactory(context::getBean);
         Pane window = loader.load();
         ReversedTablesController controller = loader.<ReversedTablesController>getController();
-        controller.init(metaData, blackList);
+        controller.init(metaData, blackList, canvasChangeListener);
 
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
@@ -104,30 +117,51 @@ public class ReverseEngineHandler {
 
     public boolean saveReversedObjects(List<ApricotTable> included, List<ApricotTable> excluded,
             List<ApricotRelationship> relationships) {
-        boolean ret = true;
         Map<ApricotTable, ApricotTable> extraExclude = consistencyHandler.getFullConsistentExclude(excluded,
                 relationships);
         if (!extraExclude.isEmpty()) {
             ButtonType yes = new ButtonType("Ok, exclude", ButtonData.OK_DONE);
             ButtonType no = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
             Alert alert = new Alert(AlertType.WARNING, null, no, yes);
-            alert.setTitle("Delete Snapshot");
-            alert.setHeaderText(WordUtils.wrap(
-                    "Some Parent tables were excluded from the resulting list. "
+            alert.setTitle("Save results of the scan");
+            alert.setHeaderText(WordUtils
+                    .wrap("Some Parent tables were excluded from the resulting list. "
                             + "In order to maintain consistency of the scanned database structure, "
                             + "the corresponding Child tables will be excluded from the result:\n\n", 60)
-                            + getMessageForExtraExclude(extraExclude));
+                    + getMessageForExtraExclude(extraExclude));
             alertDecorator.decorateAlert(alert);
             Optional<ButtonType> result = alert.showAndWait();
 
             if (result.orElse(no) == yes) {
+                // alter the input collections with the extra excluded values
+                Set<ApricotTable> exclChildren = extraExclude.keySet();
+                for (ApricotTable t : exclChildren) {
+                    included.remove(t);
+                    excluded.add(t);
+                }
 
+                // save the black list
+                excluded.sort((ApricotTable t1, ApricotTable t2) -> {
+                    return t1.getName().compareTo(t2.getName());
+
+                });
+                blackListHandler.saveBlackList(projectManager.findCurrentProject(), excluded);
             } else {
-                ret = false;
+                return false;
             }
         }
+        
+        // request the relevant relationships
+        List<ApricotRelationship> filteredRelationships = consistencyHandler.getRelationshipsForTables(included,
+                relationships);
 
-        return ret;
+        // save tables and relationships
+        MetaData md = new MetaData();
+        md.setTables(included);
+        md.setRelationships(filteredRelationships);
+        dataSaver.saveMetaData(md);
+
+        return true;
     }
 
     private String getMessageForExtraExclude(Map<ApricotTable, ApricotTable> extraExclude) {
@@ -152,7 +186,8 @@ public class ReverseEngineHandler {
         return alert;
     }
 
-    private void openDatabaseConnectionForm(ApricotProject project) throws IOException {
+    private void openDatabaseConnectionForm(ApricotProject project, PropertyChangeListener canvasChangeListener)
+            throws IOException {
         ApricotTargetDatabase targetDatabase = ApricotTargetDatabase.valueOf(project.getTargetDatabase());
         DatabaseConnectionModel model = databaseConnectionModelBuilder.buildModel(project);
 
@@ -167,7 +202,7 @@ public class ReverseEngineHandler {
 
             title = "Connect to SQLServer database";
             ConnectionSqlServerController controller = loader.<ConnectionSqlServerController>getController();
-            controller.init(model);
+            controller.init(model, canvasChangeListener);
             break;
         }
 

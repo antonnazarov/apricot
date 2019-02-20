@@ -1,5 +1,6 @@
 package za.co.apricotdb.ui;
 
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 
 import org.apache.commons.text.WordUtils;
@@ -78,7 +79,10 @@ public class ConnectionSqlServerController {
     @FXML
     PasswordField password;
 
-    public void init(DatabaseConnectionModel model) {
+    private PropertyChangeListener canvasChangeListener;
+
+    public void init(DatabaseConnectionModel model, PropertyChangeListener canvasChangeListener) {
+        this.canvasChangeListener = canvasChangeListener;
         applyModel(model);
     }
 
@@ -146,7 +150,7 @@ public class ConnectionSqlServerController {
         String[] blackList = blackListHandler.getBlackListTables(project);
         try {
             getStage().close();
-            reverseEngineHandler.openScanResultForm(metaData, blackList);
+            reverseEngineHandler.openScanResultForm(metaData, blackList, canvasChangeListener);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -83,7 +83,7 @@ public class ApricotRelationship implements Serializable {
     @Override
     public boolean equals(Object rel) {
         if (rel instanceof ApricotRelationship) {
-            return ((ApricotRelationship) rel).getId() == this.getId();
+            return ((ApricotRelationship) rel).getChild().getName().equals(this.getChild().getName());
         }
 
         return false;
@@ -91,7 +91,7 @@ public class ApricotRelationship implements Serializable {
 
     @Override
     public int hashCode() {
-        return 1;
+        return this.getChild().getName().hashCode();
     }
     
     /**

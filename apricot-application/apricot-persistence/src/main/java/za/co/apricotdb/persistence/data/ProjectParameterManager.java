@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotProjectParameter;
+import za.co.apricotdb.persistence.repository.ApricotProjectParameterRepository;
 
 /**
  * This manager serves the Parameters, associated with the Project.
@@ -37,6 +38,9 @@ public class ProjectParameterManager {
 
     @Resource
     EntityManager em;
+    
+    @Resource
+    ApricotProjectParameterRepository projectParameterRepository;
 
     public List<String> getServerNamesForTargetDb(ApricotProject project, String targetDb) {
         List<String> ret = new ArrayList<>();
@@ -84,6 +88,27 @@ public class ProjectParameterManager {
         }
 
         return ret;
+    }
+    
+    public void saveParameter(ApricotProject project, String name, String value) {
+        TypedQuery<ApricotProjectParameter> query = em
+                .createNamedQuery("ApricotProjectParameter.getParameterByName", ApricotProjectParameter.class);
+        query.setParameter("project", project);
+        query.setParameter("name", name);
+        
+        List<ApricotProjectParameter> params = query.getResultList();
+        ApricotProjectParameter p = null;
+        if (params != null && params.size() > 0) {
+            p = params.get(0);
+            p.setValue(value);
+        } else {
+            p = new ApricotProjectParameter();
+            p.setProject(project);
+            p.setName(name);
+            p.setValue(value);
+        }
+        
+        projectParameterRepository.saveAndFlush(p);
     }
 
     private List<ApricotProjectParameter> getConnectionParametersForTargetDb(ApricotProject project, String targetDb) {

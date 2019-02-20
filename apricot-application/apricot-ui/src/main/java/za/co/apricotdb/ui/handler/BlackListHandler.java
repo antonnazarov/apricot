@@ -1,11 +1,14 @@
 package za.co.apricotdb.ui.handler;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.persistence.data.ProjectParameterManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotProjectParameter;
+import za.co.apricotdb.persistence.entity.ApricotTable;
 
 /**
  * All operations required for Black List have been supported by this component.
@@ -27,5 +30,17 @@ public class BlackListHandler {
         }
         
         return ret;
+    }
+    
+    public void saveBlackList(ApricotProject project, List<ApricotTable> tables) {
+        StringBuilder sb = new StringBuilder();
+        for (ApricotTable t : tables) {
+            if (sb.length() != 0) {
+                sb.append(";");
+            }
+            sb.append(t.getName());
+            
+            projectParameterManager.saveParameter(project, ProjectParameterManager.PROJECT_BLACKLIST_PARAM, sb.toString());
+        }
     }
 }

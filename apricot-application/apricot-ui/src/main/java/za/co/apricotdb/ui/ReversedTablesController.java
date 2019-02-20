@@ -1,5 +1,6 @@
 package za.co.apricotdb.ui;
 
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,6 +20,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import za.co.apricotdb.persistence.data.MetaData;
 import za.co.apricotdb.persistence.entity.ApricotTable;
+import za.co.apricotdb.ui.handler.ApplicationInitializer;
 import za.co.apricotdb.ui.handler.ReverseEngineHandler;
 
 /**
@@ -32,6 +34,9 @@ public class ReversedTablesController {
 
     @Autowired
     ReverseEngineHandler reverseEngineHandler;
+    
+    @Autowired
+    ApplicationInitializer applicationInitializer;
 
     @FXML
     TableView<ReversedTableRow> reversedTablesList;
@@ -49,11 +54,11 @@ public class ReversedTablesController {
     Pane mainPane;
 
     private MetaData metaData = null;
-    private String[] blackList = null;
+    private PropertyChangeListener canvasChangeListener;
 
-    public void init(MetaData metaData, String[] blackList) {
+    public void init(MetaData metaData, String[] blackList, PropertyChangeListener canvasChangeListener) {
         this.metaData = metaData;
-        this.blackList = blackList;
+        this.canvasChangeListener = canvasChangeListener;
 
         reversedTablesList.getItems().clear();
         List<ApricotTable> tables = metaData.getTables();
@@ -102,6 +107,8 @@ public class ReversedTablesController {
         }
 
         if (reverseEngineHandler.saveReversedObjects(included, excluded, metaData.getRelationships())) {
+            // refresh the snapshot view
+            applicationInitializer.initializeDefault(canvasChangeListener);
             getStage().close();
         }
     }
