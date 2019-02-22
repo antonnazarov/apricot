@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 import javax.annotation.Resource;
 
 import org.apache.commons.text.WordUtils;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -82,7 +81,7 @@ public class ReverseEngineHandler {
         if (tables != null && tables.size() > 0) {
             // the reverse eng operation cannot be performed of the non empty snapshot
             Alert alert = getAlert("The snapshot \"" + snapshot.getName() + "\" contains entities.\n"
-                    + "You only can perform the database reverse engineering into the EMPTY snapshot.");
+                    + "You only can perform the database reverse engineering operation \ninto an EMPTY snapshot.");
             alert.showAndWait();
 
             return false;

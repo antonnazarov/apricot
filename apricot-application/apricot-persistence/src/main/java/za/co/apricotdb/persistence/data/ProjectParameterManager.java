@@ -29,6 +29,7 @@ import za.co.apricotdb.persistence.repository.ApricotProjectParameterRepository;
 public class ProjectParameterManager {
 
     public static final String DATABASE_CONNECTION_PARAM_PREFIX = "DATABASE.CONNECTION.";
+    public static final String DATABASE_CONNECTION_LATEST = "DATABASE.CONNECTION.LATEST";
     public static final String PROJECT_BLACKLIST_PARAM = "PROJECT.BLACKLIST";
     public static final String CONNECTION_SERVER = "CONNECTION.SERVER";
     public static final String CONNECTION_PORT = "CONNECTION.PORT";
@@ -111,7 +112,7 @@ public class ProjectParameterManager {
         projectParameterRepository.saveAndFlush(p);
     }
 
-    private List<ApricotProjectParameter> getConnectionParametersForTargetDb(ApricotProject project, String targetDb) {
+    public List<ApricotProjectParameter> getConnectionParametersForTargetDb(ApricotProject project, String targetDb) {
         TypedQuery<ApricotProjectParameter> query = em
                 .createNamedQuery("ApricotProjectParameter.getParametersWithPrefix", ApricotProjectParameter.class);
         query.setParameter("project", project);

@@ -74,4 +74,14 @@ public class ApricotProjectParameter implements Serializable {
     public void setProject(ApricotProject project) {
         this.project = project;
     }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("ApricotProjectParameter: ")
+        .append("name=[").append(name).append("], ")
+        .append("value=[").append(value).append("]");
+        
+        return sb.toString(); 
+    }
 }

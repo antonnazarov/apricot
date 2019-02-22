@@ -1,6 +1,7 @@
 package za.co.apricotdb.ui;
 
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,7 @@ import za.co.apricotdb.metascan.ApricotTargetDatabase;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
+import za.co.apricotdb.ui.handler.BlackListHandler;
 import za.co.apricotdb.ui.model.ApricotProjectSerializer;
 import za.co.apricotdb.ui.model.ProjectFormModel;
 
@@ -34,12 +36,15 @@ public class EditProjectController {
 
     @Autowired
     ParentWindow parentWindow;
-    
+
     @Autowired
     ProjectManager projectManager;
-    
+
     @Autowired
     ApplicationInitializer applicationInitializer;
+    
+    @Autowired
+    BlackListHandler blackListHandler;
 
     @FXML
     Pane mainPane;
@@ -52,6 +57,9 @@ public class EditProjectController {
 
     @FXML
     ChoiceBox<String> projectDatabase;
+
+    @FXML
+    TextArea blackList;
 
     private boolean isCreateNew = false;
     private ProjectFormModel model = null;
@@ -105,6 +113,20 @@ public class EditProjectController {
         projectName.setText(model.getProjectName());
         projectDescription.setText(model.getProjectDescription());
         projectDatabase.getSelectionModel().select(model.getProjectDatabase());
+        if (isCreateNew) {
+            blackList.setDisable(true);
+        } else {
+            blackList.setText(model.getBlackList());
+        }
+    }
+
+    @FXML
+    public void editBlackList(ActionEvent event) {
+        try {
+            blackListHandler.openEditBlackListForm(blackList);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private Stage getStage() {

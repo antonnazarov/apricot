@@ -18,6 +18,7 @@ public class ProjectFormModel implements Serializable {
     private String projectDatabase;
     private String projectBlackList;
     private long projectId;
+    private String blackList;
     
     public String getProjectName() {
         return projectName;
@@ -65,5 +66,13 @@ public class ProjectFormModel implements Serializable {
 
     public void setNewView(boolean newView) {
         this.newView = newView;
+    }
+
+    public String getBlackList() {
+        return blackList;
+    }
+
+    public void setBlackList(String blackList) {
+        this.blackList = blackList;
     }
 }

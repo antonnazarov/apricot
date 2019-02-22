@@ -13,12 +13,12 @@ import org.springframework.stereotype.Component;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.scene.control.Alert.AlertType;
 import za.co.apricotdb.metascan.MetaDataScanner;
 import za.co.apricotdb.metascan.sqlserver.SqlServerScanner;
 import za.co.apricotdb.metascan.sqlserver.SqlServerUrlBuilder;
@@ -32,6 +32,7 @@ import za.co.apricotdb.ui.handler.BlackListHandler;
 import za.co.apricotdb.ui.handler.ReverseEngineHandler;
 import za.co.apricotdb.ui.handler.SqlServerParametersHandler;
 import za.co.apricotdb.ui.model.DatabaseConnectionModel;
+import za.co.apricotdb.ui.model.DatabaseConnectionModelBuilder;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.ui.util.StringEncoder;
 
@@ -64,9 +65,12 @@ public class ConnectionSqlServerController {
 
     @Autowired
     BlackListHandler blackListHandler;
-    
+
     @Autowired
     SqlServerParametersHandler parametersHandler;
+
+    @Autowired
+    DatabaseConnectionModelBuilder dbConnModelBuilder;
 
     @FXML
     Pane mainPane;
@@ -87,10 +91,19 @@ public class ConnectionSqlServerController {
     PasswordField password;
 
     private PropertyChangeListener canvasChangeListener;
+    private DatabaseConnectionModel model;
+    private ApricotSnapshot snapshot;
+    private ApricotProject project;
 
     public void init(DatabaseConnectionModel model, PropertyChangeListener canvasChangeListener) {
         this.canvasChangeListener = canvasChangeListener;
+        this.model = model;
+
+        this.snapshot = snapshotManager.getDefaultSnapshot();
+        this.project = projectManager.findCurrentProject();
+
         applyModel(model);
+        setLatestConnectionParameters();
     }
 
     @FXML
@@ -123,24 +136,24 @@ public class ConnectionSqlServerController {
                 return rs.getString("name");
             };
             op.query("select name from sys.tables;", rowMapper);
-            
-            //  Success! Save the connection parameters in the project- parameter
+
+            // Success! Save the connection parameters in the project- parameter
             Properties params = getConnectionParameters();
             parametersHandler.saveConnectionParameters(params);
         } catch (Exception e) {
             throw new Exception("Unable to connect to the database server:\n" + WordUtils.wrap(e.getMessage(), 60));
         }
     }
-    
+
     private Properties getConnectionParameters() {
         Properties params = new Properties();
-        
+
         params.setProperty(ProjectParameterManager.CONNECTION_SERVER, server.getSelectionModel().getSelectedItem());
         params.setProperty(ProjectParameterManager.CONNECTION_PORT, port.getSelectionModel().getSelectedItem());
         params.setProperty(ProjectParameterManager.CONNECTION_DATABASE, database.getSelectionModel().getSelectedItem());
         params.setProperty(ProjectParameterManager.CONNECTION_USER, user.getSelectionModel().getSelectedItem());
         params.setProperty(ProjectParameterManager.CONNECTION_PASSWORD, StringEncoder.encode(password.getText()));
-        
+
         return params;
     }
 
@@ -165,8 +178,8 @@ public class ConnectionSqlServerController {
         String driverClass = sqlServerUrlBuilder.getDriverClass();
         String url = sqlServerUrlBuilder.getUrl(server.getSelectionModel().getSelectedItem(),
                 port.getSelectionModel().getSelectedItem(), database.getSelectionModel().getSelectedItem());
-        ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
-        ApricotProject project = projectManager.findCurrentProject();
+        this.snapshot = snapshotManager.getDefaultSnapshot();
+        this.project = projectManager.findCurrentProject();
 
         MetaData metaData = sqlServerScanner.scan(driverClass, url, user.getSelectionModel().getSelectedItem(),
                 password.getText(), snapshot);
@@ -181,19 +194,22 @@ public class ConnectionSqlServerController {
 
     @FXML
     public void serverSelected(ActionEvent event) {
+        dbConnModelBuilder.populateModel(project, model, server.getSelectionModel().getSelectedItem());
+        applyModel(model);
+    }
 
+    @FXML
+    public void userSelected(ActionEvent event) {
+        password.setText(model.getPassword(user.getSelectionModel().getSelectedItem()));
     }
 
     private void applyModel(DatabaseConnectionModel model) {
-        server.getItems().clear();
         port.getItems().clear();
         database.getItems().clear();
         user.getItems().clear();
 
-        // TODO cant't do it here??
-        server.getItems().addAll(model.getServers());
-        if (model.getServer() != null) {
-            server.getSelectionModel().select(model.getServer());
+        if (server.getItems().isEmpty()) {
+            server.getItems().addAll(model.getServers());
         }
 
         if (model.getPort() != null) {
@@ -227,5 +243,28 @@ public class ConnectionSqlServerController {
 
     private Stage getStage() {
         return (Stage) mainPane.getScene().getWindow();
+    }
+
+    private void setLatestConnectionParameters() {
+        Properties props = parametersHandler.getLatestConnectionProperties(project);
+        if (props != null) {
+            String sServer = props.getProperty(ProjectParameterManager.CONNECTION_SERVER);
+            if (sServer != null && server.getItems() != null && server.getItems().contains(sServer)) {
+                server.getSelectionModel().select(sServer);
+                serverSelected(new ActionEvent());
+            }
+            if (props.getProperty(ProjectParameterManager.CONNECTION_PORT) != null) {
+                port.setValue(props.getProperty(ProjectParameterManager.CONNECTION_PORT));
+            }
+            if (props.getProperty(ProjectParameterManager.CONNECTION_DATABASE) != null) {
+                database.setValue(props.getProperty(ProjectParameterManager.CONNECTION_DATABASE));
+            }
+            if (props.getProperty(ProjectParameterManager.CONNECTION_USER) != null) {
+                user.setValue(props.getProperty(ProjectParameterManager.CONNECTION_USER));
+            }
+            if (props.getProperty(ProjectParameterManager.CONNECTION_PASSWORD) != null) {
+                password.setText(StringEncoder.decode(props.getProperty(ProjectParameterManager.CONNECTION_PASSWORD)));
+            }
+        }
     }
 }

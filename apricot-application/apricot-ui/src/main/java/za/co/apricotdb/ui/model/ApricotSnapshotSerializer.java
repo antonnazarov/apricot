@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.SnapshotCloneManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.TableManager;

@@ -22,44 +22,58 @@ public class SqlServerParametersHandler implements ConnectionParametersHandler {
 
     @Override
     public void saveConnectionParameters(Properties params) {
-        String serverName = params.getProperty(ProjectParameterManager.CONNECTION_SERVER);
-        if (serverName != null) {
-            ApricotProject project = projectManager.findCurrentProject();
-            List<ApricotProjectParameter> prm = projectParameterManager.getParametersWithServer(project,
-                    project.getTargetDatabase(), serverName);
-            boolean different = true;
-            String idx = null;
-            if (prm != null && prm.size() > 0) {
-                different = false;
-                for (ApricotProjectParameter app : prm) {
-                    if (idx == null) {
-                        idx = getIdx(app.getName());
-                    }
-                    Properties p = projectParameterManager.restorePropertiesFromString(app.getValue());
+        ApricotProject project = projectManager.findCurrentProject();
+        List<ApricotProjectParameter> prm = projectParameterManager.getConnectionParametersForTargetDb(project,
+                project.getTargetDatabase());
+        String paramsValue = projectParameterManager.getPropertiesAsString(params, "SqlServer connection");
+        boolean found = false;
+        String idx = null;
+        if (prm != null && prm.size() > 0) {
+            for (ApricotProjectParameter app : prm) {
+                if (idx == null) {
+                    idx = getIdx(app.getName());
+                }
+                Properties p = projectParameterManager.restorePropertiesFromString(app.getValue());
 
-                    if (isDifferent(p, params, ProjectParameterManager.CONNECTION_PORT)
-                            || isDifferent(p, params, ProjectParameterManager.CONNECTION_DATABASE)
-                            || isDifferent(p, params, ProjectParameterManager.CONNECTION_USER)) {
-                        different = true;
-                        break;
-                    }
+                if (areEqual(p, params, ProjectParameterManager.CONNECTION_PORT)
+                        && areEqual(p, params, ProjectParameterManager.CONNECTION_DATABASE)
+                        && areEqual(p, params, ProjectParameterManager.CONNECTION_USER)) {
+                    // found the same combination of parameters. Rewrite upon the existing one (in
+                    // sake of the password).
+                    projectParameterManager.saveParameter(project, app.getName(), paramsValue);
+                    found = true;
+                    break;
                 }
             }
-
-            if (different) {
-                idx = calcNextIdx(idx);
-                String paramsValue = projectParameterManager.getPropertiesAsString(params, "SqlServer connection");
-                projectParameterManager.saveParameter(project, ProjectParameterManager.DATABASE_CONNECTION_PARAM_PREFIX
-                        + project.getTargetDatabase() + "." + idx, paramsValue);
-            }
         }
+
+        if (!found) {
+            idx = calcNextIdx(idx);
+            projectParameterManager.saveParameter(project,
+                    ProjectParameterManager.DATABASE_CONNECTION_PARAM_PREFIX + project.getTargetDatabase() + "." + idx,
+                    paramsValue);
+        }
+        
+        //  save the latest successful connection for this project
+        projectParameterManager.saveParameter(project, ProjectParameterManager.DATABASE_CONNECTION_LATEST, paramsValue);        
+    }
+    
+    public Properties getLatestConnectionProperties(ApricotProject project) {
+        Properties ret = null;
+        ApricotProjectParameter param = projectParameterManager.getParameterByName(project, ProjectParameterManager.DATABASE_CONNECTION_LATEST);
+        
+        if (param != null) {
+            ret = projectParameterManager.restorePropertiesFromString(param.getValue());
+        }
+        
+        return ret;
     }
 
     private String getIdx(String paramName) {
         String idx = null;
-        String[] pn = paramName.split(".");
-        if (pn.length == 3) {
-            idx = pn[2];
+        String[] pn = paramName.split("\\.");
+        if (pn.length == 4) {
+            idx = pn[3];
         }
 
         return idx;
@@ -72,7 +86,7 @@ public class SqlServerParametersHandler implements ConnectionParametersHandler {
         return String.format("%03d", Integer.parseInt(idx) + 1);
     }
 
-    private boolean isDifferent(Properties p1, Properties p2, String parameterName) {
-        return !p1.getProperty(parameterName, "<none>").equalsIgnoreCase(p2.getProperty(parameterName, "<none>"));
+    private boolean areEqual(Properties p1, Properties p2, String parameterName) {
+        return p1.getProperty(parameterName, "<none>").equalsIgnoreCase(p2.getProperty(parameterName, "<none>"));
     }
 }

@@ -49,7 +49,7 @@
                         <AnchorPane layoutX="10.0" layoutY="76.0" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="3">
                            <children>
                               <Label layoutY="6.0" text="Project Black List:" />
-                              <Button layoutY="76.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="143.0" text="Edit Black List" />
+                              <Button fx:id="editBlackListButton" layoutY="76.0" mnemonicParsing="false" onAction="#editBlackList" prefHeight="25.0" prefWidth="143.0" text="Edit Black List" />
                            </children>
                         </AnchorPane>
                         <TextArea fx:id="blackList" editable="false" layoutX="162.0" layoutY="87.0" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />

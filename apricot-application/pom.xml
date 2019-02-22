@@ -185,6 +185,19 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>1.5.16.RELEASE</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>repackage</goal>
+                            </goals>
+                            <configuration>
+                                <classifier>spring-boot</classifier>
+                                <mainClass>
+                                    za.co.apricotdb.ui.ApricotMainApp
+                                </mainClass>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
