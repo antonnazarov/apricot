@@ -24,6 +24,7 @@
         <module>apricot-support</module>
         <module>apricot-ui</module>
         <module>apricot-viewport</module>
+        <module>apricot-launcher</module>
     </modules>
 
     <dependencies>
