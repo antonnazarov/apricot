@@ -52,21 +52,30 @@ public class ApplicationInitializer {
 
     @Autowired
     ApricotCanvasHandler canvasHandler;
-    
+
     @Autowired
     ParentWindow parentWindow;
 
     @Transactional
     public void initializeDefault(PropertyChangeListener canvasChangeListener) {
         ApricotProject currentProject = projectManager.findCurrentProject();
-        ApricotSnapshot defaultSnapshot = snapshotManager.getDefaultSnapshot(currentProject);
+        if (currentProject == null) {
+            // there is no project in the system
+            initializeEmptyEnvironment();
+            parentWindow.setEmptyEnv(true);
+            return;
+        } else {
+            parentWindow.setEmptyEnv(false);
+        }
 
-        initialize(currentProject, defaultSnapshot, canvasChangeListener);
+        ApricotSnapshot defaultSnapshot = snapshotManager.getDefaultSnapshot(currentProject);
+        if (defaultSnapshot != null) {
+            initialize(currentProject, defaultSnapshot, canvasChangeListener);
+        }
     }
 
     @Transactional
-    public void initializeForProject(ApricotProject project,
-            PropertyChangeListener canvasChangeListener) {
+    public void initializeForProject(ApricotProject project, PropertyChangeListener canvasChangeListener) {
         ApricotSnapshot defaultSnapshot = snapshotManager.getDefaultSnapshot(project);
         initialize(project, defaultSnapshot, canvasChangeListener);
     }
@@ -74,7 +83,7 @@ public class ApplicationInitializer {
     @Transactional
     public void initialize(ApricotProject project, ApricotSnapshot snapshot,
             PropertyChangeListener canvasChangeListener) {
-        //  remember the current project
+        // remember the current project
         parentWindow.getApplicationData().setCurrentProject(project);
 
         List<ApricotTable> tables = tableManager.getTablesForSnapshot(snapshot);
@@ -84,8 +93,7 @@ public class ApplicationInitializer {
         parentWindow.getProjectTreeView().setRoot(root);
 
         ComboBox<String> combo = parentWindow.getSnapshotCombo();
-        if (combo.getUserData() != null && 
-                combo.getUserData().equals("snapshotCombo.selectSnapshot")) {
+        if (combo.getUserData() != null && combo.getUserData().equals("snapshotCombo.selectSnapshot")) {
             combo.setUserData("reset");
         } else {
             combo.setUserData("AppInitialize");
@@ -95,13 +103,13 @@ public class ApplicationInitializer {
         TabPane tabPane = parentWindow.getProjectTabPane();
         tabPane.getTabs().clear();
         for (ApricotView view : viewHandler.getAllViews(project)) {
-            //  create Tabs for General view and for other views with the Layout Objects
+            // create Tabs for General view and for other views with the Layout Objects
             if (view.isGeneral() || view.getObjectLayouts().size() != 0) {
                 viewHandler.createViewTab(snapshot, view, tabPane, canvasChangeListener);
             }
         }
     }
-    
+
     private void initCombo(ApricotProject project, ApricotSnapshot snapshot, ComboBox<String> combo) {
         combo.getItems().clear();
         List<ApricotSnapshot> snapshots = snapshotManager.getAllSnapshots(project);
@@ -118,5 +126,18 @@ public class ApplicationInitializer {
         }
 
         return ret;
+    }
+
+    /**
+     * Do it, when no projects were registered in the system.
+     */
+    private void initializeEmptyEnvironment() {
+        TreeItem<String> root = new TreeItem<>("<No current Project>");
+        parentWindow.getProjectTreeView().setRoot(root);
+        ComboBox<String> combo = parentWindow.getSnapshotCombo();
+        combo.getItems().clear();
+        combo.setValue("<No current Snapshot>");
+        TabPane tabPane = parentWindow.getProjectTabPane();
+        tabPane.getTabs().clear();
     }
 }

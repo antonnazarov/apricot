@@ -190,6 +190,16 @@ public class MainAppController {
     public void reverseEngineer(ActionEvent event) {
         reverseEngineHandler.startReverseEngineering(canvasChangeListener);
     }
+    
+    /**
+     * Delete the current project.
+     */
+    @FXML
+    public void deleteProject(ActionEvent event) {
+        if (projectHandler.deleteCurrentProject()) {
+            applicationInitializer.initializeDefault(canvasChangeListener);
+        }
+    }
 
     public PropertyChangeListener getCanvasChangeListener() {
         return canvasChangeListener;

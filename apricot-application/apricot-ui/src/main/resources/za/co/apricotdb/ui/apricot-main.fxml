@@ -23,18 +23,18 @@
       <AnchorPane prefHeight="25.0" prefWidth="1400.0" style="-fx-background-color: lightgray;" BorderPane.alignment="CENTER" />
    </bottom>
    <top>
-      <HBox prefHeight="22.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+      <HBox id="mainBox" prefHeight="22.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <MenuBar prefHeight="35.0" prefWidth="284.0">
+            <MenuBar id="mainMenu" prefHeight="35.0" prefWidth="284.0">
               <menus>
-                <Menu mnemonicParsing="false" text="Project">
+                <Menu id="menuProject" mnemonicParsing="false" text="Project">
                   <items>
                     <MenuItem mnemonicParsing="false" onAction="#newProject" text="New                     " />
-                        <MenuItem mnemonicParsing="false" onAction="#openProject" text="Open" />
-                        <MenuItem mnemonicParsing="false" onAction="#editProject" text="Edit" />
+                        <MenuItem id="menuOpen" mnemonicParsing="false" onAction="#openProject" text="Open" />
+                        <MenuItem id="menuEdit" mnemonicParsing="false" onAction="#editProject" text="Edit" />
                         <MenuItem disable="true" mnemonicParsing="false" text="Export" />
                         <MenuItem disable="true" mnemonicParsing="false" text="Import" />
-                        <MenuItem disable="true" mnemonicParsing="false" text="Delete" />
+                        <MenuItem id="menuDelete" mnemonicParsing="false" onAction="#deleteProject" text="Delete" />
                   </items>
                 </Menu>
                 <Menu disable="true" mnemonicParsing="false" text="Edit">
@@ -52,7 +52,7 @@
                         </Menu>
                   </items>
                 </Menu>
-                  <Menu mnemonicParsing="false" text="Operations">
+                  <Menu id="menuOperations" mnemonicParsing="false" text="Operations">
                      <items>
                         <MenuItem mnemonicParsing="false" onAction="#reverseEngineer" text="Reverse Engineering" />
                         <MenuItem disable="true" mnemonicParsing="false" text="Compare Snapshots" />
@@ -80,9 +80,9 @@
                   <Insets />
                </HBox.margin>
             </MenuBar>
-            <MenuBar prefHeight="36.0" prefWidth="68.0">
+            <MenuBar id="snapshotMenu" prefHeight="36.0" prefWidth="68.0">
               <menus>
-                <Menu mnemonicParsing="false" text="Snapshot:">
+                <Menu id="menuSnapshot" mnemonicParsing="false" text="Snapshot:">
                   <items>
                     <MenuItem mnemonicParsing="false" onAction="#editSnapshot" text="Edit" />
                         <MenuItem mnemonicParsing="false" onAction="#deleteSnapshot" text="Delete             " />
@@ -104,15 +104,15 @@
                   <Insets top="6.0" />
                </HBox.margin>
             </ComboBox>
-            <ButtonBar nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="300.0">
+            <ButtonBar id="mainButtons" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="300.0">
               <buttons>
-                  <Button fx:id="saveButton" minWidth="34.0" mnemonicParsing="false" onAction="#save" prefHeight="25.0" text="Save" />
+                  <Button id="buttonSave" fx:id="saveButton" minWidth="34.0" mnemonicParsing="false" onAction="#save" prefHeight="25.0" text="Save" />
                 <Button disable="true" minWidth="34.0" mnemonicParsing="false" prefHeight="25.0" text="Undo" />
                   <Label alignment="CENTER_RIGHT" minWidth="44.0" prefHeight="17.0" text="New:" />
-                  <Button layoutX="455.0" layoutY="10.0" minWidth="34.0" mnemonicParsing="false" onAction="#newSnapshot" prefHeight="25.0" text="Snapshot" />
+                  <Button id="buttonSnapshot" layoutX="455.0" layoutY="10.0" minWidth="34.0" mnemonicParsing="false" onAction="#newSnapshot" prefHeight="25.0" text="Snapshot" />
                   <Button disable="true" minWidth="34.0" mnemonicParsing="false" prefHeight="25.0" text="Entity" />
                   <Button disable="true" minWidth="34.0" mnemonicParsing="false" prefHeight="25.0" text="Relationship" />
-                  <Button layoutX="540.0" layoutY="10.0" minWidth="34.0" mnemonicParsing="false" onAction="#newView" prefHeight="25.0" text="View" />
+                  <Button id="buttonView" layoutX="540.0" layoutY="10.0" minWidth="34.0" mnemonicParsing="false" onAction="#newView" prefHeight="25.0" text="View" />
               </buttons>
                <HBox.margin>
                   <Insets bottom="5.0" right="5.0" top="5.0" />

@@ -60,4 +60,11 @@ public class ObjectLayoutManager {
     public void deleteObjectLayout(ApricotObjectLayout layout) {
         layoutRepository.delete(layout);
     }
+    
+    public List<ApricotObjectLayout> getObjectLayoutsByView(ApricotView view) {
+        TypedQuery<ApricotObjectLayout> query = em.createNamedQuery("ApricotObjectLayout.getLayoutsForView", ApricotObjectLayout.class);
+        query.setParameter("view", view);
+        
+        return query.getResultList();
+    }
 }

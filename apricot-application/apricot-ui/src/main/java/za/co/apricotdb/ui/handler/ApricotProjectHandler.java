@@ -1,6 +1,8 @@
 package za.co.apricotdb.ui.handler;
 
 import java.beans.PropertyChangeListener;
+import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Resource;
 
@@ -10,17 +12,24 @@ import org.springframework.stereotype.Component;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import za.co.apricotdb.persistence.data.ProjectManager;
+import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.ui.EditProjectController;
 import za.co.apricotdb.ui.OpenProjectController;
 import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.model.EditProjectModelBuilder;
 import za.co.apricotdb.ui.model.NewProjectModelBuilder;
 import za.co.apricotdb.ui.model.ProjectFormModel;
+import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
 /**
  * All the project- related high level business logic is implemented in this
@@ -40,6 +49,12 @@ public class ApricotProjectHandler {
     
     @Autowired
     ParentWindow parentWindow;
+    
+    @Autowired
+    ProjectManager projectManager;
+    
+    @Autowired
+    AlertMessageDecorator alertDecorator;
     
     public void createOpenProjectForm(BorderPane mainBorderPane, PropertyChangeListener canvasChangeListener)
             throws Exception {
@@ -89,5 +104,29 @@ public class ApricotProjectHandler {
         controller.init(isCreateNew, model, mainBorderPane, canvasChangeListener);
 
         dialog.show();
+    }
+    
+    public boolean deleteCurrentProject() {
+        ApricotProject project = projectManager.findCurrentProject();
+        
+        ButtonType yes = new ButtonType("Delete", ButtonData.OK_DONE);
+        ButtonType no = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+        Alert alert = new Alert(AlertType.WARNING, null, yes, no);
+        alert.setTitle("Delete Project");
+        alert.setHeaderText("Do you want to delete the project \"" + project.getName() + "\"?");
+        alertDecorator.decorateAlert(alert);
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.orElse(no) == yes) {
+            projectManager.deleteProject(project);
+            List<ApricotProject> prj = projectManager.getAllProjects();
+            if (prj != null && prj.size() > 0) {
+                projectManager.setProjectCurrent(prj.get(0));
+            }
+            
+            return true;
+        }
+        
+        return false;
     }
 }

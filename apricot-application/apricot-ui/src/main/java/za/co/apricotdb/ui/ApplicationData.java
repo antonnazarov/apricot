@@ -11,6 +11,7 @@ import za.co.apricotdb.persistence.entity.ApricotProject;
 public class ApplicationData {
     
     private ApricotProject currentProject;
+    private boolean emptyEnv;
 
     public ApricotProject getCurrentProject() {
         return currentProject;
@@ -18,5 +19,13 @@ public class ApplicationData {
 
     public void setCurrentProject(ApricotProject currentProject) {
         this.currentProject = currentProject;
+    }
+
+    public boolean isEmptyEnv() {
+        return emptyEnv;
+    }
+
+    public void setEmptyEnv(boolean emptyEnv) {
+        this.emptyEnv = emptyEnv;
     }
 }

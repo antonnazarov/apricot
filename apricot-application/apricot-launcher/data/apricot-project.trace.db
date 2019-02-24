@@ -1,0 +1,3 @@
+2019-02-24 17:29:26 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "APRICOT_APP_PARAMETERS" not found; SQL statement:
+select app_parameter_value from apricot_app_parameters where app_parameter_name=? [42102-197]

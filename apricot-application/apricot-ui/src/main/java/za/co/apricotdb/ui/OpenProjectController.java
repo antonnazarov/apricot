@@ -83,7 +83,7 @@ public class OpenProjectController {
         this.mainBorderPane = mainBorderPane;
         this.canvasChangeListener = canvasChangeListener;
 
-        ApricotProject currentProject = parentWindow.getApplicationData().getCurrentProject();
+        ApricotProject currentProject = projectManager.findCurrentProject();
         List<ApricotProject> projects = projectManager.getAllProjects();
         for (ApricotProject p : projects) {
             if (p.getName().equals(currentProject.getName())) {

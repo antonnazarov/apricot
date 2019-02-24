@@ -72,8 +72,12 @@ public class TableWrapper {
         List<ApricotConstraint> constraints = apricotTable.getConstraints();
         constraints.sort((ApricotConstraint c1, ApricotConstraint c2) -> {
             if (c1.getType().getOrder() == c2.getType().getOrder()) {
-                //  use ordinal position of the constraint fields
-                return c1.getColumns().get(0).getColumn().getOrdinalPosition() - c2.getColumns().get(0).getColumn().getOrdinalPosition();
+                // use ordinal position of the constraint fields
+                if (c1.getColumns() != null && c1.getColumns().size() > 0 && c2.getColumns() != null
+                        && c2.getColumns().size() > 0) {
+                    return c1.getColumns().get(0).getColumn().getOrdinalPosition()
+                            - c2.getColumns().get(0).getColumn().getOrdinalPosition();
+                }
             }
             return c1.getType().getOrder() - c2.getType().getOrder();
         });
@@ -85,7 +89,7 @@ public class TableWrapper {
                 abbreviation += String.valueOf(cnt);
             }
 
-            //  populate the constraint legend
+            // populate the constraint legend
             constraintsLegend.put(abbreviation, c.getName());
 
             for (ApricotColumnConstraint acc : c.getColumns()) {
@@ -106,15 +110,14 @@ public class TableWrapper {
         int childCnt = 0;
         int tableSize = indexedRows.size();
 
-        relationships.sort((ApricotRelationship r1, ApricotRelationship r2) -> 
-                r1.getChild().getTable().getName()
-                        .compareTo(r2.getChild().getTable().getName()));
+        relationships.sort((ApricotRelationship r1, ApricotRelationship r2) -> r1.getChild().getTable().getName()
+                .compareTo(r2.getChild().getTable().getName()));
         List<String> children = new ArrayList<>();
         for (ApricotRelationship r : relationships) {
             String child = r.getChild().getTable().getName();
             String parent = r.getParent().getTable().getName();
 
-            //  populate the parent tables names
+            // populate the parent tables names
             if (child.equals(apricotTable.getName())) {
                 List<ApricotColumnConstraint> relColumns = r.getChild().getColumns();
                 for (ApricotColumnConstraint acc : relColumns) {
@@ -123,7 +126,7 @@ public class TableWrapper {
                 }
             }
 
-            //  populate the child tables names
+            // populate the child tables names
             if (parent.equals(apricotTable.getName())) {
                 if (!children.contains(child)) {
                     if (childCnt < tableSize) {
@@ -151,24 +154,31 @@ public class TableWrapper {
         String constraints;
         String childTable;
         boolean isColumnDefinition;
+
         public String getParentTable() {
             return parentTable;
         }
+
         public int getOrdinalPosition() {
             return ordinalPosition;
         }
+
         public String getColumnName() {
             return columnName;
         }
+
         public String getColumnType() {
             return columnType;
         }
+
         public String getConstraints() {
             return constraints;
         }
+
         public String getChildTable() {
             return childTable;
         }
+
         public boolean isColumnDefinition() {
             return isColumnDefinition;
         }
@@ -185,7 +195,7 @@ public class TableWrapper {
     public Map<String, String> getConstraintsLegend() {
         return constraintsLegend;
     }
-    
+
     public Map<String, ReportRow> getRowMap() {
         return rows;
     }

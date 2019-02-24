@@ -6,9 +6,13 @@ import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import za.co.apricotdb.persistence.entity.ApricotObjectLayout;
 import za.co.apricotdb.persistence.entity.ApricotProject;
+import za.co.apricotdb.persistence.entity.ApricotSnapshot;
+import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.persistence.repository.ApricotProjectRepository;
 
 /**
@@ -25,6 +29,15 @@ public class ProjectManager {
     
     @Resource
     EntityManager em;
+    
+    @Autowired
+    SnapshotManager snapshotManager;
+    
+    @Autowired
+    ViewManager viewManager;
+    
+    @Autowired
+    ObjectLayoutManager objectLayoutManager;
 
     public void setProjectCurrent(ApricotProject project) {
         List<ApricotProject> projects = projectRepository.findAll();
@@ -86,5 +99,25 @@ public class ProjectManager {
     
     public ApricotProject getProject(long projectId) {
         return projectRepository.findOne(projectId);
+    }
+    
+    /**
+     * Delete the project with all related information (objects).
+     */
+    public void deleteProject(ApricotProject project) {
+        List<ApricotSnapshot> snapshots = snapshotManager.getAllSnapshots(project);
+        for (ApricotSnapshot s : snapshots) {
+            snapshotManager.deleteSnapshot(s);
+        }
+        
+        List<ApricotView> views = viewManager.getAllViews(project);
+        for (ApricotView v : views) {
+            List<ApricotObjectLayout> layouts = objectLayoutManager.getObjectLayoutsByView(v);
+            for (ApricotObjectLayout l : layouts) {
+                objectLayoutManager.deleteObjectLayout(l);
+            }
+        }
+        
+        projectRepository.delete(project);
     }
 }
