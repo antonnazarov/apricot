@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -106,6 +107,7 @@ public class ApricotProjectHandler {
         dialog.show();
     }
     
+    @Transactional
     public boolean deleteCurrentProject() {
         ApricotProject project = projectManager.findCurrentProject();
         

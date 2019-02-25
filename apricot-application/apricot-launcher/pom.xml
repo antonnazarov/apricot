@@ -7,7 +7,7 @@
     <parent>
         <groupId>za.co.apricot</groupId>
         <artifactId>apricotdb</artifactId>
-        <version>0.1</version>
+        <version>0.2</version>
     </parent>
 
     <artifactId>apricot-launcher</artifactId>

@@ -9,6 +9,7 @@ import java.util.Optional;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 
+import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -37,25 +38,25 @@ import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
 @Component
 public class ApricotSnapshotHandler {
-    
+
     @Resource
     ApplicationContext context;
-    
+
     @Autowired
     NewSnapshotModelBuilder newSnapshotModelBuilder;
-    
+
     @Autowired
     EditSnapshotModelBuilder editSnapshotModelBuilder;
-    
+
     @Autowired
     SnapshotManager snapshotManager;
-    
+
     @Autowired
     ProjectManager projectManager;
-    
+
     @Autowired
     AlertMessageDecorator alertDecorator;
-    
+
     public void createDefaultSnapshot(ApricotProject project) {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         ApricotSnapshot snapshot = new ApricotSnapshot("Initial snapshot, created " + df.format(new java.util.Date()),
@@ -63,15 +64,19 @@ public class ApricotSnapshotHandler {
                 new ArrayList<ApricotTable>());
         project.getSnapshots().add(snapshot);
     }
-    
+
     @Transactional
     public void setDefaultSnapshot(ApricotSnapshot snapshot) {
+        if (snapshot == null) {
+            return;
+        }
+        
         List<ApricotSnapshot> snapshots = snapshotManager.getAllSnapshots(snapshot.getProject());
         for (ApricotSnapshot s : snapshots) {
             s.setDefaultSnapshot(false);
             snapshotManager.saveSnapshot(s);
         }
-        
+
         snapshot.setDefaultSnapshot(true);
         snapshotManager.saveSnapshot(snapshot);
     }
@@ -107,10 +112,22 @@ public class ApricotSnapshotHandler {
 
         dialog.show();
     }
-    
+
     public boolean deleteSnapshot() {
+        ApricotProject project = projectManager.findCurrentProject();
+        List<ApricotSnapshot> snaps = snapshotManager.getAllSnapshots(project);
+        if (snaps.size() == 1) {
+            Alert alert = getAlert(AlertType.WARNING, WordUtils.wrap("The snapshot \"" + snaps.get(0).getName()
+                    + "\" is the only snapshot in the project \"" + project.getName()
+                    + "\". This snapshot can't be deleted, since a project has to include at least one snapshot.", 60));
+            alertDecorator.decorateAlert(alert);
+            alert.showAndWait();
+
+            return false;
+        }
+
         ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
-        
+
         ButtonType yes = new ButtonType("Delete", ButtonData.OK_DONE);
         ButtonType no = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
         Alert alert = new Alert(AlertType.WARNING, null, yes, no);
@@ -121,14 +138,24 @@ public class ApricotSnapshotHandler {
 
         if (result.orElse(no) == yes) {
             snapshotManager.deleteSnapshot(snapshot);
-            ApricotProject project = projectManager.findCurrentProject();
             List<ApricotSnapshot> snapshots = snapshotManager.getAllSnapshots(project);
-            ApricotSnapshot defSnapshot = snapshots.get(snapshots.size()-1);
+            ApricotSnapshot defSnapshot = snapshots.get(snapshots.size() - 1);
             setDefaultSnapshot(defSnapshot);
-            
+
             return true;
         }
-        
+
         return false;
+    }
+
+    private Alert getAlert(AlertType alertType, String text) {
+        Alert alert = new Alert(alertType, null, ButtonType.OK);
+        alert.setTitle("Delete Snapshot");
+        alert.setHeaderText(text);
+        if (alertType == AlertType.ERROR) {
+            alertDecorator.decorateAlert(alert);
+        }
+
+        return alert;
     }
 }

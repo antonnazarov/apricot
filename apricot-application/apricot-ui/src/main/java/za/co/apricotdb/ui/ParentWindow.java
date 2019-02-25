@@ -138,6 +138,9 @@ public class ParentWindow {
         ButtonBar mainButtons = getButtonBar("mainButtons");
         List<Node> buttons = mainButtons.getButtons();
         setButtonDisable(buttons, empty);
+        
+        ComboBox<String> combo = getSnapshotCombo();
+        combo.setUserData(null);
     }
 
     private HBox getMainBox() {
@@ -174,6 +177,9 @@ public class ParentWindow {
 
     private void setMenuDisable(List<Menu> menus, boolean disable) {
         for (Menu m : menus) {
+            if (m.getId() != null && Arrays.stream(EMPTY_RELATED_OBJECTS).anyMatch(m.getId()::equals)) {
+                m.setDisable(disable);
+            }
             for (MenuItem mi : m.getItems()) {
                 if (mi.getId() != null && Arrays.stream(EMPTY_RELATED_OBJECTS).anyMatch(mi.getId()::equals)) {
                     mi.setDisable(disable);

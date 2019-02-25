@@ -76,6 +76,7 @@ public class ApplicationInitializer {
 
     @Transactional
     public void initializeForProject(ApricotProject project, PropertyChangeListener canvasChangeListener) {
+        parentWindow.setEmptyEnv(false);
         ApricotSnapshot defaultSnapshot = snapshotManager.getDefaultSnapshot(project);
         initialize(project, defaultSnapshot, canvasChangeListener);
     }

@@ -156,6 +156,9 @@ public class MainAppController {
             String snapshotSelected = snapshotCombo.getSelectionModel().getSelectedItem();
             ApricotSnapshot snapshot = snapshotManager
                     .getSnapshotByName(parentWindow.getApplicationData().getCurrentProject(), snapshotSelected);
+            if (snapshot == null) {
+                return;
+            }
             snapshotHandler.setDefaultSnapshot(snapshot);
             applicationInitializer.initialize(snapshot.getProject(), snapshot, canvasChangeListener);
         }

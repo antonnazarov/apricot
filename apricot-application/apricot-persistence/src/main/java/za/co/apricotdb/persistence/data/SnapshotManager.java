@@ -108,7 +108,7 @@ public class SnapshotManager {
     }
 
     public void deleteSnapshot(ApricotSnapshot snapshot) {
-        List<ApricotTable> tables = tableManager.getTablesForSnapshot(getDefaultSnapshot());
+        List<ApricotTable> tables = tableManager.getTablesForSnapshot(snapshot);
         for (ApricotTable t : tables) {
             List<ApricotColumnConstraint> cnstrs = constraintManager.getConstraintColumnsByTable(t);
             for (ApricotColumnConstraint cc : cnstrs) {

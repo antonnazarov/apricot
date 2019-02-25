@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -104,6 +105,7 @@ public class ProjectManager {
     /**
      * Delete the project with all related information (objects).
      */
+    @Transactional
     public void deleteProject(ApricotProject project) {
         List<ApricotSnapshot> snapshots = snapshotManager.getAllSnapshots(project);
         for (ApricotSnapshot s : snapshots) {
