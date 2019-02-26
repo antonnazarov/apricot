@@ -1,14 +1,12 @@
 package za.co.apricotdb.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.stereotype.Component;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -17,6 +15,7 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import za.co.apricotdb.ui.model.ApricotColumnData;
 import za.co.apricotdb.ui.model.EditEntityModel;
 
@@ -65,13 +64,24 @@ public class EditEntityController {
         
         dataType.setCellValueFactory(e -> e.getValue().getDataType());
         ObservableList<String> test = FXCollections.observableArrayList("1", "2", "3");
-        dataType.setCellFactory(ComboBoxTableCell.forTableColumn(test));
+        dataType.setCellFactory(getCallback(test));
         
         length.setCellValueFactory(e -> e.getValue().getValueLength());
         length.setCellFactory(TextFieldTableCell.forTableColumn());
 
         applyModel(model);
     }
+    
+    public <S,T> Callback<TableColumn<S,T>, TableCell<S,T>> getCallback(final ObservableList<T> items) {
+        return new Callback<TableColumn<S,T>, TableCell<S,T>>() {
+            @Override public TableCell<S,T> call(TableColumn<S,T> list) {
+                ComboBoxTableCell<S,T> combo = new ComboBoxTableCell<S,T>(items);
+                combo.comboBoxEditableProperty().setValue(true);
+                
+                return combo;
+            }
+        };
+    }    
 
     @FXML
     public void cancel(ActionEvent event) {
