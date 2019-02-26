@@ -1,6 +1,7 @@
 package za.co.apricotdb.ui.handler;
 
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,9 +10,12 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javafx.event.ActionEvent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
+import javafx.scene.input.MouseButton;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.TableManager;
@@ -31,7 +35,7 @@ import za.co.apricotdb.viewport.canvas.CanvasBuilder;
  */
 @Component
 public class ApplicationInitializer {
-
+    
     @Autowired
     ProjectManager projectManager;
 
@@ -55,6 +59,9 @@ public class ApplicationInitializer {
 
     @Autowired
     ParentWindow parentWindow;
+    
+    @Autowired
+    ApricotEntityHandler apricotEntityHandler;
 
     @Transactional
     public void initializeDefault(PropertyChangeListener canvasChangeListener) {
@@ -91,7 +98,21 @@ public class ApplicationInitializer {
         TreeItem<String> root = new TreeItem<>(project.getName());
         root.getChildren().addAll(getTables(tables));
         root.setExpanded(true);
-        parentWindow.getProjectTreeView().setRoot(root);
+        TreeView<String> tw = parentWindow.getProjectTreeView();
+        tw.setRoot(root);
+        tw.setOnMouseClicked(e -> {
+            if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 2) {
+                TreeItem<String> item = tw.getSelectionModel().getSelectedItem();
+                if (item != tw.getRoot()) {
+                    //  a table has been selected by double click
+                    try {
+                    apricotEntityHandler.openEntityEditorForm(false, item.getValue());
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
 
         ComboBox<String> combo = parentWindow.getSnapshotCombo();
         if (combo.getUserData() != null && combo.getUserData().equals("snapshotCombo.selectSnapshot")) {

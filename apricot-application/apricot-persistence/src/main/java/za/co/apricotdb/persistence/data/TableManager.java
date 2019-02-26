@@ -42,4 +42,18 @@ public class TableManager {
     public ApricotTable saveTable(ApricotTable table) {
         return tableRep.save(table);
     }
+    
+    public ApricotTable getTableByName(String name, ApricotSnapshot snapshot) {
+        ApricotTable ret = null;
+        
+        TypedQuery<ApricotTable> query = em.createNamedQuery("ApricotTable.getTableByName", ApricotTable.class);
+        query.setParameter("name", name);
+        query.setParameter("snapshot", snapshot);
+        List<ApricotTable> res = query.getResultList();
+        if (res != null && res.size() > 0) {
+            ret = res.get(0);
+        }
+        
+        return ret;
+    }
 }

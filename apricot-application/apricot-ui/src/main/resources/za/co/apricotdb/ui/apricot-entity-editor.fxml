@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<Pane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="722.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.EditEntityController">
+   <children>
+      <VBox layoutY="-1.0" prefHeight="400.0" prefWidth="722.0">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="31.0" prefWidth="600.0" spacing="10.0">
+               <children>
+                  <Label text="Entity Name:" />
+                  <TextField fx:id="entityName" prefHeight="25.0" prefWidth="237.0" />
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </HBox>
+            <TabPane prefHeight="329.0" prefWidth="700.0" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                <Tab text="Columns">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="612.0">
+                           <children>
+                              <TableView fx:id="columnDefinitionTable" editable="true" layoutX="14.0" layoutY="3.0" prefHeight="296.0" prefWidth="697.0">
+                                <columns>
+                                  <TableColumn fx:id="columnName" prefWidth="312.0" text="Column Name" />
+                                  <TableColumn fx:id="primaryKey" prefWidth="92.0" text="Primary Key" />
+                                    <TableColumn fx:id="allowsNull" prefWidth="77.0" text="Allows Null" />
+                                    <TableColumn fx:id="dataType" prefWidth="115.0" text="Data Type" />
+                                    <TableColumn fx:id="length" prefWidth="90.0" text="Length" />
+                                </columns>
+                              </TableView>
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </Tab>
+                <Tab text="Keys, Indexes and Constraints">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                  </content>
+                </Tab>
+              </tabs>
+            </TabPane>
+            <HBox alignment="CENTER_RIGHT" prefHeight="37.0" prefWidth="546.0" spacing="10.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#cancel" prefWidth="90.0" text="Cancel" />
+                  <Button mnemonicParsing="false" onAction="#save" prefWidth="90.0" text="Save" />
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="10.0" top="5.0" />
+               </padding>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</Pane>
