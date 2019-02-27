@@ -28,6 +28,9 @@ public class ApricotColumnData implements Serializable {
     private SimpleBooleanProperty nullable;
     private SimpleStringProperty valueLength;
     private String comment;
+    private boolean added;
+    private boolean deleted;
+    private ApricotColumn column;
 
     public ApricotColumnData() {
         primaryKey = new SimpleBooleanProperty();
@@ -38,6 +41,7 @@ public class ApricotColumnData implements Serializable {
     }
 
     public ApricotColumnData(ApricotColumn col) {
+        this.column = col;
         this.id = col.getId();
         primaryKey = new SimpleBooleanProperty(isPrimaryKey(col));
         name = new SimpleStringProperty(col.getName());
@@ -93,6 +97,26 @@ public class ApricotColumnData implements Serializable {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public boolean isAdded() {
+        return added;
+    }
+
+    public void setAdded(boolean added) {
+        this.added = added;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void sedDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+    
+    public ApricotColumn getColumn() {
+        return column;
     }
 
     @Override

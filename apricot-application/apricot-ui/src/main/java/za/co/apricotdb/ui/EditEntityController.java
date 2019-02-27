@@ -27,6 +27,7 @@ import za.co.apricotdb.persistence.data.ApplicationParameterManager;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.entity.ApricotApplicationParameter;
 import za.co.apricotdb.persistence.entity.ApricotProject;
+import za.co.apricotdb.ui.handler.ApricotEntityHandler;
 import za.co.apricotdb.ui.model.ApricotColumnData;
 import za.co.apricotdb.ui.model.EditEntityModel;
 
@@ -44,6 +45,9 @@ public class EditEntityController {
 
     @Autowired
     ProjectManager projectManager;
+    
+    @Autowired
+    ApricotEntityHandler entityHandler;
 
     @FXML
     Pane mainPane;
@@ -142,11 +146,19 @@ public class EditEntityController {
 
     @FXML
     public void newColumn(ActionEvent event) {
+        //  ignore if there is already a new column in process of insert
+        if (model.getColumns().get(model.getColumns().size()-1).getName().getValue().equals("<New Column>")) {
+            return;
+        }
+        
         ApricotColumnData columnData = new ApricotColumnData();
         columnData.getName().setValue("<New Column>");
+        columnData.setAdded(true);
 
         model.getColumns().add(columnData);
-        columnDefinitionTable.getFocusModel().focus(model.getColumns().size()-1);
+        columnDefinitionTable.getSelectionModel().select(model.getColumns().size()-1, columnName);
+        columnDefinitionTable.getFocusModel().focus(model.getColumns().size()-1, columnName);
+        columnDefinitionTable.refresh();
     }
 
     @FXML
@@ -161,7 +173,11 @@ public class EditEntityController {
 
     @FXML
     public void deleteColumn(ActionEvent event) {
-
+        ApricotColumnData cd = columnDefinitionTable.getSelectionModel().getSelectedItem();
+        if (cd.getColumn() == null || entityHandler.requestColumnDelete(cd.getColumn())) {
+            model.getColumns().remove(cd);
+            columnDefinitionTable.refresh();
+        }
     }
 
     @FXML
