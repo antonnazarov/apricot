@@ -20,8 +20,6 @@ public class ConstraintManager {
     EntityManager em;
 
     public List<ApricotConstraint> getConstraintsByTable(ApricotTable table) {
-        List<ApricotConstraint> ret = new ArrayList<>();
-
         TypedQuery<ApricotConstraint> query = em.createNamedQuery("ApricotConstraint.getConstraintsByTable",
                 ApricotConstraint.class);
         query.setParameter("table", table);
@@ -30,8 +28,6 @@ public class ConstraintManager {
     }
 
     public List<ApricotColumnConstraint> getConstraintColumns(ApricotConstraint constraint) {
-        List<ApricotColumnConstraint> ret = new ArrayList<>();
-
         TypedQuery<ApricotColumnConstraint> query = em
                 .createNamedQuery("ApricotColumnConstraint.getColumnsByConstraint", ApricotColumnConstraint.class);
         query.setParameter("constraint", constraint);

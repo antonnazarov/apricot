@@ -160,7 +160,7 @@ create table apricot_app_parameter (
 );
 
 insert into apricot_app_parameter (app_parameter_name, app_parameter_value) values ('database_version', '1.1');
-insert into apricot_app_parameter (app_parameter_name, app_parameter_value) values ('MSSQLServer.datatypes', 'bigint;int;smallint;tinyint;bit;decimal;float;numeric#varchar;char;nvarchar;text;varbinary#date;datetime;datetime2');
+insert into apricot_app_parameter (app_parameter_name, app_parameter_value) values ('MSSQLServer.datatypes', 'bigint;int;smallint;tinyint;bit;decimal;float;numeric;varchar;char;nvarchar;text;varbinary;date;datetime;datetime2');
 
 -- views
 create view vw_column as

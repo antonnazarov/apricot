@@ -27,9 +27,14 @@ public class ApricotColumnData implements Serializable {
     private SimpleStringProperty dataType;
     private SimpleBooleanProperty nullable;
     private SimpleStringProperty valueLength;
+    private String comment;
 
     public ApricotColumnData() {
-
+        primaryKey = new SimpleBooleanProperty();
+        name = new SimpleStringProperty();
+        dataType = new SimpleStringProperty();
+        nullable = new SimpleBooleanProperty();
+        valueLength = new SimpleStringProperty();
     }
 
     public ApricotColumnData(ApricotColumn col) {
@@ -80,6 +85,14 @@ public class ApricotColumnData implements Serializable {
 
     public SimpleStringProperty getValueLength() {
         return valueLength;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     @Override
