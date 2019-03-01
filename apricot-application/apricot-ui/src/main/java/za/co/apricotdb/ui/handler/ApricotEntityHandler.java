@@ -23,7 +23,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
-import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.ui.EditEntityController;
 import za.co.apricotdb.ui.model.EditEntityModel;
 import za.co.apricotdb.ui.model.EditEntityModelBuilder;

@@ -84,8 +84,9 @@ public class EditEntityModelBuilder {
             }
             ApricotConstraintData constraint = new ApricotConstraintData();
             constraint.setId(c.getId());
-            constraint.setConstraintType(c.getType().name());
-            constraint.setConstraintName(c.getName());
+            constraint.getConstraintType().setValue(c.getType().name());
+            constraint.getConstraintName().setValue(c.getName());
+            constraint.setTable(table);
             List<ApricotColumnData> constrCols = constraint.getColumns();
             for (ApricotColumnConstraint cc : c.getColumns()) {
                 ApricotColumnData acd = findColumnByName(columns, cc.getColumn().getName());

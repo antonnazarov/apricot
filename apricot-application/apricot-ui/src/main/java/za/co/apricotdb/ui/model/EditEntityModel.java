@@ -21,6 +21,9 @@ public class EditEntityModel implements Serializable {
     private boolean newEntity;
     private ObservableList<ApricotColumnData> columns = FXCollections.observableArrayList();
     private ObservableList<ApricotConstraintData> constraints = FXCollections.observableArrayList();
+    
+    private List<ApricotColumnData> deletedColumns = new ArrayList<>();
+    private List<ApricotConstraintData> deletedConstraints = new ArrayList<>();
 
     public EditEntityModel(boolean newEntity) {
         this.newEntity = newEntity;
@@ -56,5 +59,13 @@ public class EditEntityModel implements Serializable {
 
     public void setConstraints(ObservableList<ApricotConstraintData> constraints) {
         this.constraints = constraints;
+    }
+
+    public List<ApricotColumnData> getDeletedColumns() {
+        return deletedColumns;
+    }
+
+    public List<ApricotConstraintData> getDeletedConstraints() {
+        return deletedConstraints;
     }
 }

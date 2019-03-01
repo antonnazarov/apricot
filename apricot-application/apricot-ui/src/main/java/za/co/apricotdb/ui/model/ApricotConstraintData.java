@@ -1,11 +1,14 @@
 package za.co.apricotdb.ui.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.text.WordUtils;
-import org.springframework.stereotype.Component;
+
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import za.co.apricotdb.persistence.entity.ApricotTable;
 
 /**
  * This is a "model"- representation of the Constraint to be reflected in
@@ -13,32 +16,39 @@ import org.springframework.stereotype.Component;
  * 
  * @author Anton Nazarov
  * @since 28/02/2019
- *
  */
-@Component
 public class ApricotConstraintData implements Serializable {
 
     private static final long serialVersionUID = 5624231358883188078L;
-    
-    private String constraintType;
-    private String constraintName;
-    private List<ApricotColumnData> columns = new ArrayList<>();
+
+    private SimpleStringProperty constraintType = new SimpleStringProperty();
+    private SimpleStringProperty constraintName = new SimpleStringProperty();
+    private ObservableList<ApricotColumnData> columns = FXCollections.observableArrayList();
     private long id;
     private boolean added;
+    private ApricotTable table;
 
-    public String getConstraintType() {
+    public SimpleStringProperty getConstraintType() {
         return constraintType;
     }
+    
+    public String getConstraintTypeAsString() {
+        return constraintType.getValue();
+    }
 
-    public void setConstraintType(String constraintType) {
+    public void setConstraintType(SimpleStringProperty constraintType) {
         this.constraintType = constraintType;
     }
 
-    public String getConstraintName() {
+    public SimpleStringProperty getConstraintName() {
         return constraintName;
     }
+    
+    public String getConstraintNameAsString() {
+        return constraintName.getValue();
+    }
 
-    public void setConstraintName(String constraintName) {
+    public void setConstraintName(SimpleStringProperty constraintName) {
         this.constraintName = constraintName;
     }
 
@@ -50,7 +60,7 @@ public class ApricotConstraintData implements Serializable {
             }
             sb.append(cd.getName().getValue());
         }
-        
+
         String res = WordUtils.wrap(sb.toString(), 45);
         return res;
     }
@@ -75,7 +85,15 @@ public class ApricotConstraintData implements Serializable {
         return columns;
     }
 
-    public void setColumns(List<ApricotColumnData> columns) {
+    public void setColumns(ObservableList<ApricotColumnData> columns) {
         this.columns = columns;
+    }
+
+    public ApricotTable getTable() {
+        return table;
+    }
+
+    public void setTable(ApricotTable table) {
+        this.table = table;
     }
 }

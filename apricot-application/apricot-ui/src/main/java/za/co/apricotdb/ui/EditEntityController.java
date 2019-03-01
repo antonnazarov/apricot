@@ -1,5 +1,6 @@
 package za.co.apricotdb.ui;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -8,6 +9,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -29,6 +31,7 @@ import za.co.apricotdb.persistence.data.ApplicationParameterManager;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.entity.ApricotApplicationParameter;
 import za.co.apricotdb.persistence.entity.ApricotProject;
+import za.co.apricotdb.ui.handler.ApricotConstraintHandler;
 import za.co.apricotdb.ui.handler.ApricotEntityHandler;
 import za.co.apricotdb.ui.model.ApricotColumnData;
 import za.co.apricotdb.ui.model.ApricotConstraintData;
@@ -48,9 +51,12 @@ public class EditEntityController {
 
     @Autowired
     ProjectManager projectManager;
-    
+
     @Autowired
     ApricotEntityHandler entityHandler;
+
+    @Autowired
+    ApricotConstraintHandler constraintHandler;
 
     @FXML
     Pane mainPane;
@@ -78,19 +84,19 @@ public class EditEntityController {
 
     @FXML
     TableColumn<ApricotColumnData, String> comment;
-    
+
     @FXML
     AnchorPane columnsAnchorPane;
-    
+
     @FXML
     TableView<ApricotConstraintData> constraintsTable;
-    
+
     @FXML
     TableColumn<ApricotConstraintData, String> constraintType;
 
     @FXML
     TableColumn<ApricotConstraintData, String> constraintName;
-    
+
     @FXML
     TableColumn<ApricotConstraintData, String> constraintColumns;
 
@@ -104,7 +110,7 @@ public class EditEntityController {
 
         applyModel(model);
     }
-    
+
     private void initColumnsTab() {
         columnDefinitionTable.getSelectionModel().cellSelectionEnabledProperty().set(true);
         columnDefinitionTable.setOnKeyPressed(e -> {
@@ -147,11 +153,16 @@ public class EditEntityController {
 
         comment.setCellValueFactory(new PropertyValueFactory<ApricotColumnData, String>("comment"));
     }
-    
+
     private void initConstraintsTab() {
-        constraintType.setCellValueFactory(new PropertyValueFactory<ApricotConstraintData, String>("constraintType"));
-        constraintName.setCellValueFactory(new PropertyValueFactory<ApricotConstraintData, String>("constraintName"));
-        constraintColumns.setCellValueFactory(new PropertyValueFactory<ApricotConstraintData, String>("constraintColumns"));
+        constraintsTable.itemsProperty()
+                .bind(new SimpleObjectProperty<ObservableList<ApricotConstraintData>>(model.getConstraints()));
+        constraintType
+                .setCellValueFactory(new PropertyValueFactory<ApricotConstraintData, String>("constraintTypeAsString"));
+        constraintName
+                .setCellValueFactory(new PropertyValueFactory<ApricotConstraintData, String>("constraintNameAsString"));
+        constraintColumns
+                .setCellValueFactory(new PropertyValueFactory<ApricotConstraintData, String>("constraintColumns"));
     }
 
     private <S, T> Callback<TableColumn<S, T>, TableCell<S, T>> getComboCallback(final ObservableList<T> items) {
@@ -175,19 +186,19 @@ public class EditEntityController {
 
     @FXML
     public void newColumn(ActionEvent event) {
-        //  ignore if there is already a new column in process of insert
-        if (model.getColumns().get(model.getColumns().size()-1).getName().getValue().equals("<New Column>")) {
+        // ignore if there is already a new column in process of insert
+        if (model.getColumns().get(model.getColumns().size() - 1).getName().getValue().equals("<New Column>")) {
             return;
         }
-        
+
         ApricotColumnData columnData = new ApricotColumnData();
         columnData.getName().setValue("<New Column>");
         columnData.setAdded(true);
 
         model.getColumns().add(columnData);
-        focusRow(model.getColumns().size()-1);
+        focusRow(model.getColumns().size() - 1);
     }
-    
+
     private void focusRow(int pos) {
         columnDefinitionTable.getSelectionModel().select(pos, columnName);
         columnDefinitionTable.getFocusModel().focus(pos, columnName);
@@ -195,29 +206,29 @@ public class EditEntityController {
     }
 
     @FXML
-    @SuppressWarnings("unchecked")    
+    @SuppressWarnings("unchecked")
     public void upColumn(ActionEvent event) {
         final TablePosition<ApricotColumnData, ?> focusedCell = columnDefinitionTable.focusModelProperty().get()
-                .focusedCellProperty().get();        
+                .focusedCellProperty().get();
         int row = focusedCell.getRow();
         if (row == 0) {
             return;
         }
-        Collections.swap(model.getColumns(), row, row-1);
-        focusRow(row-1);
+        Collections.swap(model.getColumns(), row, row - 1);
+        focusRow(row - 1);
     }
 
     @FXML
     @SuppressWarnings("unchecked")
     public void downColumn(ActionEvent event) {
         final TablePosition<ApricotColumnData, ?> focusedCell = columnDefinitionTable.focusModelProperty().get()
-                .focusedCellProperty().get();        
+                .focusedCellProperty().get();
         int row = focusedCell.getRow();
-        if (row == model.getColumns().size()-1) {
+        if (row == model.getColumns().size() - 1) {
             return;
         }
-        Collections.swap(model.getColumns(), row, row+1);
-        focusRow(row+1);
+        Collections.swap(model.getColumns(), row, row + 1);
+        focusRow(row + 1);
     }
 
     @FXML
@@ -225,16 +236,17 @@ public class EditEntityController {
         if (model.getColumns().size() == 0) {
             return;
         }
-        
+
         ApricotColumnData cd = columnDefinitionTable.getSelectionModel().getSelectedItem();
         if (cd.getColumn() == null || entityHandler.requestColumnDelete(cd.getColumn())) {
+            model.getDeletedColumns().add(cd);
             model.getColumns().remove(cd);
             columnDefinitionTable.refresh();
-            
+
             removeRelatedConstraint(cd);
         }
     }
-    
+
     private void removeRelatedConstraint(ApricotColumnData cd) {
         List<ApricotConstraintData> removeConstraints = new ArrayList<>();
         for (ApricotConstraintData acd : model.getConstraints()) {
@@ -244,28 +256,38 @@ public class EditEntityController {
                 }
             }
         }
-        
+
         if (removeConstraints.size() > 0) {
+            model.getDeletedConstraints().addAll(removeConstraints);
             model.getConstraints().removeAll(removeConstraints);
             constraintsTable.refresh();
         }
     }
-    
+
     @FXML
     public void newConstraint(ActionEvent event) {
-        
+        try {
+            constraintHandler.openConstraintEditorForm(true, null, model, constraintsTable);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-    
+
     @FXML
     public void editConstraint(ActionEvent event) {
-        
+        ApricotConstraintData cd = constraintsTable.getSelectionModel().getSelectedItem();
+        try {
+            constraintHandler.openConstraintEditorForm(false, cd, model, constraintsTable);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     public void deleteConstraint(ActionEvent event) {
-        
+
     }
-    
+
     @FXML
     public void cancel(ActionEvent event) {
         getStage().close();
@@ -284,9 +306,6 @@ public class EditEntityController {
         entityName.setText(model.getEntityName());
         columnDefinitionTable.itemsProperty().setValue(model.getColumns());
         columnDefinitionTable.refresh();
-        
-        constraintsTable.itemsProperty().setValue(model.getConstraints());
-        constraintsTable.refresh();
     }
 
     private List<String> getFieldTypes() {

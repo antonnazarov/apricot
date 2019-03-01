@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="354.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="354.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.EditConstraintController">
    <children>
       <HBox prefHeight="84.0" prefWidth="600.0">
          <children>
@@ -29,8 +29,8 @@
                <children>
                   <Label text="Constraint Name:" />
                   <Label text="Constraint Type:" GridPane.rowIndex="1" />
-                  <TextField prefHeight="25.0" prefWidth="269.0" GridPane.columnIndex="1" />
-                  <ChoiceBox prefHeight="25.0" prefWidth="260.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField fx:id="constraintName" prefHeight="25.0" prefWidth="269.0" GridPane.columnIndex="1" />
+                  <ChoiceBox fx:id="constraintType" prefHeight="25.0" prefWidth="260.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                </children>
                <padding>
                   <Insets bottom="5.0" left="15.0" top="5.0" />
@@ -40,17 +40,17 @@
       </HBox>
       <HBox prefHeight="234.0" prefWidth="600.0">
          <children>
-            <ListView prefHeight="224.0" prefWidth="245.0" />
+            <ListView fx:id="allColumnsList" prefHeight="224.0" prefWidth="245.0" />
             <VBox alignment="CENTER" prefHeight="224.0" prefWidth="79.0" spacing="10.0">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="69.0" text="&gt;" />
-                  <Button layoutX="24.0" layoutY="110.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="69.0" text="&lt;" />
+                  <Button mnemonicParsing="false" onAction="#selectColumn" prefHeight="25.0" prefWidth="69.0" text="&gt;" />
+                  <Button layoutX="24.0" layoutY="110.0" mnemonicParsing="false" onAction="#deselectColumn" prefHeight="25.0" prefWidth="69.0" text="&lt;" />
                </children>
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
             </VBox>
-            <ListView layoutX="25.0" layoutY="15.0" prefHeight="224.0" prefWidth="245.0" />
+            <ListView fx:id="selectedColumnsList" layoutX="25.0" layoutY="15.0" prefHeight="224.0" prefWidth="245.0" />
          </children>
          <padding>
             <Insets bottom="5.0" left="15.0" right="5.0" top="5.0" />
@@ -58,8 +58,8 @@
       </HBox>
       <HBox alignment="CENTER_RIGHT" prefHeight="36.0" prefWidth="595.0" spacing="10.0">
          <children>
-            <Button mnemonicParsing="false" prefWidth="90.0" text="Cancel" />
-            <Button layoutX="505.0" layoutY="16.0" mnemonicParsing="false" prefWidth="90.0" text="Save" />
+            <Button mnemonicParsing="false" onAction="#cancel" prefWidth="90.0" text="Cancel" />
+            <Button layoutX="505.0" layoutY="16.0" mnemonicParsing="false" onAction="#save" prefWidth="90.0" text="Save" />
          </children>
          <padding>
             <Insets right="15.0" />
