@@ -2,6 +2,7 @@ package za.co.apricotdb.ui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -29,6 +31,7 @@ import za.co.apricotdb.persistence.entity.ApricotApplicationParameter;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.ui.handler.ApricotEntityHandler;
 import za.co.apricotdb.ui.model.ApricotColumnData;
+import za.co.apricotdb.ui.model.ApricotConstraintData;
 import za.co.apricotdb.ui.model.EditEntityModel;
 
 /**
@@ -75,12 +78,34 @@ public class EditEntityController {
 
     @FXML
     TableColumn<ApricotColumnData, String> comment;
+    
+    @FXML
+    AnchorPane columnsAnchorPane;
+    
+    @FXML
+    TableView<ApricotConstraintData> constraintsTable;
+    
+    @FXML
+    TableColumn<ApricotConstraintData, String> constraintType;
+
+    @FXML
+    TableColumn<ApricotConstraintData, String> constraintName;
+    
+    @FXML
+    TableColumn<ApricotConstraintData, String> constraintColumns;
 
     private EditEntityModel model;
 
     public void init(EditEntityModel model) {
         this.model = model;
 
+        initColumnsTab();
+        initConstraintsTab();
+
+        applyModel(model);
+    }
+    
+    private void initColumnsTab() {
         columnDefinitionTable.getSelectionModel().cellSelectionEnabledProperty().set(true);
         columnDefinitionTable.setOnKeyPressed(e -> {
             if (e.getCode().isLetterKey() || e.getCode().isDigitKey()) {
@@ -121,8 +146,12 @@ public class EditEntityController {
         });
 
         comment.setCellValueFactory(new PropertyValueFactory<ApricotColumnData, String>("comment"));
-
-        applyModel(model);
+    }
+    
+    private void initConstraintsTab() {
+        constraintType.setCellValueFactory(new PropertyValueFactory<ApricotConstraintData, String>("constraintType"));
+        constraintName.setCellValueFactory(new PropertyValueFactory<ApricotConstraintData, String>("constraintName"));
+        constraintColumns.setCellValueFactory(new PropertyValueFactory<ApricotConstraintData, String>("constraintColumns"));
     }
 
     private <S, T> Callback<TableColumn<S, T>, TableCell<S, T>> getComboCallback(final ObservableList<T> items) {
@@ -156,30 +185,87 @@ public class EditEntityController {
         columnData.setAdded(true);
 
         model.getColumns().add(columnData);
-        columnDefinitionTable.getSelectionModel().select(model.getColumns().size()-1, columnName);
-        columnDefinitionTable.getFocusModel().focus(model.getColumns().size()-1, columnName);
+        focusRow(model.getColumns().size()-1);
+    }
+    
+    private void focusRow(int pos) {
+        columnDefinitionTable.getSelectionModel().select(pos, columnName);
+        columnDefinitionTable.getFocusModel().focus(pos, columnName);
         columnDefinitionTable.refresh();
     }
 
     @FXML
+    @SuppressWarnings("unchecked")    
     public void upColumn(ActionEvent event) {
-
+        final TablePosition<ApricotColumnData, ?> focusedCell = columnDefinitionTable.focusModelProperty().get()
+                .focusedCellProperty().get();        
+        int row = focusedCell.getRow();
+        if (row == 0) {
+            return;
+        }
+        Collections.swap(model.getColumns(), row, row-1);
+        focusRow(row-1);
     }
 
     @FXML
+    @SuppressWarnings("unchecked")
     public void downColumn(ActionEvent event) {
-
+        final TablePosition<ApricotColumnData, ?> focusedCell = columnDefinitionTable.focusModelProperty().get()
+                .focusedCellProperty().get();        
+        int row = focusedCell.getRow();
+        if (row == model.getColumns().size()-1) {
+            return;
+        }
+        Collections.swap(model.getColumns(), row, row+1);
+        focusRow(row+1);
     }
 
     @FXML
     public void deleteColumn(ActionEvent event) {
+        if (model.getColumns().size() == 0) {
+            return;
+        }
+        
         ApricotColumnData cd = columnDefinitionTable.getSelectionModel().getSelectedItem();
         if (cd.getColumn() == null || entityHandler.requestColumnDelete(cd.getColumn())) {
             model.getColumns().remove(cd);
             columnDefinitionTable.refresh();
+            
+            removeRelatedConstraint(cd);
         }
     }
+    
+    private void removeRelatedConstraint(ApricotColumnData cd) {
+        List<ApricotConstraintData> removeConstraints = new ArrayList<>();
+        for (ApricotConstraintData acd : model.getConstraints()) {
+            for (ApricotColumnData d : acd.getColumns()) {
+                if (d.equals(cd)) {
+                    removeConstraints.add(acd);
+                }
+            }
+        }
+        
+        if (removeConstraints.size() > 0) {
+            model.getConstraints().removeAll(removeConstraints);
+            constraintsTable.refresh();
+        }
+    }
+    
+    @FXML
+    public void newConstraint(ActionEvent event) {
+        
+    }
+    
+    @FXML
+    public void editConstraint(ActionEvent event) {
+        
+    }
 
+    @FXML
+    public void deleteConstraint(ActionEvent event) {
+        
+    }
+    
     @FXML
     public void cancel(ActionEvent event) {
         getStage().close();
@@ -187,7 +273,7 @@ public class EditEntityController {
 
     @FXML
     public void save(ActionEvent event) {
-
+        // TODO implement
     }
 
     private Stage getStage() {
@@ -198,6 +284,9 @@ public class EditEntityController {
         entityName.setText(model.getEntityName());
         columnDefinitionTable.itemsProperty().setValue(model.getColumns());
         columnDefinitionTable.refresh();
+        
+        constraintsTable.itemsProperty().setValue(model.getConstraints());
+        constraintsTable.refresh();
     }
 
     private List<String> getFieldTypes() {

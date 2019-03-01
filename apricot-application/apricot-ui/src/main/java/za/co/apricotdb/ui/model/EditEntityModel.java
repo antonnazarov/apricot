@@ -1,7 +1,10 @@
 package za.co.apricotdb.ui.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
@@ -16,7 +19,8 @@ public class EditEntityModel implements Serializable {
 
     private String entityName;
     private boolean newEntity;
-    private ObservableList<ApricotColumnData> columns;
+    private ObservableList<ApricotColumnData> columns = FXCollections.observableArrayList();
+    private ObservableList<ApricotConstraintData> constraints = FXCollections.observableArrayList();
 
     public EditEntityModel(boolean newEntity) {
         this.newEntity = newEntity;
@@ -44,5 +48,13 @@ public class EditEntityModel implements Serializable {
 
     public void setColumns(ObservableList<ApricotColumnData> columns) {
         this.columns = columns;
+    }
+
+    public ObservableList<ApricotConstraintData> getConstraints() {
+        return constraints;
+    }
+
+    public void setConstraints(ObservableList<ApricotConstraintData> constraints) {
+        this.constraints = constraints;
     }
 }
