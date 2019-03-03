@@ -125,6 +125,16 @@ public class ApricotTable implements Serializable {
         return null;
     }
 
+    public ApricotColumn getColumnById(long id) {
+        for (ApricotColumn c : columns) {
+            if (c.getId() == id) {
+                return c;
+            }
+        }
+        
+        return null;
+    }
+
     /**
      * Get a list of columns by their names.
      */
@@ -153,6 +163,16 @@ public class ApricotTable implements Serializable {
     public ApricotConstraint getConstraingByName(String name) {
         for (ApricotConstraint c : constraints) {
             if (c.getName().equals(name)) {
+                return c;
+            }
+        }
+        
+        return null;
+    }
+    
+    public ApricotConstraint getConstraingById(long id) {
+        for (ApricotConstraint c : constraints) {
+            if (c.getId() == id) {
                 return c;
             }
         }

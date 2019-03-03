@@ -8,6 +8,7 @@ import org.apache.commons.text.WordUtils;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 
 /**
@@ -27,6 +28,7 @@ public class ApricotConstraintData implements Serializable {
     private long id;
     private boolean added;
     private ApricotTable table;
+    private ApricotConstraint constraint;
 
     public SimpleStringProperty getConstraintType() {
         return constraintType;
@@ -95,5 +97,13 @@ public class ApricotConstraintData implements Serializable {
 
     public void setTable(ApricotTable table) {
         this.table = table;
+    }
+
+    public ApricotConstraint getConstraint() {
+        return constraint;
+    }
+
+    public void setConstraint(ApricotConstraint constraint) {
+        this.constraint = constraint;
     }
 }

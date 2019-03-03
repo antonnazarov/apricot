@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
@@ -31,11 +37,12 @@ import za.co.apricotdb.persistence.data.ApplicationParameterManager;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.entity.ApricotApplicationParameter;
 import za.co.apricotdb.persistence.entity.ApricotProject;
+import za.co.apricotdb.persistence.entity.ConstraintType;
 import za.co.apricotdb.ui.handler.ApricotConstraintHandler;
-import za.co.apricotdb.ui.handler.ApricotEntityHandler;
 import za.co.apricotdb.ui.model.ApricotColumnData;
 import za.co.apricotdb.ui.model.ApricotConstraintData;
 import za.co.apricotdb.ui.model.EditEntityModel;
+import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
 /**
  * This controller is allocated under the apricot-entity-editor.fxml form.
@@ -53,10 +60,10 @@ public class EditEntityController {
     ProjectManager projectManager;
 
     @Autowired
-    ApricotEntityHandler entityHandler;
+    ApricotConstraintHandler constraintHandler;
 
     @Autowired
-    ApricotConstraintHandler constraintHandler;
+    AlertMessageDecorator alertDecorator;
 
     @FXML
     Pane mainPane;
@@ -99,6 +106,12 @@ public class EditEntityController {
 
     @FXML
     TableColumn<ApricotConstraintData, String> constraintColumns;
+
+    @FXML
+    Button editConstraintButton;
+
+    @FXML
+    Button deleteConstraintButton;
 
     private EditEntityModel model;
 
@@ -159,10 +172,25 @@ public class EditEntityController {
                 .bind(new SimpleObjectProperty<ObservableList<ApricotConstraintData>>(model.getConstraints()));
         constraintType
                 .setCellValueFactory(new PropertyValueFactory<ApricotConstraintData, String>("constraintTypeAsString"));
+        constraintType.setCellFactory(GrayedLabelCell.getCallback());
         constraintName
                 .setCellValueFactory(new PropertyValueFactory<ApricotConstraintData, String>("constraintNameAsString"));
+        constraintName.setCellFactory(GrayedLabelCell.getCallback());
         constraintColumns
                 .setCellValueFactory(new PropertyValueFactory<ApricotConstraintData, String>("constraintColumns"));
+        constraintColumns.setCellFactory(GrayedLabelCell.getCallback());
+
+        constraintsTable.setOnMouseClicked(e -> {
+            ApricotConstraintData cd = constraintsTable.getSelectionModel().getSelectedItem();
+            if (cd.getConstraintType().getValue().equals(ConstraintType.PRIMARY_KEY.name())
+                    || cd.getConstraintType().getValue().equals(ConstraintType.FOREIGN_KEY.name())) {
+                editConstraintButton.setDisable(true);
+                deleteConstraintButton.setDisable(true);
+            } else {
+                editConstraintButton.setDisable(false);
+                deleteConstraintButton.setDisable(false);
+            }
+        });
     }
 
     private <S, T> Callback<TableColumn<S, T>, TableCell<S, T>> getComboCallback(final ObservableList<T> items) {
@@ -238,7 +266,7 @@ public class EditEntityController {
         }
 
         ApricotColumnData cd = columnDefinitionTable.getSelectionModel().getSelectedItem();
-        if (cd.getColumn() == null || entityHandler.requestColumnDelete(cd.getColumn())) {
+        if (requestColumnDelete(cd)) {
             model.getDeletedColumns().add(cd);
             model.getColumns().remove(cd);
             columnDefinitionTable.refresh();
@@ -247,7 +275,10 @@ public class EditEntityController {
         }
     }
 
-    private void removeRelatedConstraint(ApricotColumnData cd) {
+    /**
+     * Get constraints to be deleted together with the target column.
+     */
+    private List<ApricotConstraintData> getRemovalConstraints(ApricotColumnData cd) {
         List<ApricotConstraintData> removeConstraints = new ArrayList<>();
         for (ApricotConstraintData acd : model.getConstraints()) {
             for (ApricotColumnData d : acd.getColumns()) {
@@ -256,6 +287,44 @@ public class EditEntityController {
                 }
             }
         }
+
+        return removeConstraints;
+    }
+
+    public boolean requestColumnDelete(ApricotColumnData cd) {
+        List<ApricotConstraintData> removeConstraints = getRemovalConstraints(cd);
+
+        if (removeConstraints.size() > 0) {
+            StringBuilder sb = new StringBuilder();
+            for (ApricotConstraintData c : removeConstraints) {
+                sb.append(c.getConstraintTypeAsString()).append(" (").append(c.getConstraintNameAsString())
+                        .append(")\n");
+            }
+
+            ButtonType yes = new ButtonType("Delete", ButtonData.OK_DONE);
+            ButtonType no = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+            Alert alert = new Alert(AlertType.WARNING, null, yes, no);
+            alert.setTitle("Delete Column");
+            alert.setHeaderText("The following constraints, attached to the column \"" + cd.getName().getValue()
+                    + "\" will be deleted:\n" + sb.toString());
+            alertDecorator.decorateAlert(alert);
+            Optional<ButtonType> result = alert.showAndWait();
+
+            if (result.orElse(no) == yes) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Remove the related constraints from the model.
+     */
+    private void removeRelatedConstraint(ApricotColumnData cd) {
+        List<ApricotConstraintData> removeConstraints = getRemovalConstraints(cd);
 
         if (removeConstraints.size() > 0) {
             model.getDeletedConstraints().addAll(removeConstraints);

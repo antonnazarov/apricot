@@ -34,7 +34,7 @@ public class ReversedTablesController {
 
     @Autowired
     ReverseEngineHandler reverseEngineHandler;
-    
+
     @Autowired
     ApplicationInitializer applicationInitializer;
 

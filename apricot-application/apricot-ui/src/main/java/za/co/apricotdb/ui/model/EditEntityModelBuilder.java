@@ -56,6 +56,7 @@ public class EditEntityModelBuilder {
         ApricotTable table = tableManager.getTableByName(tableName, snapshotManager.getDefaultSnapshot());
         if (table != null) {
             model.setEntityName(table.getName());
+            model.setTable(table);
         } else {
             return;
         }
@@ -79,14 +80,12 @@ public class EditEntityModelBuilder {
 
         List<ApricotConstraintData> constraints = model.getConstraints();
         for (ApricotConstraint c : table.getConstraints()) {
-            if (c.getType() == ConstraintType.PRIMARY_KEY || c.getType() == ConstraintType.FOREIGN_KEY) {
-                continue;
-            }
             ApricotConstraintData constraint = new ApricotConstraintData();
             constraint.setId(c.getId());
             constraint.getConstraintType().setValue(c.getType().name());
             constraint.getConstraintName().setValue(c.getName());
             constraint.setTable(table);
+            constraint.setConstraint(c);
             List<ApricotColumnData> constrCols = constraint.getColumns();
             for (ApricotColumnConstraint cc : c.getColumns()) {
                 ApricotColumnData acd = findColumnByName(columns, cc.getColumn().getName());

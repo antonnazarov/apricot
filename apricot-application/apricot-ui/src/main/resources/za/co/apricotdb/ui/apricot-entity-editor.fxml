@@ -72,8 +72,8 @@
                               <HBox alignment="CENTER_LEFT" layoutX="8.0" layoutY="347.0" prefHeight="43.0" prefWidth="807.0" spacing="10.0">
                                  <children>
                                     <Button mnemonicParsing="false" onAction="#newConstraint" prefWidth="90.0" text="New" />
-                                    <Button mnemonicParsing="false" onAction="#editConstraint" prefWidth="90.0" text="Edit" />
-                                    <Button mnemonicParsing="false" onAction="#deleteConstraint" prefWidth="90.0" text="Delete" />
+                                    <Button fx:id="editConstraintButton" mnemonicParsing="false" onAction="#editConstraint" prefWidth="90.0" text="Edit" />
+                                    <Button fx:id="deleteConstraintButton" mnemonicParsing="false" onAction="#deleteConstraint" prefWidth="90.0" text="Delete" />
                                  </children>
                                  <padding>
                                     <Insets bottom="5.0" top="5.0" />

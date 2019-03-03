@@ -6,6 +6,7 @@ import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import za.co.apricotdb.persistence.entity.ApricotTable;
 
 /**
  * The data model for the form apricot-entity-editor.fxml.
@@ -19,6 +20,7 @@ public class EditEntityModel implements Serializable {
 
     private String entityName;
     private boolean newEntity;
+    private ApricotTable table;
     private ObservableList<ApricotColumnData> columns = FXCollections.observableArrayList();
     private ObservableList<ApricotConstraintData> constraints = FXCollections.observableArrayList();
     
@@ -67,5 +69,23 @@ public class EditEntityModel implements Serializable {
 
     public List<ApricotConstraintData> getDeletedConstraints() {
         return deletedConstraints;
+    }
+
+    public ApricotTable getTable() {
+        return table;
+    }
+
+    public void setTable(ApricotTable table) {
+        this.table = table;
+    }
+    
+    public ApricotColumnData getColumnByName(String name) {
+        for (ApricotColumnData cd : columns) {
+            if (cd.getName().getValue().equals(name)) {
+                return cd;
+            }
+        }
+        
+        return null;
     }
 }
