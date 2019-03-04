@@ -11,7 +11,7 @@ import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 
 /**
- * This component serializes the new or edited entity into the Apricot project
+ * This component serialises the new or edited entity into the Apricot project
  * database.
  * 
  * @author Anton Nazarov
@@ -39,7 +39,6 @@ public class ApricotEntitySerializer {
         
         table.setName(model.getEntityName());
         model.setTable(table);
-        
         updateColumns(model);
         
         return table;

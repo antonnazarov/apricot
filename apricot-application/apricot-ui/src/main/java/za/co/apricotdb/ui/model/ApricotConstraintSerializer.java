@@ -19,9 +19,9 @@ public class ApricotConstraintSerializer {
 
     public void serialize(EditEntityModel model) {
         if (model.isNewEntity()) {
-            
+
         } else {
-            
+
         }
 
     }
@@ -34,13 +34,13 @@ public class ApricotConstraintSerializer {
             }
             ApricotConstraint constraint = null;
             if (cd.isAdded()) {
-                constraint = model.getTable().getConstraingByName(cd.getConstraintName().getValue());
+                constraint = model.getTable().getConstraintByName(cd.getConstraintName().getValue());
                 if (constraint == null) {
                     constraint = new ApricotConstraint();
                     model.getTable().getConstraints().add(constraint);
                 }
             } else {
-                constraint = model.getTable().getConstraingById(cd.getId());
+                constraint = model.getTable().getConstraintById(cd.getId());
             }
 
             constraint.setName(cd.getConstraintNameAsString());
@@ -48,14 +48,16 @@ public class ApricotConstraintSerializer {
             constraint.setTable(model.getTable());
         }
     }
-    
+
     public List<ApricotConstraint> getDeletedConstraints(EditEntityModel model) {
         List<ApricotConstraint> deletedConstraints = new ArrayList<>();
-        
+
         for (ApricotConstraintData cd : model.getDeletedConstraints()) {
-            deletedConstraints.add(cd.getConstraint());
+            if (!cd.isAdded()) {
+                deletedConstraints.add(cd.getConstraint());
+            }
         }
-        
+
         return deletedConstraints;
     }
 }

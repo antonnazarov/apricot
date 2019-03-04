@@ -152,15 +152,15 @@ public class ApricotTable implements Serializable {
     }
     
     public ApricotRelationship establishChildConstraint(String parentConstraintName, ApricotTable childTable, String childConstraintName) {
-        ApricotConstraint parent = getConstraingByName(parentConstraintName);
-        ApricotConstraint child = childTable.getConstraingByName(childConstraintName);
+        ApricotConstraint parent = getConstraintByName(parentConstraintName);
+        ApricotConstraint child = childTable.getConstraintByName(childConstraintName);
         
         ApricotRelationship r = new ApricotRelationship(parent, child);
         
         return r;
     }
     
-    public ApricotConstraint getConstraingByName(String name) {
+    public ApricotConstraint getConstraintByName(String name) {
         for (ApricotConstraint c : constraints) {
             if (c.getName().equals(name)) {
                 return c;
@@ -170,7 +170,7 @@ public class ApricotTable implements Serializable {
         return null;
     }
     
-    public ApricotConstraint getConstraingById(long id) {
+    public ApricotConstraint getConstraintById(long id) {
         for (ApricotConstraint c : constraints) {
             if (c.getId() == id) {
                 return c;
