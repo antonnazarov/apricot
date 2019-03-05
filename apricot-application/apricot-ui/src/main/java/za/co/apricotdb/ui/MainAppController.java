@@ -203,6 +203,14 @@ public class MainAppController {
             applicationInitializer.initializeDefault(canvasChangeListener);
         }
     }
+    
+    /**
+     * Start a process of creation of the new entity.
+     */
+    @FXML
+    public void newEntity(ActionEvent event) {
+        
+    }
 
     public PropertyChangeListener getCanvasChangeListener() {
         return canvasChangeListener;

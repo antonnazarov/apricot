@@ -285,4 +285,19 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
         entities.clear();
         relationships.clear();
     }
+
+    @Override
+    public boolean isStartNewEntity() {
+        return canvasChangeProperty.isStartNewEntity();
+    }
+
+    @Override
+    public void resetStartNewEntity() {
+        canvasChangeProperty.setStartNewEntity(false);
+    }
+
+    @Override
+    public void notifyStartNewEntity() {
+        canvasChangeProperty.setStartNewEntity(true);
+    }
 }

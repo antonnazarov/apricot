@@ -55,4 +55,10 @@ public interface ApricotCanvas {
     boolean isCanvasChanged();
     
     void cleanCanvas();
+    
+    boolean isStartNewEntity();
+    
+    void resetStartNewEntity();
+    
+    void notifyStartNewEntity();
 }

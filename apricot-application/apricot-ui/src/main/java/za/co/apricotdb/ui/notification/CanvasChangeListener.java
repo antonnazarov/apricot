@@ -25,17 +25,24 @@ public class CanvasChangeListener implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent event) {
-        boolean changed = (boolean) event.getNewValue();
+        switch (event.getPropertyName()) {
+        case "changed":
+            boolean changed = (boolean) event.getNewValue();
 
-        Tab selectedTab = viewsTabPane.getSelectionModel().getSelectedItem();
-        if (changed) {
-            selectedTab.setStyle("-fx-font-weight: bold;");
-            saveButton.setStyle("-fx-font-weight: bold;");
-        } else {
-            // reset all tabs
-            for (Tab tab : viewsTabPane.getTabs()) {
-                tab.setStyle("-fx-font-weight: normal;");
+            Tab selectedTab = viewsTabPane.getSelectionModel().getSelectedItem();
+            if (changed) {
+                selectedTab.setStyle("-fx-font-weight: bold;");
+                saveButton.setStyle("-fx-font-weight: bold;");
+            } else {
+                // reset all tabs
+                for (Tab tab : viewsTabPane.getTabs()) {
+                    tab.setStyle("-fx-font-weight: normal;");
+                }
             }
+            break;
+            
+        case "startNewEntity" :
+            
         }
     }
 }

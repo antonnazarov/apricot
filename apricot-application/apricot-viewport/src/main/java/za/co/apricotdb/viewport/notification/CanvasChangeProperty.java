@@ -12,6 +12,7 @@ import java.beans.PropertyChangeSupport;
 public class CanvasChangeProperty {
 
     private boolean changed;
+    private boolean startNewEntity;
 
     private PropertyChangeSupport support;
 
@@ -34,5 +35,14 @@ public class CanvasChangeProperty {
     
     public boolean isChanged() {
         return changed;
+    }
+    
+    public void setStartNewEntity(boolean value) {
+        support.firePropertyChange("startNewEntity", this.startNewEntity, value);
+        this.startNewEntity = value;
+    }
+    
+    public boolean isStartNewEntity() {
+        return startNewEntity;
     }
 }
