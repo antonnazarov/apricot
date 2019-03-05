@@ -3,15 +3,19 @@ package za.co.apricotdb.ui.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Component;
 
+import za.co.apricotdb.persistence.entity.ApricotColumnConstraint;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ConstraintType;
+import za.co.apricotdb.persistence.repository.ApricotColumnConstraintRepository;
 
 /**
  * This class/component handles the primary key (the new or existing one) of the
- * table during the serialisation process.
+ * table during the serialization process.
  * 
  * @author Anton Nazarov
  * @since 04/03/2019
@@ -19,14 +23,20 @@ import za.co.apricotdb.persistence.entity.ConstraintType;
 @Component
 public class PrimaryKeySerializer {
 
-    public void handlePrimaryKey(EditEntityModel model) {
-        ApricotConstraint pk = getPrimaryKey(model.getTable());
-        if (getPrimaryKeyColumns(model).size() > 0 && pk == null) {
+    @Resource
+    ApricotColumnConstraintRepository columnConstraintRepository;
+
+    public void serializePrimaryKey(EditEntityModel model) {
+        ApricotConstraint primaryKey = getPrimaryKey(model.getTable());
+        if (getPrimaryKeyColumns(model).size() > 0 && primaryKey == null) {
             // a new PRIMARY_KEY needs to be created
             ApricotTable table = model.getTable();
-            ApricotConstraint primaryKey = new ApricotConstraint("PK_" + table.getName(),
-                    ConstraintType.PRIMARY_KEY, table);
+            primaryKey = new ApricotConstraint("PK_" + table.getName(), ConstraintType.PRIMARY_KEY, table);
             table.getConstraints().add(primaryKey);
+        }
+
+        if (primaryKey != null) {
+            serializePrimaryKeyColumns(primaryKey, model);
         }
     }
 
@@ -49,5 +59,21 @@ public class PrimaryKeySerializer {
         }
 
         return ret;
+    }
+
+    private void serializePrimaryKeyColumns(ApricotConstraint constraint, EditEntityModel model) {
+        for (ApricotColumnConstraint constrCol : constraint.getColumns()) {
+            columnConstraintRepository.delete(constrCol);
+        }
+        constraint.getColumns().clear();
+
+        int ordinalPosition = 0;
+        for (ApricotColumnData columnData : getPrimaryKeyColumns(model)) {
+            ApricotColumnConstraint acc = new ApricotColumnConstraint(constraint, columnData.getColumn());
+            acc.setOrdinalPosition(ordinalPosition);
+            constraint.getColumns().add(acc);
+
+            ordinalPosition++;
+        }
     }
 }

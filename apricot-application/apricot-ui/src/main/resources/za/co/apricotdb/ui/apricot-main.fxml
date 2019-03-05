@@ -110,7 +110,7 @@
                 <Button disable="true" minWidth="34.0" mnemonicParsing="false" prefHeight="25.0" text="Undo" />
                   <Label alignment="CENTER_RIGHT" minWidth="44.0" prefHeight="17.0" text="New:" />
                   <Button id="buttonSnapshot" layoutX="455.0" layoutY="10.0" minWidth="34.0" mnemonicParsing="false" onAction="#newSnapshot" prefHeight="25.0" text="Snapshot" />
-                  <Button disable="true" minWidth="34.0" mnemonicParsing="false" prefHeight="25.0" text="Entity" />
+                  <Button minWidth="34.0" mnemonicParsing="false" onAction="#newEntity" prefHeight="25.0" text="Entity" />
                   <Button disable="true" minWidth="34.0" mnemonicParsing="false" prefHeight="25.0" text="Relationship" />
                   <Button id="buttonView" layoutX="540.0" layoutY="10.0" minWidth="34.0" mnemonicParsing="false" onAction="#newView" prefHeight="25.0" text="View" />
               </buttons>

@@ -113,8 +113,12 @@ public class EditConstraintController {
         ApricotConstraintData constraintData = model.getConstraintData();
         if (model.isNewConstraint()) {
             editEntityModel.getConstraints().add(constraintData);
+        } else {
+            // I assume, that something was edited is the existing constraint was saved
+            // in the editor form
+            constraintData.setEdited(true);
         }
-        
+
         constraintData.getConstraintName().setValue(constraintName.getText());
         constraintData.getConstraintType().setValue(constraintType.getValue());
         constraintData.getColumns().clear();

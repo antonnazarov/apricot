@@ -24,7 +24,7 @@ public class ApricotEntitySerializer {
     SnapshotManager snapshotManager;
     
     public void serialize(EditEntityModel model) {
-        
+                
     }
 
     public ApricotTable updateTable(EditEntityModel model) {

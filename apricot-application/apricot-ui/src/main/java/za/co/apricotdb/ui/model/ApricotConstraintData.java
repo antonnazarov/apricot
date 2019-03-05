@@ -29,6 +29,7 @@ public class ApricotConstraintData implements Serializable {
     private boolean added;
     private ApricotTable table;
     private ApricotConstraint constraint;
+    private boolean edited;
 
     public SimpleStringProperty getConstraintType() {
         return constraintType;
@@ -105,5 +106,13 @@ public class ApricotConstraintData implements Serializable {
 
     public void setConstraint(ApricotConstraint constraint) {
         this.constraint = constraint;
+    }
+
+    public boolean isEdited() {
+        return edited;
+    }
+
+    public void setEdited(boolean edited) {
+        this.edited = edited;
     }
 }
