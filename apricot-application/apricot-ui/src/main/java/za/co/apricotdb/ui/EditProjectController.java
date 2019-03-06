@@ -1,6 +1,5 @@
 package za.co.apricotdb.ui;
 
-import java.beans.PropertyChangeListener;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +41,7 @@ public class EditProjectController {
 
     @Autowired
     ApplicationInitializer applicationInitializer;
-    
+
     @Autowired
     BlackListHandler blackListHandler;
 
@@ -64,7 +63,6 @@ public class EditProjectController {
     private boolean isCreateNew = false;
     private ProjectFormModel model = null;
     private BorderPane mainBorderPane = null;
-    private PropertyChangeListener canvasChangeListener = null;
 
     @FXML
     public void save(ActionEvent event) {
@@ -85,7 +83,7 @@ public class EditProjectController {
             project = projectSerializer.serializeEditedProject(model);
         }
 
-        applicationInitializer.initializeForProject(project, canvasChangeListener);
+        applicationInitializer.initializeForProject(project);
         if (isCreateNew) {
             projectManager.setProjectCurrent(project);
         }
@@ -98,12 +96,10 @@ public class EditProjectController {
         getStage().close();
     }
 
-    public void init(boolean isCreateNew, ProjectFormModel model, BorderPane mainBorderPane,
-            PropertyChangeListener canvasChangeListener) {
+    public void init(boolean isCreateNew, ProjectFormModel model, BorderPane mainBorderPane) {
         this.isCreateNew = isCreateNew;
         this.model = model;
         this.mainBorderPane = mainBorderPane;
-        this.canvasChangeListener = canvasChangeListener;
 
         // initialize the project target database
         for (ApricotTargetDatabase d : ApricotTargetDatabase.values()) {

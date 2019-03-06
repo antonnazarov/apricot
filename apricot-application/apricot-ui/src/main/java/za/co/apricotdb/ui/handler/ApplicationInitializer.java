@@ -1,6 +1,5 @@
 package za.co.apricotdb.ui.handler;
 
-import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +25,7 @@ import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.viewport.canvas.CanvasBuilder;
 
 /**
- * This controller is responsible for initialisation of the application on
+ * This controller is responsible for initialization of the application on
  * startup.
  * 
  * @author Anton Nazarov
@@ -63,7 +62,7 @@ public class ApplicationInitializer {
     ApricotEntityHandler apricotEntityHandler;
 
     @Transactional
-    public void initializeDefault(PropertyChangeListener canvasChangeListener) {
+    public void initializeDefault() {
         ApricotProject currentProject = projectManager.findCurrentProject();
         if (currentProject == null) {
             // there is no project in the system
@@ -76,20 +75,19 @@ public class ApplicationInitializer {
 
         ApricotSnapshot defaultSnapshot = snapshotManager.getDefaultSnapshot(currentProject);
         if (defaultSnapshot != null) {
-            initialize(currentProject, defaultSnapshot, canvasChangeListener);
+            initialize(currentProject, defaultSnapshot);
         }
     }
 
     @Transactional
-    public void initializeForProject(ApricotProject project, PropertyChangeListener canvasChangeListener) {
+    public void initializeForProject(ApricotProject project) {
         parentWindow.setEmptyEnv(false);
         ApricotSnapshot defaultSnapshot = snapshotManager.getDefaultSnapshot(project);
-        initialize(project, defaultSnapshot, canvasChangeListener);
+        initialize(project, defaultSnapshot);
     }
 
     @Transactional
-    public void initialize(ApricotProject project, ApricotSnapshot snapshot,
-            PropertyChangeListener canvasChangeListener) {
+    public void initialize(ApricotProject project, ApricotSnapshot snapshot) {
         // remember the current project
         parentWindow.getApplicationData().setCurrentProject(project);
 
@@ -126,7 +124,7 @@ public class ApplicationInitializer {
         for (ApricotView view : viewHandler.getAllViews(project)) {
             // create Tabs for General view and for other views with the Layout Objects
             if (view.isGeneral() || view.getObjectLayouts().size() != 0) {
-                viewHandler.createViewTab(snapshot, view, tabPane, canvasChangeListener);
+                viewHandler.createViewTab(snapshot, view, tabPane);
             }
         }
     }

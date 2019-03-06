@@ -1,6 +1,5 @@
 package za.co.apricotdb.ui.handler;
 
-import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -75,7 +74,7 @@ public class ReverseEngineHandler {
     @Autowired
     DataSaver dataSaver;
 
-    public boolean startReverseEngineering(PropertyChangeListener canvasChangeListener) {
+    public boolean startReverseEngineering() {
         ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
         List<ApricotTable> tables = tableManager.getTablesForSnapshot(snapshot);
         if (tables != null && tables.size() > 0) {
@@ -88,7 +87,7 @@ public class ReverseEngineHandler {
         }
 
         try {
-            openDatabaseConnectionForm(snapshot.getProject(), canvasChangeListener);
+            openDatabaseConnectionForm(snapshot.getProject());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -96,13 +95,13 @@ public class ReverseEngineHandler {
         return false;
     }
 
-    public void openScanResultForm(MetaData metaData, String[] blackList, PropertyChangeListener canvasChangeListener)
+    public void openScanResultForm(MetaData metaData, String[] blackList)
             throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-re-tables-list.fxml"));
         loader.setControllerFactory(context::getBean);
         Pane window = loader.load();
         ReversedTablesController controller = loader.<ReversedTablesController>getController();
-        controller.init(metaData, blackList, canvasChangeListener);
+        controller.init(metaData, blackList);
 
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
@@ -185,7 +184,7 @@ public class ReverseEngineHandler {
         return alert;
     }
 
-    private void openDatabaseConnectionForm(ApricotProject project, PropertyChangeListener canvasChangeListener)
+    private void openDatabaseConnectionForm(ApricotProject project)
             throws IOException {
         ApricotTargetDatabase targetDatabase = ApricotTargetDatabase.valueOf(project.getTargetDatabase());
         DatabaseConnectionModel model = databaseConnectionModelBuilder.buildModel(project);
@@ -201,7 +200,7 @@ public class ReverseEngineHandler {
 
             title = "Connect to SQLServer database";
             ConnectionSqlServerController controller = loader.<ConnectionSqlServerController>getController();
-            controller.init(model, canvasChangeListener);
+            controller.init(model);
             break;
         }
 

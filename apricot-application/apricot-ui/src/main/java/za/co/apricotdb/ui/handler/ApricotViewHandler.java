@@ -1,6 +1,5 @@
 package za.co.apricotdb.ui.handler;
 
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -120,8 +119,7 @@ public class ApricotViewHandler {
         }
     }
 
-    public void createViewEditor(TabPane viewsTabPane, ApricotView view, PropertyChangeListener canvasChangeListener,
-            Tab tab) throws Exception {
+    public void createViewEditor(TabPane viewsTabPane, ApricotView view, Tab tab) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-view-editor.fxml"));
         loader.setControllerFactory(context::getBean);
         Pane window = loader.load();
@@ -143,7 +141,7 @@ public class ApricotViewHandler {
         dialog.getIcons().add(new Image(getClass().getResourceAsStream("view-s1.jpg")));
 
         ViewFormController controller = loader.<ViewFormController>getController();
-        controller.init(model, viewsTabPane, canvasChangeListener);
+        controller.init(model, viewsTabPane);
 
         dialog.show();
     }
@@ -178,9 +176,8 @@ public class ApricotViewHandler {
     }
 
     @Transactional
-    public Tab createViewTab(ApricotSnapshot snapshot, ApricotView view, TabPane tabPane,
-            PropertyChangeListener canvasChangeListener) {
-        ApricotCanvas canvas = canvasBuilder.buildCanvas(canvasChangeListener);
+    public Tab createViewTab(ApricotSnapshot snapshot, ApricotView view, TabPane tabPane) {
+        ApricotCanvas canvas = canvasBuilder.buildCanvas();
         Tab tab = tabViewHandler.buildTab(snapshot, view, canvas);
         tabPane.getTabs().add(tab);
 

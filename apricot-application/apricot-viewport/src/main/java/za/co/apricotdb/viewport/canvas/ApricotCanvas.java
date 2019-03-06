@@ -1,8 +1,9 @@
 package za.co.apricotdb.viewport.canvas;
 
-import java.beans.PropertyChangeListener;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.context.ApplicationEvent;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
@@ -46,19 +47,11 @@ public interface ApricotCanvas {
     
     List<ApricotEntity> getSelectedEntities();
     
-    void notifyCanvasChange();
+    void cleanCanvas();
     
-    void resetCanvasChange();
-    
-    void addCanvasChangeListener(PropertyChangeListener canvasChangeListener);
+    void publishEvent(ApplicationEvent event);
     
     boolean isCanvasChanged();
     
-    void cleanCanvas();
-    
-    boolean isStartNewEntity();
-    
-    void resetStartNewEntity();
-    
-    void notifyStartNewEntity();
+    void setCanvasChanged(boolean changed);
 }

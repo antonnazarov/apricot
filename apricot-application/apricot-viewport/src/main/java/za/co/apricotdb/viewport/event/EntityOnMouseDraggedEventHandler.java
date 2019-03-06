@@ -14,6 +14,7 @@ import javafx.scene.layout.VBox;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ElementStatus;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
+import za.co.apricotdb.viewport.notification.CanvasChangedEvent;
 
 /**
  * The mouse is dragged event applied on the source Entity.
@@ -68,7 +69,7 @@ public class EntityOnMouseDraggedEventHandler implements EventHandler<MouseEvent
                         break;
                     }
 
-                    canvas.notifyCanvasChange();
+                    canvas.publishEvent(new CanvasChangedEvent(canvas));
                     
                     event.consume();
                 }

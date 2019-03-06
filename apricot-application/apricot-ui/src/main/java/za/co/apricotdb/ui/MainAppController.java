@@ -1,6 +1,6 @@
 package za.co.apricotdb.ui;
 
-import java.beans.PropertyChangeListener;
+import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,6 +16,7 @@ import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
+import za.co.apricotdb.ui.handler.ApricotEntityHandler;
 import za.co.apricotdb.ui.handler.ApricotProjectHandler;
 import za.co.apricotdb.ui.handler.ApricotSnapshotHandler;
 import za.co.apricotdb.ui.handler.ApricotViewHandler;
@@ -53,9 +54,12 @@ public class MainAppController {
 
     @Autowired
     SnapshotManager snapshotManager;
-    
+
     @Autowired
     ReverseEngineHandler reverseEngineHandler;
+
+    @Autowired
+    ApricotEntityHandler entityHandler;
 
     @FXML
     BorderPane mainBorderPane;
@@ -69,8 +73,6 @@ public class MainAppController {
     @FXML
     ComboBox<String> snapshotCombo;
 
-    private PropertyChangeListener canvasChangeListener;
-
     @FXML
     public void save(ActionEvent event) {
         for (Tab t : viewsTabPane.getTabs()) {
@@ -83,7 +85,8 @@ public class MainAppController {
                     ApricotView view = tabViewHandler.saveCanvasAllocationMap(allocationMap, o.getView());
                     o.setView(view);
 
-                    o.getCanvas().resetCanvasChange();
+                    t.setStyle("-fx-font-weight: normal;");
+                    o.getCanvas().setCanvasChanged(false);
                 }
             }
         }
@@ -92,7 +95,7 @@ public class MainAppController {
 
     @FXML
     public void newView(ActionEvent event) throws Exception {
-        viewHandler.createViewEditor(viewsTabPane, null, canvasChangeListener, null);
+        viewHandler.createViewEditor(viewsTabPane, null, null);
     }
 
     /**
@@ -101,7 +104,7 @@ public class MainAppController {
     @FXML
     public void openProject(ActionEvent event) {
         try {
-            projectHandler.createOpenProjectForm(mainBorderPane, canvasChangeListener);
+            projectHandler.createOpenProjectForm(mainBorderPane);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -113,7 +116,7 @@ public class MainAppController {
     @FXML
     public void newProject(ActionEvent event) {
         try {
-            projectHandler.createEditProjectForm(true, mainBorderPane, canvasChangeListener);
+            projectHandler.createEditProjectForm(true, mainBorderPane);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -125,7 +128,7 @@ public class MainAppController {
     @FXML
     public void editProject(ActionEvent event) {
         try {
-            projectHandler.createEditProjectForm(false, mainBorderPane, canvasChangeListener);
+            projectHandler.createEditProjectForm(false, mainBorderPane);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -137,7 +140,7 @@ public class MainAppController {
     @FXML
     public void newSnapshot(ActionEvent event) {
         try {
-            snapshotHandler.createEditSnapshotForm(true, mainBorderPane, canvasChangeListener);
+            snapshotHandler.createEditSnapshotForm(true, mainBorderPane);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -160,7 +163,7 @@ public class MainAppController {
                 return;
             }
             snapshotHandler.setDefaultSnapshot(snapshot);
-            applicationInitializer.initialize(snapshot.getProject(), snapshot, canvasChangeListener);
+            applicationInitializer.initialize(snapshot.getProject(), snapshot);
         }
     }
 
@@ -170,7 +173,7 @@ public class MainAppController {
     @FXML
     public void editSnapshot(ActionEvent event) {
         try {
-            snapshotHandler.createEditSnapshotForm(false, mainBorderPane, canvasChangeListener);
+            snapshotHandler.createEditSnapshotForm(false, mainBorderPane);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -182,41 +185,45 @@ public class MainAppController {
     @FXML
     public void deleteSnapshot(ActionEvent event) {
         if (snapshotHandler.deleteSnapshot()) {
-            applicationInitializer.initializeDefault(canvasChangeListener);
+            applicationInitializer.initializeDefault();
         }
     }
-    
+
     /**
-     * Reverse engineer into the current project/snapshot. 
+     * Reverse engineer into the current project/snapshot.
      */
     @FXML
     public void reverseEngineer(ActionEvent event) {
-        reverseEngineHandler.startReverseEngineering(canvasChangeListener);
+        reverseEngineHandler.startReverseEngineering();
     }
-    
+
     /**
      * Delete the current project.
      */
     @FXML
     public void deleteProject(ActionEvent event) {
         if (projectHandler.deleteCurrentProject()) {
-            applicationInitializer.initializeDefault(canvasChangeListener);
+            applicationInitializer.initializeDefault();
         }
     }
-    
+
     /**
      * Start a process of creation of the new entity.
      */
     @FXML
     public void newEntity(ActionEvent event) {
-        
+        try {
+            entityHandler.openEntityEditorForm(true, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public PropertyChangeListener getCanvasChangeListener() {
-        return canvasChangeListener;
+    public TabPane getViewsTabPane() {
+        return viewsTabPane;
     }
 
-    public void setCanvasChangeListener(PropertyChangeListener canvasChangeListener) {
-        this.canvasChangeListener = canvasChangeListener;
+    public Button getSaveButton() {
+        return saveButton;
     }
 }

@@ -1,6 +1,5 @@
 package za.co.apricotdb.ui.handler;
 
-import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +69,7 @@ public class ApricotSnapshotHandler {
         if (snapshot == null) {
             return;
         }
-        
+
         List<ApricotSnapshot> snapshots = snapshotManager.getAllSnapshots(snapshot.getProject());
         for (ApricotSnapshot s : snapshots) {
             s.setDefaultSnapshot(false);
@@ -84,8 +83,7 @@ public class ApricotSnapshotHandler {
     /**
      * Create the snapshot editing form for a new or existing snapshot.
      */
-    public void createEditSnapshotForm(boolean isCreateNew, BorderPane mainBorderPane,
-            PropertyChangeListener canvasChangeListener) throws Exception {
+    public void createEditSnapshotForm(boolean isCreateNew, BorderPane mainBorderPane) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-snapshot-editor.fxml"));
         loader.setControllerFactory(context::getBean);
         Pane window = loader.load();
@@ -108,7 +106,7 @@ public class ApricotSnapshotHandler {
         dialog.setScene(openProjectScene);
 
         EditSnapshotController controller = loader.<EditSnapshotController>getController();
-        controller.init(model, canvasChangeListener);
+        controller.init(model);
 
         dialog.show();
     }

@@ -1,6 +1,5 @@
 package za.co.apricotdb.ui;
 
-import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +57,6 @@ public class OpenProjectController {
     TableColumn<ApricotProject, String> createdColumn;
 
     private BorderPane mainBorderPane;
-    private PropertyChangeListener canvasChangeListener;
 
     @FXML
     public void cancel(ActionEvent event) {
@@ -70,7 +68,7 @@ public class OpenProjectController {
         parentWindow.setParentPane(mainBorderPane);
         ApricotProject selectedProject = projectsList.getSelectionModel().getSelectedItem();
         projectManager.setProjectCurrent(selectedProject);
-        applicationInitializer.initializeDefault(canvasChangeListener);
+        applicationInitializer.initializeDefault();
 
         getStage().close();
     }
@@ -79,9 +77,8 @@ public class OpenProjectController {
         return (Stage) mainPane.getScene().getWindow();
     }
 
-    public void init(BorderPane mainBorderPane, PropertyChangeListener canvasChangeListener) {
+    public void init(BorderPane mainBorderPane) {
         this.mainBorderPane = mainBorderPane;
-        this.canvasChangeListener = canvasChangeListener;
 
         ApricotProject currentProject = projectManager.findCurrentProject();
         List<ApricotProject> projects = projectManager.getAllProjects();
@@ -103,7 +100,7 @@ public class OpenProjectController {
                 projectDescription.setText(newSelection.getDescription());
             }
         });
-        
+
         // handle the double click on the project name in the list
         projectsList.setOnMouseClicked(e -> {
             if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 2) {

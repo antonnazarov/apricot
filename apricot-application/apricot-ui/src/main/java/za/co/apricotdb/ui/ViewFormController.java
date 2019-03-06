@@ -1,6 +1,5 @@
 package za.co.apricotdb.ui;
 
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -82,15 +81,13 @@ public class ViewFormController {
     private Stage stage;
     private ViewFormModel model;
     private TabPane viewsTabPane;
-    private PropertyChangeListener canvasChangeListener;
 
     /**
      * Initialise the form
      */
-    public void init(ViewFormModel model, TabPane viewsTabPane, PropertyChangeListener canvasChangeListener) {
+    public void init(ViewFormModel model, TabPane viewsTabPane) {
         this.model = model;
         this.viewsTabPane = viewsTabPane;
-        this.canvasChangeListener = canvasChangeListener;
         TextLimiter.addTextLimiter(viewName, 30);
         TextLimiter.addTextLimiter(comment, 250);
 
@@ -136,7 +133,7 @@ public class ViewFormController {
         ApricotView view = viewSerializer.serializeView(model);
 
         if (model.isNewView()) {
-            Tab tab = viewHandler.createViewTab(model.getSnapshot(), view, viewsTabPane, canvasChangeListener);
+            Tab tab = viewHandler.createViewTab(model.getSnapshot(), view, viewsTabPane);
             viewsTabPane.getSelectionModel().select(tab);
         } else {
             model.getTab().setText(viewName.getText());
@@ -263,7 +260,7 @@ public class ViewFormController {
         model.addAvailableTables(availableTables);
         model.getViewTables().clear();
         model.addViewTables(tableNames);
-        
+
         model.setViewName(this.viewName.getText());
         model.setComment(this.comment.getText());
 

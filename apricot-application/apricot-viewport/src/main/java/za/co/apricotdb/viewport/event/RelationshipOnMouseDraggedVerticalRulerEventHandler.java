@@ -7,6 +7,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Shape;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ApricotElement;
+import za.co.apricotdb.viewport.notification.CanvasChangedEvent;
 import za.co.apricotdb.viewport.relationship.shape.ApricotRelationshipShape;
 import za.co.apricotdb.viewport.relationship.shape.HatRelationship;
 import za.co.apricotdb.viewport.relationship.shape.RoofRelationship;
@@ -50,7 +51,7 @@ public class RelationshipOnMouseDraggedVerticalRulerEventHandler implements Even
                 Pane pane = (Pane) canvas;
                 pane.getScene().setCursor(Cursor.N_RESIZE);
 
-                canvas.notifyCanvasChange();
+                canvas.publishEvent(new CanvasChangedEvent(canvas));
                 
                 event.consume();
             }

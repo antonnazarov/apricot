@@ -1,7 +1,5 @@
 package za.co.apricotdb.ui;
 
-import java.beans.PropertyChangeListener;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,7 +13,6 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
-import za.co.apricotdb.ui.notification.CanvasChangeListener;
 
 @Configuration
 @EnableAutoConfiguration
@@ -24,7 +21,6 @@ public class ApricotMainApp extends Application {
 
     private ConfigurableApplicationContext context;
     private Parent rootNode;
-    private PropertyChangeListener canvasChangeListener;
 
     ApplicationInitializer initializer;
 
@@ -38,8 +34,7 @@ public class ApricotMainApp extends Application {
         rootNode = loader.load();
         
         MainAppController controller = loader.<MainAppController>getController();
-        canvasChangeListener = new CanvasChangeListener(controller.viewsTabPane, controller.saveButton);
-        controller.setCanvasChangeListener(canvasChangeListener);
+        System.out.println("ApricotMainApp: the main app controller was instantiated: " + controller.toString());
     }
 
     @Override
@@ -47,7 +42,7 @@ public class ApricotMainApp extends Application {
         ParentWindow pw = context.getBean(ParentWindow.class);
         pw.setParentPane(rootNode);
         primaryStage.setOnShown(event -> {
-            initializer.initializeDefault(canvasChangeListener);
+            initializer.initializeDefault();
         });
 
         primaryStage.setScene(new Scene(rootNode));

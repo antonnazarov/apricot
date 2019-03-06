@@ -1,9 +1,8 @@
 package za.co.apricotdb.viewport.canvas;
 
-import java.beans.PropertyChangeListener;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import javafx.event.EventHandler;
@@ -16,19 +15,21 @@ public class ApricotCanvasBuilder implements CanvasBuilder {
     @Autowired
     @Qualifier("CanvasOnMousePressedEventHandler")
     private EventHandler<MouseEvent> canvasOnMousePressedEventHandler;
-    
+
     @Autowired
     @Qualifier("CanvasOnMouseReleasedEventHandler")
     private EventHandler<MouseEvent> canvasOnMouseReleasedEventHandler;
-    
+
     @Autowired
     @Qualifier("CanvasOnMouseDraggedEventHandler")
     private EventHandler<MouseEvent> canvasOnMouseDraggedEventHandler;
-    
+
+    @Autowired
+    ApplicationEventPublisher applicationEventPublisher;
+
     @Override
-    public ApricotCanvas buildCanvas(PropertyChangeListener canvasChangeListener) {
-        ApricotCanvas canvas = new ApricotCanvasImpl();
-        canvas.addCanvasChangeListener(canvasChangeListener);
+    public ApricotCanvas buildCanvas() {
+        ApricotCanvas canvas = new ApricotCanvasImpl(applicationEventPublisher);
         Pane p = (Pane) canvas;
         p.setOnMousePressed(canvasOnMousePressedEventHandler);
         p.setOnMouseReleased(canvasOnMouseReleasedEventHandler);

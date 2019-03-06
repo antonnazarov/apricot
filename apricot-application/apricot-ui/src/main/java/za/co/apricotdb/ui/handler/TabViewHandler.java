@@ -35,7 +35,6 @@ import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.CanvasAllocationItem;
 import za.co.apricotdb.viewport.canvas.CanvasAllocationMap;
-import za.co.apricotdb.viewport.canvas.CanvasBuilder;
 import za.co.apricotdb.viewport.canvas.ElementType;
 
 /**
@@ -48,9 +47,6 @@ import za.co.apricotdb.viewport.canvas.ElementType;
 public class TabViewHandler {
 
     @Autowired
-    CanvasBuilder canvasBuilder;
-
-    @Autowired
     ObjectLayoutManager layoutManager;
 
     @Autowired
@@ -58,7 +54,7 @@ public class TabViewHandler {
 
     @Autowired
     ApricotViewHandler viewHandler;
-    
+
     @Autowired
     AlertMessageDecorator alertDecorator;
 
@@ -185,7 +181,7 @@ public class TabViewHandler {
             @Override
             public void handle(ActionEvent event) {
                 try {
-                    viewHandler.createViewEditor(tab.getTabPane(), tabInfo.getView(), null, tab);
+                    viewHandler.createViewEditor(tab.getTabPane(), tabInfo.getView(), tab);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -200,7 +196,7 @@ public class TabViewHandler {
                 Alert alert = new Alert(AlertType.WARNING, null, yes, no);
                 alert.setTitle("Delete View");
                 alert.setHeaderText("Do you really want to delete the view \"" + tab.getText() + "\"?");
-                alertDecorator.decorateAlert(alert);                
+                alertDecorator.decorateAlert(alert);
 
                 Optional<ButtonType> result = alert.showAndWait();
 

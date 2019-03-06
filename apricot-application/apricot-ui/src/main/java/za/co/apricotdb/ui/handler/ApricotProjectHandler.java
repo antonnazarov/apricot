@@ -1,6 +1,5 @@
 package za.co.apricotdb.ui.handler;
 
-import java.beans.PropertyChangeListener;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,7 +56,7 @@ public class ApricotProjectHandler {
     @Autowired
     AlertMessageDecorator alertDecorator;
     
-    public void createOpenProjectForm(BorderPane mainBorderPane, PropertyChangeListener canvasChangeListener)
+    public void createOpenProjectForm(BorderPane mainBorderPane)
             throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-project-open.fxml"));
         loader.setControllerFactory(context::getBean);
@@ -72,13 +71,12 @@ public class ApricotProjectHandler {
         dialog.setScene(openProjectScene);
 
         OpenProjectController controller = loader.<OpenProjectController>getController();
-        controller.init(mainBorderPane, canvasChangeListener);
+        controller.init(mainBorderPane);
 
         dialog.show();
     }
     
-    public void createEditProjectForm(boolean isCreateNew, BorderPane mainBorderPane,
-            PropertyChangeListener canvasChangeListener) throws Exception {
+    public void createEditProjectForm(boolean isCreateNew, BorderPane mainBorderPane) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-project-editor.fxml"));
         loader.setControllerFactory(context::getBean);
         Pane window = loader.load();
@@ -102,7 +100,7 @@ public class ApricotProjectHandler {
         dialog.setScene(openProjectScene);
 
         EditProjectController controller = loader.<EditProjectController>getController();
-        controller.init(isCreateNew, model, mainBorderPane, canvasChangeListener);
+        controller.init(isCreateNew, model, mainBorderPane);
 
         dialog.show();
     }

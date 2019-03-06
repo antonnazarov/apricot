@@ -7,6 +7,7 @@ import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ApricotElement;
 import za.co.apricotdb.viewport.canvas.ElementStatus;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
+import za.co.apricotdb.viewport.notification.EditEntityEvent;
 
 /**
  * The mouse is pressed.
@@ -40,6 +41,11 @@ public class EntityOnMousePressedEventHandler implements EventHandler<MouseEvent
                     entity.setElementStatus(ElementStatus.SELECTED);
                 } else {
                     entity.setElementStatus(ElementStatus.SELECTED);                    
+                }
+                
+                //  the double click runs the Edit Entity command
+                if (event.getClickCount() == 2) {
+                    canvas.publishEvent(new EditEntityEvent(canvas, tableName));
                 }
 
                 event.consume();
