@@ -41,6 +41,8 @@ import za.co.apricotdb.persistence.entity.ConstraintType;
 import za.co.apricotdb.ui.handler.ApricotConstraintHandler;
 import za.co.apricotdb.ui.model.ApricotColumnData;
 import za.co.apricotdb.ui.model.ApricotConstraintData;
+import za.co.apricotdb.ui.model.ApricotConstraintSerializer;
+import za.co.apricotdb.ui.model.ApricotEntitySerializer;
 import za.co.apricotdb.ui.model.EditEntityModel;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
@@ -64,6 +66,12 @@ public class EditEntityController {
 
     @Autowired
     AlertMessageDecorator alertDecorator;
+    
+    @Autowired
+    ApricotEntitySerializer entitySerializer;
+    
+    @Autowired
+    ApricotConstraintSerializer constraintSerializer;
 
     @FXML
     Pane mainPane;
@@ -215,7 +223,8 @@ public class EditEntityController {
     @FXML
     public void newColumn(ActionEvent event) {
         // ignore if there is already a new column in process of insert
-        if (model.getColumns().get(model.getColumns().size() - 1).getName().getValue().equals("<New Column>")) {
+        if (model.getColumns().size() > 0
+                && model.getColumns().get(model.getColumns().size() - 1).getName().getValue().equals("<New Column>")) {
             return;
         }
 
@@ -364,7 +373,8 @@ public class EditEntityController {
 
     @FXML
     public void save(ActionEvent event) {
-        // TODO implement
+        model.setEntityName(entityName.getText());
+        entitySerializer.serialize(model);
     }
 
     private Stage getStage() {

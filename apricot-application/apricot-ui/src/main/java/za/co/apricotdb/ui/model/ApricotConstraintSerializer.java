@@ -8,11 +8,10 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import za.co.apricotdb.persistence.data.ConstraintManager;
 import za.co.apricotdb.persistence.entity.ApricotColumnConstraint;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ConstraintType;
-import za.co.apricotdb.persistence.repository.ApricotColumnConstraintRepository;
-import za.co.apricotdb.persistence.repository.ApricotConstraintRepository;
 
 /**
  * This is a serialize of constraints after the entity added/edited.
@@ -24,10 +23,7 @@ import za.co.apricotdb.persistence.repository.ApricotConstraintRepository;
 public class ApricotConstraintSerializer {
 
     @Resource
-    ApricotColumnConstraintRepository columnConstraintRepository;
-
-    @Resource
-    ApricotConstraintRepository constraintRepository;
+    ConstraintManager constraintManager;
 
     @Autowired
     PrimaryKeySerializer primaryKeySerializer;
@@ -70,9 +66,9 @@ public class ApricotConstraintSerializer {
     private void deleteRemovedConstraints(EditEntityModel model) {
         for (ApricotConstraint constraint : getRemovedConstraints(model)) {
             for (ApricotColumnConstraint acc : constraint.getColumns()) {
-                columnConstraintRepository.delete(acc);
+                constraintManager.deleteConstraintColumn(acc);
             }
-            constraintRepository.delete(constraint);
+            constraintManager.deleteConstraint(constraint);
         }
     }
 
@@ -91,7 +87,7 @@ public class ApricotConstraintSerializer {
     private void serializeConstraintColumns(ApricotConstraint constraint, ApricotConstraintData constraintData,
             EditEntityModel model) {
         for (ApricotColumnConstraint constrCol : constraint.getColumns()) {
-            columnConstraintRepository.delete(constrCol);
+            constraintManager.deleteConstraintColumn(constrCol);
         }
         constraint.getColumns().clear();
 

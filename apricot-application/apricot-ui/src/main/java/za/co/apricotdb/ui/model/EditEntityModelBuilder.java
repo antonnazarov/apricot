@@ -43,6 +43,8 @@ public class EditEntityModelBuilder {
 
         if (!newEntity && tableName != null) {
             readData(tableName, model);
+        } else {
+            model.setEntityName("<New Entity>");
         }
 
         return model;

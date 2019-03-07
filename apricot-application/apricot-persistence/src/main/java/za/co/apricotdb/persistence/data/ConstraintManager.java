@@ -12,12 +12,20 @@ import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.entity.ApricotColumnConstraint;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotTable;
+import za.co.apricotdb.persistence.repository.ApricotColumnConstraintRepository;
+import za.co.apricotdb.persistence.repository.ApricotConstraintRepository;
 
 @Component
 public class ConstraintManager {
 
     @Resource
     EntityManager em;
+    
+    @Resource
+    ApricotColumnConstraintRepository columnConstraintRepository;
+    
+    @Resource
+    ApricotConstraintRepository constraintRepository;
 
     public List<ApricotConstraint> getConstraintsByTable(ApricotTable table) {
         TypedQuery<ApricotConstraint> query = em.createNamedQuery("ApricotConstraint.getConstraintsByTable",
@@ -44,5 +52,13 @@ public class ConstraintManager {
         }
         
         return ret;
+    }
+
+    public void deleteConstraint(ApricotConstraint constraint) {
+        constraintRepository.delete(constraint);
+    }
+
+    public void deleteConstraintColumn(ApricotColumnConstraint columnConstraint) {
+        columnConstraintRepository.delete(columnConstraint);
     }
 }
