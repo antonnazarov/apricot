@@ -6,13 +6,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import za.co.apricotdb.persistence.data.ColumnManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.TableManager;
 import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 
 /**
- * This component serializes the new or edited entity into the Apricot project
+ * This component serialises the new or edited entity into the Apricot project
  * database.
  * 
  * @author Anton Nazarov
@@ -29,6 +30,9 @@ public class ApricotEntitySerializer {
     
     @Autowired
     ApricotConstraintSerializer constraintSerializer;
+    
+    @Autowired
+    ColumnManager columnManager;
 
     public void serialize(EditEntityModel model) {
         updateTable(model);
@@ -62,6 +66,7 @@ public class ApricotEntitySerializer {
                 if (column == null) {
                     column = new ApricotColumn();
                     model.getTable().getColumns().add(column);
+                    cd.setColumn(column);
                 }
             } else {
                 column = model.getTable().getColumnById(cd.getId());
@@ -98,6 +103,10 @@ public class ApricotEntitySerializer {
     private void deleteColumns(EditEntityModel model) {
         List<ApricotColumn> deletedColumns = getDeletedColumns(model);
 
+        for(ApricotColumn c : deletedColumns) {
+            columnManager.deleteColumn(c);
+        }
+        
         model.getTable().getColumns().removeAll(deletedColumns);
     }
 }

@@ -115,4 +115,15 @@ public class ApricotConstraintData implements Serializable {
     public void setEdited(boolean edited) {
         this.edited = edited;
     }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("name=[").append(constraintName.getValue())
+            .append("], type=[").append(constraintType.getValue())
+            .append("], added=[").append(added)
+            .append("], edited=[").append(edited).append("]");
+        
+        return sb.toString();
+    }
 }

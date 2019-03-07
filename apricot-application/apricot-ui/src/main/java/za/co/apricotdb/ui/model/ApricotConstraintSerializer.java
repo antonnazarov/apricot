@@ -68,7 +68,7 @@ public class ApricotConstraintSerializer {
             for (ApricotColumnConstraint acc : constraint.getColumns()) {
                 constraintManager.deleteConstraintColumn(acc);
             }
-            constraintManager.deleteConstraint(constraint);
+            model.getTable().getConstraints().remove(constraint);
         }
     }
 

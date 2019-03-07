@@ -111,7 +111,7 @@ public class ApricotColumnData implements Serializable {
         return deleted;
     }
 
-    public void sedDeleted(boolean deleted) {
+    public void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }
 
@@ -119,6 +119,10 @@ public class ApricotColumnData implements Serializable {
         return column;
     }
 
+    public void setColumn(ApricotColumn column) {
+        this.column = column;
+    }
+    
     @Override
     public int hashCode() {
         return name.hashCode();
