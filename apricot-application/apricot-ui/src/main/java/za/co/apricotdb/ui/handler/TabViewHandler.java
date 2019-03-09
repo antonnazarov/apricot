@@ -26,9 +26,12 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.Pane;
 import javafx.stage.WindowEvent;
 import za.co.apricotdb.persistence.data.ObjectLayoutManager;
+import za.co.apricotdb.persistence.data.RelationshipManager;
 import za.co.apricotdb.persistence.data.ViewManager;
 import za.co.apricotdb.persistence.entity.ApricotObjectLayout;
+import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
+import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.persistence.entity.LayoutObjectType;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
@@ -57,7 +60,10 @@ public class TabViewHandler {
 
     @Autowired
     AlertMessageDecorator alertDecorator;
-
+    
+    @Autowired
+    RelationshipManager relationshipManager;
+    
     /**
      * Build a new Tab and populate it with the initial data.
      */
@@ -139,6 +145,32 @@ public class TabViewHandler {
             map.addCanvasAllocationItem(alloc);
         }
 
+        return map;
+    }
+    
+    /**
+     * Get allocation map for one table.
+     */
+    public CanvasAllocationMap readCanvasAllocationMap(ApricotView view, ApricotTable table) {
+        CanvasAllocationMap map = new CanvasAllocationMap();
+        
+        ApricotObjectLayout layout = layoutManager.findLayoutByName(view, table.getName());
+        if (layout != null) {
+            CanvasAllocationItem alloc = new CanvasAllocationItem();
+            alloc.setName(table.getName());
+            alloc.setType(ElementType.ENTITY);
+            alloc.setPropertiesFromString(layout.getObjectLayout());
+            map.addCanvasAllocationItem(alloc);
+
+            for (ApricotRelationship r : relationshipManager.getRelationshipsForTable(table)) {
+                alloc = new CanvasAllocationItem();
+                alloc.setName(r.getName());
+                alloc.setType(ElementType.RELATIONSHIP);
+                alloc.setPropertiesFromString(layout.getObjectLayout());
+                map.addCanvasAllocationItem(alloc);
+            }
+        }
+        
         return map;
     }
 

@@ -19,26 +19,27 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
- * This entity class represents the table apricot_view. 
+ * This entity class represents the table apricot_view.
  * 
  * @author Anton Nazarov
  * @since 04/01/2019
  */
 @Entity
 @Table(name = "apricot_view")
-@NamedQuery(name="ApricotView.getGeneralView", query="SELECT vw FROM ApricotView vw WHERE vw.project = :project AND vw.general = true")
-@NamedQuery(name="ApricotView.getAllViewsOrdered", query="SELECT vw FROM ApricotView vw WHERE vw.project = :project ORDER by vw.ordinalPosition")
-@NamedQuery(name="ApricotView.getViewByName", query="SELECT vw FROM ApricotView vw WHERE vw.project = :project AND vw.name = :name")
-@NamedQuery(name="ApricotView.getViewMaxOrdinalPosition", query="SELECT MAX(vw.ordinalPosition) FROM ApricotView vw WHERE vw.project = :project")
+@NamedQuery(name = "ApricotView.getGeneralView", query = "SELECT vw FROM ApricotView vw WHERE vw.project = :project AND vw.general = true")
+@NamedQuery(name = "ApricotView.getAllViewsOrdered", query = "SELECT vw FROM ApricotView vw WHERE vw.project = :project ORDER by vw.ordinalPosition")
+@NamedQuery(name = "ApricotView.getViewByName", query = "SELECT vw FROM ApricotView vw WHERE vw.project = :project AND vw.name = :name")
+@NamedQuery(name = "ApricotView.getViewMaxOrdinalPosition", query = "SELECT MAX(vw.ordinalPosition) FROM ApricotView vw WHERE vw.project = :project")
+@NamedQuery(name = "ApricotView.getViewsByObjectName", query = "SELECT vw FROM ApricotView vw JOIN vw.objectLayouts l WHERE vw.project = :project AND l.objectType = :objectType AND l.objectName = :objectName")
 public class ApricotView implements Serializable {
 
     private static final long serialVersionUID = 8705614293066261879L;
-    
-    public ApricotView() {}
-    
-    public ApricotView(String name, String comment, java.util.Date created,
-            java.util.Date updated, boolean general, int ordinalPosition, ApricotProject project,
-            List<ApricotObjectLayout> objectLayouts) {
+
+    public ApricotView() {
+    }
+
+    public ApricotView(String name, String comment, java.util.Date created, java.util.Date updated, boolean general,
+            int ordinalPosition, ApricotProject project, List<ApricotObjectLayout> objectLayouts) {
         this.name = name;
         this.comment = comment;
         this.created = created;
@@ -48,12 +49,12 @@ public class ApricotView implements Serializable {
         this.project = project;
         this.objectLayouts = objectLayouts;
     }
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "view_id")
     private long id;
-    
+
     @Column(name = "view_name")
     private String name;
 
@@ -67,17 +68,17 @@ public class ApricotView implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "view_updated")
     private java.util.Date updated;
-    
+
     @Column(name = "is_general")
     private boolean general;
-    
+
     @Column(name = "ordinal_position")
     private int ordinalPosition;
 
     @ManyToOne
     @JoinColumn(name = "project_id")
     private ApricotProject project;
-    
+
     @OneToMany(mappedBy = "view", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ApricotObjectLayout> objectLayouts = new ArrayList<>();
 
@@ -151,5 +152,30 @@ public class ApricotView implements Serializable {
 
     public void setObjectLayouts(List<ApricotObjectLayout> objectLayouts) {
         this.objectLayouts = objectLayouts;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ApricotView other = (ApricotView) obj;
+        if (name == null) {
+            if (other.name != null)
+                return false;
+        } else if (!name.equals(other.name))
+            return false;
+        return true;
     }
 }

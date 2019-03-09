@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotView;
+import za.co.apricotdb.persistence.entity.LayoutObjectType;
 import za.co.apricotdb.persistence.repository.ApricotObjectLayoutRepository;
 import za.co.apricotdb.persistence.repository.ApricotViewRepository;
 
@@ -23,14 +24,14 @@ public class ViewManager {
 
     @Resource
     ApricotViewRepository viewRepository;
-    
+
     @Resource
     ApricotObjectLayoutRepository objectLayoutRepository;
 
     public ApricotView getGeneralView(ApricotProject project) {
         TypedQuery<ApricotView> query = em.createNamedQuery("ApricotView.getGeneralView", ApricotView.class);
         query.setParameter("project", project);
-        
+
         return query.getSingleResult();
     }
 
@@ -50,11 +51,32 @@ public class ViewManager {
 
         return ret;
     }
-    
+
+    /**
+     * Get all views which contains layout definition for the specific object.
+     */
+    public List<ApricotView> getViewsByObjectName(ApricotProject project, LayoutObjectType objectType,
+            String objectName) {
+        List<ApricotView> ret = new ArrayList<>();
+
+        TypedQuery<ApricotView> query = em.createNamedQuery("ApricotView.getViewsByObjectName", ApricotView.class);
+        query.setParameter("project", project);
+        query.setParameter("objectType", objectType);
+        query.setParameter("objectName", objectName);
+
+        List<ApricotView> res = query.getResultList();
+
+        if (res != null && res.size() > 0) {
+            return res;
+        }
+
+        return ret;
+    }
+
     public void removeGeneralView(ApricotProject project) {
         TypedQuery<ApricotView> query = em.createNamedQuery("ApricotView.getGeneralView", ApricotView.class);
         query.setParameter("project", project);
-        
+
         List<ApricotView> res = query.getResultList();
         if (res != null && res.size() > 0) {
             for (ApricotView v : res) {
@@ -63,36 +85,36 @@ public class ViewManager {
             }
         }
     }
-    
+
     @Transactional
     public void removeView(ApricotView view) {
         ApricotView v = viewRepository.getOne(view.getId());
         objectLayoutRepository.delete(v.getObjectLayouts());
         viewRepository.delete(v);
     }
-    
+
     @Transactional
     public ApricotView saveView(ApricotView view) {
         return viewRepository.saveAndFlush(view);
     }
-    
+
     @Transactional
     public ApricotView findViewById(long id) {
         return viewRepository.getOne(id);
     }
-    
+
     public List<ApricotView> getViewByName(ApricotProject project, String name) {
         TypedQuery<ApricotView> query = em.createNamedQuery("ApricotView.getViewByName", ApricotView.class);
         query.setParameter("project", project);
         query.setParameter("name", name);
-        
+
         return query.getResultList();
     }
-    
+
     public int getMaxOrdinalPosition(ApricotProject project) {
         TypedQuery<Integer> query = em.createNamedQuery("ApricotView.getViewMaxOrdinalPosition", Integer.class);
         query.setParameter("project", project);
-        
+
         return query.getSingleResult();
     }
 }

@@ -27,4 +27,14 @@ public class RelationshipManager {
         
         return ret;
     }
+    
+    public List<ApricotRelationship> getRelationshipsForTable(ApricotTable table) {
+        List<ApricotRelationship> ret = new ArrayList<>();
+        
+        TypedQuery<ApricotRelationship> query = em.createNamedQuery("ApricotRelationship.getRelationshipsForTable", ApricotRelationship.class);
+        query.setParameter("table", table);
+        ret = query.getResultList();
+        
+        return ret;
+    }
 }

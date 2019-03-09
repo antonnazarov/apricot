@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.Tab;
+import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.RelationshipManager;
 import za.co.apricotdb.persistence.data.TableManager;
 import za.co.apricotdb.persistence.data.ViewManager;
@@ -21,8 +23,10 @@ import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ApricotView;
+import za.co.apricotdb.persistence.entity.LayoutObjectType;
 import za.co.apricotdb.support.excel.TableWrapper;
 import za.co.apricotdb.support.excel.TableWrapper.ReportRow;
+import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.viewport.align.AlignCommand;
 import za.co.apricotdb.viewport.align.CanvasSizeAjustor;
 import za.co.apricotdb.viewport.align.SimpleGridEntityAllocator;
@@ -30,6 +34,7 @@ import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ApricotElement;
 import za.co.apricotdb.viewport.canvas.CanvasAllocationMap;
 import za.co.apricotdb.viewport.canvas.ElementType;
+import za.co.apricotdb.viewport.entity.ApricotEntity;
 import za.co.apricotdb.viewport.entity.ApricotEntityBuilder;
 import za.co.apricotdb.viewport.entity.EntityBuilder;
 import za.co.apricotdb.viewport.entity.FieldDetail;
@@ -47,19 +52,25 @@ import za.co.apricotdb.viewport.relationship.RelationshipType;
 public class ApricotCanvasHandler {
 
     @Autowired
+    ProjectManager projectManager;
+
+    @Autowired
     TableManager tableManager;
 
     @Autowired
     RelationshipManager relationshipManager;
-    
+
     @Autowired
     ApricotViewHandler viewHandler;
-    
+
     @Autowired
     TabViewHandler tabViewHandler;
-    
+
     @Autowired
     ViewManager viewManager;
+
+    @Autowired
+    ParentWindow parentWindow;
 
     /**
      * Populate the given canvas with the information of snapshot, using the
@@ -67,18 +78,71 @@ public class ApricotCanvasHandler {
      */
     @Transactional
     public void populateCanvas(ApricotSnapshot snapshot, ApricotView view, ApricotCanvas canvas) {
-        //  clean the canvas first
+        // clean the canvas first
         canvas.cleanCanvas();
-        
+
         List<ApricotTable> tables = null;
         if (view.isGeneral()) {
             tables = tableManager.getTablesForSnapshot(snapshot);
         } else {
             tables = viewHandler.getTablesForView(snapshot, view);
         }
-        
-        List<ApricotRelationship> relationships = relationshipManager.getRelationshipsForTables(tables);
+        populateCanvas(canvas, tables);
 
+        // if view does not contain layout definitions, do default alignment
+        if ((view.getObjectLayouts() == null || view.getObjectLayouts().size() == 0) && view.isGeneral()) {
+            runAlignerAfterDelay(canvas, view);
+        } else {
+            runAllocationAfterDelay(canvas, view);
+        }
+    }
+
+    /**
+     * Update or add entity on view port.
+     */
+    @Transactional
+    public void updateEntity(ApricotTable table, boolean newEntity) {
+        if (newEntity) {
+            addEntityOnViewPort(table);
+        } else {
+            updateEntityOnViewPort(table);
+        }
+    }
+
+    /**
+     * Remove entity and all related relationships from the canvas.
+     */
+    public void removeEntityFromCanvas(ApricotTable table, ApricotCanvas canvas) {
+        ApricotEntity entity = canvas.findEntityByName(table.getName());
+        if (entity != null) {
+            List<za.co.apricotdb.viewport.relationship.ApricotRelationship> pks = entity.getPrimaryLinks();
+            List<za.co.apricotdb.viewport.relationship.ApricotRelationship> fks = entity.getForeignLinks();
+
+            canvas.removeElement(entity);
+            for (za.co.apricotdb.viewport.relationship.ApricotRelationship r : pks) {
+                canvas.removeElement(r);
+            }
+            for (za.co.apricotdb.viewport.relationship.ApricotRelationship r : fks) {
+                canvas.removeElement(r);
+            }
+        }
+    }
+
+    private void populateCanvas(ApricotCanvas canvas, ApricotTable table) {
+        List<ApricotRelationship> relationships = relationshipManager.getRelationshipsForTable(table);
+        List<ApricotTable> tables = new ArrayList<>();
+        tables.add(table);
+        populateCanvas(canvas, tables, relationships, false);
+    }
+
+    private void populateCanvas(ApricotCanvas canvas, List<ApricotTable> tables) {
+        List<ApricotRelationship> relationships = relationshipManager.getRelationshipsForTables(tables);
+        populateCanvas(canvas, tables, relationships, true);
+    }
+
+    private void populateCanvas(ApricotCanvas canvas, List<ApricotTable> tables,
+            List<ApricotRelationship> relationships, boolean consistent) {
+        
         Map<String, List<FieldDetail>> fieldDetails = new HashMap<>();
         EntityBuilder eBuilder = new ApricotEntityBuilder(canvas);
         for (ApricotTable t : tables) {
@@ -87,6 +151,13 @@ public class ApricotCanvasHandler {
             canvas.addElement(element);
             fieldDetails.put(t.getName(), fd);
         }
+        
+        if (!consistent) {
+            for (ApricotTable t : getRelatedTables(tables.get(0), relationships)) {
+                List<FieldDetail> fd = getFieldDetails(t, relationships);
+                fieldDetails.put(t.getName(), fd);
+            }
+        }
 
         RelationshipBuilder rBuilder = new ApricotRelationshipBuilder(canvas);
         for (ApricotRelationship ar : relationships) {
@@ -94,15 +165,81 @@ public class ApricotCanvasHandler {
                     rBuilder);
             canvas.addElement(wpar);
         }
-
-        //  if view does not contain layout definitions, do default alignment
-        if ((view.getObjectLayouts() == null || view.getObjectLayouts().size() == 0) && view.isGeneral()) {
-            runAlignerAfterDelay(canvas, view);
-        } else {
-            runAllocationAfterDelay(canvas, view);
-        }
     }
     
+    private List<ApricotTable> getRelatedTables(ApricotTable table, List<ApricotRelationship> relationships) {
+        List<ApricotTable> ret = new ArrayList<>();
+        for (ApricotRelationship r : relationships) {
+            if (!r.getParent().getTable().equals(table)) {
+                ret.add(r.getParent().getTable());
+            }
+            if (!r.getChild().getTable().equals(table)) {
+                ret.add(r.getChild().getTable());
+            }
+        }
+        
+        return ret;
+    }
+
+    /**
+     * Update an existing entity on the current view port.
+     */
+    private void updateEntityOnViewPort(ApricotTable table) {
+        List<ApricotView> views = viewManager.getViewsByObjectName(projectManager.findCurrentProject(),
+                LayoutObjectType.TABLE, table.getName());
+        for (Tab t : parentWindow.getProjectTabPane().getTabs()) {
+            if (t.getUserData() instanceof TabInfoObject) {
+                TabInfoObject o = (TabInfoObject) t.getUserData();
+                if (views.contains(o.getView())) {
+                    drawEntityOnCanvas(table, o.getCanvas(), false);
+                    CanvasAllocationMap map = tabViewHandler.readCanvasAllocationMap(o.getView(), table);
+                    runAllocationAfterDelay(o.getCanvas(), map);
+                }
+            }
+        }
+    }
+
+    private void addEntityOnViewPort(ApricotTable table) {
+        ApricotCanvas c = getGeneralViewCanvas();
+        drawEntityOnCanvas(table, c, true);
+        c = getCurrentViewCanvas();
+        drawEntityOnCanvas(table, c, true);
+    }
+
+    private ApricotCanvas getGeneralViewCanvas() {
+        for (Tab t : parentWindow.getProjectTabPane().getTabs()) {
+            if (t.getUserData() instanceof TabInfoObject) {
+                TabInfoObject o = (TabInfoObject) t.getUserData();
+                if (o.getView().getName().equals("Main View")) {
+                    return o.getCanvas();
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private ApricotCanvas getCurrentViewCanvas() {
+        Tab t = parentWindow.getProjectTabPane().getSelectionModel().getSelectedItem();
+        if (t.getUserData() instanceof TabInfoObject) {
+            TabInfoObject o = (TabInfoObject) t.getUserData();
+
+            return o.getCanvas();
+        }
+
+        return null;
+    }
+
+    /**
+     * Update (or add from scratch) the given entity on the canvas.
+     */
+    private void drawEntityOnCanvas(ApricotTable table, ApricotCanvas canvas, boolean newEntity) {
+        if (!newEntity) {
+            removeEntityFromCanvas(table, canvas);
+        }
+        populateCanvas(canvas, table);
+    }
+
     private za.co.apricotdb.viewport.relationship.ApricotRelationship convertRelationship(ApricotRelationship r,
             Map<String, List<FieldDetail>> fieldDetails, RelationshipBuilder rBuilder) {
         String parentTable = r.getParent().getTable().getName();
@@ -133,24 +270,14 @@ public class ApricotCanvasHandler {
     }
 
     private void runAlignerAfterDelay(ApricotCanvas canvas, ApricotView view) {
-        Task<Void> sleeper = new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                }
-                return null;
-            }
-        };
-
+        Task<Void> sleeper = getSleeper(100);
         sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(WorkerStateEvent event) {
                 AlignCommand aligner = new SimpleGridEntityAllocator(canvas);
                 aligner.align();
                 canvas.buildRelationships();
-                
+
                 CanvasAllocationMap allocationMap = canvas.getAllocationMap();
                 tabViewHandler.saveCanvasAllocationMap(allocationMap, view);
             }
@@ -159,17 +286,7 @@ public class ApricotCanvasHandler {
     }
 
     private void runAllocationAfterDelay(ApricotCanvas canvas, ApricotView view) {
-        Task<Void> sleeper = new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                }
-                return null;
-            }
-        };
-
+        Task<Void> sleeper = getSleeper(100);
         sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(WorkerStateEvent event) {
@@ -184,7 +301,38 @@ public class ApricotCanvasHandler {
         });
         new Thread(sleeper).start();
     }
-    
+
+    private void runAllocationAfterDelay(ApricotCanvas canvas, CanvasAllocationMap map) {
+        Task<Void> sleeper = getSleeper(100);
+        sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+            @Override
+            public void handle(WorkerStateEvent event) {
+                canvas.applyAllocationMap(map, ElementType.ENTITY);
+                canvas.buildRelationships();
+                canvas.applyAllocationMap(map, ElementType.RELATIONSHIP);
+                AlignCommand aligner = new CanvasSizeAjustor(canvas);
+                aligner.align();
+                canvas.buildRelationships();
+            }
+        });
+        new Thread(sleeper).start();
+    }
+
+    private Task<Void> getSleeper(int delay) {
+        Task<Void> sleeper = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                }
+                return null;
+            }
+        };
+
+        return sleeper;
+    }
+
     private List<FieldDetail> getFieldDetails(ApricotTable table, List<ApricotRelationship> relationships) {
         List<FieldDetail> ret = new ArrayList<>();
         TableWrapper wrapper = new TableWrapper(table, relationships);
