@@ -60,10 +60,10 @@ public class TabViewHandler {
 
     @Autowired
     AlertMessageDecorator alertDecorator;
-    
+
     @Autowired
     RelationshipManager relationshipManager;
-    
+
     /**
      * Build a new Tab and populate it with the initial data.
      */
@@ -129,49 +129,43 @@ public class TabViewHandler {
 
     public CanvasAllocationMap readCanvasAllocationMap(ApricotView view) {
         CanvasAllocationMap map = new CanvasAllocationMap();
-
         for (ApricotObjectLayout layout : view.getObjectLayouts()) {
-            CanvasAllocationItem alloc = new CanvasAllocationItem();
-            alloc.setName(layout.getObjectName());
             ElementType type = null;
             if (layout.getObjectType() == LayoutObjectType.TABLE) {
                 type = ElementType.ENTITY;
             } else {
                 type = ElementType.RELATIONSHIP;
             }
-            alloc.setType(type);
-            alloc.setPropertiesFromString(layout.getObjectLayout());
-
-            map.addCanvasAllocationItem(alloc);
+            map.addCanvasAllocationItem(buildAllocationItem(layout.getObjectName(), type, layout.getObjectLayout()));
         }
 
         return map;
     }
-    
+
     /**
      * Get allocation map for one table.
      */
     public CanvasAllocationMap readCanvasAllocationMap(ApricotView view, ApricotTable table) {
         CanvasAllocationMap map = new CanvasAllocationMap();
-        
         ApricotObjectLayout layout = layoutManager.findLayoutByName(view, table.getName());
         if (layout != null) {
-            CanvasAllocationItem alloc = new CanvasAllocationItem();
-            alloc.setName(table.getName());
-            alloc.setType(ElementType.ENTITY);
-            alloc.setPropertiesFromString(layout.getObjectLayout());
-            map.addCanvasAllocationItem(alloc);
-
+            map.addCanvasAllocationItem(
+                    buildAllocationItem(table.getName(), ElementType.ENTITY, layout.getObjectLayout()));
             for (ApricotRelationship r : relationshipManager.getRelationshipsForTable(table)) {
-                alloc = new CanvasAllocationItem();
-                alloc.setName(r.getName());
-                alloc.setType(ElementType.RELATIONSHIP);
-                alloc.setPropertiesFromString(layout.getObjectLayout());
-                map.addCanvasAllocationItem(alloc);
+                map.addCanvasAllocationItem(
+                        buildAllocationItem(r.getName(), ElementType.RELATIONSHIP, layout.getObjectLayout()));
             }
         }
-        
+
         return map;
+    }
+
+    private CanvasAllocationItem buildAllocationItem(String name, ElementType type, String layout) {
+        CanvasAllocationItem alloc = new CanvasAllocationItem();
+        alloc.setName(name);
+        alloc.setType(type);
+        alloc.setPropertiesFromString(layout);
+        return alloc;
     }
 
     private ScrollPane buildScrollPane() {
