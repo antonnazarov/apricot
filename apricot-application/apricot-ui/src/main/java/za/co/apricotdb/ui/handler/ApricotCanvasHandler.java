@@ -142,7 +142,7 @@ public class ApricotCanvasHandler {
 
     private void populateCanvas(ApricotCanvas canvas, List<ApricotTable> tables,
             List<ApricotRelationship> relationships, boolean consistent) {
-        
+
         Map<String, List<FieldDetail>> fieldDetails = new HashMap<>();
         EntityBuilder eBuilder = new ApricotEntityBuilder(canvas);
         for (ApricotTable t : tables) {
@@ -151,7 +151,7 @@ public class ApricotCanvasHandler {
             canvas.addElement(element);
             fieldDetails.put(t.getName(), fd);
         }
-        
+
         if (!consistent) {
             for (ApricotTable t : getRelatedTables(tables.get(0), relationships)) {
                 List<FieldDetail> fd = getFieldDetails(t, relationships);
@@ -166,7 +166,7 @@ public class ApricotCanvasHandler {
             canvas.addElement(wpar);
         }
     }
-    
+
     private List<ApricotTable> getRelatedTables(ApricotTable table, List<ApricotRelationship> relationships) {
         List<ApricotTable> ret = new ArrayList<>();
         for (ApricotRelationship r : relationships) {
@@ -177,7 +177,7 @@ public class ApricotCanvasHandler {
                 ret.add(r.getChild().getTable());
             }
         }
-        
+
         return ret;
     }
 
@@ -202,8 +202,22 @@ public class ApricotCanvasHandler {
     private void addEntityOnViewPort(ApricotTable table) {
         ApricotCanvas c = getGeneralViewCanvas();
         drawEntityOnCanvas(table, c, true);
-        c = getCurrentViewCanvas();
-        drawEntityOnCanvas(table, c, true);
+        if (!isCurrentViewGeneral()) {
+            c = getCurrentViewCanvas();
+            drawEntityOnCanvas(table, c, true);
+        }
+    }
+
+    private boolean isCurrentViewGeneral() {
+        Tab t = parentWindow.getProjectTabPane().getSelectionModel().getSelectedItem();
+        if (t.getUserData() instanceof TabInfoObject) {
+            TabInfoObject o = (TabInfoObject) t.getUserData();
+            if (o.getView().getName().equals("Main View")) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private ApricotCanvas getGeneralViewCanvas() {
