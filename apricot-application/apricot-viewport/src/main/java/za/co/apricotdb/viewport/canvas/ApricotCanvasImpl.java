@@ -300,4 +300,14 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
     public void setCanvasChanged(boolean canvasChanged) {
         this.canvasChanged = canvasChanged;
     }
+
+    @Override
+    public void renameEntity(String oldName, String newName) {
+        ApricotEntity entity = findEntityByName(oldName);
+        if (entity != null) {
+            entities.remove(oldName);
+            entity.setTableName(newName);
+            entities.put(newName, entity);
+        }
+    }
 }

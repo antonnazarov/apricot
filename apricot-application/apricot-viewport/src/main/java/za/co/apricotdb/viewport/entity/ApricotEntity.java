@@ -17,6 +17,8 @@ public interface ApricotEntity extends ApricotElement {
     ApricotEntityShape getEntityShape();
 
     String getTableName();
+    
+    void setTableName(String name);
 
     List<FieldDetail> getDetails();
 

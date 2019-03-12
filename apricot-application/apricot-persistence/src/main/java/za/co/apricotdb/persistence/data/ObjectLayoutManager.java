@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.persistence.entity.ApricotObjectLayout;
+import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.persistence.entity.LayoutObjectType;
 import za.co.apricotdb.persistence.repository.ApricotObjectLayoutRepository;
@@ -49,6 +50,29 @@ public class ObjectLayoutManager {
         }
         
         return ret;
+    }
+    
+    /**
+     * Get layout objects of all types for all views in the project.
+     */
+    public List<ApricotObjectLayout> getLayoutsForProject(ApricotProject project, String objectName) {
+        TypedQuery<ApricotObjectLayout> query = em.createNamedQuery("ApricotObjectLayout.getLayoutsForProject", ApricotObjectLayout.class);
+        query.setParameter("project", project);
+        query.setParameter("objectName", objectName);
+
+        return query.getResultList();
+    }
+
+    /**
+     * Get relationship layout objects for all views in the project.
+     */
+    public List<ApricotObjectLayout> getRelationshipLayoutsForProject(ApricotProject project, String objectName) {
+        TypedQuery<ApricotObjectLayout> query = em.createNamedQuery("ApricotObjectLayout.getRelationshipLayoutsForProject", ApricotObjectLayout.class);
+        query.setParameter("project", project);
+        query.setParameter("objectType", LayoutObjectType.RELATIONSHIP);
+        query.setParameter("objectName", objectName);
+
+        return query.getResultList();
     }
     
     @Transactional

@@ -25,6 +25,8 @@ import javax.persistence.Table;
 @NamedQuery(name="ApricotObjectLayout.getLayoutsByType", query="SELECT ol FROM ApricotObjectLayout ol WHERE ol.view = :view AND ol.objectType = :objectType")
 @NamedQuery(name="ApricotObjectLayout.getLayoutByName", query="SELECT ol FROM ApricotObjectLayout ol WHERE ol.view = :view AND ol.objectName = :objectName")
 @NamedQuery(name="ApricotObjectLayout.getLayoutsForView", query="SELECT ol FROM ApricotObjectLayout ol WHERE ol.view = :view")
+@NamedQuery(name="ApricotObjectLayout.getLayoutsForProject", query="SELECT ol FROM ApricotProject p JOIN p.views v JOIN v.objectLayouts ol WHERE p = :project AND ol.objectName = :objectName")
+@NamedQuery(name="ApricotObjectLayout.getRelationshipLayoutsForProject", query="SELECT ol FROM ApricotProject p JOIN p.views v JOIN v.objectLayouts ol WHERE p = :project AND ol.objectType = :objectType AND ol.objectName LIKE CONCAT('%', :objectName, '%')")
 public class ApricotObjectLayout implements Serializable {
 
     private static final long serialVersionUID = -7584762504719191646L;
@@ -106,5 +108,11 @@ public class ApricotObjectLayout implements Serializable {
             .append("objectLayout=[").append(objectLayout).append("]");
         
         return sb.toString();
+    }
+    
+    public ApricotObjectLayout clone() {
+        ApricotObjectLayout clone = new ApricotObjectLayout(this.objectType, this.objectName, this.objectLayout, this.view);
+        
+        return clone;
     }
 }

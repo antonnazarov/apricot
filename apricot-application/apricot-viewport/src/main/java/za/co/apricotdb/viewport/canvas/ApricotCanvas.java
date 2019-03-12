@@ -54,4 +54,6 @@ public interface ApricotCanvas {
     boolean isCanvasChanged();
     
     void setCanvasChanged(boolean changed);
+    
+    void renameEntity(String oldName, String newName);
 }

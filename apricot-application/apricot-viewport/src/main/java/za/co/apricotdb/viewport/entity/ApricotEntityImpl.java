@@ -20,7 +20,7 @@ import za.co.apricotdb.viewport.relationship.ApricotRelationship;
  */
 public final class ApricotEntityImpl implements ApricotEntity {
 
-    private final String tableName;
+    private String tableName;
     private final List<FieldDetail> details;
     private final boolean slave;
     private final EntityShapeBuilder shapeBuilder;
@@ -141,5 +141,10 @@ public final class ApricotEntityImpl implements ApricotEntity {
     @Override
     public ElementType getElementType() {
         return ElementType.ENTITY;
+    }
+
+    @Override
+    public void setTableName(String name) {
+        this.tableName = name;
     }
 }

@@ -173,6 +173,15 @@ public class ApricotCanvasHandler {
 
         return ret;
     }
+    
+    public void renameEntityOnCanvas(String oldName, String newName) {
+        for (Tab t : parentWindow.getProjectTabPane().getTabs()) {
+            if (t.getUserData() instanceof TabInfoObject) {
+                TabInfoObject o = (TabInfoObject) t.getUserData();
+                o.getCanvas().renameEntity(oldName, newName);
+            }
+        }
+    }
 
     /**
      * Update an existing entity on the current view port.

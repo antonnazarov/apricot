@@ -40,6 +40,7 @@ import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ConstraintType;
 import za.co.apricotdb.ui.handler.ApricotCanvasHandler;
 import za.co.apricotdb.ui.handler.ApricotConstraintHandler;
+import za.co.apricotdb.ui.handler.ApricotObjectLayoutHandler;
 import za.co.apricotdb.ui.model.ApricotColumnData;
 import za.co.apricotdb.ui.model.ApricotConstraintData;
 import za.co.apricotdb.ui.model.ApricotConstraintSerializer;
@@ -67,15 +68,18 @@ public class EditEntityController {
 
     @Autowired
     AlertMessageDecorator alertDecorator;
-    
+
     @Autowired
     ApricotEntitySerializer entitySerializer;
-    
+
     @Autowired
     ApricotConstraintSerializer constraintSerializer;
-    
+
     @Autowired
     ApricotCanvasHandler canvasHandler;
+
+    @Autowired
+    ApricotObjectLayoutHandler objectLayoutHandler;
 
     @FXML
     Pane mainPane;
@@ -379,8 +383,15 @@ public class EditEntityController {
     public void save(ActionEvent event) {
         model.setEntityName(entityName.getText());
         entitySerializer.serialize(model);
+
+        // handle when the entity name was changed
+        if (!model.isNewEntity() && !model.getEntityName().equals(model.getEntityOriginalName())) {
+            objectLayoutHandler.duplicateObjectLayoutsForNewEntityName(model.getEntityOriginalName(),
+                    model.getEntityName());
+            canvasHandler.renameEntityOnCanvas(model.getEntityOriginalName(), model.getEntityName());
+        }
         canvasHandler.updateEntity(model.getTable(), model.isNewEntity());
-        
+
         getStage().close();
     }
 
