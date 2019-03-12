@@ -57,6 +57,7 @@ public class EditEntityModelBuilder {
         ApricotTable table = tableManager.getTableByName(tableName, snapshotManager.getDefaultSnapshot());
         if (table != null) {
             model.setEntityName(table.getName());
+            model.setEntityOriginalName(table.getName()); // remember the original name to handle on serialization
             model.setTable(table);
         } else {
             return;

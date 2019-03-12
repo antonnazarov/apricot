@@ -152,8 +152,11 @@ public class TabViewHandler {
             map.addCanvasAllocationItem(
                     buildAllocationItem(table.getName(), ElementType.ENTITY, layout.getObjectLayout()));
             for (ApricotRelationship r : relationshipManager.getRelationshipsForTable(table)) {
-                map.addCanvasAllocationItem(
-                        buildAllocationItem(r.getName(), ElementType.RELATIONSHIP, layout.getObjectLayout()));
+                layout = layoutManager.findLayoutByName(view, r.getName());
+                if (layout != null) {
+                    map.addCanvasAllocationItem(
+                            buildAllocationItem(r.getName(), ElementType.RELATIONSHIP, layout.getObjectLayout()));
+                }
             }
         }
 

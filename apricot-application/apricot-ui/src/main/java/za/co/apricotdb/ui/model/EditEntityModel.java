@@ -23,6 +23,7 @@ public class EditEntityModel implements Serializable {
     private ApricotTable table;
     private ObservableList<ApricotColumnData> columns = FXCollections.observableArrayList();
     private ObservableList<ApricotConstraintData> constraints = FXCollections.observableArrayList();
+    private String entityOriginalName;
     
     private List<ApricotColumnData> deletedColumns = new ArrayList<>();
     private List<ApricotConstraintData> deletedConstraints = new ArrayList<>();
@@ -87,5 +88,24 @@ public class EditEntityModel implements Serializable {
         }
         
         return null;
+    }
+
+    public String getEntityOriginalName() {
+        return entityOriginalName;
+    }
+
+    public void setEntityOriginalName(String entityOriginalName) {
+        this.entityOriginalName = entityOriginalName;
+    }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("entityName=[").append(entityName)
+            .append("], newEntity=[").append(newEntity)
+            .append("], entityOriginalName=[").append(entityOriginalName)
+            .append("]");
+        
+        return sb.toString();
     }
 }

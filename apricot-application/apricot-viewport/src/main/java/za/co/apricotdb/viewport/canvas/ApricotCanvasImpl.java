@@ -76,10 +76,27 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
         elements.remove(element);
         if (element.getElementType() == ElementType.ENTITY) {
             entities.remove(((ApricotEntity) element).getTableName());
+            removeEntityLinkedRelationships((ApricotEntity) element);
         } else {
             relationships.remove(element);
         }
         this.getChildren().remove(element.getShape());
+    }
+    
+    /**
+     * Remove all relationships, linked to the entity. 
+     */
+    private void removeEntityLinkedRelationships(ApricotEntity entity) {
+        List<ApricotRelationship> relationships = new ArrayList<>(entity.getPrimaryLinks());
+        relationships.addAll(entity.getForeignLinks());
+        
+        for (ApricotRelationship r : relationships) {
+            r.getParent().getPrimaryLinks().remove(r);
+            r.getParent().getForeignLinks().remove(r);
+            r.getChild().getPrimaryLinks().remove(r);
+            r.getChild().getForeignLinks().remove(r);
+            removeElement(r);
+        }
     }
 
     @Override

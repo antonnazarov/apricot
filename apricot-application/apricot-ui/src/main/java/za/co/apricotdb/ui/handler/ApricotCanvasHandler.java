@@ -14,6 +14,7 @@ import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Tab;
+import za.co.apricotdb.persistence.data.ObjectLayoutManager;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.RelationshipManager;
 import za.co.apricotdb.persistence.data.TableManager;
@@ -72,6 +73,9 @@ public class ApricotCanvasHandler {
     @Autowired
     ParentWindow parentWindow;
 
+    @Autowired
+    ObjectLayoutManager objectLayoutManager;
+
     /**
      * Populate the given canvas with the information of snapshot, using the
      * provided skin.
@@ -115,48 +119,30 @@ public class ApricotCanvasHandler {
     public void removeEntityFromCanvas(ApricotTable table, ApricotCanvas canvas) {
         ApricotEntity entity = canvas.findEntityByName(table.getName());
         if (entity != null) {
-            List<za.co.apricotdb.viewport.relationship.ApricotRelationship> pks = entity.getPrimaryLinks();
-            List<za.co.apricotdb.viewport.relationship.ApricotRelationship> fks = entity.getForeignLinks();
-
             canvas.removeElement(entity);
-            for (za.co.apricotdb.viewport.relationship.ApricotRelationship r : pks) {
-                canvas.removeElement(r);
-            }
-            for (za.co.apricotdb.viewport.relationship.ApricotRelationship r : fks) {
-                canvas.removeElement(r);
-            }
         }
     }
 
-    private void populateCanvas(ApricotCanvas canvas, ApricotTable table) {
-        List<ApricotRelationship> relationships = relationshipManager.getRelationshipsForTable(table);
-        List<ApricotTable> tables = new ArrayList<>();
-        tables.add(table);
-        populateCanvas(canvas, tables, relationships, false);
+    /**
+     * Populate the given canvas for the edited table in the given view.
+     */
+    private void populateCanvas(ApricotCanvas canvas, ApricotTable table, ApricotView view) {
+        List<ApricotTable> tables = getRelatedTables(table, view);
+        populateCanvas(canvas, tables);
     }
 
     private void populateCanvas(ApricotCanvas canvas, List<ApricotTable> tables) {
         List<ApricotRelationship> relationships = relationshipManager.getRelationshipsForTables(tables);
-        populateCanvas(canvas, tables, relationships, true);
-    }
-
-    private void populateCanvas(ApricotCanvas canvas, List<ApricotTable> tables,
-            List<ApricotRelationship> relationships, boolean consistent) {
 
         Map<String, List<FieldDetail>> fieldDetails = new HashMap<>();
         EntityBuilder eBuilder = new ApricotEntityBuilder(canvas);
         for (ApricotTable t : tables) {
             List<FieldDetail> fd = getFieldDetails(t, relationships);
-            ApricotElement element = eBuilder.buildEntity(t.getName(), fd, isSlave(fd));
-            canvas.addElement(element);
-            fieldDetails.put(t.getName(), fd);
-        }
-
-        if (!consistent) {
-            for (ApricotTable t : getRelatedTables(tables.get(0), relationships)) {
-                List<FieldDetail> fd = getFieldDetails(t, relationships);
-                fieldDetails.put(t.getName(), fd);
+            if (canvas.findEntityByName(t.getName()) == null) {
+                ApricotElement element = eBuilder.buildEntity(t.getName(), fd, isSlave(fd));
+                canvas.addElement(element);
             }
+            fieldDetails.put(t.getName(), fd);
         }
 
         RelationshipBuilder rBuilder = new ApricotRelationshipBuilder(canvas);
@@ -167,14 +153,21 @@ public class ApricotCanvasHandler {
         }
     }
 
-    private List<ApricotTable> getRelatedTables(ApricotTable table, List<ApricotRelationship> relationships) {
+    /**
+     * Find all tables, related to the given one on the given view.
+     */
+    private List<ApricotTable> getRelatedTables(ApricotTable table, ApricotView view) {
+        List<ApricotRelationship> relationships = relationshipManager.getRelationshipsForTable(table);
         List<ApricotTable> ret = new ArrayList<>();
+        ret.add(table);
         for (ApricotRelationship r : relationships) {
-            if (!r.getParent().getTable().equals(table)) {
-                ret.add(r.getParent().getTable());
+            ApricotTable parent = r.getParent().getTable();
+            ApricotTable child = r.getChild().getTable();
+            if (objectLayoutManager.findLayoutByName(view, parent.getName()) != null && !ret.contains(parent)) {
+                ret.add(parent);
             }
-            if (!r.getChild().getTable().equals(table)) {
-                ret.add(r.getChild().getTable());
+            if (objectLayoutManager.findLayoutByName(view, child.getName()) != null && !ret.contains(child)) {
+                ret.add(child);
             }
         }
 
@@ -191,7 +184,7 @@ public class ApricotCanvasHandler {
             if (t.getUserData() instanceof TabInfoObject) {
                 TabInfoObject o = (TabInfoObject) t.getUserData();
                 if (views.contains(o.getView())) {
-                    drawEntityOnCanvas(table, o.getCanvas(), false);
+                    drawEntityOnCanvas(table, o.getCanvas(), o.getView(), false);
                     CanvasAllocationMap map = tabViewHandler.readCanvasAllocationMap(o.getView(), table);
                     runAllocationAfterDelay(o.getCanvas(), map);
                 }
@@ -200,11 +193,11 @@ public class ApricotCanvasHandler {
     }
 
     private void addEntityOnViewPort(ApricotTable table) {
-        ApricotCanvas c = getGeneralViewCanvas();
-        drawEntityOnCanvas(table, c, true);
+        TabInfoObject c = getGeneralViewTabInfo();
+        drawEntityOnCanvas(table, c.getCanvas(), c.getView(), true);
         if (!isCurrentViewGeneral()) {
-            c = getCurrentViewCanvas();
-            drawEntityOnCanvas(table, c, true);
+            c = getCurrentViewTabInfo();
+            drawEntityOnCanvas(table, c.getCanvas(), c.getView(), true);
         }
     }
 
@@ -220,12 +213,12 @@ public class ApricotCanvasHandler {
         return false;
     }
 
-    private ApricotCanvas getGeneralViewCanvas() {
+    private TabInfoObject getGeneralViewTabInfo() {
         for (Tab t : parentWindow.getProjectTabPane().getTabs()) {
             if (t.getUserData() instanceof TabInfoObject) {
                 TabInfoObject o = (TabInfoObject) t.getUserData();
                 if (o.getView().getName().equals("Main View")) {
-                    return o.getCanvas();
+                    return o;
                 }
             }
         }
@@ -233,12 +226,12 @@ public class ApricotCanvasHandler {
         return null;
     }
 
-    private ApricotCanvas getCurrentViewCanvas() {
+    private TabInfoObject getCurrentViewTabInfo() {
         Tab t = parentWindow.getProjectTabPane().getSelectionModel().getSelectedItem();
         if (t.getUserData() instanceof TabInfoObject) {
             TabInfoObject o = (TabInfoObject) t.getUserData();
 
-            return o.getCanvas();
+            return o;
         }
 
         return null;
@@ -247,11 +240,11 @@ public class ApricotCanvasHandler {
     /**
      * Update (or add from scratch) the given entity on the canvas.
      */
-    private void drawEntityOnCanvas(ApricotTable table, ApricotCanvas canvas, boolean newEntity) {
+    private void drawEntityOnCanvas(ApricotTable table, ApricotCanvas canvas, ApricotView view, boolean newEntity) {
         if (!newEntity) {
             removeEntityFromCanvas(table, canvas);
         }
-        populateCanvas(canvas, table);
+        populateCanvas(canvas, table, view);
     }
 
     private za.co.apricotdb.viewport.relationship.ApricotRelationship convertRelationship(ApricotRelationship r,
