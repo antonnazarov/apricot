@@ -11,6 +11,12 @@ public class RelationshipsInNonIdentifyingStackComparator implements Comparator<
     @Override
     public int compare(ApricotRelationship ar1, ApricotRelationship ar2) {
         
+        if (ar1.getRelationshipType() == RelationshipType.IDENTIFYING && ar2.getRelationshipType() != RelationshipType.IDENTIFYING) {
+            return -1;
+        } else if (ar1.getRelationshipType() != RelationshipType.IDENTIFYING && ar2.getRelationshipType() == RelationshipType.IDENTIFYING) {
+            return 1;
+        }
+        
         double childY1 = getY(ar1, true);
         double childY2 = getY(ar2, true);
         double parentY = getY(ar1, false);

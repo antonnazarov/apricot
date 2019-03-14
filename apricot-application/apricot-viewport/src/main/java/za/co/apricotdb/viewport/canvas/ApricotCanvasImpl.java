@@ -168,13 +168,6 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
                             }
                         }
 
-                        // add foreign identifying relationships (if any)
-                        for (ApricotRelationship r : entity.getForeignLinks()) {
-                            if (r.getRelationshipType() == RelationshipType.IDENTIFYING) {
-                                entityShape.getTopStack().addRelationship(r);
-                            }
-                        }
-
                         if (entityShape.getLeftStack().hasRelationships()) {
                             entityShape.getLeftStack().build();
                             entityShape.getEntityGroup().getChildren().add(entityShape.getLeftStack());

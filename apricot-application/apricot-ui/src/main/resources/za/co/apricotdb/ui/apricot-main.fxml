@@ -104,15 +104,15 @@
                   <Insets top="6.0" />
                </HBox.margin>
             </ComboBox>
-            <ButtonBar id="mainButtons" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="300.0">
+            <ButtonBar id="mainButtons" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="681.0">
               <buttons>
                   <Button id="buttonSave" fx:id="saveButton" minWidth="34.0" mnemonicParsing="false" onAction="#save" prefHeight="25.0" text="Save" />
                 <Button disable="true" minWidth="34.0" mnemonicParsing="false" prefHeight="25.0" text="Undo" />
                   <Label alignment="CENTER_RIGHT" minWidth="44.0" prefHeight="17.0" text="New:" />
                   <Button id="buttonSnapshot" layoutX="455.0" layoutY="10.0" minWidth="34.0" mnemonicParsing="false" onAction="#newSnapshot" prefHeight="25.0" text="Snapshot" />
-                  <Button minWidth="34.0" mnemonicParsing="false" onAction="#newEntity" prefHeight="25.0" text="Entity" />
-                  <Button disable="true" minWidth="34.0" mnemonicParsing="false" prefHeight="25.0" text="Relationship" />
                   <Button id="buttonView" layoutX="540.0" layoutY="10.0" minWidth="34.0" mnemonicParsing="false" onAction="#newView" prefHeight="25.0" text="View" />
+                  <Button minWidth="34.0" mnemonicParsing="false" onAction="#newEntity" prefHeight="25.0" text="Entity" />
+                  <Button minWidth="50.0" mnemonicParsing="false" onAction="#newRelationship" prefHeight="25.0" text="Relationship" />
               </buttons>
                <HBox.margin>
                   <Insets bottom="5.0" right="5.0" top="5.0" />

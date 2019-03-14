@@ -10,7 +10,6 @@ import za.co.apricotdb.viewport.modifiers.HatRelationshipEventModifier;
 import za.co.apricotdb.viewport.modifiers.NonIdentifyingRelationshipShapeModifier;
 import za.co.apricotdb.viewport.modifiers.RoofRelationshipEventModifier;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
-import za.co.apricotdb.viewport.relationship.RelationshipType;
 
 public class RelationshipTopologyImpl implements RelationshipTopology {
 
@@ -21,20 +20,20 @@ public class RelationshipTopologyImpl implements RelationshipTopology {
 
     public RelationshipTopologyImpl(ApricotCanvas canvas) {
         RelationshipPrimitivesBuilder primitivesBuilder = new RelationshipPrimitivesBuilderImpl();
-        
-        ElementVisualModifier[] shapeModifiers = new ElementVisualModifier[] {new NonIdentifyingRelationshipShapeModifier(), 
-                new DirectRelationshipEventModifier(canvas)};
+
+        ElementVisualModifier[] shapeModifiers = new ElementVisualModifier[] {
+                new NonIdentifyingRelationshipShapeModifier(), new DirectRelationshipEventModifier(canvas) };
         directBuilder = new DirectShapeBuilder(primitivesBuilder, this, shapeModifiers);
-        
-        shapeModifiers = new ElementVisualModifier[] {new NonIdentifyingRelationshipShapeModifier(), 
-                new HatRelationshipEventModifier(canvas)};
+
+        shapeModifiers = new ElementVisualModifier[] { new NonIdentifyingRelationshipShapeModifier(),
+                new HatRelationshipEventModifier(canvas) };
         hatBuilder = new HatShapeBuilder(primitivesBuilder, this, shapeModifiers);
 
-        shapeModifiers = new ElementVisualModifier[] {new NonIdentifyingRelationshipShapeModifier(), 
-                new DadsHandRelationshipEventModifier(canvas)};
+        shapeModifiers = new ElementVisualModifier[] { new NonIdentifyingRelationshipShapeModifier(),
+                new DadsHandRelationshipEventModifier(canvas) };
         dadsHandBuilder = new DadsHandShapeBuilder(primitivesBuilder, this, shapeModifiers);
 
-        shapeModifiers = new ElementVisualModifier[] {new RoofRelationshipEventModifier(canvas)};
+        shapeModifiers = new ElementVisualModifier[] { new RoofRelationshipEventModifier(canvas) };
         roofHandBuilder = new RoofShapeBuilder(primitivesBuilder, this, shapeModifiers);
     }
 
@@ -52,7 +51,7 @@ public class RelationshipTopologyImpl implements RelationshipTopology {
             ret = dadsHandBuilder;
             break;
         case ROOF:
-            //  ROOF- type is exclusively for identifying primary links
+            // ROOF- type is exclusively for identifying primary links
             ret = roofHandBuilder;
             break;
         }
@@ -69,17 +68,13 @@ public class RelationshipTopologyImpl implements RelationshipTopology {
         RelationshipShapeType ret = null;
 
         double hDist = TopologyHelper.getHorizontalDistance(relationship.getParent(), relationship.getChild());
-        if (relationship.getRelationshipType() != RelationshipType.IDENTIFYING) {
-            if (hDist > MIN_HORIZONTAL_DISTANCE) {
-                ret = RelationshipShapeType.DIRECT;
-            } else if (isHatType(relationship)) {
-                ret = RelationshipShapeType.HAT;
-            } else {
-                ret = RelationshipShapeType.DADS_HAND;
-            }
+
+        if (hDist > MIN_HORIZONTAL_DISTANCE) {
+            ret = RelationshipShapeType.DIRECT;
+        } else if (isHatType(relationship)) {
+            ret = RelationshipShapeType.HAT;
         } else {
-            // identifying relationships: ROOF
-            ret = RelationshipShapeType.ROOF;
+            ret = RelationshipShapeType.DADS_HAND;
         }
 
         return ret;

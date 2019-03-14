@@ -31,15 +31,17 @@ public class ApricotObjectLayoutHandler {
 
         List<ApricotObjectLayout> layouts = layoutManager.getLayoutsForProject(project, oldName);
         for (ApricotObjectLayout l : layouts) {
-            ApricotObjectLayout clone = l.clone();
-            clone.setObjectName(newName);
-            layoutManager.saveObjectLayout(clone);
+            if (layoutManager.findLayoutByName(l.getView(), newName) == null) {
+                ApricotObjectLayout clone = l.clone();
+                clone.setObjectName(newName);
+                layoutManager.saveObjectLayout(clone);
+            }
         }
 
         layouts = layoutManager.getRelationshipLayoutsForProject(project, oldName);
         for (ApricotObjectLayout l : layouts) {
             ApricotObjectLayout clone = cloneRelationship(l, oldName, newName);
-            if (clone != null) {
+            if (clone != null && layoutManager.findLayoutByName(l.getView(), clone.getObjectName()) == null) {
                 layoutManager.saveObjectLayout(clone);
             }
         }
@@ -47,7 +49,7 @@ public class ApricotObjectLayoutHandler {
 
     private ApricotObjectLayout cloneRelationship(ApricotObjectLayout relationship, String oldName, String newName) {
         ApricotObjectLayout ret = null;
-        String[] s = relationship.getObjectName().split("|");
+        String[] s = relationship.getObjectName().split("\\|");
         boolean updated = false;
         if (s.length >= 4) {
             if (s[0].equals(oldName)) {

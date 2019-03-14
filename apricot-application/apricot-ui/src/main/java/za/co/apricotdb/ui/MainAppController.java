@@ -18,6 +18,7 @@ import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
 import za.co.apricotdb.ui.handler.ApricotEntityHandler;
 import za.co.apricotdb.ui.handler.ApricotProjectHandler;
+import za.co.apricotdb.ui.handler.ApricotRelationshipHandler;
 import za.co.apricotdb.ui.handler.ApricotSnapshotHandler;
 import za.co.apricotdb.ui.handler.ApricotViewHandler;
 import za.co.apricotdb.ui.handler.ReverseEngineHandler;
@@ -60,6 +61,9 @@ public class MainAppController {
 
     @Autowired
     ApricotEntityHandler entityHandler;
+    
+    @Autowired
+    ApricotRelationshipHandler relationshipHandler;
 
     @FXML
     BorderPane mainBorderPane;
@@ -96,6 +100,11 @@ public class MainAppController {
     @FXML
     public void newView(ActionEvent event) throws Exception {
         viewHandler.createViewEditor(viewsTabPane, null, null);
+    }
+    
+    @FXML
+    public void newRelationship(ActionEvent event) throws Exception {
+        relationshipHandler.openRelationshipEditorForm(viewsTabPane);
     }
 
     /**

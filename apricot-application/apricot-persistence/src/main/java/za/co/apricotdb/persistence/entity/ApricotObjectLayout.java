@@ -104,6 +104,7 @@ public class ApricotObjectLayout implements Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("ApricotObjectLayout: ")
+            .append("id=[").append(id).append("], ")
             .append("objectName=[").append(objectName).append("], ")
             .append("objectLayout=[").append(objectLayout).append("]");
         

@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<Pane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="347.0" prefWidth="686.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.EditRelationshipController">
+   <children>
+      <VBox layoutX="6.0" layoutY="8.0" prefHeight="340.0" prefWidth="673.0">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="33.0" prefWidth="673.0">
+               <children>
+                  <Label prefHeight="17.0" prefWidth="50.0" text="Name:" />
+                  <TextField fx:id="relationshipName" prefHeight="25.0" prefWidth="495.0" />
+                  <CheckBox fx:id="autoRelated" disable="true" mnemonicParsing="false" text="Auto Related">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </CheckBox>
+               </children>
+               <padding>
+                  <Insets left="12.0" />
+               </padding>
+            </HBox>
+            <HBox prefHeight="16.0" prefWidth="673.0">
+               <children>
+                  <Separator prefHeight="12.0" prefWidth="676.0" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="45.0" prefWidth="566.0">
+               <children>
+                  <GridPane alignment="CENTER" prefHeight="44.0" prefWidth="672.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="269.0" minWidth="10.0" prefWidth="249.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="191.0" minWidth="10.0" prefWidth="75.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="348.0" minWidth="10.0" prefWidth="348.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#swap" prefHeight="25.0" prefWidth="58.0" text="Swap" GridPane.columnIndex="1">
+                           <GridPane.margin>
+                              <Insets left="10.0" top="3.0" />
+                           </GridPane.margin>
+                        </Button>
+                        <HBox alignment="CENTER_LEFT" prefHeight="44.0" prefWidth="247.0">
+                           <children>
+                              <Label prefHeight="17.0" prefWidth="49.0" text="Parent:" />
+                              <TextField fx:id="parentEntity" editable="false" prefHeight="25.0" prefWidth="181.0" />
+                           </children>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2">
+                           <children>
+                              <Label prefHeight="17.0" prefWidth="42.0" text="Child:" />
+                              <TextField fx:id="childEntity" editable="false" prefHeight="25.0" prefWidth="181.0" />
+                           </children>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </HBox>
+                     </children>
+                  </GridPane>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="19.0" prefWidth="566.0">
+               <children>
+                  <Separator prefHeight="12.0" prefWidth="676.0" />
+               </children>
+            </HBox>
+            <HBox prefHeight="175.0" prefWidth="673.0">
+               <children>
+                  <GridPane prefHeight="100.0" prefWidth="672.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="266.0" minWidth="10.0" prefWidth="257.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="179.0" minWidth="10.0" prefWidth="67.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="348.0" minWidth="10.0" prefWidth="348.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <HBox prefHeight="175.0" prefWidth="73.0" spacing="55.0" GridPane.columnIndex="1">
+                           <children>
+                              <Separator orientation="VERTICAL" prefHeight="200.0" />
+                              <Separator layoutX="10.0" layoutY="10.0" orientation="VERTICAL" prefHeight="200.0" />
+                           </children>
+                        </HBox>
+                        <GridPane prefHeight="100.0" prefWidth="342.0" GridPane.columnIndex="2">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="260.0" minWidth="10.0" prefWidth="260.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="130.0" minWidth="10.0" prefWidth="33.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="130.0" minWidth="10.0" prefWidth="55.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Label prefHeight="17.0" prefWidth="20.0" text="PK" textAlignment="CENTER" GridPane.columnIndex="1">
+                                 <GridPane.margin>
+                                    <Insets left="10.0" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label text="Not null" GridPane.columnIndex="2">
+                                 <GridPane.margin>
+                                    <Insets left="10.0" />
+                                 </GridPane.margin>
+                              </Label>
+                              <ComboBox id="childForeignKey_1" fx:id="childForeignKey_1" editable="true" onAction="#foreignKeyEdited" prefHeight="25.0" prefWidth="251.0" GridPane.rowIndex="1">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin>
+                              </ComboBox>
+                              <CheckBox fx:id="pk_1" mnemonicParsing="false" prefHeight="17.0" prefWidth="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                 <GridPane.margin>
+                                    <Insets left="10.0" />
+                                 </GridPane.margin>
+                              </CheckBox>
+                              <CheckBox fx:id="notNull_1" layoutX="266.0" layoutY="39.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="10.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                 <GridPane.margin>
+                                    <Insets left="20.0" />
+                                 </GridPane.margin>
+                              </CheckBox>
+                              <ComboBox id="childForeignKey_2" fx:id="childForeignKey_2" editable="true" layoutX="10.0" layoutY="33.0" onAction="#foreignKeyEdited" prefHeight="25.0" prefWidth="251.0" GridPane.rowIndex="2">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin>
+                              </ComboBox>
+                              <Label text="Create new or select existing field:">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin>
+                              </Label>
+                              <ComboBox id="childForeignKey_3" fx:id="childForeignKey_3" editable="true" layoutX="15.0" layoutY="70.0" onAction="#foreignKeyEdited" prefHeight="25.0" prefWidth="251.0" GridPane.rowIndex="3">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin>
+                              </ComboBox>
+                              <ComboBox id="childForeignKey_4" fx:id="childForeignKey_4" editable="true" layoutX="15.0" layoutY="99.0" onAction="#foreignKeyEdited" prefHeight="25.0" prefWidth="251.0" GridPane.rowIndex="4">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin>
+                              </ComboBox>
+                              <ComboBox id="childForeignKey_5" fx:id="childForeignKey_5" editable="true" layoutX="15.0" layoutY="128.0" onAction="#foreignKeyEdited" prefHeight="25.0" prefWidth="251.0" GridPane.rowIndex="5">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin>
+                              </ComboBox>
+                              <CheckBox fx:id="pk_2" layoutX="280.0" layoutY="45.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                 <GridPane.margin>
+                                    <Insets left="10.0" />
+                                 </GridPane.margin>
+                              </CheckBox>
+                              <CheckBox fx:id="pk_3" layoutX="280.0" layoutY="74.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="10.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                 <GridPane.margin>
+                                    <Insets left="10.0" />
+                                 </GridPane.margin>
+                              </CheckBox>
+                              <CheckBox fx:id="pk_4" layoutX="280.0" layoutY="103.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="10.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                 <GridPane.margin>
+                                    <Insets left="10.0" />
+                                 </GridPane.margin>
+                              </CheckBox>
+                              <CheckBox fx:id="pk_5" layoutX="280.0" layoutY="132.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="10.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                 <GridPane.margin>
+                                    <Insets left="10.0" />
+                                 </GridPane.margin>
+                              </CheckBox>
+                              <CheckBox fx:id="notNull_2" layoutX="323.0" layoutY="45.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="10.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                 <GridPane.margin>
+                                    <Insets left="20.0" />
+                                 </GridPane.margin>
+                              </CheckBox>
+                              <CheckBox fx:id="notNull_3" layoutX="323.0" layoutY="74.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="10.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                                 <GridPane.margin>
+                                    <Insets left="20.0" />
+                                 </GridPane.margin>
+                              </CheckBox>
+                              <CheckBox fx:id="notNull_4" layoutX="323.0" layoutY="103.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="10.0" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                                 <GridPane.margin>
+                                    <Insets left="20.0" />
+                                 </GridPane.margin>
+                              </CheckBox>
+                              <CheckBox fx:id="notNull_5" layoutX="323.0" layoutY="132.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="10.0" GridPane.columnIndex="2" GridPane.rowIndex="5">
+                                 <GridPane.margin>
+                                    <Insets left="20.0" />
+                                 </GridPane.margin>
+                              </CheckBox>
+                           </children>
+                        </GridPane>
+                        <GridPane layoutX="334.0" layoutY="10.0" prefHeight="100.0" prefWidth="342.0">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="260.0" minWidth="10.0" prefWidth="260.0" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <children>
+                              <Label text="Field(s) in the Parent's Primary Key:">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" />
+                                 </GridPane.margin>
+                              </Label>
+                              <TextField fx:id="primaryKeyField_1" editable="false" prefHeight="25.0" prefWidth="237.0" GridPane.rowIndex="1">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" right="5.0" />
+                                 </GridPane.margin>
+                              </TextField>
+                              <TextField fx:id="primaryKeyField_2" editable="false" layoutX="15.0" layoutY="41.0" prefHeight="25.0" prefWidth="237.0" GridPane.rowIndex="2">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" right="5.0" />
+                                 </GridPane.margin>
+                              </TextField>
+                              <TextField fx:id="primaryKeyField_3" editable="false" layoutX="15.0" layoutY="70.0" prefHeight="25.0" prefWidth="237.0" GridPane.rowIndex="3">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" right="5.0" />
+                                 </GridPane.margin>
+                              </TextField>
+                              <TextField fx:id="primaryKeyField_4" editable="false" layoutX="15.0" layoutY="99.0" prefHeight="25.0" prefWidth="237.0" GridPane.rowIndex="4">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" right="5.0" />
+                                 </GridPane.margin>
+                              </TextField>
+                              <TextField fx:id="primaryKeyField_5" editable="false" layoutX="15.0" layoutY="128.0" prefHeight="25.0" prefWidth="237.0" GridPane.rowIndex="5">
+                                 <GridPane.margin>
+                                    <Insets left="5.0" right="5.0" />
+                                 </GridPane.margin>
+                              </TextField>
+                           </children>
+                        </GridPane>
+                     </children>
+                  </GridPane>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_RIGHT" layoutX="10.0" layoutY="74.0" prefHeight="12.0" prefWidth="566.0" spacing="10.0">
+               <children>
+                  <Separator prefHeight="12.0" prefWidth="670.0" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_RIGHT" layoutX="10.0" layoutY="174.0" prefHeight="44.0" prefWidth="673.0" spacing="10.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#cancel" prefWidth="90.0" text="Cancel" />
+                  <Button mnemonicParsing="false" onAction="#save" prefWidth="90.0" text="Save" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</Pane>
