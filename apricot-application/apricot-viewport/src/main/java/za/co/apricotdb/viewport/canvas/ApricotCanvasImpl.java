@@ -165,6 +165,8 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
                             case TOP:
                                 entityShape.getTopStack().addRelationship(r);
                                 break;
+                            default:
+                                break;
                             }
                         }
 

@@ -64,4 +64,23 @@ public class ParentChildKeyHolder {
     public boolean isVoidSlot() {
         return voidSlot;
     }
+    
+    public String getChildForeignKeyComboId() {
+        return childForeignKey.getId();
+    }
+    
+    public void initColumnAttributes(boolean isPk, boolean isNotNull) {
+        pk.setSelected(isPk);
+        notNull.setSelected(isNotNull);
+        
+        pk.setDisable(true);
+        notNull.setDisable(true);
+    }
+
+    public void resetColumnAttributes() {
+        pk.setSelected(false);
+        notNull.setSelected(false);
+        pk.setDisable(false);
+        notNull.setDisable(false);
+    }
 }

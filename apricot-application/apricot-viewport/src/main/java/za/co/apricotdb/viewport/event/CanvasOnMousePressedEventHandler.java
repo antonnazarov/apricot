@@ -84,6 +84,7 @@ public class CanvasOnMousePressedEventHandler implements EventHandler<MouseEvent
         return ret;
     }
 
+    @SuppressWarnings("unchecked")
     public static Map<String, Bounds> getBounds(Pane pane) {
         Map<String, Bounds> ret = null;
 
@@ -96,6 +97,7 @@ public class CanvasOnMousePressedEventHandler implements EventHandler<MouseEvent
         return ret;
     }
 
+    @SuppressWarnings("unchecked")
     private static Map<String, Object> getUserData(Pane pane) {
         Map<String, Object> userData = null;
 

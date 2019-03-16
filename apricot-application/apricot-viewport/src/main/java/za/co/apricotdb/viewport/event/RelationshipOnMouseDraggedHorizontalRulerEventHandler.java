@@ -50,6 +50,8 @@ public class RelationshipOnMouseDraggedHorizontalRulerEventHandler implements Ev
                     DadsHandRelationship dhr = (DadsHandRelationship) shape;
                     dhr.setRulerX(pos.getInitRuler() + newTranslateX);
                     break;
+                case ROOF:
+                    break;
                 }
 
                 ApricotElement element = shape.getElement();

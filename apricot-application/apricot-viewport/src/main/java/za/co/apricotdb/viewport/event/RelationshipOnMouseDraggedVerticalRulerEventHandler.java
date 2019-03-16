@@ -43,6 +43,8 @@ public class RelationshipOnMouseDraggedVerticalRulerEventHandler implements Even
                     RoofRelationship rs = (RoofRelationship) shape;
                     rs.setRulerY(pos.getInitRuler() + newTranslateY);
                     break;
+                default:
+                    break;
                 }
 
                 ApricotElement element = shape.getElement();

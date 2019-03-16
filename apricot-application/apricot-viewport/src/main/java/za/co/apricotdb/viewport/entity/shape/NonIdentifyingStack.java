@@ -42,7 +42,7 @@ public class NonIdentifyingStack extends PrimaryKeyStack {
             Point2D stackStart = getStackStartingPoint();
             double y = stackStart.getY() + (idx + 1) * STACK_PARTICLE_LENGTH;
             double x = 0;
-            if (side == side.LEFT) {
+            if (side == Side.LEFT) {
                 x = stackStart.getX() - STACK_ENTITY_DISTANCE;
             } else {
                 x = stackStart.getX() + STACK_ENTITY_DISTANCE;
@@ -56,7 +56,7 @@ public class NonIdentifyingStack extends PrimaryKeyStack {
 
     private Point2D getStackStartingPoint() {
         double X = 0;
-        if (side == side.LEFT) {
+        if (side == Side.LEFT) {
             X = entityShape.getLayoutX() + entityShape.getTranslateX();
         } else {
             X = entityShape.getLayoutX() + entityShape.getTranslateX() + entityShape.getWidth();
@@ -84,7 +84,7 @@ public class NonIdentifyingStack extends PrimaryKeyStack {
         
         Point2D start = getStackStartingPoint(); 
         this.getElements().add(new MoveTo(start.getX(), start.getY()));
-        if (side == side.LEFT) {
+        if (side == Side.LEFT) {
             this.getElements().add(new HLineTo(start.getX()-STACK_ENTITY_DISTANCE));
         } else {
             this.getElements().add(new HLineTo(start.getX()+STACK_ENTITY_DISTANCE));

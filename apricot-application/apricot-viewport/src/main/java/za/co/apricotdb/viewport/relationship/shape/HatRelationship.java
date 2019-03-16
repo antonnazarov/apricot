@@ -22,6 +22,7 @@ public class HatRelationship extends ApricotRelationshipShape {
         super(relationship, RelationshipShapeType.HAT);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void translateRelationshipRulers(double translateX, double translateY) {
         if (this.getUserData() == null) {
@@ -35,7 +36,7 @@ public class HatRelationship extends ApricotRelationshipShape {
             centerRulerY += translateY;
         } else {
             if (this.getUserData() instanceof Map) {
-                Map<String, Double> rulers = (Map) this.getUserData();
+                Map<String, Double> rulers = (Map<String, Double>) this.getUserData();
                 leftRulerX = rulers.get("leftRulerX") + translateX;
                 rightRulerX = rulers.get("rightRulerX") + translateX;
                 centerRulerY = rulers.get("centerRulerY") + translateY;

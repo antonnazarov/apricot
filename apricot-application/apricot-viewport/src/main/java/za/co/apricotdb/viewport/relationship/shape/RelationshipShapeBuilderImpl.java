@@ -51,7 +51,8 @@ public abstract class RelationshipShapeBuilderImpl implements RelationshipShapeB
                     TopologyHelper.getFieldY(relationship.getParent(), relationship.getPrimaryKeyName()));
             break;
         case TOP:
-
+            break;
+        default:
             break;
         }
 
@@ -75,6 +76,8 @@ public abstract class RelationshipShapeBuilderImpl implements RelationshipShapeB
         case TOP:
             ret = entityShape.getStackRelationshipStart(relationship);
             break;
+        default:
+            break;
         }
 
         return ret;
@@ -94,7 +97,8 @@ public abstract class RelationshipShapeBuilderImpl implements RelationshipShapeB
                         .setLayoutX(parentStart.getX() - (RelationshipPrimitivesBuilderImpl.OPTIONAL_START_LENGTH + 2));
                 break;
             case TOP:
-
+                break;
+            default:
                 break;
             }
             startElement.setLayoutY(parentStart.getY() - RelationshipPrimitivesBuilderImpl.OPTIONAL_START_LENGTH / 2);
@@ -117,7 +121,8 @@ public abstract class RelationshipShapeBuilderImpl implements RelationshipShapeB
         case TOP:
             endElement = primitivesBuilder.getEnd(new Point2D(childEnd.getX(),
                     childEnd.getY() - RelationshipPrimitivesBuilderImpl.LINK_END_DIAMETER));
-
+            break;
+        default:
             break;
         }
         shape.setEndElement(endElement);
