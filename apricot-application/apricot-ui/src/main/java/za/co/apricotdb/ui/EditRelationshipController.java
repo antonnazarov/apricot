@@ -131,7 +131,9 @@ public class EditRelationshipController {
 
     @FXML
     public void save(ActionEvent event) {
-
+        if (relationshipHandler.saveRelationship(this)) {
+            getStage().close();
+        }
     }
 
     @SuppressWarnings("unchecked")

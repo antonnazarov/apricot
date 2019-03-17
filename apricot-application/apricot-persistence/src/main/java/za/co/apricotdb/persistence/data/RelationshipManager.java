@@ -11,12 +11,16 @@ import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotTable;
+import za.co.apricotdb.persistence.repository.ApricotRelationshipRepository;
 
 @Component
 public class RelationshipManager {
     
     @Resource
     EntityManager em;
+    
+    @Resource
+    ApricotRelationshipRepository relationshipRepository;
 
     public List<ApricotRelationship> getRelationshipsForTables(List<ApricotTable> tables) {
         List<ApricotRelationship> ret = new ArrayList<>();
@@ -36,5 +40,9 @@ public class RelationshipManager {
         ret = query.getResultList();
         
         return ret;
+    }
+    
+    public void saveRelationship(ApricotRelationship relationship) {
+        relationshipRepository.save(relationship);
     }
 }

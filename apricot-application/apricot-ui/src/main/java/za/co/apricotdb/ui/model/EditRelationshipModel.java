@@ -1,6 +1,7 @@
 package za.co.apricotdb.ui.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,5 +96,50 @@ public class EditRelationshipModel implements Serializable {
         if (keyHolder != null) {
             keyHolder.resetColumnAttributes();
         }
+    }
+    
+    /**
+     * Return a collection of the filled foreign keys only. 
+     */
+    public List<ParentChildKeyHolder> getKeys() {
+        List<ParentChildKeyHolder> ret = new ArrayList<>();
+        
+        for (ParentChildKeyHolder h : keys.values()) {
+            if (!h.isVoidSlot()) {
+                ret.add(h);
+            }
+        }
+        
+        return ret;
+    }
+    
+    public ParentChildKeyHolder getHolderByFkName(String fkName) {
+        for (ParentChildKeyHolder h : keys.values()) {
+            if (h.getForeignKeyField().equals(fkName)) {
+                return h;
+            }
+        }
+        
+        return null;
+    }
+    
+    public boolean isPkConstraint() {
+        for (ParentChildKeyHolder h : keys.values()) {
+            if (h.isPrimaryKey()) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    public boolean hasNewFields() {
+        for (ParentChildKeyHolder h : keys.values()) {
+            if (childTable.getColumnByName(h.getForeignKeyField()) == null) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 }

@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.persistence.entity.ApricotColumnConstraint;
@@ -26,6 +27,9 @@ public class ConstraintManager {
     
     @Resource
     ApricotConstraintRepository constraintRepository;
+    
+    @Autowired
+    SnapshotManager snapshotManager;
 
     public List<ApricotConstraint> getConstraintsByTable(ApricotTable table) {
         TypedQuery<ApricotConstraint> query = em.createNamedQuery("ApricotConstraint.getConstraintsByTable",
@@ -57,6 +61,7 @@ public class ConstraintManager {
     public ApricotConstraint getConstraintByName(String name) {
         ApricotConstraint ret = null;
         TypedQuery<ApricotConstraint> query = em.createNamedQuery("ApricotConstraint.getConstraintsByName", ApricotConstraint.class);
+        query.setParameter("snapshot", snapshotManager.getDefaultSnapshot());
         query.setParameter("name", name);
 
         List<ApricotConstraint> c = query.getResultList();
@@ -73,5 +78,9 @@ public class ConstraintManager {
 
     public void deleteConstraintColumn(ApricotColumnConstraint columnConstraint) {
         columnConstraintRepository.delete(columnConstraint);
+    }
+    
+    public void saveConstraint(ApricotConstraint constraint) {
+        constraintRepository.save(constraint);
     }
 }

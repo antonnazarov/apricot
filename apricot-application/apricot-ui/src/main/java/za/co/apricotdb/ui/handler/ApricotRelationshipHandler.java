@@ -25,6 +25,7 @@ import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.ui.EditRelationshipController;
+import za.co.apricotdb.ui.model.ApricotRelationshipSerializer;
 import za.co.apricotdb.ui.model.ApricotRelationshipValidator;
 import za.co.apricotdb.ui.model.EditRelationshipModel;
 import za.co.apricotdb.ui.model.EditRelationshipModelBuilder;
@@ -55,9 +56,12 @@ public class ApricotRelationshipHandler {
 
     @Autowired
     AlertMessageDecorator alertDecorator;
-    
+
     @Autowired
     ApricotRelationshipValidator relationshipValidator;
+
+    @Autowired
+    ApricotRelationshipSerializer relationshipSerializer;
 
     @Transactional
     public void openRelationshipEditorForm(TabPane viewsTabPane) throws IOException {
@@ -96,7 +100,7 @@ public class ApricotRelationshipHandler {
 
         dialog.show();
     }
-    
+
     @Transactional
     public void swapEntities(EditRelationshipController controller) {
         EditRelationshipModel model = controller.getModel();
@@ -110,18 +114,31 @@ public class ApricotRelationshipHandler {
     }
 
     @Transactional
+    public boolean saveRelationship(EditRelationshipController controller) {
+        EditRelationshipModel model = controller.getModel();
+        refreshTables(model);
+        if (!relationshipValidator.verifyForeignKeyColumns(model)) {
+            return false;
+        }
+        relationshipSerializer.serializeRelationship(model);
+
+        return true;
+    }
+
+    @Transactional
     public void handleForeignKeyChanged(EditRelationshipModel model, String key, String value) {
         refreshTables(model);
-        
+
         ApricotColumn column = model.getChildTable().getColumnByName(value);
         if (column != null) {
             relationshipValidator.isColumnPrimaryKey(model.getChildTable(), column);
-            model.initColumnAttributes(key, relationshipValidator.isColumnPrimaryKey(model.getChildTable(), column), !column.isNullable());
+            model.initColumnAttributes(key, relationshipValidator.isColumnPrimaryKey(model.getChildTable(), column),
+                    !column.isNullable());
         } else {
             model.resetColumnAttributes(key);
         }
     }
-    
+
     private void refreshTables(EditRelationshipModel model) {
         ApricotSnapshot snap = snapshotManager.getDefaultSnapshot();
         ApricotTable parentTable = tableManager.getTableByName(model.getParentTable().getName(), snap);

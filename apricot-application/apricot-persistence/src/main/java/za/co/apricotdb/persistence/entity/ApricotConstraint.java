@@ -28,7 +28,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "apricot_constraint")
 @NamedQuery(name="ApricotConstraint.getConstraintsByTable", query="SELECT cnst FROM ApricotConstraint cnst WHERE cnst.table = :table")
-@NamedQuery(name="ApricotConstraint.getConstraintsByName", query="SELECT cnst FROM ApricotConstraint cnst WHERE cnst.name = :name")
+@NamedQuery(name="ApricotConstraint.getConstraintsByName", query="SELECT DISTINCT cnst FROM ApricotSnapshot snap JOIN snap.tables tbl JOIN tbl.constraints cnst WHERE snap = :snapshot AND cnst.name = :name")
 public class ApricotConstraint implements Serializable {
 
     private static final long serialVersionUID = 3862015345366091286L;
