@@ -53,6 +53,19 @@ public class ConstraintManager {
         
         return ret;
     }
+    
+    public ApricotConstraint getConstraintByName(String name) {
+        ApricotConstraint ret = null;
+        TypedQuery<ApricotConstraint> query = em.createNamedQuery("ApricotConstraint.getConstraintsByName", ApricotConstraint.class);
+        query.setParameter("name", name);
+
+        List<ApricotConstraint> c = query.getResultList();
+        if (c != null && c.size() > 0) {
+            ret = c.get(0);
+        }
+        
+        return ret;
+    }
 
     public void deleteConstraint(ApricotConstraint constraint) {
         constraintRepository.delete(constraint);

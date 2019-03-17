@@ -100,11 +100,11 @@ public class ApricotRelationshipHandler {
     @Transactional
     public void swapEntities(EditRelationshipController controller) {
         EditRelationshipModel model = controller.getModel();
+        refreshTables(model);
         model.swapTables();
         if (!relationshipValidator.checkPrimaryKey(model)) {
             return;
         }
-        refreshTables(model);
         controller.init(model);
         modelBuilder.populateKeys(model);
     }

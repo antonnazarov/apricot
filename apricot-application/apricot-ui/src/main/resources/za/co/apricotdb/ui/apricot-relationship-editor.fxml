@@ -144,7 +144,7 @@
                                     <Insets left="5.0" />
                                  </GridPane.margin>
                               </ComboBox>
-                              <Label text="Create new or select existing field:">
+                              <Label text="Create new or select existing FK- field:">
                                  <GridPane.margin>
                                     <Insets left="5.0" />
                                  </GridPane.margin>

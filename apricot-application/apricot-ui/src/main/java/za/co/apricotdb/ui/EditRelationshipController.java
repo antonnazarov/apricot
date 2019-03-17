@@ -35,10 +35,10 @@ public class EditRelationshipController {
 
     @Autowired
     EditRelationshipModelBuilder modelBuilder;
-    
+
     @Autowired
     ApricotRelationshipHandler relationshipHandler;
-    
+
     @FXML
     Pane mainPane;
 
@@ -97,12 +97,12 @@ public class EditRelationshipController {
     CheckBox notNull_4;
     @FXML
     CheckBox notNull_5;
-    
+
     private EditRelationshipModel model;
 
     public void init(EditRelationshipModel model) {
         this.model = model;
-        
+
         model.getRelationshipNameProperty().bind(relationshipName.textProperty());
         if (relationshipName.getText() == null || "".equals(relationshipName.getText())) {
             relationshipName.setText(NEW_RELATIONSHIP);
@@ -114,7 +114,7 @@ public class EditRelationshipController {
         addKeyHolders(model);
         model.resetKeys();
     }
-    
+
     public EditRelationshipModel getModel() {
         return model;
     }
@@ -138,7 +138,7 @@ public class EditRelationshipController {
     @FXML
     public void foreignKeyEdited(ActionEvent event) {
         ComboBox<String> source = (ComboBox<String>) event.getSource();
-        
+
         relationshipHandler.handleForeignKeyChanged(model, source.getId(), source.getValue());
     }
 
