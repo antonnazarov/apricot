@@ -33,7 +33,7 @@ public class ApricotRelationshipSerializer {
 
     @Autowired
     ConstraintManager constraintManager;
-    
+
     @Autowired
     RelationshipManager relationshipManager;
 
@@ -61,14 +61,12 @@ public class ApricotRelationshipSerializer {
         List<ApricotColumn> columns = new ArrayList<>();
         ApricotTable table = model.getChildTable();
 
-        boolean hasNew = false;
         int pos = table.getColumns().size();
         for (ParentChildKeyHolder h : model.getKeys()) {
             String fieldName = h.getForeignKeyField();
             if (table.getColumnByName(fieldName) != null) {
                 columns.add(table.getColumnByName(fieldName));
             } else {
-                hasNew = true;
                 pos++;
                 ApricotColumn column = new ApricotColumn();
                 column.setName(fieldName);
@@ -83,11 +81,8 @@ public class ApricotRelationshipSerializer {
                 }
                 column.setTable(table);
                 table.getColumns().add(column);
+                columns.add(column);
             }
-        }
-
-        if (hasNew) {
-            tableManager.saveTable(table);
         }
 
         return columns;

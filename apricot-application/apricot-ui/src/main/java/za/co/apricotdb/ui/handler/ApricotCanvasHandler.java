@@ -147,9 +147,13 @@ public class ApricotCanvasHandler {
 
         RelationshipBuilder rBuilder = new ApricotRelationshipBuilder(canvas);
         for (ApricotRelationship ar : relationships) {
-            za.co.apricotdb.viewport.relationship.ApricotRelationship wpar = convertRelationship(ar, fieldDetails,
-                    rBuilder);
-            canvas.addElement(wpar);
+            if (canvas.findRelationshipByName(ar.getName()) == null) {
+                za.co.apricotdb.viewport.relationship.ApricotRelationship wpar = convertRelationship(ar, fieldDetails,
+                        rBuilder);
+                if (wpar != null) {
+                    canvas.addElement(wpar);
+                }
+            }
         }
     }
 
@@ -173,7 +177,7 @@ public class ApricotCanvasHandler {
 
         return ret;
     }
-    
+
     public void renameEntityOnCanvas(String oldName, String newName) {
         for (Tab t : parentWindow.getProjectTabPane().getTabs()) {
             if (t.getUserData() instanceof TabInfoObject) {
@@ -260,6 +264,10 @@ public class ApricotCanvasHandler {
             Map<String, List<FieldDetail>> fieldDetails, RelationshipBuilder rBuilder) {
         String parentTable = r.getParent().getTable().getName();
         String childTable = r.getChild().getTable().getName();
+        // both sides of relationship have to have some key(s) in the constraint
+        if (r.getParent().getColumns().size() == 0 || r.getChild().getColumns().size() == 0) {
+            return null;
+        }
         String parentColumn = r.getParent().getColumns().get(0).getColumn().getName();
         String childColumn = r.getChild().getColumns().get(0).getColumn().getName();
 

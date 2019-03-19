@@ -70,6 +70,17 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
     public ApricotEntity findEntityByName(String name) {
         return entities.get(name);
     }
+    
+    @Override
+    public ApricotRelationship findRelationshipByName(String name) {
+        for (ApricotRelationship r : relationships) {
+            if (r.getRelationshipName().equals(name)) {
+                return r;
+            }
+        }
+        
+        return null;
+    }
 
     @Override
     public void removeElement(ApricotElement element) {

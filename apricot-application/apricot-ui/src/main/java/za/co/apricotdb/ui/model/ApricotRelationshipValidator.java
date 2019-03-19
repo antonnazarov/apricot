@@ -116,7 +116,7 @@ public class ApricotRelationshipValidator {
         return true;
     }
 
-    public boolean verifyForeignKeyColumns(EditRelationshipModel model) {
+    private boolean verifyForeignKeyColumns(EditRelationshipModel model) {
         List<String> columns = new ArrayList<>();
         boolean hasPK = false;
         boolean allPK = true;
@@ -124,7 +124,7 @@ public class ApricotRelationshipValidator {
             String columnName = h.getForeignKeyField();
             if (columnName == null || columnName.equals("")) {
                 Alert alert = alertDecorator.getErrorAlert("New Relationship",
-                        "Please provide a non empty name of the foreign key field");
+                        "Please select or fill in a non empty name of the foreign key field");
                 alert.showAndWait();
                 return false;
             }
@@ -144,16 +144,16 @@ public class ApricotRelationshipValidator {
                     alert.showAndWait();
                     return false;
                 }
-            } else {
+            } else if (h.isPrimaryKey()) {
                 // for the new field and if it was marked as a Primary Key, check that the
                 // existing primary
                 // key of the child- table is not included into any existing relationship.
                 // In this case, it is prohibited to change content of the Primary Key.
                 for (ApricotRelationship r : relationshipManager.getRelationshipsForTable(model.getChildTable())) {
                     if (r.getParent().getTable().equals(model.getChildTable())) {
-                        Alert alert = alertDecorator.getErrorAlert("New Relationship", "The field + " + columnName
-                                + " cannot be created as a part of the Primary Key of the Child- table, "
-                                + "because there is already a Relationship, where the Foreign Key- table acts as a parent.");
+                        Alert alert = alertDecorator.getErrorAlert("New Relationship", "The field \"" + columnName
+                                + "\" cannot be created as a part of the Primary Key of the Child table, "
+                                + "because there is already a Relationship, where the this table acts as a parent.");
                         alert.showAndWait();
                         return false;
                     }

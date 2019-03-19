@@ -26,6 +26,8 @@ public interface ApricotCanvas {
     void orderElements(OrderManager orderManager);
 
     ApricotEntity findEntityByName(String name);
+    
+    ApricotRelationship findRelationshipByName(String name);
 
     void sendToFront(ApricotElement entity);
 

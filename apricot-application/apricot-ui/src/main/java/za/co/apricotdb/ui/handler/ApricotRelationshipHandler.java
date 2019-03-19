@@ -62,6 +62,9 @@ public class ApricotRelationshipHandler {
 
     @Autowired
     ApricotRelationshipSerializer relationshipSerializer;
+    
+    @Autowired
+    ApricotCanvasHandler canvasHandler;
 
     @Transactional
     public void openRelationshipEditorForm(TabPane viewsTabPane) throws IOException {
@@ -117,10 +120,11 @@ public class ApricotRelationshipHandler {
     public boolean saveRelationship(EditRelationshipController controller) {
         EditRelationshipModel model = controller.getModel();
         refreshTables(model);
-        if (!relationshipValidator.verifyForeignKeyColumns(model)) {
+        if (!relationshipValidator.validateRelationshipModel(model)) {
             return false;
         }
         relationshipSerializer.serializeRelationship(model);
+        canvasHandler.updateEntity(model.getChildTable(), false);
 
         return true;
     }
