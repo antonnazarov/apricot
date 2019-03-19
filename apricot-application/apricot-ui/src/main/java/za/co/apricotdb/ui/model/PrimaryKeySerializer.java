@@ -3,15 +3,12 @@ package za.co.apricotdb.ui.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.persistence.entity.ApricotColumnConstraint;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ConstraintType;
-import za.co.apricotdb.persistence.repository.ApricotColumnConstraintRepository;
 
 /**
  * This class/component handles the primary key (the new or existing one) of the
@@ -22,9 +19,6 @@ import za.co.apricotdb.persistence.repository.ApricotColumnConstraintRepository;
  */
 @Component
 public class PrimaryKeySerializer {
-
-    @Resource
-    ApricotColumnConstraintRepository columnConstraintRepository;
 
     public void serializePrimaryKey(EditEntityModel model) {
         ApricotConstraint primaryKey = getPrimaryKey(model.getTable());
@@ -62,9 +56,6 @@ public class PrimaryKeySerializer {
     }
 
     private void serializePrimaryKeyColumns(ApricotConstraint constraint, EditEntityModel model) {
-        for (ApricotColumnConstraint constrCol : constraint.getColumns()) {
-            columnConstraintRepository.delete(constrCol);
-        }
         constraint.getColumns().clear();
 
         int ordinalPosition = 0;

@@ -21,13 +21,13 @@ public class ConstraintManager {
 
     @Resource
     EntityManager em;
-    
+
     @Resource
     ApricotColumnConstraintRepository columnConstraintRepository;
-    
+
     @Resource
     ApricotConstraintRepository constraintRepository;
-    
+
     @Autowired
     SnapshotManager snapshotManager;
 
@@ -46,21 +46,22 @@ public class ConstraintManager {
 
         return query.getResultList();
     }
-    
+
     public List<ApricotColumnConstraint> getConstraintColumnsByTable(ApricotTable table) {
         List<ApricotColumnConstraint> ret = new ArrayList<>();
-        
+
         List<ApricotConstraint> constraints = getConstraintsByTable(table);
         for (ApricotConstraint c : constraints) {
             ret.addAll(getConstraintColumns(c));
         }
-        
+
         return ret;
     }
-    
+
     public ApricotConstraint getConstraintByName(String name) {
         ApricotConstraint ret = null;
-        TypedQuery<ApricotConstraint> query = em.createNamedQuery("ApricotConstraint.getConstraintsByName", ApricotConstraint.class);
+        TypedQuery<ApricotConstraint> query = em.createNamedQuery("ApricotConstraint.getConstraintsByName",
+                ApricotConstraint.class);
         query.setParameter("snapshot", snapshotManager.getDefaultSnapshot());
         query.setParameter("name", name);
 
@@ -68,7 +69,7 @@ public class ConstraintManager {
         if (c != null && c.size() > 0) {
             ret = c.get(0);
         }
-        
+
         return ret;
     }
 
@@ -79,7 +80,7 @@ public class ConstraintManager {
     public void deleteConstraintColumn(ApricotColumnConstraint columnConstraint) {
         columnConstraintRepository.delete(columnConstraint);
     }
-    
+
     public void saveConstraint(ApricotConstraint constraint) {
         constraintRepository.save(constraint);
     }

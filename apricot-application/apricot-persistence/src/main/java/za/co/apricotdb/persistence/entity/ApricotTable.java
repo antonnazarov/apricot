@@ -77,6 +77,9 @@ public class ApricotTable implements Serializable {
     }
 
     public List<ApricotColumn> getColumns() {
+        columns.sort((c1, c2) -> {
+            return c1.getOrdinalPosition()-c2.getOrdinalPosition();
+        });
         return columns;
     }
 

@@ -32,7 +32,6 @@ public class ApricotConstraintSerializer {
         if (!model.isNewEntity()) {
             deleteRemovedConstraints(model);
         }
-        
         updateConstraints(model);
         primaryKeySerializer.serializePrimaryKey(model);
     }
@@ -86,9 +85,6 @@ public class ApricotConstraintSerializer {
 
     private void serializeConstraintColumns(ApricotConstraint constraint, ApricotConstraintData constraintData,
             EditEntityModel model) {
-        for (ApricotColumnConstraint constrCol : constraint.getColumns()) {
-            constraintManager.deleteConstraintColumn(constrCol);
-        }
         constraint.getColumns().clear();
 
         int ordinalPosition = 0;

@@ -80,6 +80,7 @@ public class TabViewHandler {
         o.setCanvas(canvas);
         o.setView(view);
         o.setSnapshot(snapshot);
+        o.setScroll(scroll);
         tab.setUserData(o);
 
         createTabContextMenu(tab, o);

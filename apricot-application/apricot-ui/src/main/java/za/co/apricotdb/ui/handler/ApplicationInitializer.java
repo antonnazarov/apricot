@@ -101,7 +101,7 @@ public class ApplicationInitializer {
             if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 2) {
                 TreeItem<String> item = tw.getSelectionModel().getSelectedItem();
                 if (item != tw.getRoot()) {
-                    //  a table has been selected by double click
+                    //  the table was selected by double click
                     try {
                     apricotEntityHandler.openEntityEditorForm(false, item.getValue());
                     } catch (IOException ex) {
