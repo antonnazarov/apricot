@@ -23,6 +23,7 @@ import javax.persistence.Table;
 @NamedQuery(name = "ApricotRelationship.getRelationshipsForTables", query = "SELECT DISTINCT rl FROM ApricotRelationship rl WHERE rl.child.table.name IN (:tables) AND rl.parent.table.name IN (:tables)")
 @NamedQuery(name = "ApricotRelationship.getRelationshipsForTableList", query = "SELECT DISTINCT rl FROM ApricotRelationship rl WHERE rl.child.table IN (:tables) AND rl.parent.table IN (:tables)")
 @NamedQuery(name = "ApricotRelationship.getRelationshipsForTable", query = "SELECT DISTINCT rl FROM ApricotRelationship rl WHERE rl.child.table = :table OR rl.parent.table = :table")
+@NamedQuery(name = "ApricotRelationship.findRelationshipByParentConstraint", query = "SELECT rl FROM ApricotRelationship rl WHERE rl.parent = :parentConstraint")
 public class ApricotRelationship implements Serializable {
 
     private static final long serialVersionUID = 2135283859031176938L;

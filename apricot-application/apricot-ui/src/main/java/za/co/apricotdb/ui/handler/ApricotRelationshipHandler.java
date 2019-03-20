@@ -19,9 +19,13 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import za.co.apricotdb.persistence.data.ConstraintManager;
+import za.co.apricotdb.persistence.data.RelationshipManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.TableManager;
 import za.co.apricotdb.persistence.entity.ApricotColumn;
+import za.co.apricotdb.persistence.entity.ApricotConstraint;
+import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.ui.EditRelationshipController;
@@ -62,9 +66,15 @@ public class ApricotRelationshipHandler {
 
     @Autowired
     ApricotRelationshipSerializer relationshipSerializer;
-    
+
     @Autowired
     ApricotCanvasHandler canvasHandler;
+
+    @Autowired
+    RelationshipManager relationshipManager;
+
+    @Autowired
+    ConstraintManager constraintManager;
 
     @Transactional
     public void openRelationshipEditorForm(TabPane viewsTabPane) throws IOException {
@@ -141,6 +151,15 @@ public class ApricotRelationshipHandler {
         } else {
             model.resetColumnAttributes(key);
         }
+    }
+
+    /**
+     * Delete relationship.
+     */
+    public void deleteRelationship(ApricotRelationship relationship) {
+        ApricotConstraint childConstraint = relationship.getChild();
+        constraintManager.deleteConstraint(childConstraint);
+        relationshipManager.deleteRelationship(relationship);
     }
 
     private void refreshTables(EditRelationshipModel model) {

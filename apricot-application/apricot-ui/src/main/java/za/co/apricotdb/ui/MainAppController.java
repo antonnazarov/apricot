@@ -61,7 +61,7 @@ public class MainAppController {
 
     @Autowired
     ApricotEntityHandler entityHandler;
-    
+
     @Autowired
     ApricotRelationshipHandler relationshipHandler;
 
@@ -84,11 +84,7 @@ public class MainAppController {
                 TabInfoObject o = (TabInfoObject) t.getUserData();
                 // save only changed canvas
                 if (o.getCanvas().isCanvasChanged()) {
-                    CanvasAllocationMap allocationMap = o.getCanvas().getAllocationMap();
-
-                    ApricotView view = tabViewHandler.saveCanvasAllocationMap(allocationMap, o.getView());
-                    o.setView(view);
-
+                    tabViewHandler.saveCanvasAllocationMap(o);
                     t.setStyle("-fx-font-weight: normal;");
                     o.getCanvas().setCanvasChanged(false);
                 }
@@ -101,7 +97,7 @@ public class MainAppController {
     public void newView(ActionEvent event) throws Exception {
         viewHandler.createViewEditor(viewsTabPane, null, null);
     }
-    
+
     @FXML
     public void newRelationship(ActionEvent event) throws Exception {
         relationshipHandler.openRelationshipEditorForm(viewsTabPane);

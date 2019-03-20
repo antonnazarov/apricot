@@ -73,7 +73,6 @@ public class TabViewHandler {
 
         ScrollPane scroll = buildScrollPane();
         scroll.setContent((Pane) canvas);
-
         tab.setContent(scroll);
 
         TabInfoObject o = new TabInfoObject();
@@ -86,6 +85,13 @@ public class TabViewHandler {
         createTabContextMenu(tab, o);
 
         return tab;
+    }
+    
+    @Transactional
+    public void saveCanvasAllocationMap(TabInfoObject tabInfo) {
+        CanvasAllocationMap allocationMap = tabInfo.getCanvas().getAllocationMap();
+        ApricotView view = saveCanvasAllocationMap(allocationMap, tabInfo.getView());
+        tabInfo.setView(view);
     }
 
     @Transactional

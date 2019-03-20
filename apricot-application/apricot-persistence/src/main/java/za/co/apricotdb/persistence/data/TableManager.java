@@ -56,4 +56,8 @@ public class TableManager {
         
         return ret;
     }
+    
+    public void deleteTable(ApricotTable table) {
+        tableRep.delete(table);
+    }
 }

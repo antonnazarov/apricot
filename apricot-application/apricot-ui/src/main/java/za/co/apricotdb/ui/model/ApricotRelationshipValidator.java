@@ -16,6 +16,7 @@ import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ConstraintType;
 import za.co.apricotdb.ui.EditRelationshipController;
+import za.co.apricotdb.ui.handler.ApricotEntityHandler;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
 /**
@@ -37,9 +38,12 @@ public class ApricotRelationshipValidator {
     @Autowired
     RelationshipManager relationshipManager;
 
+    @Autowired
+    ApricotEntityHandler entityHandler;
+
     public boolean checkPrimaryKey(EditRelationshipModel model) {
         ApricotTable table = model.getParentTable();
-        ApricotConstraint pk = getPrimaryKey(table);
+        ApricotConstraint pk = entityHandler.getPrimaryKey(table);
 
         if (pk == null) {
             Alert alert = alertDecorator.getErrorAlert("New Relationship", "The table " + table.getName()
@@ -61,19 +65,8 @@ public class ApricotRelationshipValidator {
         return true;
     }
 
-    public ApricotConstraint getPrimaryKey(ApricotTable table) {
-
-        for (ApricotConstraint c : table.getConstraints()) {
-            if (c.getType() == ConstraintType.PRIMARY_KEY) {
-                return c;
-            }
-        }
-
-        return null;
-    }
-
     public boolean isColumnPrimaryKey(ApricotTable table, ApricotColumn column) {
-        ApricotConstraint constraint = getPrimaryKey(table);
+        ApricotConstraint constraint = entityHandler.getPrimaryKey(table);
 
         if (constraint != null) {
             for (ApricotColumnConstraint acc : constraint.getColumns()) {

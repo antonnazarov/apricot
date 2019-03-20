@@ -15,6 +15,7 @@ import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ConstraintType;
+import za.co.apricotdb.ui.handler.ApricotEntityHandler;
 
 /**
  * This component performs the serialization of the new Relationship.
@@ -26,9 +27,6 @@ import za.co.apricotdb.persistence.entity.ConstraintType;
 public class ApricotRelationshipSerializer {
 
     @Autowired
-    ApricotRelationshipValidator relationshipValidator;
-
-    @Autowired
     TableManager tableManager;
 
     @Autowired
@@ -36,6 +34,9 @@ public class ApricotRelationshipSerializer {
 
     @Autowired
     RelationshipManager relationshipManager;
+
+    @Autowired
+    ApricotEntityHandler entityHandler;
 
     public void serializeRelationship(EditRelationshipModel model) {
         List<ApricotColumn> columns = getForeignKeyColumns(model);
@@ -52,7 +53,7 @@ public class ApricotRelationshipSerializer {
             constraintManager.saveConstraint(childPk);
         }
 
-        ApricotConstraint pk = relationshipValidator.getPrimaryKey(model.getParentTable());
+        ApricotConstraint pk = entityHandler.getPrimaryKey(model.getParentTable());
         ApricotRelationship relationship = new ApricotRelationship(pk, fk);
         relationshipManager.saveRelationship(relationship);
     }
@@ -91,7 +92,7 @@ public class ApricotRelationshipSerializer {
     private ApricotConstraint buildPrimaryKey(List<ApricotColumn> columns, EditRelationshipModel model) {
         if (model.isPkConstraint() && model.hasNewFields()) {
             List<ApricotColumn> pkColumns = new ArrayList<>();
-            ApricotConstraint pk = relationshipValidator.getPrimaryKey(model.getChildTable());
+            ApricotConstraint pk = entityHandler.getPrimaryKey(model.getChildTable());
             if (pk != null) {
                 for (ApricotColumnConstraint acc : pk.getColumns()) {
                     pkColumns.add(acc.getColumn());

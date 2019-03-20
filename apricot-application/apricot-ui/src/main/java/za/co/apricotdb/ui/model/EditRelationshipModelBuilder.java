@@ -12,13 +12,14 @@ import za.co.apricotdb.persistence.entity.ApricotColumnConstraint;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ConstraintType;
+import za.co.apricotdb.ui.handler.ApricotEntityHandler;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
 @Component
 public class EditRelationshipModelBuilder {
 
     @Autowired
-    ApricotRelationshipValidator relationshipValidator;
+    ApricotEntityHandler entityHandler;
 
     @Autowired
     AlertMessageDecorator alertDecorator;
@@ -26,9 +27,9 @@ public class EditRelationshipModelBuilder {
     public EditRelationshipModel buildModel(ApricotTable[] selectedTables) {
 
         EditRelationshipModel model = new EditRelationshipModel(selectedTables);
-        if (relationshipValidator.getPrimaryKey(model.getParentTable()) == null) {
+        if (entityHandler.getPrimaryKey(model.getParentTable()) == null) {
             model.swapTables();
-            if (relationshipValidator.getPrimaryKey(model.getParentTable()) == null) {
+            if (entityHandler.getPrimaryKey(model.getParentTable()) == null) {
                 Alert alert = alertDecorator.getErrorAlert("New Relationship",
                         "The selected tables " + model.getParentTable().getName() + " and "
                                 + model.getChildTable().getName()
@@ -43,7 +44,7 @@ public class EditRelationshipModelBuilder {
 
     public void populateKeys(EditRelationshipModel model) {
 
-        ApricotConstraint pk = relationshipValidator.getPrimaryKey(model.getParentTable());
+        ApricotConstraint pk = entityHandler.getPrimaryKey(model.getParentTable());
         int cnt = 1;
         for (ApricotColumnConstraint acc : pk.getColumns()) {
             String key = "childForeignKey_" + cnt;

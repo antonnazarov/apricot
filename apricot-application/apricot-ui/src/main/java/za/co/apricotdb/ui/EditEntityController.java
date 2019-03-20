@@ -38,13 +38,11 @@ import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.entity.ApricotApplicationParameter;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ConstraintType;
-import za.co.apricotdb.ui.handler.ApricotCanvasHandler;
 import za.co.apricotdb.ui.handler.ApricotConstraintHandler;
-import za.co.apricotdb.ui.handler.ApricotObjectLayoutHandler;
+import za.co.apricotdb.ui.handler.ApricotEntityHandler;
 import za.co.apricotdb.ui.model.ApricotColumnData;
 import za.co.apricotdb.ui.model.ApricotConstraintData;
 import za.co.apricotdb.ui.model.ApricotConstraintSerializer;
-import za.co.apricotdb.ui.model.ApricotEntitySerializer;
 import za.co.apricotdb.ui.model.EditEntityModel;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
@@ -70,16 +68,10 @@ public class EditEntityController {
     AlertMessageDecorator alertDecorator;
 
     @Autowired
-    ApricotEntitySerializer entitySerializer;
-
-    @Autowired
     ApricotConstraintSerializer constraintSerializer;
 
     @Autowired
-    ApricotCanvasHandler canvasHandler;
-
-    @Autowired
-    ApricotObjectLayoutHandler objectLayoutHandler;
+    ApricotEntityHandler enttityHandler;
 
     @FXML
     Pane mainPane;
@@ -381,17 +373,7 @@ public class EditEntityController {
 
     @FXML
     public void save(ActionEvent event) {
-        model.setEntityName(entityName.getText());
-        entitySerializer.serialize(model);
-
-        // handle when the entity name was changed
-        if (!model.isNewEntity() && !model.getEntityName().equals(model.getEntityOriginalName())) {
-            objectLayoutHandler.duplicateObjectLayoutsForNewEntityName(model.getEntityOriginalName(),
-                    model.getEntityName());
-            canvasHandler.renameEntityOnCanvas(model.getEntityOriginalName(), model.getEntityName());
-        }
-        canvasHandler.updateEntity(model.getTable(), model.isNewEntity());
-
+        enttityHandler.saveEntity(model, entityName.getText());
         getStage().close();
     }
 

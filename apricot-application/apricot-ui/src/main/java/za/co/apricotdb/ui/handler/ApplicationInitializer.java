@@ -1,7 +1,5 @@
 package za.co.apricotdb.ui.handler;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -12,14 +10,11 @@ import org.springframework.stereotype.Component;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
-import javafx.scene.input.MouseButton;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.TableManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
-import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.viewport.canvas.CanvasBuilder;
@@ -33,7 +28,7 @@ import za.co.apricotdb.viewport.canvas.CanvasBuilder;
  */
 @Component
 public class ApplicationInitializer {
-    
+
     @Autowired
     ProjectManager projectManager;
 
@@ -59,7 +54,7 @@ public class ApplicationInitializer {
     ParentWindow parentWindow;
     
     @Autowired
-    ApricotEntityHandler apricotEntityHandler;
+    TreeViewHandler treeViewHandler;
 
     @Transactional
     public void initializeDefault() {
@@ -90,26 +85,8 @@ public class ApplicationInitializer {
     public void initialize(ApricotProject project, ApricotSnapshot snapshot) {
         // remember the current project
         parentWindow.getApplicationData().setCurrentProject(project);
-
-        List<ApricotTable> tables = tableManager.getTablesForSnapshot(snapshot);
-        TreeItem<String> root = new TreeItem<>(project.getName());
-        root.getChildren().addAll(getTables(tables));
-        root.setExpanded(true);
-        TreeView<String> tw = parentWindow.getProjectTreeView();
-        tw.setRoot(root);
-        tw.setOnMouseClicked(e -> {
-            if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 2) {
-                TreeItem<String> item = tw.getSelectionModel().getSelectedItem();
-                if (item != tw.getRoot()) {
-                    //  the table was selected by double click
-                    try {
-                    apricotEntityHandler.openEntityEditorForm(false, item.getValue());
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            }
-        });
+        
+        treeViewHandler.populate(project, snapshot);
 
         ComboBox<String> combo = parentWindow.getSnapshotCombo();
         if (combo.getUserData() != null && combo.getUserData().equals("snapshotCombo.selectSnapshot")) {
@@ -136,15 +113,6 @@ public class ApplicationInitializer {
             combo.getItems().add(s.getName());
         }
         combo.setValue(snapshot.getName());
-    }
-
-    private List<TreeItem<String>> getTables(List<ApricotTable> tables) {
-        List<TreeItem<String>> ret = new ArrayList<>();
-        for (ApricotTable t : tables) {
-            ret.add(new TreeItem<String>(t.getName()));
-        }
-
-        return ret;
     }
 
     /**

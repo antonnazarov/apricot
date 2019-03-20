@@ -49,6 +49,8 @@ public interface ApricotCanvas {
     
     List<ApricotEntity> getSelectedEntities();
     
+    List<ApricotRelationship> getSelectedRelationships();
+    
     void cleanCanvas();
     
     void publishEvent(ApplicationEvent event);

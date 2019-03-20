@@ -3,12 +3,14 @@ package za.co.apricotdb.ui.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.persistence.entity.ApricotColumnConstraint;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ConstraintType;
+import za.co.apricotdb.ui.handler.ApricotEntityHandler;
 
 /**
  * This class/component handles the primary key (the new or existing one) of the
@@ -19,9 +21,12 @@ import za.co.apricotdb.persistence.entity.ConstraintType;
  */
 @Component
 public class PrimaryKeySerializer {
+    
+    @Autowired
+    ApricotEntityHandler entityHandler;
 
     public void serializePrimaryKey(EditEntityModel model) {
-        ApricotConstraint primaryKey = getPrimaryKey(model.getTable());
+        ApricotConstraint primaryKey = entityHandler.getPrimaryKey(model.getTable());
         if (getPrimaryKeyColumns(model).size() > 0 && primaryKey == null) {
             // a new PRIMARY_KEY needs to be created
             ApricotTable table = model.getTable();
@@ -32,16 +37,6 @@ public class PrimaryKeySerializer {
         if (primaryKey != null) {
             serializePrimaryKeyColumns(primaryKey, model);
         }
-    }
-
-    private ApricotConstraint getPrimaryKey(ApricotTable table) {
-        for (ApricotConstraint c : table.getConstraints()) {
-            if (c.getType() == ConstraintType.PRIMARY_KEY) {
-                return c;
-            }
-        }
-
-        return null;
     }
 
     public List<ApricotColumnData> getPrimaryKeyColumns(EditEntityModel model) {

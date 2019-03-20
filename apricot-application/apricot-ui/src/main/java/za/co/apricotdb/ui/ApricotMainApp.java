@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
+import za.co.apricotdb.ui.handler.OnKeyPressedEventHandler;
 
 @Configuration
 @EnableAutoConfiguration
@@ -44,12 +45,13 @@ public class ApricotMainApp extends Application {
         primaryStage.setOnShown(event -> {
             initializer.initializeDefault();
         });
-
         primaryStage.setScene(new Scene(rootNode));
         primaryStage.centerOnScreen();
         primaryStage.setTitle("Apricot DB");
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("favicon-32x32.png")));
         primaryStage.show();
+        
+        primaryStage.getScene().setOnKeyPressed(new OnKeyPressedEventHandler());
     }
 
     @Override

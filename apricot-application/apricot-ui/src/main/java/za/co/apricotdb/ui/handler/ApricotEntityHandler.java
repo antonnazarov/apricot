@@ -1,6 +1,7 @@
 package za.co.apricotdb.ui.handler;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
@@ -15,7 +16,16 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import za.co.apricotdb.persistence.data.ProjectManager;
+import za.co.apricotdb.persistence.data.RelationshipManager;
+import za.co.apricotdb.persistence.data.SnapshotManager;
+import za.co.apricotdb.persistence.data.TableManager;
+import za.co.apricotdb.persistence.entity.ApricotConstraint;
+import za.co.apricotdb.persistence.entity.ApricotRelationship;
+import za.co.apricotdb.persistence.entity.ApricotTable;
+import za.co.apricotdb.persistence.entity.ConstraintType;
 import za.co.apricotdb.ui.EditEntityController;
+import za.co.apricotdb.ui.model.ApricotEntitySerializer;
 import za.co.apricotdb.ui.model.EditEntityModel;
 import za.co.apricotdb.ui.model.EditEntityModelBuilder;
 
@@ -36,6 +46,33 @@ public class ApricotEntityHandler {
 
     @Autowired
     ApricotConstraintHandler constraintHandler;
+
+    @Autowired
+    ApricotEntitySerializer entitySerializer;
+
+    @Autowired
+    ApricotObjectLayoutHandler objectLayoutHandler;
+
+    @Autowired
+    ApricotCanvasHandler canvasHandler;
+
+    @Autowired
+    TreeViewHandler treeViewHandler;
+
+    @Autowired
+    ProjectManager projectManager;
+
+    @Autowired
+    SnapshotManager snapshotManager;
+
+    @Autowired
+    TableManager tableManager;
+
+    @Autowired
+    RelationshipManager relationshipManager;
+
+    @Autowired
+    ApricotRelationshipHandler relationshipHandler;
 
     @Transactional
     public void openEntityEditorForm(boolean newEntity, String tableName) throws IOException {
@@ -62,4 +99,45 @@ public class ApricotEntityHandler {
 
         dialog.show();
     }
+
+    public void saveEntity(EditEntityModel model, String entityName) {
+        model.setEntityName(entityName);
+        entitySerializer.serialize(model);
+
+        // handle when the entity name was changed
+        if (!model.isNewEntity() && !model.getEntityName().equals(model.getEntityOriginalName())) {
+            objectLayoutHandler.duplicateObjectLayoutsForNewEntityName(model.getEntityOriginalName(),
+                    model.getEntityName());
+            canvasHandler.renameEntityOnCanvas(model.getEntityOriginalName(), model.getEntityName());
+        }
+        canvasHandler.updateEntity(model.getTable(), model.isNewEntity());
+        treeViewHandler.populate(projectManager.findCurrentProject(), snapshotManager.getDefaultSnapshot());
+        treeViewHandler.selectEntity(entityName);
+    }
+
+    /**
+     * Delete the entity.
+     */
+    @Transactional
+    public void deleteEntity(String entityName) {
+        ApricotTable table = tableManager.getTableByName(entityName, snapshotManager.getDefaultSnapshot());
+        if (table != null) {
+            List<ApricotRelationship> relationships = relationshipManager.getRelationshipsForTable(table);
+            for (ApricotRelationship r : relationships) {
+                relationshipHandler.deleteRelationship(r);
+            }
+            tableManager.deleteTable(table);
+        }
+    }
+    
+    public ApricotConstraint getPrimaryKey(ApricotTable table) {
+        for (ApricotConstraint c : table.getConstraints()) {
+            if (c.getType() == ConstraintType.PRIMARY_KEY) {
+                return c;
+            }
+        }
+
+        return null;
+    }
+
 }

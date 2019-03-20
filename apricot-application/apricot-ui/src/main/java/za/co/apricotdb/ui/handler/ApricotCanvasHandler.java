@@ -13,7 +13,9 @@ import org.springframework.stereotype.Component;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
+import javafx.scene.layout.Pane;
 import za.co.apricotdb.persistence.data.ObjectLayoutManager;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.RelationshipManager;
@@ -34,11 +36,13 @@ import za.co.apricotdb.viewport.align.SimpleGridEntityAllocator;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ApricotElement;
 import za.co.apricotdb.viewport.canvas.CanvasAllocationMap;
+import za.co.apricotdb.viewport.canvas.ElementStatus;
 import za.co.apricotdb.viewport.canvas.ElementType;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 import za.co.apricotdb.viewport.entity.ApricotEntityBuilder;
 import za.co.apricotdb.viewport.entity.EntityBuilder;
 import za.co.apricotdb.viewport.entity.FieldDetail;
+import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
 import za.co.apricotdb.viewport.relationship.ApricotRelationshipBuilder;
 import za.co.apricotdb.viewport.relationship.RelationshipBuilder;
 import za.co.apricotdb.viewport.relationship.RelationshipType;
@@ -123,6 +127,19 @@ public class ApricotCanvasHandler {
         }
     }
 
+    public ApricotCanvas getSelectedCanvas() {
+        ApricotCanvas ret = null;
+        Tab tab = parentWindow.getProjectTabPane().getSelectionModel().getSelectedItem();
+        if (tab != null) {
+            if (tab.getUserData() instanceof TabInfoObject) {
+                TabInfoObject o = (TabInfoObject) tab.getUserData();
+                ret = o.getCanvas();
+            }
+        }
+
+        return ret;
+    }
+
     /**
      * Populate the given canvas for the edited table in the given view.
      */
@@ -197,7 +214,7 @@ public class ApricotCanvasHandler {
             if (t.getUserData() instanceof TabInfoObject) {
                 TabInfoObject o = (TabInfoObject) t.getUserData();
                 if (views.contains(o.getView())) {
-                    drawEntityOnCanvas(table, o.getCanvas(), o.getView(), false);
+                    drawEntityOnCanvas(table, o, false);
                     CanvasAllocationMap map = tabViewHandler.readCanvasAllocationMap(o.getView(), table);
                     runAllocationAfterDelay(o.getCanvas(), map);
                 }
@@ -206,11 +223,46 @@ public class ApricotCanvasHandler {
     }
 
     private void addEntityOnViewPort(ApricotTable table) {
-        TabInfoObject c = getGeneralViewTabInfo();
-        drawEntityOnCanvas(table, c.getCanvas(), c.getView(), true);
+        TabInfoObject tabInfo = getGeneralViewTabInfo();
+        drawEntityOnCanvas(table, tabInfo, true);
         if (!isCurrentViewGeneral()) {
-            c = getCurrentViewTabInfo();
-            drawEntityOnCanvas(table, c.getCanvas(), c.getView(), true);
+            tabInfo = getCurrentViewTabInfo();
+            drawEntityOnCanvas(table, tabInfo, true);
+        }
+    }
+
+    /**
+     * Center the Entity in the visible part of the screen.
+     */
+    private void centerEntityOnView(TabInfoObject tabInfo, String tableName) {
+        ApricotCanvas canvas = tabInfo.getCanvas();
+        ApricotEntity entity = canvas.findEntityByName(tableName);
+        if (entity != null) {
+            ApricotEntityShape shape = entity.getEntityShape();
+            if (shape != null) {
+                double canvasWidth = ((Pane) canvas).getWidth();
+                double canvasHeight = ((Pane) canvas).getHeight();
+                ScrollPane scroll = tabInfo.getScroll();
+                double visibleWidth = scroll.getWidth();
+                double visibleHeight = scroll.getHeight();
+                double horizontalBias = scroll.getHvalue();
+                double verticalBias = scroll.getVvalue();
+
+                double layoutX = 0;
+                if (canvasWidth > visibleWidth) {
+                    layoutX = (canvasWidth - visibleWidth) * horizontalBias + visibleWidth / 2;
+                } else {
+                    layoutX = visibleWidth / 2;
+                }
+                double layoutY = 0;
+                if (canvasHeight > visibleHeight) {
+                    layoutY = (canvasHeight - visibleHeight) * verticalBias + visibleHeight / 2;
+                } else {
+                    layoutY = visibleHeight / 2;
+                }
+                shape.setLayoutX(layoutX);
+                shape.setLayoutY(layoutY);
+            }
         }
     }
 
@@ -253,11 +305,28 @@ public class ApricotCanvasHandler {
     /**
      * Update (or add from scratch) the given entity on the canvas.
      */
-    private void drawEntityOnCanvas(ApricotTable table, ApricotCanvas canvas, ApricotView view, boolean newEntity) {
+    private void drawEntityOnCanvas(ApricotTable table, TabInfoObject tabInfo, boolean newEntity) {
         if (!newEntity) {
-            removeEntityFromCanvas(table, canvas);
+            removeEntityFromCanvas(table, tabInfo.getCanvas());
         }
-        populateCanvas(canvas, table, view);
+        populateCanvas(tabInfo.getCanvas(), table, tabInfo.getView());
+
+        if (newEntity) {
+            centerEntityOnView(tabInfo, table.getName());
+            tabViewHandler.saveCanvasAllocationMap(tabInfo);
+        }
+
+        makeEntitySelected(table.getName(), tabInfo, true);
+    }
+
+    private void makeEntitySelected(String tableName, TabInfoObject tabInfo, boolean deselectOthers) {
+        ApricotEntity entity = tabInfo.getCanvas().findEntityByName(tableName);
+        if (entity != null) {
+            if (deselectOthers) {
+                tabInfo.getCanvas().changeAllElementsStatus(ElementStatus.DEFAULT);
+            }
+            entity.setElementStatus(ElementStatus.SELECTED);
+        }
     }
 
     private za.co.apricotdb.viewport.relationship.ApricotRelationship convertRelationship(ApricotRelationship r,
