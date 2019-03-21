@@ -6,11 +6,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import za.co.apricotdb.persistence.data.ConstraintManager;
+import za.co.apricotdb.persistence.data.RelationshipManager;
 import za.co.apricotdb.persistence.entity.ApricotColumnConstraint;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
+import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ConstraintType;
 import za.co.apricotdb.ui.handler.ApricotEntityHandler;
+import za.co.apricotdb.ui.handler.ApricotRelationshipHandler;
 
 /**
  * This class/component handles the primary key (the new or existing one) of the
@@ -24,6 +28,15 @@ public class PrimaryKeySerializer {
     
     @Autowired
     ApricotEntityHandler entityHandler;
+    
+    @Autowired
+    RelationshipManager relationshipManager;
+    
+    @Autowired
+    ApricotRelationshipHandler relationshipHandler;
+    
+    @Autowired
+    ConstraintManager constraintManager;
 
     public void serializePrimaryKey(EditEntityModel model) {
         ApricotConstraint primaryKey = entityHandler.getPrimaryKey(model.getTable());
@@ -32,9 +45,11 @@ public class PrimaryKeySerializer {
             ApricotTable table = model.getTable();
             primaryKey = new ApricotConstraint("PK_" + table.getName(), ConstraintType.PRIMARY_KEY, table);
             table.getConstraints().add(primaryKey);
-        }
-
-        if (primaryKey != null) {
+        } else if (getPrimaryKeyColumns(model).size() == 0 && primaryKey != null) {
+            //  the existing PRIMARY_KEY needs to be deleted
+            deletePrimaryKey(primaryKey);
+        } else if (getPrimaryKeyColumns(model).size() > 0 && primaryKey != null) {
+            //  save existing PRIMARY_KEY
             serializePrimaryKeyColumns(primaryKey, model);
         }
     }
@@ -61,5 +76,13 @@ public class PrimaryKeySerializer {
 
             ordinalPosition++;
         }
+    }
+    
+    private void deletePrimaryKey(ApricotConstraint primaryKey) {
+        List<ApricotRelationship> rels = relationshipManager.findRelationshipsByParentConstraint(primaryKey);
+        for (ApricotRelationship r : rels) {
+            relationshipHandler.deleteRelationship(r);
+        }
+        constraintManager.deleteConstraint(primaryKey);
     }
 }

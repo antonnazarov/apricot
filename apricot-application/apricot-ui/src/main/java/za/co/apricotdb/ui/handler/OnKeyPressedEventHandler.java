@@ -1,5 +1,6 @@
 package za.co.apricotdb.ui.handler;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javafx.event.EventHandler;
@@ -14,8 +15,17 @@ import javafx.scene.input.KeyEvent;
 @Component
 public class OnKeyPressedEventHandler implements EventHandler<KeyEvent> {
 
+    @Autowired
+    DeleteSelectedHandler deleteSelectedHandler;
+
     @Override
     public void handle(KeyEvent event) {
-        System.out.println("----> key pressed: " + event.getCode());
+        switch (event.getCode()) {
+        case DELETE:
+            deleteSelectedHandler.deleteSelected();
+            break;
+        default:
+            break;
+        }
     }
 }

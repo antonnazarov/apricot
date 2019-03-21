@@ -158,8 +158,8 @@ public class ApricotRelationshipHandler {
      */
     public void deleteRelationship(ApricotRelationship relationship) {
         ApricotConstraint childConstraint = relationship.getChild();
-        constraintManager.deleteConstraint(childConstraint);
         relationshipManager.deleteRelationship(relationship);
+        constraintManager.deleteConstraint(childConstraint);
     }
 
     private void refreshTables(EditRelationshipModel model) {

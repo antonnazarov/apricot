@@ -19,6 +19,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -30,6 +32,7 @@ import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.ui.EditSnapshotController;
+import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.model.EditSnapshotModelBuilder;
 import za.co.apricotdb.ui.model.NewSnapshotModelBuilder;
 import za.co.apricotdb.ui.model.SnapshotFormModel;
@@ -55,6 +58,15 @@ public class ApricotSnapshotHandler {
 
     @Autowired
     AlertMessageDecorator alertDecorator;
+
+    @Autowired
+    ParentWindow parentWindow;
+
+    @Autowired
+    TreeViewHandler treeViewHandler;
+
+    @Autowired
+    ApricotCanvasHandler canvasHandler;
 
     public void createDefaultSnapshot(ApricotProject project) {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
@@ -144,6 +156,23 @@ public class ApricotSnapshotHandler {
         }
 
         return false;
+    }
+
+    /**
+     * Re-draw all the views for the current (default) snapshot together with the
+     * tree view representation of the data
+     */
+    public void syncronizeSnapshot() {
+        TabPane tp = parentWindow.getProjectTabPane();
+        for (Tab tab : tp.getTabs()) {
+            TabInfoObject tabInfo = TabInfoObject.getTabInfo(tab);
+            if (tabInfo != null) {
+                ApricotProject project = projectManager.findCurrentProject();
+                ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
+                treeViewHandler.populate(project, snapshot);
+                canvasHandler.populateCanvas(snapshot, tabInfo.getView(), tabInfo.getCanvas());
+            }
+        }
     }
 
     private Alert getAlert(AlertType alertType, String text) {

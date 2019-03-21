@@ -3,6 +3,7 @@ package za.co.apricotdb.ui.handler;
 import java.io.Serializable;
 
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tab;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
@@ -52,5 +53,13 @@ public class TabInfoObject implements Serializable {
 
     public void setScroll(ScrollPane scroll) {
         this.scroll = scroll;
+    }
+
+    public static TabInfoObject getTabInfo(Tab tab) {
+        if (tab.getUserData() != null && tab.getUserData() instanceof TabInfoObject) {
+            return (TabInfoObject) tab.getUserData();
+        }
+
+        return null;
     }
 }

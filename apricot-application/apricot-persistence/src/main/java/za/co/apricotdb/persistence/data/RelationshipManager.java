@@ -53,17 +53,10 @@ public class RelationshipManager {
         relationshipRepository.delete(relationship);
     }
 
-    public ApricotRelationship findRelationshipByParentConstraint(ApricotConstraint constraint) {
-        ApricotRelationship ret = null;
-
+    public List<ApricotRelationship> findRelationshipsByParentConstraint(ApricotConstraint constraint) {
         TypedQuery<ApricotRelationship> query = em
                 .createNamedQuery("ApricotRelationship.findRelationshipByParentConstraint", ApricotRelationship.class);
         query.setParameter("parentConstraint", constraint);
-        List<ApricotRelationship> result = query.getResultList();
-        if (result != null && result.size() > 0) {
-            ret = result.get(0);
-        }
-
-        return ret;
+        return query.getResultList();
     }
 }

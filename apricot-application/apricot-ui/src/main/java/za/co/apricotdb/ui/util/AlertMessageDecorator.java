@@ -14,7 +14,7 @@ import javafx.scene.control.ButtonBar.ButtonData;
 @Component
 public class AlertMessageDecorator {
     
-    public final static int STANDARD_MESSAGE_LENGTH = 60;
+    public final static int STANDARD_MESSAGE_LENGTH = 75;
     
     /**
      * Apply the custom style sheet to the Alert given.

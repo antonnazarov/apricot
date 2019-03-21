@@ -51,7 +51,8 @@ public class ApricotMainApp extends Application {
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("favicon-32x32.png")));
         primaryStage.show();
         
-        primaryStage.getScene().setOnKeyPressed(new OnKeyPressedEventHandler());
+        //  handling key pressed in the main scene
+        primaryStage.getScene().setOnKeyPressed(context.getBean(OnKeyPressedEventHandler.class));
     }
 
     @Override

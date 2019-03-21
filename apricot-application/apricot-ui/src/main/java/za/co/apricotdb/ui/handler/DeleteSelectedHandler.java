@@ -2,6 +2,8 @@ package za.co.apricotdb.ui.handler;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -45,6 +47,10 @@ public class DeleteSelectedHandler {
     @Autowired
     RelationshipManager relationshipManager;
 
+    @Autowired
+    ApricotSnapshotHandler snapshotHandler;
+
+    @Transactional
     public void deleteSelected() {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
         List<ApricotEntity> entities = canvas.getSelectedEntities();
@@ -62,11 +68,14 @@ public class DeleteSelectedHandler {
                         ApricotTable parent = tableManager.getTableByName(r.getParent().getTableName(),
                                 snapshotManager.getDefaultSnapshot());
                         ApricotConstraint pk = entityHandler.getPrimaryKey(parent);
-                        za.co.apricotdb.persistence.entity.ApricotRelationship rel = relationshipManager
-                                .findRelationshipByParentConstraint(pk);
-                        relationshipHandler.deleteRelationship(rel);
+                        List<za.co.apricotdb.persistence.entity.ApricotRelationship> rls = relationshipManager
+                                .findRelationshipsByParentConstraint(pk);
+                        for (za.co.apricotdb.persistence.entity.ApricotRelationship rel : rls) {
+                            relationshipHandler.deleteRelationship(rel);
+                        }
                     }
                 }
+                snapshotHandler.syncronizeSnapshot();
             }
         } else {
             StringBuilder sb = new StringBuilder();
@@ -79,6 +88,7 @@ public class DeleteSelectedHandler {
                     entityHandler.deleteEntity(e.getTableName());
                 }
             }
+            snapshotHandler.syncronizeSnapshot();
         }
     }
 }

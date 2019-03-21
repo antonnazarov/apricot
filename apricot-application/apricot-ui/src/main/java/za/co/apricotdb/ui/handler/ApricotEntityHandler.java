@@ -16,6 +16,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import za.co.apricotdb.persistence.data.ConstraintManager;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.RelationshipManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
@@ -74,6 +75,9 @@ public class ApricotEntityHandler {
     @Autowired
     ApricotRelationshipHandler relationshipHandler;
 
+    @Autowired
+    ConstraintManager constraintManager;
+
     @Transactional
     public void openEntityEditorForm(boolean newEntity, String tableName) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-entity-editor.fxml"));
@@ -126,10 +130,17 @@ public class ApricotEntityHandler {
             for (ApricotRelationship r : relationships) {
                 relationshipHandler.deleteRelationship(r);
             }
+
+            for (ApricotConstraint constr : table.getConstraints()) {
+                if (constr.getType() != ConstraintType.FOREIGN_KEY) {
+                    constraintManager.deleteConstraint(constr);
+                }
+            }
+
             tableManager.deleteTable(table);
         }
     }
-    
+
     public ApricotConstraint getPrimaryKey(ApricotTable table) {
         for (ApricotConstraint c : table.getConstraints()) {
             if (c.getType() == ConstraintType.PRIMARY_KEY) {
@@ -139,5 +150,4 @@ public class ApricotEntityHandler {
 
         return null;
     }
-
 }
