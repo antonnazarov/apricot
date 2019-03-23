@@ -129,7 +129,7 @@
                                     <Insets left="5.0" />
                                  </GridPane.margin>
                               </ComboBox>
-                              <CheckBox fx:id="pk_1" mnemonicParsing="false" prefHeight="17.0" prefWidth="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                              <CheckBox id="childForeignKey_1" fx:id="pk_1" mnemonicParsing="false" onAction="#primaryKeyFlagChanged" prefHeight="17.0" prefWidth="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                  <GridPane.margin>
                                     <Insets left="10.0" />
                                  </GridPane.margin>
@@ -164,22 +164,22 @@
                                     <Insets left="5.0" />
                                  </GridPane.margin>
                               </ComboBox>
-                              <CheckBox fx:id="pk_2" layoutX="280.0" layoutY="45.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                              <CheckBox id="childForeignKey_2" fx:id="pk_2" layoutX="280.0" layoutY="45.0" mnemonicParsing="false" onAction="#primaryKeyFlagChanged" prefHeight="17.0" prefWidth="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                  <GridPane.margin>
                                     <Insets left="10.0" />
                                  </GridPane.margin>
                               </CheckBox>
-                              <CheckBox fx:id="pk_3" layoutX="280.0" layoutY="74.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="10.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                              <CheckBox id="childForeignKey_3" fx:id="pk_3" layoutX="280.0" layoutY="74.0" mnemonicParsing="false" onAction="#primaryKeyFlagChanged" prefHeight="17.0" prefWidth="10.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                  <GridPane.margin>
                                     <Insets left="10.0" />
                                  </GridPane.margin>
                               </CheckBox>
-                              <CheckBox fx:id="pk_4" layoutX="280.0" layoutY="103.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="10.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                              <CheckBox id="childForeignKey_4" fx:id="pk_4" layoutX="280.0" layoutY="103.0" mnemonicParsing="false" onAction="#primaryKeyFlagChanged" prefHeight="17.0" prefWidth="10.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                                  <GridPane.margin>
                                     <Insets left="10.0" />
                                  </GridPane.margin>
                               </CheckBox>
-                              <CheckBox fx:id="pk_5" layoutX="280.0" layoutY="132.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="10.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                              <CheckBox id="childForeignKey_5" fx:id="pk_5" layoutX="280.0" layoutY="132.0" mnemonicParsing="false" onAction="#primaryKeyFlagChanged" prefHeight="17.0" prefWidth="10.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
                                  <GridPane.margin>
                                     <Insets left="10.0" />
                                  </GridPane.margin>

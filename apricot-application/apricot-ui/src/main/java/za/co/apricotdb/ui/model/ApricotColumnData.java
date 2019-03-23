@@ -150,8 +150,8 @@ public class ApricotColumnData implements Serializable {
         StringBuilder sb = new StringBuilder();
 
         sb.append("ApricotColumnData: ").append("Id=[").append(id).append("], name=[").append(name.getValue())
-                .append("], primaryKey=[").append(primaryKey.getValue()).append("], isNullable")
-                .append(nullable.getValue()).append("]");
+                .append("], primaryKey=[").append(primaryKey.getValue())
+                .append("], isNullable=[").append(nullable.getValue()).append("]");
 
         return sb.toString();
     }

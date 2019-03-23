@@ -34,7 +34,7 @@ public class ApricotConstraintData implements Serializable {
     public SimpleStringProperty getConstraintType() {
         return constraintType;
     }
-    
+
     public String getConstraintTypeAsString() {
         return constraintType.getValue();
     }
@@ -46,7 +46,7 @@ public class ApricotConstraintData implements Serializable {
     public SimpleStringProperty getConstraintName() {
         return constraintName;
     }
-    
+
     public String getConstraintNameAsString() {
         return constraintName.getValue();
     }
@@ -115,15 +115,43 @@ public class ApricotConstraintData implements Serializable {
     public void setEdited(boolean edited) {
         this.edited = edited;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("name=[").append(constraintName.getValue())
-            .append("], type=[").append(constraintType.getValue())
-            .append("], added=[").append(added)
-            .append("], edited=[").append(edited).append("]");
-        
+        sb.append("name=[").append(constraintName.getValue()).append("], type=[").append(constraintType.getValue())
+                .append("], added=[").append(added).append("], edited=[").append(edited).append("]");
+
         return sb.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((constraint == null) ? 0 : constraint.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        ApricotConstraintData other = (ApricotConstraintData) obj;
+        if (constraint == null) {
+            if (other.constraint != null) {
+                return false;
+            }
+        } else if (!constraint.equals(other.constraint)) {
+            return false;
+        }
+        return true;
     }
 }

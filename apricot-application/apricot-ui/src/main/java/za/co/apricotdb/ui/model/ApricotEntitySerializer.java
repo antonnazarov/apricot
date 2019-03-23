@@ -103,9 +103,10 @@ public class ApricotEntitySerializer {
     private void deleteColumns(EditEntityModel model) {
         List<ApricotColumn> deletedColumns = getDeletedColumns(model);
 
-        for(ApricotColumn c : deletedColumns) {
-            columnManager.deleteColumn(c);
-        }
+        //  TODO: check if this change from 23/03/2019 is not destructive
+        //for(ApricotColumn c : deletedColumns) {
+        //    columnManager.deleteColumn(c);
+        //}
         
         model.getTable().getColumns().removeAll(deletedColumns);
     }

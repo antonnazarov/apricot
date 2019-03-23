@@ -38,6 +38,10 @@ public class PrimaryKeySerializer {
     ConstraintManager constraintManager;
 
     public void serializePrimaryKey(EditEntityModel model) {
+        if (wasPrimaryKeyDeleted(model)) {
+            return;
+        }
+
         ApricotConstraint primaryKey = entityHandler.getPrimaryKey(model.getTable());
         if (getPrimaryKeyColumns(model).size() > 0 && primaryKey == null) {
             // a new PRIMARY_KEY needs to be created
@@ -89,5 +93,15 @@ public class PrimaryKeySerializer {
         }
 
         return null;
+    }
+
+    private boolean wasPrimaryKeyDeleted(EditEntityModel model) {
+        for (ApricotConstraintData acd : model.getDeletedConstraints()) {
+            if (acd.getConstraintTypeAsString().equals(ConstraintType.PRIMARY_KEY.name())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

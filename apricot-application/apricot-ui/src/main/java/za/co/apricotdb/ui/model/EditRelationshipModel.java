@@ -84,6 +84,13 @@ public class EditRelationshipModel implements Serializable {
         }
     }
     
+    public void setPrimaryKeyFlag(String key, boolean pkFlag) {
+        ParentChildKeyHolder keyHolder = keys.get(key);
+        if (keyHolder != null) {
+            keyHolder.setPrimaryKeyFlag(pkFlag);
+        }
+    }
+    
     public void initColumnAttributes(String key, boolean isPk, boolean isNotNull) {
         ParentChildKeyHolder keyHolder = keys.get(key);
         if (keyHolder != null) {
@@ -141,5 +148,18 @@ public class EditRelationshipModel implements Serializable {
         }
         
         return false;
+    }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append("EditRelationshipModel: ")
+            .append("relationshipName=[").append(relationshipName.getValue())
+            .append("], parentTable=[").append(parentTable.getName())
+            .append("], childTable=[").append(childTable.getName()).append("\n")
+            .append("], keys=[").append(keys);
+        
+        return sb.toString();
     }
 }

@@ -15,7 +15,7 @@ import za.co.apricotdb.persistence.entity.ConstraintType;
 import za.co.apricotdb.ui.handler.ApricotConstraintHandler;
 
 /**
- * This is a serialize of constraints after the entity added/edited.
+ * This is a serialise of constraints after the entity added/edited.
  * 
  * @author Anton Nazarov
  * @since 03/03/2019

@@ -18,7 +18,7 @@ import za.co.apricotdb.persistence.entity.ConstraintType;
 import za.co.apricotdb.ui.handler.ApricotEntityHandler;
 
 /**
- * This component performs the serialization of the new Relationship.
+ * This component performs the serialisation of the new Relationship.
  * 
  * @author Anton Nazarov
  * @since 17/03/2019
@@ -46,10 +46,16 @@ public class ApricotRelationshipSerializer {
             ApricotColumnConstraint acc = new ApricotColumnConstraint(fk, c);
             fk.getColumns().add(acc);
         }
-        constraintManager.saveConstraint(fk);
+        if (model.getChildTable().getConstraintByName(fk.getName()) == null) {
+            model.getChildTable().getConstraints().add(fk);
+        }
+        constraintManager.saveConstraint(fk);        
 
         ApricotConstraint childPk = buildPrimaryKey(columns, model);
         if (childPk != null) {
+            if (entityHandler.getPrimaryKey(model.getChildTable()) == null) {
+                model.getChildTable().getConstraints().add(childPk);
+            }
             constraintManager.saveConstraint(childPk);
         }
 
@@ -113,6 +119,8 @@ public class ApricotRelationshipSerializer {
                     pk.getColumns().add(cc);
                 }
             }
+
+            return pk;
         }
 
         return null;

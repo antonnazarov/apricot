@@ -38,7 +38,7 @@ public class EditRelationshipModelBuilder {
                 return null;
             }
         }
-        
+
         return model;
     }
 
@@ -51,9 +51,7 @@ public class EditRelationshipModelBuilder {
             ApricotColumn column = acc.getColumn();
             model.setPimaryKeyField(key, column.getName());
             List<String> fields = getChildColumnsForTypeAsString(model.getChildTable(), column.getDataType());
-            if (fields.size() > 0) {
-                model.populateChildKeyDropDown(key, fields);
-            }
+            model.populateChildKeyDropDown(key, fields);
 
             cnt++;
         }

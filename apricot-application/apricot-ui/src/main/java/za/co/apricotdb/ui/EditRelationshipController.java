@@ -144,6 +144,12 @@ public class EditRelationshipController {
         relationshipHandler.handleForeignKeyChanged(model, source.getId(), source.getValue());
     }
 
+    @FXML
+    public void primaryKeyFlagChanged(ActionEvent event) {
+        CheckBox source = (CheckBox) event.getSource();
+        model.setPrimaryKeyFlag(source.getId(), source.isSelected());
+    }
+
     private Stage getStage() {
         return (Stage) mainPane.getScene().getWindow();
     }

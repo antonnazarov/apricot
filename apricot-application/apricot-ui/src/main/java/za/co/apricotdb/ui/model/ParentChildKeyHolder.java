@@ -34,8 +34,8 @@ public class ParentChildKeyHolder {
         primaryKeyField.setText(primaryKeyFieldName);
     }
 
-    public void populateForeignKey(List<String> tables) {
-        childForeignKey.getItems().addAll(tables);
+    public void populateForeignKey(List<String> fields) {
+        childForeignKey.getItems().addAll(fields);
         voidSlot = false;
     }
 
@@ -97,8 +97,30 @@ public class ParentChildKeyHolder {
     public boolean isNotNull() {
         return notNull.isSelected();
     }
-    
+
     public String getPrimaryKeyField() {
         return primaryKeyField.getText();
+    }
+    
+    public void setPrimaryKeyFlag(boolean pkFlag) {
+        if (pkFlag) {
+            notNull.setSelected(true);
+            notNull.setDisable(true);
+        } else {
+            notNull.setSelected(false);
+            notNull.setDisable(false);
+        }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("ParentChildKeyHolder: primaryKeyField=[").append(primaryKeyField.getText())
+                .append("], childForeignKey=[").append(childForeignKey.getValue()).append("], pk=[")
+                .append(pk.isSelected()).append("], notNull=[").append(notNull.isSelected()).append("], voidSlot=[")
+                .append(voidSlot).append("]\n");
+
+        return sb.toString();
     }
 }
