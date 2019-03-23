@@ -48,6 +48,10 @@ public class RelationshipManager {
     public void saveRelationship(ApricotRelationship relationship) {
         relationshipRepository.save(relationship);
     }
+    
+    public ApricotRelationship findRelationshipById(long id) {
+        return relationshipRepository.findOne(id);
+    }
 
     public void deleteRelationship(ApricotRelationship relationship) {
         relationshipRepository.delete(relationship);
@@ -55,8 +59,15 @@ public class RelationshipManager {
 
     public List<ApricotRelationship> findRelationshipsByParentConstraint(ApricotConstraint constraint) {
         TypedQuery<ApricotRelationship> query = em
-                .createNamedQuery("ApricotRelationship.findRelationshipByParentConstraint", ApricotRelationship.class);
+                .createNamedQuery("ApricotRelationship.findRelationshipsByParentConstraint", ApricotRelationship.class);
         query.setParameter("parentConstraint", constraint);
+        return query.getResultList();
+    }
+    
+    public List<ApricotRelationship> findRelationshipsByConstraint(ApricotConstraint constraint) {
+        TypedQuery<ApricotRelationship> query = em
+                .createNamedQuery("ApricotRelationship.findRelationshipsByConstraint", ApricotRelationship.class);
+        query.setParameter("constraint", constraint);
         return query.getResultList();
     }
 }

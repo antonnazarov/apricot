@@ -22,6 +22,7 @@ public class ApricotRelationshipImpl implements ApricotRelationship {
     private ApricotEntity child = null;
     private String primaryKeyName = null;
     private String foreignKeyName = null;
+    private long relationshipId;
     private RelationshipType type = null;
     private ApricotRelationshipShape relationshipShape = null;
     private RelationshipTopology topology = null;
@@ -29,11 +30,13 @@ public class ApricotRelationshipImpl implements ApricotRelationship {
     private ElementStatus status = null;
 
     public ApricotRelationshipImpl(ApricotEntity parent, ApricotEntity child, String primaryKeyName,
-            String foreignKeyName, RelationshipType type, RelationshipTopology topology, ApricotCanvas canvas) {
+            String foreignKeyName, long relationshipId, RelationshipType type, RelationshipTopology topology,
+            ApricotCanvas canvas) {
         this.parent = parent;
         this.child = child;
         this.primaryKeyName = primaryKeyName;
         this.foreignKeyName = foreignKeyName;
+        this.relationshipId = relationshipId;
         this.type = type;
         this.canvas = canvas;
         this.topology = topology;
@@ -72,7 +75,7 @@ public class ApricotRelationshipImpl implements ApricotRelationship {
             relationshipShape = shapeBulder.buildRelationshipShape(this);
             if (relationshipShape != null) {
                 canvas.getShapes().add(relationshipShape);
-            }            
+            }
         }
 
         setShapeStyle();
@@ -128,14 +131,20 @@ public class ApricotRelationshipImpl implements ApricotRelationship {
     }
 
     @Override
+    public long getRelationshipId() {
+        return relationshipId;
+    }
+
+    @Override
     public RelationshipType getRelationshipType() {
         return type;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("ApricotRelationship: ");
-        sb.append(parent.getTableName()).append(" (").append(primaryKeyName).append("), ").append(child.getTableName()).append(" (").append(foreignKeyName).append(")");
+        sb.append(parent.getTableName()).append(" (").append(primaryKeyName).append("), ").append(child.getTableName())
+                .append(" (").append(foreignKeyName).append(")");
         return sb.toString();
     }
 
@@ -151,7 +160,7 @@ public class ApricotRelationshipImpl implements ApricotRelationship {
         sb.append(getChild().getTableName()).append("|");
         sb.append(getPrimaryKeyName()).append("|");
         sb.append(getForeignKeyName()).append("|");
-        
+
         return sb.toString();
     }
 }

@@ -10,5 +10,5 @@ package za.co.apricotdb.viewport.relationship;
 public interface RelationshipBuilder {
 
     ApricotRelationship buildRelationship(String parentEntityName, String childEntityName, 
-            String primaryKeyName, String foreignKeyName, RelationshipType type);
+            String primaryKeyName, String foreignKeyName, long relationshipId, RelationshipType type);
 }

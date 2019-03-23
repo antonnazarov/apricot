@@ -19,4 +19,6 @@ public interface ApricotRelationship extends ApricotElement {
     RelationshipShapeType getRelationshipShapeType();
     
     String getRelationshipName();
+    
+    long getRelationshipId();
 }

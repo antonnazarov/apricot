@@ -133,7 +133,7 @@ public class ApricotRelationshipValidator {
             if (column != null) {
                 if (isColumnForeignKey(model.getChildTable(), column)) {
                     Alert alert = alertDecorator.getErrorAlert("New Relationship",
-                            "The field + " + columnName + " is already included in the foreign key");
+                            "The field \"" + columnName + "\" is already included in the foreign key");
                     alert.showAndWait();
                     return false;
                 }

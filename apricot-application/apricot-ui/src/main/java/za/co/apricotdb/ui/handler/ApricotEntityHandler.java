@@ -104,6 +104,7 @@ public class ApricotEntityHandler {
         dialog.show();
     }
 
+    @Transactional    
     public void saveEntity(EditEntityModel model, String entityName) {
         model.setEntityName(entityName);
         entitySerializer.serialize(model);

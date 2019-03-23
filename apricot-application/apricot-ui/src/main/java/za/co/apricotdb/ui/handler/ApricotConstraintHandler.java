@@ -18,10 +18,13 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import za.co.apricotdb.persistence.data.RelationshipManager;
 import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.persistence.entity.ApricotColumnConstraint;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
+import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotTable;
+import za.co.apricotdb.persistence.entity.ConstraintType;
 import za.co.apricotdb.ui.EditConstraintController;
 import za.co.apricotdb.ui.model.ApricotConstraintData;
 import za.co.apricotdb.ui.model.EditConstraintModel;
@@ -36,6 +39,12 @@ public class ApricotConstraintHandler {
 
     @Autowired
     EditConstraintModelBuilder modelBuilder;
+
+    @Autowired
+    ApricotRelationshipHandler relationshipHandler;
+
+    @Autowired
+    RelationshipManager relationshipManager;
 
     public List<ApricotConstraint> getConstraintsForColumn(ApricotColumn column) {
         List<ApricotConstraint> ret = new ArrayList<>();
@@ -96,5 +105,25 @@ public class ApricotConstraintHandler {
         controller.init(model, constraintsTable, editEntityModel);
 
         dialog.show();
+    }
+
+    /**
+     * Delete the constraint as well as the related relationships.
+     */
+    public void deleteRelatedRelationships(ApricotConstraint constraint) {
+        List<ApricotRelationship> relationships = relationshipManager.findRelationshipsByConstraint(constraint);
+        if (relationships != null && relationships.size() > 0) {
+            if (constraint.getType() == ConstraintType.PRIMARY_KEY) {
+                deleteRelationships(relationships);
+            } else if (constraint.getType() == ConstraintType.FOREIGN_KEY) {
+                relationshipManager.deleteRelationship(relationships.get(0));
+            }
+        }
+    }
+
+    private void deleteRelationships(List<ApricotRelationship> relationships) {
+        for (ApricotRelationship r : relationships) {
+            relationshipHandler.deleteRelationship(r);
+        }
     }
 }

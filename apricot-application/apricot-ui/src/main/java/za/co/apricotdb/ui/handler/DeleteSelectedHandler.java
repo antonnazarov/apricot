@@ -10,8 +10,6 @@ import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.RelationshipManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.TableManager;
-import za.co.apricotdb.persistence.entity.ApricotConstraint;
-import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
@@ -65,14 +63,9 @@ public class DeleteSelectedHandler {
                 }
                 if (alert.requestYesNoOption("Delete Relationship(s)", sb.toString())) {
                     for (ApricotRelationship r : relationships) {
-                        ApricotTable parent = tableManager.getTableByName(r.getParent().getTableName(),
-                                snapshotManager.getDefaultSnapshot());
-                        ApricotConstraint pk = entityHandler.getPrimaryKey(parent);
-                        List<za.co.apricotdb.persistence.entity.ApricotRelationship> rls = relationshipManager
-                                .findRelationshipsByParentConstraint(pk);
-                        for (za.co.apricotdb.persistence.entity.ApricotRelationship rel : rls) {
-                            relationshipHandler.deleteRelationship(rel);
-                        }
+                        za.co.apricotdb.persistence.entity.ApricotRelationship rel = relationshipManager
+                                .findRelationshipById(r.getRelationshipId());
+                        relationshipHandler.deleteRelationship(rel);
                     }
                 }
                 snapshotHandler.syncronizeSnapshot();

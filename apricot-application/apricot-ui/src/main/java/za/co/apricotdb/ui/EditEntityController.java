@@ -71,7 +71,7 @@ public class EditEntityController {
     ApricotConstraintSerializer constraintSerializer;
 
     @Autowired
-    ApricotEntityHandler enttityHandler;
+    ApricotEntityHandler entityHandler;
 
     @FXML
     Pane mainPane;
@@ -363,7 +363,13 @@ public class EditEntityController {
 
     @FXML
     public void deleteConstraint(ActionEvent event) {
-
+        if (model.getConstraints().size() == 0) {
+            return;
+        }
+        ApricotConstraintData cd = constraintsTable.getSelectionModel().getSelectedItem();
+        model.getDeletedConstraints().add(cd);
+        model.getConstraints().remove(cd);
+        constraintsTable.refresh();
     }
 
     @FXML
@@ -373,7 +379,7 @@ public class EditEntityController {
 
     @FXML
     public void save(ActionEvent event) {
-        enttityHandler.saveEntity(model, entityName.getText());
+        entityHandler.saveEntity(model, entityName.getText());
         getStage().close();
     }
 

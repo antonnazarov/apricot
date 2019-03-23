@@ -12,6 +12,7 @@ import za.co.apricotdb.persistence.data.ConstraintManager;
 import za.co.apricotdb.persistence.entity.ApricotColumnConstraint;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ConstraintType;
+import za.co.apricotdb.ui.handler.ApricotConstraintHandler;
 
 /**
  * This is a serialize of constraints after the entity added/edited.
@@ -27,13 +28,16 @@ public class ApricotConstraintSerializer {
 
     @Autowired
     PrimaryKeySerializer primaryKeySerializer;
+    
+    @Autowired
+    ApricotConstraintHandler constraintHandler;
 
     public void serialize(EditEntityModel model) {
+        primaryKeySerializer.serializePrimaryKey(model);
         if (!model.isNewEntity()) {
             deleteRemovedConstraints(model);
         }
         updateConstraints(model);
-        primaryKeySerializer.serializePrimaryKey(model);
     }
 
     private void updateConstraints(EditEntityModel model) {
@@ -67,6 +71,7 @@ public class ApricotConstraintSerializer {
             for (ApricotColumnConstraint acc : constraint.getColumns()) {
                 constraintManager.deleteConstraintColumn(acc);
             }
+            constraintHandler.deleteRelatedRelationships(constraint);
             model.getTable().getConstraints().remove(constraint);
         }
     }

@@ -340,7 +340,7 @@ public class ApricotCanvasHandler {
         String parentColumn = r.getParent().getColumns().get(0).getColumn().getName();
         String childColumn = r.getChild().getColumns().get(0).getColumn().getName();
 
-        return rBuilder.buildRelationship(parentTable, childTable, parentColumn, childColumn,
+        return rBuilder.buildRelationship(parentTable, childTable, parentColumn, childColumn, r.getId(),
                 getRelationshipType(childColumn, fieldDetails.get(childTable)));
     }
 
