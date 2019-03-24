@@ -27,6 +27,7 @@ import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ConstraintType;
 import za.co.apricotdb.ui.EditEntityController;
 import za.co.apricotdb.ui.model.ApricotEntitySerializer;
+import za.co.apricotdb.ui.model.ApricotEntityValidator;
 import za.co.apricotdb.ui.model.EditEntityModel;
 import za.co.apricotdb.ui.model.EditEntityModelBuilder;
 
@@ -65,6 +66,9 @@ public class ApricotEntityHandler {
 
     @Autowired
     SnapshotManager snapshotManager;
+    
+    @Autowired
+    ApricotSnapshotHandler snapshotHandler;
 
     @Autowired
     TableManager tableManager;
@@ -77,6 +81,9 @@ public class ApricotEntityHandler {
 
     @Autowired
     ConstraintManager constraintManager;
+    
+    @Autowired
+    ApricotEntityValidator entityValidator;
 
     @Transactional
     public void openEntityEditorForm(boolean newEntity, String tableName) throws IOException {
@@ -105,8 +112,13 @@ public class ApricotEntityHandler {
     }
 
     @Transactional    
-    public void saveEntity(EditEntityModel model, String entityName) {
+    public boolean saveEntity(EditEntityModel model, String entityName, EditEntityController controller) {
         model.setEntityName(entityName);
+        
+        if (!entityValidator.validate(model, controller)) {
+            return false;
+        }
+            
         entitySerializer.serialize(model);
 
         // handle when the entity name was changed
@@ -118,6 +130,8 @@ public class ApricotEntityHandler {
         canvasHandler.updateEntity(model.getTable(), model.isNewEntity());
         treeViewHandler.populate(projectManager.findCurrentProject(), snapshotManager.getDefaultSnapshot());
         treeViewHandler.selectEntity(entityName);
+        
+        return true;
     }
 
     /**

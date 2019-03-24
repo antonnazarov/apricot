@@ -29,7 +29,7 @@
             </HBox>
             <TabPane fx:id="mainTabPane" prefHeight="417.0" prefWidth="823.0" tabClosingPolicy="UNAVAILABLE">
               <tabs>
-                <Tab text="Columns">
+                <Tab fx:id="columnsTab" text="Columns">
                   <content>
                     <AnchorPane fx:id="columnsAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="384.0" prefWidth="823.0">
                            <children>

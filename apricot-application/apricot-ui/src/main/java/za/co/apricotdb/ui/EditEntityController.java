@@ -20,6 +20,8 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
@@ -120,6 +122,12 @@ public class EditEntityController {
 
     @FXML
     Button deleteConstraintButton;
+    
+    @FXML
+    TabPane mainTabPane;
+    
+    @FXML
+    Tab columnsTab;
 
     private EditEntityModel model;
 
@@ -130,6 +138,11 @@ public class EditEntityController {
         initConstraintsTab();
 
         applyModel(model);
+    }
+    
+    public void selectColumn(int pos, String fieldName) {
+        mainTabPane.getSelectionModel().select(columnsTab);
+        focusRow(pos, fieldName);
     }
 
     private void initColumnsTab() {
@@ -237,8 +250,18 @@ public class EditEntityController {
     }
 
     private void focusRow(int pos) {
-        columnDefinitionTable.getSelectionModel().select(pos, columnName);
-        columnDefinitionTable.getFocusModel().focus(pos, columnName);
+        focusRow(pos, "columnName");
+    }
+    
+    private void focusRow(int pos, String fieldName) {
+        TableColumn<ApricotColumnData, String> column = null;
+        if (fieldName.equals("columnName")) {
+            column = columnName;
+        } else {
+            column = dataType;
+        }
+        columnDefinitionTable.getSelectionModel().select(pos, column);
+        columnDefinitionTable.getFocusModel().focus(pos, column);
         columnDefinitionTable.refresh();
     }
 
@@ -379,8 +402,9 @@ public class EditEntityController {
 
     @FXML
     public void save(ActionEvent event) {
-        entityHandler.saveEntity(model, entityName.getText());
-        getStage().close();
+        if (entityHandler.saveEntity(model, entityName.getText(), this)) {
+            getStage().close();
+        }
     }
 
     private Stage getStage() {
