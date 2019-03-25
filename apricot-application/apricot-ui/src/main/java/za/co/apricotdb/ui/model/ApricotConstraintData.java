@@ -127,10 +127,7 @@ public class ApricotConstraintData implements Serializable {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((constraint == null) ? 0 : constraint.hashCode());
-        return result;
+        return constraintName.getValue().hashCode();
     }
 
     @Override
@@ -145,11 +142,11 @@ public class ApricotConstraintData implements Serializable {
             return false;
         }
         ApricotConstraintData other = (ApricotConstraintData) obj;
-        if (constraint == null) {
-            if (other.constraint != null) {
+        if (constraintName == null) {
+            if (other.constraintName != null) {
                 return false;
             }
-        } else if (!constraint.equals(other.constraint)) {
+        } else if (!constraintName.getValue().equals(other.constraintName.getValue())) {
             return false;
         }
         return true;

@@ -1,5 +1,6 @@
 package za.co.apricotdb.ui;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javafx.beans.property.SimpleListProperty;
@@ -16,6 +17,7 @@ import javafx.util.StringConverter;
 import za.co.apricotdb.persistence.entity.ConstraintType;
 import za.co.apricotdb.ui.model.ApricotColumnData;
 import za.co.apricotdb.ui.model.ApricotConstraintData;
+import za.co.apricotdb.ui.model.ApricotConstraintValidator;
 import za.co.apricotdb.ui.model.EditConstraintModel;
 import za.co.apricotdb.ui.model.EditEntityModel;
 
@@ -27,6 +29,9 @@ import za.co.apricotdb.ui.model.EditEntityModel;
  */
 @Component
 public class EditConstraintController {
+
+    @Autowired
+    ApricotConstraintValidator constraintValidator;
 
     @FXML
     Pane mainPane;
@@ -54,7 +59,10 @@ public class EditConstraintController {
         this.editEntityModel = editEntityModel;
 
         constraintName.setText(model.getConstraintName().getValue());
+        model.getConstraintName().bind(constraintName.textProperty());
         constraintType.setValue(model.getConstraintType().getValue());
+        model.getConstraintType().bind(constraintType.valueProperty());
+        
         allColumnsList.itemsProperty().bind(new SimpleListProperty<ApricotColumnData>(model.getAllColumns()));
         selectedColumnsList.itemsProperty().bind(new SimpleListProperty<ApricotColumnData>(model.getSelectedColumns()));
 
@@ -110,23 +118,29 @@ public class EditConstraintController {
 
     @FXML
     public void save(ActionEvent event) {
+        if (!constraintValidator.validate(model, editEntityModel)) {
+            return;
+        }
+
         ApricotConstraintData constraintData = model.getConstraintData();
         if (model.isNewConstraint()) {
-            editEntityModel.getConstraints().add(constraintData);
             constraintData.setAdded(true);
         }
-        
         // I assume, that something was edited is the existing constraint was saved
         // in the editor form
         constraintData.setEdited(true);
-
         constraintData.getConstraintName().setValue(constraintName.getText());
         constraintData.getConstraintType().setValue(constraintType.getValue());
         constraintData.getColumns().clear();
         constraintData.getColumns().addAll(model.getSelectedColumns());
 
+        if (constraintData.isAdded() && !editEntityModel.getConstraints().contains(constraintData)) {
+            editEntityModel.getConstraints().add(constraintData);
+        }
         constraintsTable.refresh();
+        constraintsTable.getSelectionModel().select(constraintData);
         getStage().close();
+
     }
 
     private Stage getStage() {
