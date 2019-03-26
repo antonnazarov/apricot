@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -84,6 +85,9 @@ public class ApricotEntityHandler {
     
     @Autowired
     ApricotEntityValidator entityValidator;
+    
+    @Autowired
+    EditEntityKeyHandler keyHandler;
 
     @Transactional
     public void openEntityEditorForm(boolean newEntity, String tableName) throws IOException {
@@ -100,12 +104,18 @@ public class ApricotEntityHandler {
         }
         dialog.getIcons().add(new Image(getClass().getResourceAsStream("table-1-s1.jpg")));
 
-        Scene openProjectScene = new Scene(window);
-        dialog.setScene(openProjectScene);
+        Scene editEntityScene = new Scene(window);
+        editEntityScene.addEventFilter(KeyEvent.KEY_PRESSED, keyHandler);
+        dialog.setScene(editEntityScene);
 
         EditEntityController controller = loader.<EditEntityController>getController();
+        keyHandler.setEditEntityController(controller);
+        dialog.setOnCloseRequest(e -> {
+            controller.cancel(null);
+            e.consume();
+        });
 
-        EditEntityModel model = modelBuilder.buildModel(newEntity, tableName);
+        EditEntityModel model = modelBuilder.buildModel(newEntity, tableName, dialog);
         controller.init(model);
 
         dialog.show();

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.stage.Stage;
 import za.co.apricotdb.persistence.data.RelationshipManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.TableManager;
@@ -37,9 +38,9 @@ public class EditEntityModelBuilder {
 
     @Autowired
     RelationshipManager relationshipManager;
-
-    public EditEntityModel buildModel(boolean newEntity, String tableName) {
-        EditEntityModel model = new EditEntityModel(newEntity);
+    
+    public EditEntityModel buildModel(boolean newEntity, String tableName, Stage dialog) {
+        EditEntityModel model = new EditEntityModel(newEntity, dialog);
 
         if (!newEntity && tableName != null) {
             readData(tableName, model);

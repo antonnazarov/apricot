@@ -61,7 +61,7 @@ public class DeleteSelectedHandler {
                     sb.append(" * ").append(r.getParent().getTableName()).append("->")
                             .append(r.getChild().getTableName()).append("\n");
                 }
-                if (alert.requestYesNoOption("Delete Relationship(s)", sb.toString())) {
+                if (alert.requestYesNoOption("Delete Relationship(s)", sb.toString(), "Delete")) {
                     for (ApricotRelationship r : relationships) {
                         za.co.apricotdb.persistence.entity.ApricotRelationship rel = relationshipManager
                                 .findRelationshipById(r.getRelationshipId());
@@ -76,7 +76,7 @@ public class DeleteSelectedHandler {
             for (ApricotEntity e : entities) {
                 sb.append(" * ").append(e.getTableName()).append("\n");
             }
-            if (alert.requestYesNoOption("Delete Entity(s)", sb.toString())) {
+            if (alert.requestYesNoOption("Delete Entity(s)", sb.toString(), "Delete")) {
                 for (ApricotEntity e : entities) {
                     entityHandler.deleteEntity(e.getTableName());
                 }

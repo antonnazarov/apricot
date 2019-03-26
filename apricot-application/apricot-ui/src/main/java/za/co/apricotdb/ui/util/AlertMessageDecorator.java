@@ -35,8 +35,8 @@ public class AlertMessageDecorator {
         return alert;
     }
     
-    public boolean requestYesNoOption(String title, String text) {
-        ButtonType yes = new ButtonType("Delete", ButtonData.OK_DONE);
+    public boolean requestYesNoOption(String title, String text, String yesText) {
+        ButtonType yes = new ButtonType(yesText, ButtonData.OK_DONE);
         ButtonType no = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
         Alert alert = new Alert(AlertType.WARNING, null, yes, no);
         alert.setTitle(title);

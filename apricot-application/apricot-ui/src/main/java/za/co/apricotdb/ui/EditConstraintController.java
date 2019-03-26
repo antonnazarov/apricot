@@ -62,9 +62,19 @@ public class EditConstraintController {
         model.getConstraintName().bind(constraintName.textProperty());
         constraintType.setValue(model.getConstraintType().getValue());
         model.getConstraintType().bind(constraintType.valueProperty());
-        
+
         allColumnsList.itemsProperty().bind(new SimpleListProperty<ApricotColumnData>(model.getAllColumns()));
         selectedColumnsList.itemsProperty().bind(new SimpleListProperty<ApricotColumnData>(model.getSelectedColumns()));
+        allColumnsList.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) {
+                selectColumn(null);
+            }
+        });
+        selectedColumnsList.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) {
+                deselectColumn(null);
+            }
+        });
 
         setCellFactory(allColumnsList);
         setCellFactory(selectedColumnsList);
@@ -139,6 +149,7 @@ public class EditConstraintController {
         }
         constraintsTable.refresh();
         constraintsTable.getSelectionModel().select(constraintData);
+        editEntityModel.setEdited(true);
         getStage().close();
 
     }

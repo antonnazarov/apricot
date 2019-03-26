@@ -6,6 +6,7 @@ import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.stage.Stage;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 
 /**
@@ -24,12 +25,15 @@ public class EditEntityModel implements Serializable {
     private ObservableList<ApricotColumnData> columns = FXCollections.observableArrayList();
     private ObservableList<ApricotConstraintData> constraints = FXCollections.observableArrayList();
     private String entityOriginalName;
+    private boolean edited;
+    private Stage dialog;
     
     private List<ApricotColumnData> deletedColumns = new ArrayList<>();
     private List<ApricotConstraintData> deletedConstraints = new ArrayList<>();
 
-    public EditEntityModel(boolean newEntity) {
+    public EditEntityModel(boolean newEntity, Stage dialog) {
         this.newEntity = newEntity;
+        this.dialog = dialog;
     }
 
     public String getEntityName() {
@@ -98,6 +102,21 @@ public class EditEntityModel implements Serializable {
         this.entityOriginalName = entityOriginalName;
     }
     
+    public boolean isEdited() {
+        return edited;
+    }
+
+    public void setEdited(boolean edited) {
+        if (!newEntity) {
+            if (edited) {
+                dialog.setTitle("Edit Entity *");
+            } else {
+                dialog.setTitle("Edit Entity");
+            }
+        }
+        this.edited = edited;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

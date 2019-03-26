@@ -14,6 +14,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -31,6 +32,7 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -122,10 +124,10 @@ public class EditEntityController {
 
     @FXML
     Button deleteConstraintButton;
-    
+
     @FXML
     TabPane mainTabPane;
-    
+
     @FXML
     Tab columnsTab;
 
@@ -136,10 +138,13 @@ public class EditEntityController {
 
         initColumnsTab();
         initConstraintsTab();
-
         applyModel(model);
+
+        entityName.setOnAction(e -> {
+            model.setEdited(true);
+        });
     }
-    
+
     public void selectColumn(int pos, String fieldName) {
         mainTabPane.getSelectionModel().select(columnsTab);
         focusRow(pos, fieldName);
@@ -159,6 +164,7 @@ public class EditEntityController {
             TablePosition<ApricotColumnData, String> pos = e.getTablePosition();
             model.getColumns().get(pos.getRow()).getName().setValue(e.getNewValue());
             columnDefinitionTable.getSelectionModel().selectRightCell();
+            model.setEdited(true);
         });
 
         primaryKey.setCellValueFactory(e -> e.getValue().getPrimaryKey());
@@ -175,6 +181,7 @@ public class EditEntityController {
             TablePosition<ApricotColumnData, String> pos = e.getTablePosition();
             model.getColumns().get(pos.getRow()).getDataType().setValue(e.getNewValue());
             columnDefinitionTable.getSelectionModel().selectRightCell();
+            model.setEdited(true);
         });
 
         length.setCellValueFactory(e -> e.getValue().getValueLength());
@@ -183,6 +190,7 @@ public class EditEntityController {
             TablePosition<ApricotColumnData, String> pos = e.getTablePosition();
             model.getColumns().get(pos.getRow()).getValueLength().setValue(e.getNewValue());
             columnDefinitionTable.getSelectionModel().selectRightCell();
+            model.setEdited(true);
         });
 
         comment.setCellValueFactory(new PropertyValueFactory<ApricotColumnData, String>("comment"));
@@ -210,6 +218,9 @@ public class EditEntityController {
             } else {
                 editConstraintButton.setDisable(false);
                 deleteConstraintButton.setDisable(false);
+                if (e.getClickCount() == 2) {
+                    editConstraint(null);
+                }
             }
         });
     }
@@ -247,12 +258,13 @@ public class EditEntityController {
 
         model.getColumns().add(columnData);
         focusRow(model.getColumns().size() - 1);
+        model.setEdited(true);
     }
 
     private void focusRow(int pos) {
         focusRow(pos, "columnName");
     }
-    
+
     private void focusRow(int pos, String fieldName) {
         TableColumn<ApricotColumnData, String> column = null;
         if (fieldName.equals("columnName")) {
@@ -276,6 +288,7 @@ public class EditEntityController {
         }
         Collections.swap(model.getColumns(), row, row - 1);
         focusRow(row - 1);
+        model.setEdited(true);
     }
 
     @FXML
@@ -289,6 +302,7 @@ public class EditEntityController {
         }
         Collections.swap(model.getColumns(), row, row + 1);
         focusRow(row + 1);
+        model.setEdited(true);
     }
 
     @FXML
@@ -304,6 +318,7 @@ public class EditEntityController {
             columnDefinitionTable.refresh();
 
             removeRelatedConstraint(cd);
+            model.setEdited(true);
         }
     }
 
@@ -377,6 +392,10 @@ public class EditEntityController {
     @FXML
     public void editConstraint(ActionEvent event) {
         ApricotConstraintData cd = constraintsTable.getSelectionModel().getSelectedItem();
+        if (cd.getConstraintType().getValue().equals(ConstraintType.PRIMARY_KEY.name())
+                || cd.getConstraintType().getValue().equals(ConstraintType.FOREIGN_KEY.name())) {
+            return;
+        }
         try {
             constraintHandler.openConstraintEditorForm(false, cd, model, constraintsTable);
         } catch (IOException e) {
@@ -389,7 +408,12 @@ public class EditEntityController {
         if (model.getConstraints().size() == 0) {
             return;
         }
+
         ApricotConstraintData cd = constraintsTable.getSelectionModel().getSelectedItem();
+        if (cd.getConstraintType().getValue().equals(ConstraintType.PRIMARY_KEY.name())
+                || cd.getConstraintType().getValue().equals(ConstraintType.FOREIGN_KEY.name())) {
+            return;
+        }
         model.getDeletedConstraints().add(cd);
         model.getConstraints().remove(cd);
         constraintsTable.refresh();
@@ -397,7 +421,13 @@ public class EditEntityController {
 
     @FXML
     public void cancel(ActionEvent event) {
-        getStage().close();
+        if (model.isEdited() || model.isNewEntity()) {
+            if (alertDecorator.requestYesNoOption("Exit", "You are about to loose the changes you've made", "Exit")) {
+                getStage().close();
+            }
+        } else {
+            getStage().close();
+        }
     }
 
     @FXML
@@ -428,5 +458,25 @@ public class EditEntityController {
         }
 
         return ret;
+    }
+
+    public enum CurrentTab {
+        COLUMNS, CONSTRAINTS;
+    }
+
+    public CurrentTab getCurrentTab() {
+        if (mainTabPane.getSelectionModel().getSelectedItem() == columnsTab) {
+            return CurrentTab.COLUMNS;
+        }
+
+        return CurrentTab.CONSTRAINTS;
+    }
+
+    public boolean isLastColumn() {
+        int idx = columnDefinitionTable.getSelectionModel().getSelectedIndex();
+        if (model.getColumns().size() - 1 == idx) {
+            return true;
+        }
+        return false;
     }
 }
