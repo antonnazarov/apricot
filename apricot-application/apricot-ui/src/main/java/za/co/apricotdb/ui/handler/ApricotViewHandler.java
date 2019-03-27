@@ -10,11 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -139,6 +142,14 @@ public class ApricotViewHandler {
         Scene addViewScene = new Scene(window);
         dialog.setScene(addViewScene);
         dialog.getIcons().add(new Image(getClass().getResourceAsStream("view-s1.jpg")));
+        addViewScene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.ESCAPE) {
+                    dialog.close();
+                }
+            }
+        });
 
         ViewFormController controller = loader.<ViewFormController>getController();
         controller.init(model, viewsTabPane);

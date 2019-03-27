@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -17,6 +18,8 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
@@ -69,6 +72,14 @@ public class ApricotProjectHandler {
 
         Scene openProjectScene = new Scene(window);
         dialog.setScene(openProjectScene);
+        openProjectScene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.ESCAPE) {
+                    dialog.close();
+                }
+            }
+        });
 
         OpenProjectController controller = loader.<OpenProjectController>getController();
         controller.init(mainBorderPane);
@@ -98,6 +109,14 @@ public class ApricotProjectHandler {
 
         Scene openProjectScene = new Scene(window);
         dialog.setScene(openProjectScene);
+        openProjectScene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.ESCAPE) {
+                    dialog.close();
+                }
+            }
+        });
 
         EditProjectController controller = loader.<EditProjectController>getController();
         controller.init(isCreateNew, model, mainBorderPane);

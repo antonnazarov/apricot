@@ -15,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
@@ -26,6 +27,9 @@ public class EditSnapshotController {
 
     @Autowired
     SnapshotManager snapshotManager;
+
+    @Autowired
+    ProjectManager projectManager;
 
     @Autowired
     ParentWindow parentWindow;
@@ -112,10 +116,10 @@ public class EditSnapshotController {
             }
         }
 
-        ApricotSnapshot snapshot = snapshotSerializer.serializeSnapshot(model);
-        applicationInitializer.initializeForProject(snapshot.getProject());
-
-        getStage().close();
+        if (snapshotSerializer.serializeSnapshot(model)) {
+            applicationInitializer.initializeForProject(projectManager.findCurrentProject());
+            getStage().close();
+        }
     }
 
     private Stage getStage() {

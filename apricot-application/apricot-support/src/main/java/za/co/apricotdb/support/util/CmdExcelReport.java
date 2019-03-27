@@ -68,10 +68,10 @@ public class CmdExcelReport implements CommandLineRunner {
      */
     private ReportParameters getReportParameters(String... args) {
         ReportParameters ret = new ReportParameters();
-        List<String> tables = new ArrayList();
+        List<String> tables = new ArrayList<>();
         for (String c : args) {
             if (c.equals("tables=*")) {
-                tables = new ArrayList();
+                tables = new ArrayList<>();
                 tables.add("*");
             } else if (c.contains("tables=")) {
                 String sTables = c.substring(7);

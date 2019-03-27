@@ -47,6 +47,9 @@ public class ApricotSnapshotSerializer {
     
     @Autowired
     AlertMessageDecorator alertDecorator;
+    
+    @Autowired
+    ApricotSnapshotValidator snapshotValidator;
 
     public boolean validate(SnapshotFormModel model) {
         if (!validateName(model)) {
@@ -60,15 +63,18 @@ public class ApricotSnapshotSerializer {
     }
 
     @Transactional
-    public ApricotSnapshot serializeSnapshot(SnapshotFormModel model) {
-        ApricotSnapshot ret = null;
+    public boolean serializeSnapshot(SnapshotFormModel model) {
+        if (!snapshotValidator.validate(model)) {
+            return false;
+        }
+        
         if (model.isNewSnapshot()) {
-            ret = serializeNewSnapshot(model);
+            serializeNewSnapshot(model);
         } else {
-            ret = serializeEditedSnapshot(model);
+            serializeEditedSnapshot(model);
         }
 
-        return ret;
+        return true;
     }
 
     private ApricotSnapshot serializeNewSnapshot(SnapshotFormModel model) {

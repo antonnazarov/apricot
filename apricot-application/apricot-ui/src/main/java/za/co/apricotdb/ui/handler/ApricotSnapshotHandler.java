@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -22,6 +23,8 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
@@ -114,8 +117,16 @@ public class ApricotSnapshotHandler {
 
         dialog.getIcons().add(new Image(getClass().getResourceAsStream("snapshot-s1.JPG")));
 
-        Scene openProjectScene = new Scene(window);
-        dialog.setScene(openProjectScene);
+        Scene editSnapshotScene = new Scene(window);
+        dialog.setScene(editSnapshotScene);
+        editSnapshotScene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.ESCAPE) {
+                    dialog.close();
+                }
+            }
+        });
 
         EditSnapshotController controller = loader.<EditSnapshotController>getController();
         controller.init(model);

@@ -92,7 +92,17 @@ public class ViewFormController {
         TextLimiter.addTextLimiter(comment, 250);
 
         availableTables.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        availableTables.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) {
+                addSelectedItems(null);
+            }
+        });
         viewTables.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        viewTables.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) {
+                removeSelectedItems(null);
+            }
+        });
 
         fromViewList.getItems().clear();
         fromViewList.getItems().add("<none>");

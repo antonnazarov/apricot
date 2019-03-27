@@ -17,7 +17,6 @@ import za.co.apricotdb.viewport.entity.ApricotEntity;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
 import za.co.apricotdb.viewport.entity.shape.DetailedEntityShape;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
-import za.co.apricotdb.viewport.relationship.RelationshipType;
 import za.co.apricotdb.viewport.relationship.shape.ApricotRelationshipShape;
 import za.co.apricotdb.viewport.relationship.shape.RelationshipTopology;
 import za.co.apricotdb.viewport.relationship.shape.RelationshipTopologyImpl;

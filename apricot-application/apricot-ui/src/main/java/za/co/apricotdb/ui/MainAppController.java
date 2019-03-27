@@ -14,17 +14,16 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
-import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
 import za.co.apricotdb.ui.handler.ApricotEntityHandler;
 import za.co.apricotdb.ui.handler.ApricotProjectHandler;
 import za.co.apricotdb.ui.handler.ApricotRelationshipHandler;
 import za.co.apricotdb.ui.handler.ApricotSnapshotHandler;
 import za.co.apricotdb.ui.handler.ApricotViewHandler;
+import za.co.apricotdb.ui.handler.ExcelReportHandler;
 import za.co.apricotdb.ui.handler.ReverseEngineHandler;
 import za.co.apricotdb.ui.handler.TabInfoObject;
 import za.co.apricotdb.ui.handler.TabViewHandler;
-import za.co.apricotdb.viewport.canvas.CanvasAllocationMap;
 
 /**
  * This controller serves the main application form apricot-main.fxml.
@@ -64,6 +63,9 @@ public class MainAppController {
 
     @Autowired
     ApricotRelationshipHandler relationshipHandler;
+    
+    @Autowired
+    ExcelReportHandler excelReportHandler;
 
     @FXML
     BorderPane mainBorderPane;
@@ -222,6 +224,11 @@ public class MainAppController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    @FXML
+    public void createExcelReport(ActionEvent event) {
+        excelReportHandler.createExcelReport(mainBorderPane.getScene().getWindow());
     }
 
     public TabPane getViewsTabPane() {

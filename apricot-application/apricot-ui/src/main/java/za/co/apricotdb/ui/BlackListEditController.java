@@ -51,7 +51,17 @@ public class BlackListEditController {
         this.blackList = blackList;
         
         allTablesList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        allTablesList.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) {
+                include(null);
+            }
+        });
         blackListTablesList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        blackListTablesList.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) {
+                include(null);
+            }
+        });
 
         BlackListFormModel model = blackListFormModelBuilder.buildModel();
         applyModel(model);

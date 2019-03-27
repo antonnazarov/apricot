@@ -6,16 +6,16 @@ import org.apache.commons.text.WordUtils;
 import org.springframework.stereotype.Component;
 
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.DialogPane;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
 
 @Component
 public class AlertMessageDecorator {
-    
+
     public final static int STANDARD_MESSAGE_LENGTH = 75;
-    
+
     /**
      * Apply the custom style sheet to the Alert given.
      */
@@ -25,7 +25,7 @@ public class AlertMessageDecorator {
                 .add(getClass().getResource("/za/co/apricotdb/ui/apricot-alert-style.css").toExternalForm());
         dialogPane.getStyleClass().add("apricotDialog");
     }
-    
+
     public Alert getErrorAlert(String title, String text) {
         Alert alert = new Alert(AlertType.ERROR, null, ButtonType.OK);
         alert.setTitle(title);
@@ -34,7 +34,18 @@ public class AlertMessageDecorator {
 
         return alert;
     }
-    
+
+    public Alert getAlert(String title, String text, AlertType type) {
+        Alert alert = new Alert(type, null, ButtonType.OK);
+        alert.setTitle(title);
+        alert.setHeaderText(WordUtils.wrap(text, STANDARD_MESSAGE_LENGTH));
+        if (type == AlertType.ERROR || type == AlertType.WARNING) {
+            decorateAlert(alert);
+        }
+
+        return alert;
+    }
+
     public boolean requestYesNoOption(String title, String text, String yesText) {
         ButtonType yes = new ButtonType(yesText, ButtonData.OK_DONE);
         ButtonType no = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);

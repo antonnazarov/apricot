@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -22,6 +23,8 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -95,8 +98,7 @@ public class ReverseEngineHandler {
         return false;
     }
 
-    public void openScanResultForm(MetaData metaData, String[] blackList)
-            throws IOException {
+    public void openScanResultForm(MetaData metaData, String[] blackList) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-re-tables-list.fxml"));
         loader.setControllerFactory(context::getBean);
         Pane window = loader.load();
@@ -148,7 +150,7 @@ public class ReverseEngineHandler {
                 return false;
             }
         }
-        
+
         // request the relevant relationships
         List<ApricotRelationship> filteredRelationships = consistencyHandler.getRelationshipsForTables(included,
                 relationships);
@@ -184,8 +186,7 @@ public class ReverseEngineHandler {
         return alert;
     }
 
-    private void openDatabaseConnectionForm(ApricotProject project)
-            throws IOException {
+    private void openDatabaseConnectionForm(ApricotProject project) throws IOException {
         ApricotTargetDatabase targetDatabase = ApricotTargetDatabase.valueOf(project.getTargetDatabase());
         DatabaseConnectionModel model = databaseConnectionModelBuilder.buildModel(project);
 
@@ -193,7 +194,7 @@ public class ReverseEngineHandler {
         FXMLLoader loader = null;
         String title = null;
         switch (targetDatabase) {
-        case MSSQLServer:
+        case MSSQLServer :
             loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-re-sqlserver.fxml"));
             loader.setControllerFactory(context::getBean);
             window = loader.load();
@@ -202,14 +203,25 @@ public class ReverseEngineHandler {
             ConnectionSqlServerController controller = loader.<ConnectionSqlServerController>getController();
             controller.init(model);
             break;
+            
+        default:
+            break;
         }
 
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setTitle(title);
         dialog.getIcons().add(new Image(getClass().getResourceAsStream("bw-reverse-s1.jpg")));
-        Scene openProjectScene = new Scene(window);
-        dialog.setScene(openProjectScene);
+        Scene connectionScene = new Scene(window);
+        dialog.setScene(connectionScene);
+        connectionScene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.ESCAPE) {
+                    dialog.close();
+                }
+            }
+        });
 
         dialog.show();
     }
