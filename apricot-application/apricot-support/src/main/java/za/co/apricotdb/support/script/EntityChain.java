@@ -40,16 +40,23 @@ public class EntityChain {
         return sortEntities(new ArrayList<Entity>(chain.values()));
     }
     
+    public List<Entity> getDeadCycle() {
+        List<Entity> sorted = sortEntities(new ArrayList<Entity>(chain.values()));
+        if (sorted.size() < chain.values().size()) {
+            return sorted;
+        }
+        
+        return null;
+    }
+    
     private List<Entity> sortEntities(List<Entity> entities) {
-        List<Entity> ret = new ArrayList<>();
         List<Entity> sortedChain = new ArrayList<>();
 
         List<Entity> pchld = getParentChildEntities(entities);
         if (pchld.size() != chainLength) {
             chainLength = pchld.size(); 
         } else {
-            System.out.println("the dead cycle detected: " + pchld);
-            return null;
+            return getOriginalEntities(pchld);
         }
         
         if (pchld.size() > 0) {
@@ -63,10 +70,15 @@ public class EntityChain {
         result.addAll(getChildEntities(entities));
         result.addAll(getStandaloneEntities(entities));
         
+        return getOriginalEntities(result);
+    }
+    
+    private List<Entity> getOriginalEntities(List<Entity> result) {
+        List<Entity> ret = new ArrayList<>();
         for (Entity e : result) {
             ret.add(chain.get(e.getName()));
         }
-
+        
         return ret;
     }
     

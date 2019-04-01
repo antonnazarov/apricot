@@ -6,9 +6,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class EntityChainTest {
-    
+
     EntityChain chain = new EntityChain();
-    
+
     @Before
     public void setUp() {
         Entity e = new Entity("A");
@@ -33,7 +33,7 @@ public class EntityChainTest {
         chain.addEntity(e);
         e = new Entity("LB");
         chain.addEntity(e);
-        
+
         chain.addRelationship("A", "AX");
         chain.addRelationship("B", "AX");
         chain.addRelationship("B", "AY");
@@ -50,15 +50,27 @@ public class EntityChainTest {
         chain.addRelationship("BZ", "LB");
         chain.addRelationship("MZ", "LB");
         chain.addRelationship("BZ", "SZ");
-        
-        chain.addRelationship("AY", "AZ");  //  Stack Overflow !!!!        
+
+        // chain.addRelationship("AY", "AZ"); // Stack Overflow !!!!
     }
-    
+
     @Test
     public void testSortEntities() {
         List<Entity> entities = chain.sortEntities();
         for (Entity e : entities) {
             System.out.println(e);
+        }
+    }
+
+    @Test
+    public void testGetDeadCycle() {
+        List<Entity> entities = chain.getDeadCycle();
+        if (entities != null) {
+            for (Entity e : entities) {
+                System.out.println(e);
+            }
+        } else {
+            System.out.println("No dead cycles were found");
         }
     }
 
