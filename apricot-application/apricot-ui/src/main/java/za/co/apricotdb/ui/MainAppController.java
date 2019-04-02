@@ -21,6 +21,7 @@ import za.co.apricotdb.ui.handler.ApricotRelationshipHandler;
 import za.co.apricotdb.ui.handler.ApricotSnapshotHandler;
 import za.co.apricotdb.ui.handler.ApricotViewHandler;
 import za.co.apricotdb.ui.handler.ExcelReportHandler;
+import za.co.apricotdb.ui.handler.GenerateScriptHandler;
 import za.co.apricotdb.ui.handler.ReverseEngineHandler;
 import za.co.apricotdb.ui.handler.TabInfoObject;
 import za.co.apricotdb.ui.handler.TabViewHandler;
@@ -63,9 +64,12 @@ public class MainAppController {
 
     @Autowired
     ApricotRelationshipHandler relationshipHandler;
-    
+
     @Autowired
     ExcelReportHandler excelReportHandler;
+
+    @Autowired
+    GenerateScriptHandler generateScriptHandler;
 
     @FXML
     BorderPane mainBorderPane;
@@ -225,10 +229,19 @@ public class MainAppController {
             e.printStackTrace();
         }
     }
-    
+
     @FXML
     public void createExcelReport(ActionEvent event) {
         excelReportHandler.createExcelReport(mainBorderPane.getScene().getWindow());
+    }
+
+    @FXML
+    public void generateCreateScript(ActionEvent event) {
+        try {
+            generateScriptHandler.createGenerateScriptForm(DBScriptType.CREATE_SCRIPT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public TabPane getViewsTabPane() {

@@ -83,7 +83,7 @@ public class ViewFormController {
     private TabPane viewsTabPane;
 
     /**
-     * Initialise the form
+     * Initialize the form
      */
     public void init(ViewFormModel model, TabPane viewsTabPane) {
         this.model = model;

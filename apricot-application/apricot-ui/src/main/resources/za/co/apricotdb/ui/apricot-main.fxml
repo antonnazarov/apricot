@@ -57,9 +57,9 @@
                         <MenuItem mnemonicParsing="false" onAction="#reverseEngineer" text="Reverse Engineering" />
                         <MenuItem disable="true" mnemonicParsing="false" text="Compare Snapshots" />
                         <MenuItem mnemonicParsing="false" onAction="#createExcelReport" text="Excel Report" />
-                        <Menu disable="true" mnemonicParsing="false" text="Scripts">
+                        <Menu mnemonicParsing="false" text="Scripts">
                           <items>
-                            <MenuItem mnemonicParsing="false" text="Generate &quot;Create&quot; Script" />
+                            <MenuItem mnemonicParsing="false" onAction="#generateCreateScript" text="Generate &quot;Create&quot; Script" />
                               <MenuItem mnemonicParsing="false" text="Generate &quot;Delete&quot; Script" />
                               <MenuItem mnemonicParsing="false" text="Generate &quot;Drop&quot; Script" />
                           </items>
