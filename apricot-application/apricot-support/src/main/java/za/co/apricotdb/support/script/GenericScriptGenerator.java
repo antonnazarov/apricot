@@ -17,24 +17,23 @@ import za.co.apricotdb.persistence.entity.ConstraintType;
 public class GenericScriptGenerator implements ScriptGenerator {
 
     public static final String INDENT = "   ";
+    public static final int COMMENT_LENGTH = 45;
 
     @Override
     public String createTableAll(ApricotTable table, List<ApricotRelationship> relationships) {
         StringBuilder sb = new StringBuilder();
 
-        sb.append(StringUtils.rightPad("", 30, "*")).append("\n");
-        sb.append(StringUtils.rightPad("* " + table.getName(), 29)).append("*\n");
-        sb.append(StringUtils.rightPad("", 30, "*")).append("\n");
+        sb.append(StringUtils.rightPad("-- ", COMMENT_LENGTH, "*")).append("\n");
+        sb.append("-- * ").append(StringUtils.center(table.getName(), COMMENT_LENGTH - 6)).append("*\n");
+        sb.append(StringUtils.rightPad("-- ", COMMENT_LENGTH, "*")).append("\n");
 
-        sb.append(createTable(table)).append("\n");
-        sb.append(createConstraints(table)).append("\n");
+        sb.append(createTable(table));
+        sb.append(createConstraints(table));
         for (ApricotRelationship r : relationships) {
             if (table.equals(r.getChild().getTable())) {
-                sb.append(createForeignKeyConstraint(r)).append("\n");
+                sb.append(createForeignKeyConstraint(r));
             }
         }
-
-        sb.append("\n");
 
         return sb.toString();
     }
@@ -43,17 +42,19 @@ public class GenericScriptGenerator implements ScriptGenerator {
     public String createTable(ApricotTable table) {
         StringBuilder sb = new StringBuilder();
 
+        int maxLength = getMaxFieldName(table);
         boolean first = true;
-        sb.append("create table ").append(table.getName()).append("(\n");
+        sb.append("create table ").append(table.getName()).append(" (\n");
         for (ApricotColumn col : table.getColumns()) {
             if (!first) {
                 sb.append(",\n");
             } else {
                 first = false;
             }
-            sb.append(INDENT).append(col.getName()).append(" ").append(col.getDataType());
+            sb.append(INDENT).append(StringUtils.rightPad(col.getName(), maxLength)).append(" ")
+                    .append(col.getDataType());
             if (col.getValueLength() != null) {
-                sb.append(" (").append(col.getValueLength()).append(")");
+                sb.append("(").append(col.getValueLength()).append(")");
             }
             if (!col.isNullable()) {
                 sb.append(" not null");
@@ -68,9 +69,21 @@ public class GenericScriptGenerator implements ScriptGenerator {
                     .append(")\n");
         }
 
-        sb.append(");");
+        sb.append(");\n\n");
 
         return sb.toString();
+    }
+
+    private int getMaxFieldName(ApricotTable table) {
+        int ret = 0;
+
+        for (ApricotColumn c : table.getColumns()) {
+            if (ret < c.getName().length()) {
+                ret = c.getName().length();
+            }
+        }
+
+        return ret;
     }
 
     @Override
@@ -81,20 +94,18 @@ public class GenericScriptGenerator implements ScriptGenerator {
             if (constr.getType() != ConstraintType.PRIMARY_KEY && constr.getType() != ConstraintType.FOREIGN_KEY) {
                 switch (constr.getType()) {
                 case UNIQUE_INDEX:
-                    sb.append(createIndex(constr, true)).append("\n");
+                    sb.append(createIndex(constr, true)).append("\n\n");
                     break;
                 case NON_UNIQUE_INDEX:
-                    sb.append(createIndex(constr, false)).append("\n");
+                    sb.append(createIndex(constr, false)).append("\n\n");
                     break;
                 case UNIQUE:
-                    sb.append(createUniqueConstraint(constr)).append("\n");
+                    sb.append(createUniqueConstraint(constr)).append("\n\n");
                     break;
                 default:
                     break;
                 }
             }
-
-            sb.append("\n");
         }
 
         return sb.toString();
@@ -110,7 +121,7 @@ public class GenericScriptGenerator implements ScriptGenerator {
                 .append(relationship.getChild().getName()).append("\n").append("foreign key (")
                 .append(getConstraintColumnsAsString(relationship.getChild())).append(") ").append("references ")
                 .append(parent.getName()).append(" (").append(getConstraintColumnsAsString(relationship.getParent()))
-                .append(");");
+                .append(");\n\n");
 
         return sb.toString();
     }
@@ -167,9 +178,9 @@ public class GenericScriptGenerator implements ScriptGenerator {
         StringBuilder sb = new StringBuilder();
 
         if (unique) {
-            sb.append("CREATE UNIQUE INDEX ");
+            sb.append("create unique index ");
         } else {
-            sb.append("CREATE INDEX ");
+            sb.append("create index ");
         }
         sb.append(constraint.getName()).append(" on ").append(constraint.getTable().getName()).append("(")
                 .append(getConstraintColumnsAsString(constraint)).append(");");

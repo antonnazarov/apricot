@@ -36,6 +36,7 @@ import za.co.apricotdb.persistence.entity.ApricotProjectParameter;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
+import za.co.apricotdb.support.script.EntityChainHandler;
 import za.co.apricotdb.support.script.GenericScriptGenerator;
 import za.co.apricotdb.ui.DBScriptType;
 import za.co.apricotdb.ui.ScriptGenerateController;
@@ -83,6 +84,9 @@ public class GenerateScriptHandler {
 
     @Autowired
     AlertMessageDecorator alertDecorator;
+    
+    @Autowired
+    EntityChainHandler entityChainHandler;
 
     public void createGenerateScriptForm(DBScriptType scriptType) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-generate-script.fxml"));
@@ -131,8 +135,10 @@ public class GenerateScriptHandler {
         StringBuilder sb = new StringBuilder();
 
         List<ApricotTable> tables = getScriptTables(source);
+        List<ApricotRelationship> allRel = relationshipManager.getRelationshipsForTables(tables);
+        List<ApricotTable> sortedTables = entityChainHandler.getParentChildChain(tables, allRel);
         String operationName = null;
-        for (ApricotTable table : tables) {
+        for (ApricotTable table : sortedTables) {
             List<ApricotRelationship> relationships = relationshipManager.getRelationshipsForTable(table);
             String sTable = null;
             switch (scriptType) {
