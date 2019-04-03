@@ -1,5 +1,6 @@
 package za.co.apricotdb.ui;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javafx.event.ActionEvent;
@@ -8,6 +9,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import za.co.apricotdb.ui.handler.GenerateScriptHandler;
 
 /**
  * The controller of the form apricot-generate-script.fxml.
@@ -17,6 +19,9 @@ import javafx.stage.Stage;
  */
 @Component
 public class ScriptGenerateController {
+
+    @Autowired
+    GenerateScriptHandler generateScriptHandler;
 
     @FXML
     Pane mainPane;
@@ -40,11 +45,11 @@ public class ScriptGenerateController {
     private ToggleGroup sourceGroup = new ToggleGroup();
     private ToggleGroup targetGroup = new ToggleGroup();
 
-    enum ScriptSource {
+    public enum ScriptSource {
         SELECTED, CURRENT_VIEW, CURRENT_SNAPSHOT;
     }
 
-    enum ScriptTarget {
+    public enum ScriptTarget {
         FILE, SQL_EDITOR;
     }
 
@@ -100,8 +105,10 @@ public class ScriptGenerateController {
 
     @FXML
     public void generate(ActionEvent event) {
-
-        getStage().close();
+        if (generateScriptHandler.generateScript(getScriptSource(), getScriptTarget(), scriptType,
+                mainPane.getScene().getWindow())) {
+            getStage().close();
+        }
     }
 
     @FXML

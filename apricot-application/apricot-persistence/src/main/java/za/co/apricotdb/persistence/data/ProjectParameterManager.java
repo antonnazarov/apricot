@@ -37,6 +37,7 @@ public class ProjectParameterManager {
     public static final String CONNECTION_USER = "CONNECTION.USER";
     public static final String CONNECTION_PASSWORD = "CONNECTION.PASSWORD";
     public static final String PROJECT_DEFAULT_OUTPUT_DIR = "PROJECT.DEFAULT.OUTPUT.DIR";
+    public static final String SCRIPT_DEFAULT_OUTPUT_DIR = "SCRIPT.DEFAULT.OUTPUT.DIR";
 
     @Resource
     EntityManager em;

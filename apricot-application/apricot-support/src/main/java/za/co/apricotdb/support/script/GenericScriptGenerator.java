@@ -1,41 +1,179 @@
 package za.co.apricotdb.support.script;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
+
+import za.co.apricotdb.persistence.entity.ApricotColumn;
+import za.co.apricotdb.persistence.entity.ApricotColumnConstraint;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotTable;
+import za.co.apricotdb.persistence.entity.ConstraintType;
 
-public abstract class GenericScriptGenerator implements ScriptGenerator {
+@Component
+public class GenericScriptGenerator implements ScriptGenerator {
 
-    
+    public static final String INDENT = "   ";
+
+    @Override
+    public String createTableAll(ApricotTable table, List<ApricotRelationship> relationships) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(StringUtils.rightPad("", 30, "*")).append("\n");
+        sb.append(StringUtils.rightPad("* " + table.getName(), 29)).append("*\n");
+        sb.append(StringUtils.rightPad("", 30, "*")).append("\n");
+
+        sb.append(createTable(table)).append("\n");
+        sb.append(createConstraints(table)).append("\n");
+        for (ApricotRelationship r : relationships) {
+            if (table.equals(r.getChild().getTable())) {
+                sb.append(createForeignKeyConstraint(r)).append("\n");
+            }
+        }
+
+        sb.append("\n");
+
+        return sb.toString();
+    }
+
+    @Override
     public String createTable(ApricotTable table) {
-        
+        StringBuilder sb = new StringBuilder();
+
+        boolean first = true;
+        sb.append("create table ").append(table.getName()).append("(\n");
+        for (ApricotColumn col : table.getColumns()) {
+            if (!first) {
+                sb.append(",\n");
+            } else {
+                first = false;
+            }
+            sb.append(INDENT).append(col.getName()).append(" ").append(col.getDataType());
+            if (col.getValueLength() != null) {
+                sb.append(" (").append(col.getValueLength()).append(")");
+            }
+            if (!col.isNullable()) {
+                sb.append(" not null");
+            }
+        }
+
+        ApricotConstraint pk = getPrimaryKey(table);
+        if (pk != null) {
+            String pkCols = getConstraintColumnsAsString(pk);
+            sb.append(",\n");
+            sb.append(INDENT).append("constraint ").append(pk.getName()).append(" primary key (").append(pkCols)
+                    .append(")\n");
+        }
+
+        sb.append(");");
+
+        return sb.toString();
+    }
+
+    @Override
+    public String createConstraints(ApricotTable table) {
+        StringBuilder sb = new StringBuilder();
+
+        for (ApricotConstraint constr : table.getConstraints()) {
+            if (constr.getType() != ConstraintType.PRIMARY_KEY && constr.getType() != ConstraintType.FOREIGN_KEY) {
+                switch (constr.getType()) {
+                case UNIQUE_INDEX:
+                    sb.append(createIndex(constr, true)).append("\n");
+                    break;
+                case NON_UNIQUE_INDEX:
+                    sb.append(createIndex(constr, false)).append("\n");
+                    break;
+                case UNIQUE:
+                    sb.append(createUniqueConstraint(constr)).append("\n");
+                    break;
+                default:
+                    break;
+                }
+            }
+
+            sb.append("\n");
+        }
+
+        return sb.toString();
+    }
+
+    @Override
+    public String createForeignKeyConstraint(ApricotRelationship relationship) {
+        StringBuilder sb = new StringBuilder();
+        ApricotTable parent = relationship.getParent().getTable();
+        ApricotTable child = relationship.getChild().getTable();
+
+        sb.append("alter table ").append(child.getName()).append("\n").append("add constraint ")
+                .append(relationship.getChild().getName()).append("\n").append("foreign key (")
+                .append(getConstraintColumnsAsString(relationship.getChild())).append(") ").append("references ")
+                .append(parent.getName()).append(" (").append(getConstraintColumnsAsString(relationship.getParent()))
+                .append(");");
+
+        return sb.toString();
+    }
+
+    private ApricotConstraint getPrimaryKey(ApricotTable table) {
+        for (ApricotConstraint constr : table.getConstraints()) {
+            if (constr.getType() == ConstraintType.PRIMARY_KEY) {
+                return constr;
+            }
+        }
+
         return null;
     }
 
-    public String createConstraint(ApricotConstraint constraint) {
-        
-        return null;
+    private List<ApricotColumn> getConstraintColumns(ApricotConstraint constraint) {
+        List<ApricotColumn> ret = new ArrayList<>();
+
+        for (ApricotColumnConstraint cc : constraint.getColumns()) {
+            ret.add(cc.getColumn());
+        }
+
+        return ret;
     }
 
-    public String createIndex(ApricotConstraint constraint) {
-        
-        return null;
+    private String getConstraintColumnsAsString(ApricotConstraint constraint) {
+        StringBuilder sb = new StringBuilder();
+
+        List<ApricotColumn> columns = getConstraintColumns(constraint);
+        boolean first = true;
+        for (ApricotColumn col : columns) {
+            if (!first) {
+                sb.append(", ");
+            } else {
+                first = false;
+            }
+
+            sb.append(col.getName());
+        }
+
+        return sb.toString();
     }
 
-    public String createUniqueIndex(ApricotConstraint constraint) {
-        
-        return null;
+    private String createUniqueConstraint(ApricotConstraint constraint) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("alter table ").append(constraint.getTable().getName()).append("\n").append("add constraint ")
+                .append(constraint.getName()).append(" unique (").append(getConstraintColumnsAsString(constraint))
+                .append(");");
+
+        return sb.toString();
     }
 
-    public String createUniqueConstraint(ApricotConstraint constraint) {
-        
-        return null;
-    }
+    private String createIndex(ApricotConstraint constraint, boolean unique) {
+        StringBuilder sb = new StringBuilder();
 
-    public String createForeignKeyConstraint(ApricotTable table, List<ApricotRelationship> relationships) {
-        
-        return null;
+        if (unique) {
+            sb.append("CREATE UNIQUE INDEX ");
+        } else {
+            sb.append("CREATE INDEX ");
+        }
+        sb.append(constraint.getName()).append(" on ").append(constraint.getTable().getName()).append("(")
+                .append(getConstraintColumnsAsString(constraint)).append(");");
+
+        return sb.toString();
     }
 }
