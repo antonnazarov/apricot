@@ -70,6 +70,7 @@ public class EntityChainTest {
 
     @Test
     public void testNoDeadLoop() {
+        chain.sortEntities();
         List<Entity> loopEntities = chain.getDeadLoopEntities();
         assertNull(loopEntities);
     }
@@ -84,6 +85,7 @@ public class EntityChainTest {
     @Test
     public void testGetDeadLoop() {
         chain.addRelationship("AY", "AZ");
+        chain.sortEntities();
         List<Entity> loopEntities = chain.getDeadLoopEntities();
         assertEquals(3, loopEntities.size());
 

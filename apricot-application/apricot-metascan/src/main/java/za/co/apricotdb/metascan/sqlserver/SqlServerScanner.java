@@ -79,7 +79,15 @@ public class SqlServerScanner implements MetaDataScanner {
                     }
                     c.setDataType(rs.getString("data_type"));
                     if (rs.getInt("character_maximum_length") != 0) {
-                        c.setValueLength(String.valueOf(rs.getInt("character_maximum_length")));
+                        if (rs.getInt("character_maximum_length") == -1) {
+                            // exclusion: length=-1 with any type has to be migrated as "max"
+                            c.setValueLength("max");
+                        } else if (c.getDataType().equalsIgnoreCase("text")) {
+                            // ignore any Value Length if type is "text"
+                            c.setValueLength(null);
+                        } else {
+                            c.setValueLength(String.valueOf(rs.getInt("character_maximum_length")));
+                        }
                     }
 
                     ApricotTable t = tables.get(rs.getString("table_name"));

@@ -14,4 +14,8 @@ public interface ScriptGenerator {
     String createForeignKeyConstraint(ApricotRelationship relationship);
     
     String createTableAll(ApricotTable table, List<ApricotRelationship> relationships);
+    
+    String dropAllTables(List<ApricotTable> tables);
+    
+    String dropSelectedTables(List<ApricotTable> tables, List<ApricotRelationship> relationships);
 }

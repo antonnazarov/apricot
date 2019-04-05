@@ -22,10 +22,11 @@ public class EntityChainHandler {
 
     public List<ApricotTable> getParentChildChain(List<ApricotTable> tables, List<ApricotRelationship> relationships) {
         EntityChain chain = buidEntityChain(tables, relationships);
-        if (chain.getDeadLoopEntities() != null) {
+        List<Entity> sortedEntities = chain.sortEntities();
+        List<Entity> deadLoop = chain.getDeadLoopEntities();
+        if (deadLoop != null && deadLoop.size() > 0) {
             return null;
         }
-        List<Entity> sortedEntities = chain.sortEntities();
 
         return getTablesFromEntities(tables, sortedEntities);
     }
@@ -34,9 +35,9 @@ public class EntityChainHandler {
         List<ApricotTable> deadLoopTables = new ArrayList<>();
 
         EntityChain chain = buidEntityChain(tables, relationships);
-        List<Entity> deadLoopEntities = chain.getDeadLoopEntities();
-        if (deadLoopEntities != null) {
-            deadLoopTables = getTablesFromEntities(tables, deadLoopEntities);
+        List<Entity> sortedEntities = chain.sortEntities();
+        if (sortedEntities == null) {
+            deadLoopTables = getTablesFromEntities(tables, chain.getDeadLoopEntities());
         }
 
         return deadLoopTables;

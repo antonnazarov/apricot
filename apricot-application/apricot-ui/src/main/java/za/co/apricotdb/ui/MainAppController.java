@@ -243,6 +243,15 @@ public class MainAppController {
             e.printStackTrace();
         }
     }
+    
+    @FXML
+    public void generateDropScript(ActionEvent event) {
+        try {
+            generateScriptHandler.createGenerateScriptForm(DBScriptType.DROP_SCRIPT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public TabPane getViewsTabPane() {
         return viewsTabPane;

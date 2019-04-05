@@ -43,6 +43,7 @@ import za.co.apricotdb.ui.ScriptGenerateController;
 import za.co.apricotdb.ui.ScriptGenerateController.ScriptSource;
 import za.co.apricotdb.ui.ScriptGenerateController.ScriptTarget;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
+import za.co.apricotdb.ui.util.ApricotTableUtils;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 
@@ -84,9 +85,12 @@ public class GenerateScriptHandler {
 
     @Autowired
     AlertMessageDecorator alertDecorator;
-    
+
     @Autowired
     EntityChainHandler entityChainHandler;
+
+    @Autowired
+    SyntaxEditorHandler syntaxEditorHandler;
 
     public void createGenerateScriptForm(DBScriptType scriptType) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-generate-script.fxml"));
@@ -95,24 +99,7 @@ public class GenerateScriptHandler {
 
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
-
-        String formHeader = null;
-        switch (scriptType) {
-        case CREATE_SCRIPT:
-            formHeader = "Generate CREATE- Script";
-            break;
-        case DELETE_SCRIPT:
-            formHeader = "Generate DELETE- Script";
-            break;
-        case DROP_SCRIPT:
-            formHeader = "Generate DROP- Script";
-            break;
-        default:
-            break;
-        }
-
-        dialog.setTitle(formHeader);
-
+        dialog.setTitle(getFormHeader(scriptType));
         Scene generateScriptScene = new Scene(window);
         dialog.setScene(generateScriptScene);
         dialog.getIcons().add(new Image(getClass().getResourceAsStream("script-s1.JPG")));
@@ -132,30 +119,118 @@ public class GenerateScriptHandler {
 
     @Transactional
     public boolean generateScript(ScriptSource source, ScriptTarget target, DBScriptType scriptType, Window window) {
+        String operationName = null;
+        String script = null;
+
+        switch (scriptType) {
+        case CREATE_SCRIPT:
+            operationName = "CREATE";
+            script = generateCreateScript(source);
+            break;
+        case DROP_SCRIPT:
+            operationName = "DROP";
+            script = generateDropScript(source);
+            break;
+        default:
+            break;
+        }
+
+        if (script == null) {
+            return false;
+        }
+
+        switch (target) {
+        case FILE:
+            return saveToFile(operationName, script, window);
+        case SQL_EDITOR:
+            try {
+                syntaxEditorHandler.createSyntaxEditorForm(script, getFormHeader(scriptType));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    private String getFormHeader(DBScriptType scriptType) {
+        String formHeader = null;
+        switch (scriptType) {
+        case CREATE_SCRIPT:
+            formHeader = "Generate CREATE- Script";
+            break;
+        case DELETE_SCRIPT:
+            formHeader = "Generate DELETE- Script";
+            break;
+        case DROP_SCRIPT:
+            formHeader = "Generate DROP- Script";
+            break;
+        default:
+            break;
+        }
+
+        return formHeader;
+    }
+
+    private String generateCreateScript(ScriptSource source) {
         StringBuilder sb = new StringBuilder();
 
         List<ApricotTable> tables = getScriptTables(source);
         List<ApricotRelationship> allRel = relationshipManager.getRelationshipsForTables(tables);
         List<ApricotTable> sortedTables = entityChainHandler.getParentChildChain(tables, allRel);
-        String operationName = null;
+
+        if (sortedTables == null) {
+            // the dead loop? Check and report.
+            handleDeadLoop(tables, allRel);
+            return null;
+        }
+
         for (ApricotTable table : sortedTables) {
             List<ApricotRelationship> relationships = relationshipManager.getRelationshipsForTable(table);
             String sTable = null;
-            switch (scriptType) {
-            case CREATE_SCRIPT:
-                sTable = scriptGenerator.createTableAll(table, relationships);
-                operationName = "CREATE";
-                break;
-            default:
-                break;
-            }
+            sTable = scriptGenerator.createTableAll(table, relationships);
             sb.append(sTable).append("\n");
         }
 
-        return saveToFile(operationName, sb.toString(), window);
+        return sb.toString();
     }
 
-    private boolean saveToFile(String operationName, String script, Window window) {
+    private void handleDeadLoop(List<ApricotTable> tables, List<ApricotRelationship> allRel) {
+        List<ApricotTable> deadLoop = entityChainHandler.getDeadLoopTables(tables, allRel);
+        if (deadLoop != null && deadLoop.size() > 0) {
+            Alert alert = alertDecorator.getAlert("Dead Loop",
+                    "The following tables are included in the dead loop (they have a cyclic relationships between them): "
+                            + ApricotTableUtils.getTablesAsString(deadLoop),
+                    AlertType.ERROR);
+            alert.showAndWait();
+
+        }
+    }
+
+    private String generateDropScript(ScriptSource source) {
+        String ret = null;
+
+        List<ApricotTable> tables = getScriptTables(source);
+        List<ApricotRelationship> allRel = relationshipManager.getRelationshipsForTables(tables);
+        List<ApricotTable> sortedTables = entityChainHandler.getChildParentChain(tables, allRel);
+
+        if (sortedTables == null) {
+            // the dead loop? Check and report.
+            handleDeadLoop(tables, allRel);
+            return null;
+        }
+
+        if (source == ScriptSource.CURRENT_SNAPSHOT) {
+            ret = scriptGenerator.dropAllTables(sortedTables);
+        } else {
+            ret = scriptGenerator.dropSelectedTables(sortedTables, allRel);
+        }
+
+        return ret;
+    }
+
+    public boolean saveToFile(String operationName, String script, Window window) {
         ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
 
         String outputDir = null;
@@ -183,7 +258,7 @@ public class GenerateScriptHandler {
                 }
 
                 Alert alert = alertDecorator.getAlert(operationName + " SQL Script",
-                        "The SQL Script was successfully created in: " + file.getAbsolutePath(), AlertType.INFORMATION);
+                        "The SQL Script was successfully saved in: " + file.getAbsolutePath(), AlertType.INFORMATION);
                 alert.showAndWait();
                 parameterManager.saveParameter(projectManager.findCurrentProject(),
                         ProjectParameterManager.PROJECT_DEFAULT_OUTPUT_DIR, file.getParent());

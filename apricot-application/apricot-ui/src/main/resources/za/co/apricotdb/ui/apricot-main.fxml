@@ -60,8 +60,8 @@
                         <Menu mnemonicParsing="false" text="Scripts">
                           <items>
                             <MenuItem mnemonicParsing="false" onAction="#generateCreateScript" text="Generate &quot;Create&quot; Script" />
+                              <MenuItem mnemonicParsing="false" onAction="#generateDropScript" text="Generate &quot;Drop&quot; Script" />
                               <MenuItem mnemonicParsing="false" text="Generate &quot;Delete&quot; Script" />
-                              <MenuItem mnemonicParsing="false" text="Generate &quot;Drop&quot; Script" />
                           </items>
                         </Menu>
                         <MenuItem disable="true" mnemonicParsing="false" text="Print Diagram" />

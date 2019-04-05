@@ -126,6 +126,23 @@ public class GenericScriptGenerator implements ScriptGenerator {
         return sb.toString();
     }
 
+    @Override
+    public String dropAllTables(List<ApricotTable> tables) {
+        StringBuilder sb = new StringBuilder();
+
+        for (ApricotTable table : tables) {
+            sb.append("drop table ").append(table.getName()).append(";\n");
+        }
+
+        return sb.toString();
+    }
+
+    @Override
+    public String dropSelectedTables(List<ApricotTable> tables, List<ApricotRelationship> relationships) {
+
+        return null;
+    }
+
     private ApricotConstraint getPrimaryKey(ApricotTable table) {
         for (ApricotConstraint constr : table.getConstraints()) {
             if (constr.getType() == ConstraintType.PRIMARY_KEY) {

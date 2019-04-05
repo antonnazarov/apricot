@@ -24,8 +24,13 @@ public class EntityChain {
         Entity pe = chain.get(parent);
         Entity ce = chain.get(child);
         if (pe != null && ce != null) {
-            pe.addChild(ce);
-            ce.addParent(pe);
+            if (!pe.equals(ce)) {
+                pe.addChild(ce);
+                ce.addParent(pe);
+            } else {
+                // exception for the "auto" relationships
+                pe.addChild(ce);
+            }
 
             return true;
         }
@@ -42,24 +47,18 @@ public class EntityChain {
     }
 
     public List<Entity> getDeadLoopEntities() {
-        deadLoopEntities = new ArrayList<>();
-        List<Entity> sorted = sortEntities(new ArrayList<Entity>(chain.values()));
-        if (sorted.size() < chain.values().size()) {
-            return deadLoopEntities;
-        }
-
-        return null;
+        return deadLoopEntities;
     }
 
     private List<Entity> sortEntities(List<Entity> entities) {
         List<Entity> sortedChain = new ArrayList<>();
 
         List<Entity> pchld = getParentChildEntities(entities);
-        if (pchld.size() != chainLength) {
+        if (pchld.size() != chainLength || pchld.size() == 0) {
             chainLength = pchld.size();
         } else {
             deadLoopEntities = pchld;
-            return sortedChain;
+            return null;
         }
 
         if (pchld.size() > 0) {
@@ -69,7 +68,9 @@ public class EntityChain {
 
         List<Entity> result = new ArrayList<>();
         result.addAll(getParentEntities(entities));
-        result.addAll(sortedChain);
+        if (sortedChain != null) {
+            result.addAll(sortedChain);
+        }
         result.addAll(getChildEntities(entities));
         result.addAll(getStandaloneEntities(entities));
 
