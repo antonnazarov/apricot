@@ -1,10 +1,19 @@
 package za.co.apricotdb.metascan.mysql;
 
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.metascan.MetaDataScanner;
+import za.co.apricotdb.metascan.MetaDataScannerBase;
 import za.co.apricotdb.persistence.data.MetaData;
+import za.co.apricotdb.persistence.entity.ApricotColumn;
+import za.co.apricotdb.persistence.entity.ApricotConstraint;
+import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
+import za.co.apricotdb.persistence.entity.ApricotTable;
 
 /**
  * Scanner for the MySql database.
@@ -13,11 +22,29 @@ import za.co.apricotdb.persistence.entity.ApricotSnapshot;
  * @since 04/10/2018
  */
 @Component
-public class MySqlScanner implements MetaDataScanner {
+public class MySqlScanner extends MetaDataScannerBase {
 
     @Override
-    public MetaData scan(String driverClassName, String url, String userName, String password, ApricotSnapshot snapshot) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Map<String, ApricotTable> getTables(JdbcOperations jdbc, ApricotSnapshot snapshot) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
+    @Override
+    public Map<String, ApricotColumn> getColumns(JdbcOperations jdbc, Map<String, ApricotTable> tables) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Map<String, ApricotConstraint> getConstraints(JdbcOperations jdbc, Map<String, ApricotTable> tables) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<ApricotRelationship> getRelationships(JdbcOperations jdbc, Map<String, ApricotConstraint> constraints) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

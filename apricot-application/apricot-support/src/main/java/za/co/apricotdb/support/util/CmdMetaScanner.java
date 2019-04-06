@@ -9,7 +9,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.metascan.MetaDataScanner;
-import za.co.apricotdb.metascan.ScannerRecognizer;
+import za.co.apricotdb.metascan.MetaDataScannerFactory;
 import za.co.apricotdb.persistence.data.DataSaver;
 import za.co.apricotdb.persistence.data.MetaData;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
@@ -26,7 +26,7 @@ import za.co.apricotdb.persistence.repository.ApricotSnapshotRepository;
 public class CmdMetaScanner implements CommandLineRunner {
 
     @Autowired
-    ScannerRecognizer scannerRecognizer;
+    MetaDataScannerFactory scannerFactory;
     
     @Autowired
     DataSaver dataSaver;
@@ -52,7 +52,7 @@ public class CmdMetaScanner implements CommandLineRunner {
                 String password = props.getProperty("password");
                 String snapshot = props.getProperty("snapshot");
                 
-                MetaDataScanner scanner = scannerRecognizer.getScanner(url);
+                MetaDataScanner scanner = scannerFactory.getScanner(url);
                 if (scanner == null) {
                     System.out.println("Unable to find scanner for url=[" + url + "]");
                     return;

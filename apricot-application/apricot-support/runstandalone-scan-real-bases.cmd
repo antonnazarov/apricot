@@ -13,6 +13,10 @@ mvn -e exec:java -Dexec.mainClass="za.co.apricotdb.support.util.ApricotUtils" -D
 # Apricot Testing Database
 mvn -e exec:java -Dexec.mainClass="za.co.apricotdb.support.util.ApricotUtils" -Dexec.args="scan driver=com.microsoft.sqlserver.jdbc.SQLServerDriver url=jdbc:sqlserver://DST15404:1433;databaseName=apricot-tests user=apricot-test password=12345 snapshot=5"
 
+# Oracle Local Database
+mvn -e exec:java -Dexec.mainClass="za.co.apricotdb.support.util.ApricotUtils" -Dexec.args="scan driver=oracle.jdbc.OracleDriver url=jdbc:oracle:thin:@localhost:1521:XE user=intermediary_account password=password snapshot=30"
+
+
 #ACC_DATABASE=intermediary_account
 #ACC_HOST=POC000472
 #ACC_PORT=53199

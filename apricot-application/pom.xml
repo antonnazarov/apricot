@@ -81,11 +81,18 @@
             <version>5.3.6.Final</version>
         </dependency>
 
-        <!-- -Databases -->
+        <!-- SQL Server -->
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>mssql-jdbc</artifactId>
             <version>7.0.0.jre8</version>
+        </dependency>
+
+        <!-- Oracle -->
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc7</artifactId>
+            <version>12.1.0</version>
         </dependency>
 
         <!-- Utilities -->

@@ -103,7 +103,9 @@ public class EditProjectController {
 
         // initialize the project target database
         for (ApricotTargetDatabase d : ApricotTargetDatabase.values()) {
-            projectDatabase.getItems().add(d.toString());
+            if (d.isSupported()) {
+                projectDatabase.getItems().add(d.toString());
+            }
         }
 
         projectName.setText(model.getProjectName());

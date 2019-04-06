@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import za.co.apricotdb.persistence.data.RelationshipManager;
 import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.persistence.entity.ApricotColumnConstraint;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
@@ -18,6 +20,9 @@ public class GenericScriptGenerator implements ScriptGenerator {
 
     public static final String INDENT = "   ";
     public static final int COMMENT_LENGTH = 45;
+
+    @Autowired
+    RelationshipManager relationshipManager;
 
     @Override
     public String createTableAll(ApricotTable table, List<ApricotRelationship> relationships) {
@@ -138,9 +143,28 @@ public class GenericScriptGenerator implements ScriptGenerator {
     }
 
     @Override
-    public String dropSelectedTables(List<ApricotTable> tables, List<ApricotRelationship> relationships) {
+    public String dropSelectedTables(List<ApricotTable> tables) {
+        StringBuilder sb = new StringBuilder();
 
-        return null;
+        // first drop the outgoing/external relationships
+        List<ApricotRelationship> externalRelationships = relationshipManager.findExernalRelationships(tables, true);
+        for (ApricotRelationship r : externalRelationships) {
+            sb.append(dropConstraint(r.getChild()));
+        }
+        sb.append("\n");
+        sb.append(dropAllTables(tables));
+
+        return sb.toString();
+    }
+
+    @Override
+    public String dropConstraint(ApricotConstraint constraint) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("alter table ").append(constraint.getTable().getName()).append("\n").append("drop constraint ")
+                .append(constraint.getName()).append(";\n");
+
+        return sb.toString();
     }
 
     private ApricotConstraint getPrimaryKey(ApricotTable table) {

@@ -1,6 +1,5 @@
 package za.co.apricotdb.metascan.sqlserver;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,8 +7,7 @@ import java.util.Map;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.stereotype.Component;
 
-import za.co.apricotdb.metascan.MetaDataScanner;
-import za.co.apricotdb.persistence.data.MetaData;
+import za.co.apricotdb.metascan.MetaDataScannerBase;
 import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
@@ -24,31 +22,13 @@ import za.co.apricotdb.persistence.entity.ConstraintType;
  * @since 26/09/2018
  */
 @Component
-public class SqlServerScanner implements MetaDataScanner {
+public class SqlServerScanner extends MetaDataScannerBase {
 
     @Override
-    public MetaData scan(String driverClassName, String url, String userName, String password,
-            ApricotSnapshot snapshot) {
-        JdbcOperations jdbc = MetaDataScanner.getTargetJdbcOperations(driverClassName, url, userName, password);
-
-        Map<String, ApricotTable> tables = getTables(jdbc, snapshot);
-        getColumns(jdbc, tables);
-        Map<String, ApricotConstraint> constraints = getConstraints(jdbc, tables);
-        addIndexes(jdbc, tables, constraints);
-
-        List<ApricotRelationship> relationships = getRelationships(jdbc, constraints);
-
-        MetaData ret = new MetaData();
-        ret.setTables(new ArrayList<ApricotTable>(tables.values()));
-        ret.setRelationships(relationships);
-
-        return ret;
-    }
-
-    private Map<String, ApricotTable> getTables(JdbcOperations jdbc, ApricotSnapshot snapshot) {
-
-        List<ApricotTable> tables = jdbc.query("select table_name " + "from INFORMATION_SCHEMA.tables "
-                + "where table_type = 'BASE TABLE' " + "order by table_name", (rs, rowNum) -> {
+    public Map<String, ApricotTable> getTables(JdbcOperations jdbc, ApricotSnapshot snapshot) {
+        List<ApricotTable> tables = jdbc.query(
+                "select table_name from INFORMATION_SCHEMA.tables where table_type='BASE TABLE' order by table_name",
+                (rs, rowNum) -> {
                     ApricotTable t = new ApricotTable();
                     t.setName(rs.getString("table_name"));
                     t.setSnapshot(snapshot);
@@ -64,7 +44,8 @@ public class SqlServerScanner implements MetaDataScanner {
         return ret;
     }
 
-    private Map<String, ApricotColumn> getColumns(JdbcOperations jdbc, Map<String, ApricotTable> tables) {
+    @Override
+    public Map<String, ApricotColumn> getColumns(JdbcOperations jdbc, Map<String, ApricotTable> tables) {
         List<ApricotColumn> columns = jdbc.query(
                 "select table_name, column_name, ordinal_position, is_nullable, data_type, character_maximum_length "
                         + "from INFORMATION_SCHEMA.COLUMNS " + "order by table_name, ordinal_position",
@@ -107,12 +88,12 @@ public class SqlServerScanner implements MetaDataScanner {
         return ret;
     }
 
-    private Map<String, ApricotConstraint> getConstraints(JdbcOperations jdbc, Map<String, ApricotTable> tables) {
+    @Override
+    public Map<String, ApricotConstraint> getConstraints(JdbcOperations jdbc, Map<String, ApricotTable> tables) {
         List<ApricotConstraint> cns = jdbc.query(
                 "select table_name, constraint_type, constraint_name " + "from INFORMATION_SCHEMA.TABLE_CONSTRAINTS "
                         + "order by table_name, constraint_type, constraint_name",
                 (rs, rowNum) -> {
-
                     ApricotTable table = tables.get(rs.getString("table_name"));
                     String constraintName = rs.getString("constraint_name");
                     ConstraintType constraintType = null;
@@ -149,8 +130,35 @@ public class SqlServerScanner implements MetaDataScanner {
 
                     return null;
                 });
+        addIndexes(jdbc, tables, constraints);
 
         return constraints;
+    }
+
+    @Override
+    public List<ApricotRelationship> getRelationships(JdbcOperations jdbc, Map<String, ApricotConstraint> constraints) {
+        List<ApricotRelationship> ret = jdbc.query("select unique_constraint_name, constraint_name "
+                + "from INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS " + "order by unique_constraint_name",
+                (rs, rowNum) -> {
+                    String sParent = rs.getString("unique_constraint_name");
+                    String sChild = rs.getString("constraint_name");
+                    ApricotConstraint parent = constraints.get(sParent);
+                    if (parent == null) {
+                        throw new IllegalArgumentException(
+                                "Unable to find the parent constraint with the name=[" + sParent + "]");
+                    }
+                    ApricotConstraint child = constraints.get(sChild);
+                    if (child == null) {
+                        throw new IllegalArgumentException(
+                                "Unable to find the child constraint with the name=[" + sChild + "]");
+                    }
+
+                    ApricotRelationship r = new ApricotRelationship(parent, child);
+
+                    return r;
+                });
+
+        return ret;
     }
 
     private void addIndexes(JdbcOperations jdbc, Map<String, ApricotTable> tables,
@@ -201,31 +209,5 @@ public class SqlServerScanner implements MetaDataScanner {
                 constraints.put(c.getName(), c);
             }
         }
-    }
-
-    private List<ApricotRelationship> getRelationships(JdbcOperations jdbc,
-            Map<String, ApricotConstraint> constraints) {
-        List<ApricotRelationship> ret = jdbc.query("select unique_constraint_name, constraint_name "
-                + "from INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS " + "order by unique_constraint_name",
-                (rs, rowNum) -> {
-                    String sParent = rs.getString("unique_constraint_name");
-                    String sChild = rs.getString("constraint_name");
-                    ApricotConstraint parent = constraints.get(sParent);
-                    if (parent == null) {
-                        throw new IllegalArgumentException(
-                                "Unable to find the parent exception with the name=[" + sParent + "]");
-                    }
-                    ApricotConstraint child = constraints.get(sChild);
-                    if (child == null) {
-                        throw new IllegalArgumentException(
-                                "Unable to find the child exception with the name=[" + sChild + "]");
-                    }
-
-                    ApricotRelationship r = new ApricotRelationship(parent, child);
-
-                    return r;
-                });
-
-        return ret;
     }
 }

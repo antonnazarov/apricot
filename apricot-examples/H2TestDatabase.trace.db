@@ -1,0 +1,9 @@
+2019-04-06 21:43:32 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Table "COLUMNS" not found; SQL statement:
+select * from COLUMNS [42102-195]
+2019-04-06 21:47:03 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Table "TABLES" not found; SQL statement:
+select * from tables [42102-195]
+2019-04-06 21:47:13 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "SELECT * INFORMATION_SCHEMA[*].FROM TABLES "; SQL statement:
+select * information_schema.from tables [42000-195]

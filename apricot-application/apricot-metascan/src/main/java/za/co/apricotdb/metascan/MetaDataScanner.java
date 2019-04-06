@@ -1,11 +1,18 @@
 package za.co.apricotdb.metascan;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import za.co.apricotdb.persistence.data.MetaData;
+import za.co.apricotdb.persistence.entity.ApricotColumn;
+import za.co.apricotdb.persistence.entity.ApricotConstraint;
+import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
+import za.co.apricotdb.persistence.entity.ApricotTable;
 
 /**
  * The main interface of Meta Scan - the scanner of the DB- structure.
@@ -16,8 +23,17 @@ import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 public interface MetaDataScanner {
 
     MetaData scan(String driverClassName, String url, String userName, String password, ApricotSnapshot snapshot);
-    
-    static JdbcOperations getTargetJdbcOperations(String driverClassName, String url, String userName, String password) {
+
+    Map<String, ApricotTable> getTables(JdbcOperations jdbc, ApricotSnapshot snapshot);
+
+    Map<String, ApricotColumn> getColumns(JdbcOperations jdbc, Map<String, ApricotTable> tables);
+
+    Map<String, ApricotConstraint> getConstraints(JdbcOperations jdbc, Map<String, ApricotTable> tables);
+
+    List<ApricotRelationship> getRelationships(JdbcOperations jdbc, Map<String, ApricotConstraint> constraints);
+
+    static JdbcOperations getTargetJdbcOperations(String driverClassName, String url, String userName,
+            String password) {
         DriverManagerDataSource ds = new DriverManagerDataSource();
         ds.setDriverClassName(driverClassName);
         ds.setUrl(url);

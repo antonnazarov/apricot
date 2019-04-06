@@ -1,4 +1,4 @@
-package za.co.apricotdb.metascan.h2;
+package za.co.apricotdb.metascan.postgresql;
 
 import java.util.List;
 import java.util.Map;
@@ -14,13 +14,13 @@ import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 
 /**
- * Scanner for the H2 database.
+ * A scanner of the PostgreSQL database.
  * 
  * @author Anton Nazarov
- * @since 04/10/2018
+ * @since 06/04/2019
  */
 @Component
-public class H2Scanner extends MetaDataScannerBase {
+public class PostgreSqlScanner extends MetaDataScannerBase {
 
     @Override
     public Map<String, ApricotTable> getTables(JdbcOperations jdbc, ApricotSnapshot snapshot) {

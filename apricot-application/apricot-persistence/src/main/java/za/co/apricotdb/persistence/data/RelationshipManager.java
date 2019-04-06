@@ -48,7 +48,7 @@ public class RelationshipManager {
     public void saveRelationship(ApricotRelationship relationship) {
         relationshipRepository.save(relationship);
     }
-    
+
     public ApricotRelationship findRelationshipById(long id) {
         return relationshipRepository.findOne(id);
     }
@@ -63,11 +63,34 @@ public class RelationshipManager {
         query.setParameter("parentConstraint", constraint);
         return query.getResultList();
     }
-    
+
     public List<ApricotRelationship> findRelationshipsByConstraint(ApricotConstraint constraint) {
-        TypedQuery<ApricotRelationship> query = em
-                .createNamedQuery("ApricotRelationship.findRelationshipsByConstraint", ApricotRelationship.class);
+        TypedQuery<ApricotRelationship> query = em.createNamedQuery("ApricotRelationship.findRelationshipsByConstraint",
+                ApricotRelationship.class);
         query.setParameter("constraint", constraint);
         return query.getResultList();
+    }
+
+    /**
+     * Find all Relationships for the given Entities, which are not internal between
+     * these Entities.
+     */
+    public List<ApricotRelationship> findExernalRelationships(List<ApricotTable> tables, boolean outgoing) {
+        List<ApricotRelationship> ret = new ArrayList<>();
+
+        List<ApricotRelationship> innerRel = getRelationshipsForTables(tables);
+        for (ApricotTable table : tables) {
+            List<ApricotRelationship> tabRel = getRelationshipsForTable(table);
+            for (ApricotRelationship r : tabRel) {
+                if (!innerRel.contains(r)) {
+                    if (outgoing && r.getParent().getTable().equals(table)
+                            || !outgoing && r.getChild().getTable().equals(table)) {
+                        ret.add(r);
+                    }
+                }
+            }
+        }
+
+        return ret;
     }
 }

@@ -2,6 +2,7 @@ package za.co.apricotdb.support.script;
 
 import java.util.List;
 
+import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 
@@ -17,5 +18,7 @@ public interface ScriptGenerator {
     
     String dropAllTables(List<ApricotTable> tables);
     
-    String dropSelectedTables(List<ApricotTable> tables, List<ApricotRelationship> relationships);
+    String dropSelectedTables(List<ApricotTable> tables);
+    
+    String dropConstraint(ApricotConstraint constraint);
 }

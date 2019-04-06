@@ -15,3 +15,5 @@ drop table position;
 drop table payment_transaction_type;
 drop table personal_feature_type;
 drop table payment_group;
+
+drop view vw_person;

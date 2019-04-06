@@ -224,7 +224,7 @@ public class GenerateScriptHandler {
         if (source == ScriptSource.CURRENT_SNAPSHOT) {
             ret = scriptGenerator.dropAllTables(sortedTables);
         } else {
-            ret = scriptGenerator.dropSelectedTables(sortedTables, allRel);
+            ret = scriptGenerator.dropSelectedTables(sortedTables);
         }
 
         return ret;

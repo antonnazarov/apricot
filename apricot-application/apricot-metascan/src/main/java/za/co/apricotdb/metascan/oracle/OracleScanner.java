@@ -1,24 +1,192 @@
-
 package za.co.apricotdb.metascan.oracle;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.stereotype.Component;
 
-import za.co.apricotdb.metascan.MetaDataScanner;
-import za.co.apricotdb.persistence.data.MetaData;
+import za.co.apricotdb.metascan.MetaDataScannerBase;
+import za.co.apricotdb.persistence.entity.ApricotColumn;
+import za.co.apricotdb.persistence.entity.ApricotConstraint;
+import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
+import za.co.apricotdb.persistence.entity.ApricotTable;
+import za.co.apricotdb.persistence.entity.ConstraintType;
 
 /**
  * Scanner for the Oracle database.
  * 
  * @author Anton Nazarov
- * @since 04/10/2018
+ * @since 04/10/2018, 05/04/2019
  */
 @Component
-public class OracleScanner implements MetaDataScanner {
+public class OracleScanner extends MetaDataScannerBase {
 
     @Override
-    public MetaData scan(String driverClassName, String url, String userName, String password, ApricotSnapshot snapshot) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Map<String, ApricotTable> getTables(JdbcOperations jdbc, ApricotSnapshot snapshot) {
+        List<ApricotTable> tables = jdbc.query("select table_name from user_tables order by table_name",
+                (rs, rowNum) -> {
+                    ApricotTable t = new ApricotTable();
+                    t.setName(rs.getString("table_name"));
+                    t.setSnapshot(snapshot);
+
+                    return t;
+                });
+
+        Map<String, ApricotTable> ret = new HashMap<>();
+        for (ApricotTable t : tables) {
+            ret.put(t.getName(), t);
+        }
+
+        return ret;
     }
 
+    @Override
+    public Map<String, ApricotColumn> getColumns(JdbcOperations jdbc, Map<String, ApricotTable> tables) {
+        List<ApricotColumn> columns = jdbc.query(
+                "select table_name, column_name, column_id, nullable, data_type, data_length, data_precision from user_tab_columns order by table_name, column_id",
+                (rs, rowNum) -> {
+                    ApricotColumn c = new ApricotColumn();
+                    c.setName(rs.getString("column_name"));
+                    c.setOrdinalPosition(rs.getInt("column_id"));
+                    if (rs.getString("nullable").equals("Y")) {
+                        c.setNullable(true);
+                    } else {
+                        c.setNullable(false);
+                    }
+                    c.setDataType(rs.getString("data_type"));
+                    if (c.getDataType().equals("VARCHAR2")) {
+                        c.setValueLength(rs.getString("data_length"));
+                    } else if (c.getDataType().equals("NUMBER")) {
+                        c.setValueLength(rs.getString("data_precision"));
+                    }
+
+                    ApricotTable t = tables.get(rs.getString("table_name"));
+                    if (t != null) {
+                        c.setTable(t);
+                        t.getColumns().add(c);
+                    }
+
+                    return c;
+                });
+
+        Map<String, ApricotColumn> ret = new HashMap<>();
+        for (ApricotColumn c : columns) {
+            ret.put(c.getName(), c);
+        }
+
+        return ret;
+    }
+
+    @Override
+    public Map<String, ApricotConstraint> getConstraints(JdbcOperations jdbc, Map<String, ApricotTable> tables) {
+        List<ApricotConstraint> cns = jdbc.query(
+                "select constraint_name, constraint_type, table_name, r_constraint_name from user_constraints where constraint_type <> 'C' order by table_name, constraint_type",
+                (rs, rowNum) -> {
+                    ApricotTable table = tables.get(rs.getString("table_name"));
+                    String constraintName = rs.getString("constraint_name");
+                    ConstraintType constraintType = null;
+                    switch (rs.getString("constraint_type")) {
+                    case "P":
+                        constraintType = ConstraintType.PRIMARY_KEY;
+                        break;
+                    case "R":
+                        constraintType = ConstraintType.FOREIGN_KEY;
+                        break;
+                    case "U":
+                        constraintType = ConstraintType.UNIQUE;
+                        break;
+                    }
+
+                    ApricotConstraint c = new ApricotConstraint(constraintName, constraintType, table);
+                    table.getConstraints().add(c);
+
+                    return c;
+                });
+
+        Map<String, ApricotConstraint> constraints = new HashMap<>();
+        for (ApricotConstraint c : cns) {
+            constraints.put(c.getName(), c);
+        }
+
+        // populate the newly created constraints with the related fields
+        jdbc.query(
+                "select table_name, constraint_name, column_name, position from user_cons_columns where position is not null order by table_name, constraint_name, position",
+                (rs, rowNum) -> {
+                    ApricotConstraint c = constraints.get(rs.getString("constraint_name"));
+                    if (c != null) {
+                        String columnName = rs.getString("column_name");
+                        c.addColumn(columnName);
+                    }
+
+                    return null;
+                });
+
+        // populate indexes
+        jdbc.query("select index_name, table_name, uniqueness from user_indexes order by table_name", (rs, rowNum) -> {
+            ApricotConstraint c = constraints.get(rs.getString("index_name"));
+            if (c == null) {
+                ApricotTable table = tables.get(rs.getString("table_name"));
+                ConstraintType constraintType = null;
+                switch (rs.getString("uniqueness")) {
+                case "UNIQUE":
+                    constraintType = ConstraintType.UNIQUE_INDEX;
+                    break;
+                default:
+                    constraintType = ConstraintType.NON_UNIQUE_INDEX;
+                    break;
+                }
+
+                ApricotConstraint idx = new ApricotConstraint(rs.getString("index_name"), constraintType, table);
+                table.getConstraints().add(idx);
+                constraints.put(idx.getName(), idx);
+            }
+
+            return null;
+        });
+
+        // populate index fields
+        jdbc.query(
+                "select table_name, index_name, column_name, column_position from user_ind_columns order by table_name, index_name, column_position",
+                (rs, rowNum) -> {
+                    ApricotConstraint c = constraints.get(rs.getString("index_name"));
+                    if (c != null && (c.getType() == ConstraintType.UNIQUE_INDEX
+                            || c.getType() == ConstraintType.NON_UNIQUE_INDEX)) {
+                        String columnName = rs.getString("column_name");
+                        c.addColumn(columnName);
+                    }
+
+                    return null;
+                });
+
+        return constraints;
+    }
+
+    @Override
+    public List<ApricotRelationship> getRelationships(JdbcOperations jdbc, Map<String, ApricotConstraint> constraints) {
+        List<ApricotRelationship> ret = jdbc.query(
+                "select constraint_name, constraint_type, table_name, r_constraint_name from user_constraints where constraint_type <> 'C' and r_constraint_name is not null order by table_name, constraint_type",
+                (rs, rowNum) -> {
+                    String sParent = rs.getString("r_constraint_name");
+                    String sChild = rs.getString("constraint_name");
+                    ApricotConstraint parent = constraints.get(sParent);
+                    if (parent == null) {
+                        throw new IllegalArgumentException(
+                                "Unable to find the parent constraint with the name=[" + sParent + "]");
+                    }
+                    ApricotConstraint child = constraints.get(sChild);
+                    if (child == null) {
+                        throw new IllegalArgumentException(
+                                "Unable to find the child constraint with the name=[" + sChild + "]");
+                    }
+
+                    ApricotRelationship r = new ApricotRelationship(parent, child);
+
+                    return r;
+                });
+
+        return ret;
+    }
 }
