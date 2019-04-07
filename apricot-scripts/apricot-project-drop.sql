@@ -11,3 +11,5 @@ drop table apricot_view;
 drop table apricot_snapshot;
 drop table apricot_project_parameter;
 drop table apricot_project;
+
+drop table apricot_app_parameter;

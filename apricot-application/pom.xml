@@ -95,6 +95,13 @@
             <version>12.1.0</version>
         </dependency>
 
+        <!-- PostgreSQL -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.2.5</version>
+        </dependency>
+
         <!-- Utilities -->
         <dependency>
             <groupId>com.h2database</groupId>

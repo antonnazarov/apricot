@@ -16,6 +16,11 @@ mvn -e exec:java -Dexec.mainClass="za.co.apricotdb.support.util.ApricotUtils" -D
 # Oracle Local Database
 mvn -e exec:java -Dexec.mainClass="za.co.apricotdb.support.util.ApricotUtils" -Dexec.args="scan driver=oracle.jdbc.OracleDriver url=jdbc:oracle:thin:@localhost:1521:XE user=intermediary_account password=password snapshot=30"
 
+# H2 Testing Database
+mvn -e exec:java -Dexec.mainClass="za.co.apricotdb.support.util.ApricotUtils" -Dexec.args="scan driver=org.h2.Driver url=jdbc:h2:file:C:/apricot/apricot-examples/H2TestDatabase user= password= snapshot=31"
+
+# H2 Reporitory Database
+mvn -e exec:java -Dexec.mainClass="za.co.apricotdb.support.util.ApricotUtils" -Dexec.args="scan driver=org.h2.Driver url=jdbc:h2:file:C:/apricot/apricot-db/apricot-project user= password= snapshot=33"
 
 #ACC_DATABASE=intermediary_account
 #ACC_HOST=POC000472
