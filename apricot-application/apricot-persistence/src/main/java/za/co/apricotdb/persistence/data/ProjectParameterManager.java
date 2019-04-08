@@ -38,6 +38,7 @@ public class ProjectParameterManager {
     public static final String CONNECTION_PASSWORD = "CONNECTION.PASSWORD";
     public static final String PROJECT_DEFAULT_OUTPUT_DIR = "PROJECT.DEFAULT.OUTPUT.DIR";
     public static final String SCRIPT_DEFAULT_OUTPUT_DIR = "SCRIPT.DEFAULT.OUTPUT.DIR";
+    public static final String H2DB_FILE_DEFAULT_DIR = "H2DB.FILE.DEFAULT.DIR";
 
     @Resource
     EntityManager em;
