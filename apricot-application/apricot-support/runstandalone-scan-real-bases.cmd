@@ -22,6 +22,9 @@ mvn -e exec:java -Dexec.mainClass="za.co.apricotdb.support.util.ApricotUtils" -D
 # H2 Reporitory Database
 mvn -e exec:java -Dexec.mainClass="za.co.apricotdb.support.util.ApricotUtils" -Dexec.args="scan driver=org.h2.Driver url=jdbc:h2:file:C:/apricot/apricot-db/apricot-project user= password= snapshot=33"
 
+# PostgreSQL Database
+mvn -e exec:java -Dexec.mainClass="za.co.apricotdb.support.util.ApricotUtils" -Dexec.args="scan driver=org.postgresql.Driver url=jdbc:postgresql://localhost:5432/apricot_test user=intermediary_account password=password snapshot=34"
+
 #ACC_DATABASE=intermediary_account
 #ACC_HOST=POC000472
 #ACC_PORT=53199

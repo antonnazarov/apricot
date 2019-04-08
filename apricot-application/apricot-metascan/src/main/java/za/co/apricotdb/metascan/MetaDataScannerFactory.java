@@ -48,6 +48,9 @@ public class MetaDataScannerFactory {
         case H2:
             scanner = h2Scanner;
             break;
+        case PostrgeSQL:
+            scanner = postgreSqlScanner;
+            break;
         default:
             scanner = sqlServerScanner;
             break;
@@ -66,6 +69,8 @@ public class MetaDataScannerFactory {
             return ApricotTargetDatabase.Oracle;
         } else if (url.contains("jdbc:h2:")) {
             return ApricotTargetDatabase.H2;
+        } else if (url.contains("jdbc:postgresql://")) {
+            return ApricotTargetDatabase.PostrgeSQL;
         }
 
         return ApricotTargetDatabase.MSSQLServer;
