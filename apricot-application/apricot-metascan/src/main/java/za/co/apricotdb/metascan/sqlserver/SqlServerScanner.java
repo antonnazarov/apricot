@@ -25,7 +25,7 @@ import za.co.apricotdb.persistence.entity.ConstraintType;
 public class SqlServerScanner extends MetaDataScannerBase {
 
     @Override
-    public Map<String, ApricotTable> getTables(JdbcOperations jdbc, ApricotSnapshot snapshot) {
+    public Map<String, ApricotTable> getTables(JdbcOperations jdbc, ApricotSnapshot snapshot, String schema) {
         List<ApricotTable> tables = jdbc.query(
                 "select table_name from INFORMATION_SCHEMA.tables where table_type='BASE TABLE' order by table_name",
                 (rs, rowNum) -> {
@@ -45,7 +45,7 @@ public class SqlServerScanner extends MetaDataScannerBase {
     }
 
     @Override
-    public Map<String, ApricotColumn> getColumns(JdbcOperations jdbc, Map<String, ApricotTable> tables) {
+    public Map<String, ApricotColumn> getColumns(JdbcOperations jdbc, Map<String, ApricotTable> tables, String schema) {
         List<ApricotColumn> columns = jdbc.query(
                 "select table_name, column_name, ordinal_position, is_nullable, data_type, character_maximum_length "
                         + "from INFORMATION_SCHEMA.COLUMNS " + "order by table_name, ordinal_position",
@@ -89,7 +89,8 @@ public class SqlServerScanner extends MetaDataScannerBase {
     }
 
     @Override
-    public Map<String, ApricotConstraint> getConstraints(JdbcOperations jdbc, Map<String, ApricotTable> tables) {
+    public Map<String, ApricotConstraint> getConstraints(JdbcOperations jdbc, Map<String, ApricotTable> tables,
+            String schema) {
         List<ApricotConstraint> cns = jdbc.query(
                 "select table_name, constraint_type, constraint_name " + "from INFORMATION_SCHEMA.TABLE_CONSTRAINTS "
                         + "order by table_name, constraint_type, constraint_name",
@@ -130,13 +131,14 @@ public class SqlServerScanner extends MetaDataScannerBase {
 
                     return null;
                 });
-        addIndexes(jdbc, tables, constraints);
+        addIndexes(jdbc, tables, constraints, schema);
 
         return constraints;
     }
 
     @Override
-    public List<ApricotRelationship> getRelationships(JdbcOperations jdbc, Map<String, ApricotConstraint> constraints) {
+    public List<ApricotRelationship> getRelationships(JdbcOperations jdbc, Map<String, ApricotConstraint> constraints,
+            String schema) {
         List<ApricotRelationship> ret = jdbc.query("select unique_constraint_name, constraint_name "
                 + "from INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS " + "order by unique_constraint_name",
                 (rs, rowNum) -> {
@@ -162,7 +164,7 @@ public class SqlServerScanner extends MetaDataScannerBase {
     }
 
     private void addIndexes(JdbcOperations jdbc, Map<String, ApricotTable> tables,
-            Map<String, ApricotConstraint> constraints) {
+            Map<String, ApricotConstraint> constraints, String schema) {
 
         List<ApricotConstraint> cns = jdbc.query(
                 "select t.name as table_name, t.object_id, idx.name as index_name, idx.index_id, idx.is_primary_key, idx.is_unique, idx.is_unique_constraint "

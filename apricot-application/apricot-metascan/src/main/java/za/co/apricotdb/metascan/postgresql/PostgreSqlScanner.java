@@ -25,7 +25,7 @@ import za.co.apricotdb.persistence.entity.ConstraintType;
 public class PostgreSqlScanner extends MetaDataScannerBase {
 
     @Override
-    public Map<String, ApricotTable> getTables(JdbcOperations jdbc, ApricotSnapshot snapshot) {
+    public Map<String, ApricotTable> getTables(JdbcOperations jdbc, ApricotSnapshot snapshot, String schema) {
         List<ApricotTable> tables = jdbc.query(
                 "select table_name from information_schema.tables where table_schema='public' and table_type = 'BASE TABLE' order by table_name;",
                 (rs, rowNum) -> {
@@ -45,7 +45,7 @@ public class PostgreSqlScanner extends MetaDataScannerBase {
     }
 
     @Override
-    public Map<String, ApricotColumn> getColumns(JdbcOperations jdbc, Map<String, ApricotTable> tables) {
+    public Map<String, ApricotColumn> getColumns(JdbcOperations jdbc, Map<String, ApricotTable> tables, String schema) {
         List<ApricotColumn> columns = jdbc.query(
                 "select table_name, column_name, ordinal_position, is_nullable, data_type, character_maximum_length from information_schema.columns where table_schema='public' order by table_name, ordinal_position",
                 (rs, rowNum) -> {
@@ -80,7 +80,8 @@ public class PostgreSqlScanner extends MetaDataScannerBase {
     }
 
     @Override
-    public Map<String, ApricotConstraint> getConstraints(JdbcOperations jdbc, Map<String, ApricotTable> tables) {
+    public Map<String, ApricotConstraint> getConstraints(JdbcOperations jdbc, Map<String, ApricotTable> tables,
+            String schema) {
         Map<String, ApricotConstraint> constraints = new HashMap<>();
         jdbc.query(
                 "select table_name, constraint_name, constraint_type from information_schema.table_constraints where table_schema = 'public' and constraint_type in ('PRIMARY KEY', 'FOREIGN KEY', 'UNIQUE') order by table_name",
@@ -141,7 +142,7 @@ public class PostgreSqlScanner extends MetaDataScannerBase {
                         int startIdx = indexdef.indexOf("(");
                         int endIdx = indexdef.indexOf(")");
                         if (startIdx != -1 && endIdx != -1) {
-                            String sCols = indexdef.substring(startIdx+1, endIdx);
+                            String sCols = indexdef.substring(startIdx + 1, endIdx);
                             String[] cols = sCols.split(",");
                             for (String column : cols) {
                                 idx.addColumn(column.trim());
@@ -155,7 +156,8 @@ public class PostgreSqlScanner extends MetaDataScannerBase {
     }
 
     @Override
-    public List<ApricotRelationship> getRelationships(JdbcOperations jdbc, Map<String, ApricotConstraint> constraints) {
+    public List<ApricotRelationship> getRelationships(JdbcOperations jdbc, Map<String, ApricotConstraint> constraints,
+            String schema) {
         List<ApricotRelationship> ret = jdbc.query(
                 "select unique_constraint_name, constraint_name from information_schema.referential_constraints where constraint_schema='public' order by unique_constraint_name",
                 (rs, rowNum) -> {

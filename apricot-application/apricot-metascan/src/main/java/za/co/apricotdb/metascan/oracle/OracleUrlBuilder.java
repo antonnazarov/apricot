@@ -13,6 +13,7 @@ import za.co.apricotdb.metascan.DatabaseUrlBuilder;
 @Component
 public class OracleUrlBuilder implements DatabaseUrlBuilder {
 
+    @Override
     public String getUrl(String server, String port, String service) {
         // example of the Oracle URL jdbc:oracle:thin:@localhost:1521:orcl
         StringBuilder sb = new StringBuilder("jdbc:oracle:thin:@").append(server).append(":").append(port).append(":")

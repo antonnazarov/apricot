@@ -37,6 +37,7 @@ public class SqlServerParametersHandler implements ConnectionParametersHandler {
 
                 if (areEqual(p, params, ProjectParameterManager.CONNECTION_PORT)
                         && areEqual(p, params, ProjectParameterManager.CONNECTION_DATABASE)
+                        && areEqual(p, params, ProjectParameterManager.CONNECTION_SCHEMA)
                         && areEqual(p, params, ProjectParameterManager.CONNECTION_USER)) {
                     // found the same combination of parameters. Rewrite upon the existing one (in
                     // sake of the password).

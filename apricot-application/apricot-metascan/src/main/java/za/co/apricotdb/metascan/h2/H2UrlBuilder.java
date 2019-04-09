@@ -13,6 +13,11 @@ import za.co.apricotdb.metascan.DatabaseUrlBuilder;
 @Component
 public class H2UrlBuilder implements DatabaseUrlBuilder {
 
+    @Override
+    public String getUrl(String server, String port, String service) {
+        return getUrl(server);
+    }
+
     public String getUrl(String filePath) {
         StringBuilder sb = new StringBuilder("jdbc:h2:file:").append(filePath);
 

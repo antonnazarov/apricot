@@ -5,15 +5,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.metascan.ApricotTargetDatabase;
+import za.co.apricotdb.metascan.MetaDataScannerFactory;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.ProjectParameterManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotProjectParameter;
-import za.co.apricotdb.ui.util.DefaultSchema;
 import za.co.apricotdb.ui.util.StringEncoder;
 
 @Component
@@ -26,7 +27,7 @@ public class DatabaseConnectionModelBuilder {
     ProjectManager projectManager;
 
     @Autowired
-    DefaultSchema defaultSchema;
+    MetaDataScannerFactory scannerFactory;
 
     public DatabaseConnectionModel buildModel(ApricotProject project) {
         DatabaseConnectionModel model = new DatabaseConnectionModel(
@@ -68,22 +69,26 @@ public class DatabaseConnectionModelBuilder {
             String sSchema = props.getProperty(ProjectParameterManager.CONNECTION_SCHEMA);
             String sPort = props.getProperty(ProjectParameterManager.CONNECTION_PORT);
             String sUser = props.getProperty(ProjectParameterManager.CONNECTION_USER);
-            if (!model.getDatabases().contains(sDatabase)) {
+
+            if (!StringUtils.isEmpty(sDatabase) && !model.getDatabases().contains(sDatabase)) {
                 model.getDatabases().add(sDatabase);
             }
-            if (!model.getSchemas().contains(sSchema)) {
+            if (!StringUtils.isEmpty(sSchema) && !model.getSchemas().contains(sSchema)) {
                 model.getSchemas().add(sSchema);
             }
-            model.setPort(sPort);
-            if (!model.getUsers().contains(sUser)) {
-                model.getUsers().add(sUser);
+            if (!StringUtils.isEmpty(sPort)) {
+                model.setPort(sPort);
+                if (!model.getUsers().contains(sUser)) {
+                    model.getUsers().add(sUser);
+                }
             }
-
-            model.savePassword(sUser,
-                    StringEncoder.decode(props.getProperty(ProjectParameterManager.CONNECTION_PASSWORD)));
+            if (!StringUtils.isEmpty(sUser)) {
+                model.savePassword(sUser,
+                        StringEncoder.decode(props.getProperty(ProjectParameterManager.CONNECTION_PASSWORD)));
+            }
         }
 
-        String defSchema = defaultSchema.getDefaultSchema(model.getTargetDb());
+        String defSchema = scannerFactory.getDefaultSchema(model.getTargetDb());
         if (defSchema != null) {
             if (model.getSchemas().isEmpty()) {
                 model.setSchema(defSchema);

@@ -13,6 +13,7 @@ import za.co.apricotdb.metascan.DatabaseUrlBuilder;
 @Component
 public class PostgreSqlUrlBuilder implements DatabaseUrlBuilder {
 
+    @Override
     public String getUrl(String server, String port, String database) {
         // example of the PostgreSQL URL
         // jdbc:postgresql://<server>:<port5432>/<database>

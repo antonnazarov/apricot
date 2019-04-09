@@ -13,6 +13,7 @@ import za.co.apricotdb.metascan.DatabaseUrlBuilder;
 @Component
 public class SqlServerUrlBuilder implements DatabaseUrlBuilder {
 
+    @Override
     public String getUrl(String server, String port, String database) {
         // example of the SQLServer URL
         // jdbc:sqlserver://DST15404:1433;databaseName=apricot-tests

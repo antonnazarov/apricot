@@ -25,7 +25,7 @@ import za.co.apricotdb.persistence.entity.ConstraintType;
 public class OracleScanner extends MetaDataScannerBase {
 
     @Override
-    public Map<String, ApricotTable> getTables(JdbcOperations jdbc, ApricotSnapshot snapshot) {
+    public Map<String, ApricotTable> getTables(JdbcOperations jdbc, ApricotSnapshot snapshot, String schema) {
         List<ApricotTable> tables = jdbc.query("select table_name from user_tables order by table_name",
                 (rs, rowNum) -> {
                     ApricotTable t = new ApricotTable();
@@ -44,7 +44,7 @@ public class OracleScanner extends MetaDataScannerBase {
     }
 
     @Override
-    public Map<String, ApricotColumn> getColumns(JdbcOperations jdbc, Map<String, ApricotTable> tables) {
+    public Map<String, ApricotColumn> getColumns(JdbcOperations jdbc, Map<String, ApricotTable> tables, String schema) {
         List<ApricotColumn> columns = jdbc.query(
                 "select table_name, column_name, column_id, nullable, data_type, data_length, data_precision from user_tab_columns order by table_name, column_id",
                 (rs, rowNum) -> {
@@ -81,7 +81,8 @@ public class OracleScanner extends MetaDataScannerBase {
     }
 
     @Override
-    public Map<String, ApricotConstraint> getConstraints(JdbcOperations jdbc, Map<String, ApricotTable> tables) {
+    public Map<String, ApricotConstraint> getConstraints(JdbcOperations jdbc, Map<String, ApricotTable> tables,
+            String schema) {
         List<ApricotConstraint> cns = jdbc.query(
                 "select constraint_name, constraint_type, table_name, r_constraint_name from user_constraints where constraint_type <> 'C' order by table_name, constraint_type",
                 (rs, rowNum) -> {
@@ -165,7 +166,8 @@ public class OracleScanner extends MetaDataScannerBase {
     }
 
     @Override
-    public List<ApricotRelationship> getRelationships(JdbcOperations jdbc, Map<String, ApricotConstraint> constraints) {
+    public List<ApricotRelationship> getRelationships(JdbcOperations jdbc, Map<String, ApricotConstraint> constraints,
+            String schema) {
         List<ApricotRelationship> ret = jdbc.query(
                 "select constraint_name, constraint_type, table_name, r_constraint_name from user_constraints where constraint_type <> 'C' and r_constraint_name is not null order by table_name, constraint_type",
                 (rs, rowNum) -> {

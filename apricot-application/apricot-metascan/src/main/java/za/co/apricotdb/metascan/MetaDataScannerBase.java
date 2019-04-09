@@ -15,14 +15,14 @@ import za.co.apricotdb.persistence.entity.ApricotTable;
 public abstract class MetaDataScannerBase implements MetaDataScanner {
 
     @Override
-    public MetaData scan(String driverClassName, String url, String userName, String password,
+    public MetaData scan(String driverClassName, String url, String schema, String userName, String password,
             ApricotSnapshot snapshot) {
         JdbcOperations jdbc = MetaDataScanner.getTargetJdbcOperations(driverClassName, url, userName, password);
 
-        Map<String, ApricotTable> tables = getTables(jdbc, snapshot);
-        getColumns(jdbc, tables);
-        Map<String, ApricotConstraint> constraints = getConstraints(jdbc, tables);
-        List<ApricotRelationship> relationships = getRelationships(jdbc, constraints);
+        Map<String, ApricotTable> tables = getTables(jdbc, snapshot, schema);
+        getColumns(jdbc, tables, schema);
+        Map<String, ApricotConstraint> constraints = getConstraints(jdbc, tables, schema);
+        List<ApricotRelationship> relationships = getRelationships(jdbc, constraints, schema);
 
         MetaData ret = new MetaData();
         ret.setTables(new ArrayList<ApricotTable>(tables.values()));

@@ -11,4 +11,6 @@ public interface DatabaseUrlBuilder {
     String getDriverClass();
     
     String getDefaultSchemaName();
+    
+    String getUrl(String server, String port, String database);
 }

@@ -23,25 +23,27 @@ import za.co.apricotdb.persistence.entity.ApricotTable;
 public class MySqlScanner extends MetaDataScannerBase {
 
     @Override
-    public Map<String, ApricotTable> getTables(JdbcOperations jdbc, ApricotSnapshot snapshot) {
+    public Map<String, ApricotTable> getTables(JdbcOperations jdbc, ApricotSnapshot snapshot, String schema) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Map<String, ApricotColumn> getColumns(JdbcOperations jdbc, Map<String, ApricotTable> tables) {
+    public Map<String, ApricotColumn> getColumns(JdbcOperations jdbc, Map<String, ApricotTable> tables, String schema) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Map<String, ApricotConstraint> getConstraints(JdbcOperations jdbc, Map<String, ApricotTable> tables) {
+    public Map<String, ApricotConstraint> getConstraints(JdbcOperations jdbc, Map<String, ApricotTable> tables,
+            String schema) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public List<ApricotRelationship> getRelationships(JdbcOperations jdbc, Map<String, ApricotConstraint> constraints) {
+    public List<ApricotRelationship> getRelationships(JdbcOperations jdbc, Map<String, ApricotConstraint> constraints,
+            String schema) {
         // TODO Auto-generated method stub
         return null;
     }

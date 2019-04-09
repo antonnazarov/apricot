@@ -18,9 +18,9 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import za.co.apricotdb.metascan.ApricotTargetDatabase;
 import za.co.apricotdb.metascan.MetaDataScanner;
-import za.co.apricotdb.metascan.sqlserver.SqlServerScanner;
-import za.co.apricotdb.metascan.sqlserver.SqlServerUrlBuilder;
+import za.co.apricotdb.metascan.MetaDataScannerFactory;
 import za.co.apricotdb.persistence.data.MetaData;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.ProjectParameterManager;
@@ -45,16 +45,10 @@ import za.co.apricotdb.ui.util.StringEncoder;
 public class ConnectionSqlServerController {
 
     @Autowired
-    SqlServerUrlBuilder sqlServerUrlBuilder;
-
-    @Autowired
     AlertMessageDecorator alertDecorator;
 
     @Autowired
     ReverseEngineHandler reverseEngineHandler;
-
-    @Autowired
-    SqlServerScanner sqlServerScanner;
 
     @Autowired
     SnapshotManager snapshotManager;
@@ -71,6 +65,9 @@ public class ConnectionSqlServerController {
     @Autowired
     DatabaseConnectionModelBuilder dbConnModelBuilder;
 
+    @Autowired
+    MetaDataScannerFactory scannerFactory;
+
     @FXML
     Pane mainPane;
 
@@ -82,7 +79,7 @@ public class ConnectionSqlServerController {
 
     @FXML
     ComboBox<String> database;
-    
+
     @FXML
     ComboBox<String> schema;
 
@@ -112,7 +109,7 @@ public class ConnectionSqlServerController {
         try {
             testConnection(server.getSelectionModel().getSelectedItem(), port.getSelectionModel().getSelectedItem(),
                     database.getSelectionModel().getSelectedItem(), user.getSelectionModel().getSelectedItem(),
-                    password.getText());
+                    password.getText(), model.getTargetDb());
             alert = getAlert(AlertType.INFORMATION, "The connection was successfully established");
             alert.showAndWait();
         } catch (Exception e) {
@@ -124,10 +121,11 @@ public class ConnectionSqlServerController {
         return true;
     }
 
-    private void testConnection(String server, String port, String database, String user, String password)
-            throws Exception {
-        String driverClass = sqlServerUrlBuilder.getDriverClass();
-        String url = sqlServerUrlBuilder.getUrl(server, port, database);
+    private void testConnection(String server, String port, String database, String user, String password,
+            ApricotTargetDatabase targetDb) throws Exception {
+
+        String driverClass = scannerFactory.getDriverClass(targetDb);
+        String url = scannerFactory.getUrl(targetDb, server, port, database);
 
         try {
             JdbcOperations op = MetaDataScanner.getTargetJdbcOperations(driverClass, url, user, password);
@@ -169,21 +167,21 @@ public class ConnectionSqlServerController {
         try {
             testConnection(server.getSelectionModel().getSelectedItem(), port.getSelectionModel().getSelectedItem(),
                     database.getSelectionModel().getSelectedItem(), user.getSelectionModel().getSelectedItem(),
-                    password.getText());
+                    password.getText(), model.getTargetDb());
         } catch (Exception e) {
             Alert alert = getAlert(AlertType.ERROR, e.getMessage());
             alert.showAndWait();
             return;
         }
 
-        String driverClass = sqlServerUrlBuilder.getDriverClass();
-        String url = sqlServerUrlBuilder.getUrl(server.getSelectionModel().getSelectedItem(),
+        String driverClass = scannerFactory.getDriverClass(model.getTargetDb());
+        String url = scannerFactory.getUrl(model.getTargetDb(), server.getSelectionModel().getSelectedItem(),
                 port.getSelectionModel().getSelectedItem(), database.getSelectionModel().getSelectedItem());
         this.snapshot = snapshotManager.getDefaultSnapshot();
         this.project = projectManager.findCurrentProject();
 
-        MetaData metaData = sqlServerScanner.scan(driverClass, url, user.getSelectionModel().getSelectedItem(),
-                password.getText(), snapshot);
+        MetaData metaData = scannerFactory.getScanner(url).scan(driverClass, url, schema.getValue(),
+                user.getSelectionModel().getSelectedItem(), password.getText(), snapshot);
         String[] blackList = blackListHandler.getBlackListTables(project);
         try {
             getStage().close();
@@ -222,7 +220,7 @@ public class ConnectionSqlServerController {
         if (model.getDatabase() != null) {
             database.getSelectionModel().select(model.getDatabase());
         }
-        
+
         schema.getItems().addAll(model.getSchemas());
         if (model.getSchemas() != null) {
             schema.getSelectionModel().select(model.getSchema());

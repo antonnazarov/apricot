@@ -25,7 +25,7 @@ import za.co.apricotdb.persistence.entity.ConstraintType;
 public class H2Scanner extends MetaDataScannerBase {
 
     @Override
-    public Map<String, ApricotTable> getTables(JdbcOperations jdbc, ApricotSnapshot snapshot) {
+    public Map<String, ApricotTable> getTables(JdbcOperations jdbc, ApricotSnapshot snapshot, String schema) {
         List<ApricotTable> tables = jdbc.query(
                 "select table_name from information_schema.tables where table_schema='PUBLIC' and table_type='TABLE' order by table_name",
                 (rs, rowNum) -> {
@@ -45,7 +45,7 @@ public class H2Scanner extends MetaDataScannerBase {
     }
 
     @Override
-    public Map<String, ApricotColumn> getColumns(JdbcOperations jdbc, Map<String, ApricotTable> tables) {
+    public Map<String, ApricotColumn> getColumns(JdbcOperations jdbc, Map<String, ApricotTable> tables, String schema) {
         List<ApricotColumn> columns = jdbc.query(
                 "select table_name, column_name, ordinal_position, is_nullable, type_name, character_maximum_length from information_schema.columns where table_schema='PUBLIC' order by table_name, ordinal_position",
                 (rs, rowNum) -> {
@@ -80,7 +80,8 @@ public class H2Scanner extends MetaDataScannerBase {
     }
 
     @Override
-    public Map<String, ApricotConstraint> getConstraints(JdbcOperations jdbc, Map<String, ApricotTable> tables) {
+    public Map<String, ApricotConstraint> getConstraints(JdbcOperations jdbc, Map<String, ApricotTable> tables,
+            String schema) {
         Map<String, ApricotConstraint> constraints = new HashMap<>();
         jdbc.query(
                 "select table_name, constraint_name, constraint_type, column_list from information_schema.constraints where table_schema='PUBLIC' and constraint_schema = 'PUBLIC' order by table_name",
@@ -144,7 +145,8 @@ public class H2Scanner extends MetaDataScannerBase {
     }
 
     @Override
-    public List<ApricotRelationship> getRelationships(JdbcOperations jdbc, Map<String, ApricotConstraint> constraints) {
+    public List<ApricotRelationship> getRelationships(JdbcOperations jdbc, Map<String, ApricotConstraint> constraints,
+            String schema) {
         Map<String, String> indexMap = new HashMap<>();
         jdbc.query(
                 "select unique_index_name, constraint_name, constraint_type from information_schema.constraints where table_schema='PUBLIC' and constraint_schema = 'PUBLIC' and constraint_type = 'PRIMARY_KEY' order by unique_index_name",

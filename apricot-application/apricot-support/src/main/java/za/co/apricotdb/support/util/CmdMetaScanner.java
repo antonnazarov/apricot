@@ -50,6 +50,7 @@ public class CmdMetaScanner implements CommandLineRunner {
 
                 String driver = props.getProperty("driver");
                 String url = props.getProperty("url");
+                String schema = props.getProperty("schema");
                 String user = props.getProperty("user");
                 String password = props.getProperty("password");
                 String snapshot = props.getProperty("snapshot");
@@ -62,7 +63,7 @@ public class CmdMetaScanner implements CommandLineRunner {
 
                 System.out.println("Scanning the database for the following parameters: driver=[" + driver + "], url=["
                         + url + "], user=[" + user + "], password=[" + password + "], snapshot=[" + snapshot + "]");
-                MetaData result = scanner.scan(driver, url, user, password, getSnapshot(Long.parseLong(snapshot)));
+                MetaData result = scanner.scan(driver, url, user, schema, password, getSnapshot(Long.parseLong(snapshot)));
                 System.out.println("The scanned results:");
                 System.out.println(result);
 
@@ -84,7 +85,7 @@ public class CmdMetaScanner implements CommandLineRunner {
     private Properties getConnectionParameters(String... args) {
         Properties props = new Properties();
         for (String c : args) {
-            if (c.startsWith("driver=") || c.startsWith("user=") || c.startsWith("password=")
+            if (c.startsWith("driver=") || c.startsWith("schema=") || c.startsWith("user=") || c.startsWith("password=")
                     || c.startsWith("snapshot=")) {
                 String[] r = c.split("=");
                 if (r.length == 2) {
