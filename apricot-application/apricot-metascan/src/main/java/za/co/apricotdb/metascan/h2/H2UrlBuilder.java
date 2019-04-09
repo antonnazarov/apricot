@@ -23,4 +23,9 @@ public class H2UrlBuilder implements DatabaseUrlBuilder {
     public String getDriverClass() {
         return "org.h2.Driver";
     }
+
+    @Override
+    public String getDefaultSchemaName() {
+        return "PUBLIC";
+    }
 }

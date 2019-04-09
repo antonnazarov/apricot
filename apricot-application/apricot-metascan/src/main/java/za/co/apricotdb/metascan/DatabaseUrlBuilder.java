@@ -9,4 +9,6 @@ package za.co.apricotdb.metascan;
 public interface DatabaseUrlBuilder {
     
     String getDriverClass();
+    
+    String getDefaultSchemaName();
 }

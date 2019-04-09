@@ -6,9 +6,7 @@ import java.util.Map;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.stereotype.Component;
 
-import za.co.apricotdb.metascan.MetaDataScanner;
 import za.co.apricotdb.metascan.MetaDataScannerBase;
-import za.co.apricotdb.persistence.data.MetaData;
 import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;

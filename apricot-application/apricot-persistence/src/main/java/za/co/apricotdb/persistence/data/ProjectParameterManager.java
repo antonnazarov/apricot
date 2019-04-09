@@ -34,6 +34,7 @@ public class ProjectParameterManager {
     public static final String CONNECTION_SERVER = "CONNECTION.SERVER";
     public static final String CONNECTION_PORT = "CONNECTION.PORT";
     public static final String CONNECTION_DATABASE = "CONNECTION.DATABASE";
+    public static final String CONNECTION_SCHEMA = "CONNECTION.SCHEMA";
     public static final String CONNECTION_USER = "CONNECTION.USER";
     public static final String CONNECTION_PASSWORD = "CONNECTION.PASSWORD";
     public static final String PROJECT_DEFAULT_OUTPUT_DIR = "PROJECT.DEFAULT.OUTPUT.DIR";

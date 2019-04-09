@@ -196,6 +196,8 @@ public class ReverseEngineHandler {
         switch (targetDatabase) {
         case MSSQLServer :
             loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-re-sqlserver.fxml"));
+            loader.setControllerFactory(context::getBean);
+            window = loader.load();
 
             title = "Connect to SQL Server database";
             ConnectionSqlServerController controller = loader.<ConnectionSqlServerController>getController();
@@ -208,8 +210,6 @@ public class ReverseEngineHandler {
             break;
         }
         
-        loader.setControllerFactory(context::getBean);
-        window = loader.load();
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setTitle(title);

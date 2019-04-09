@@ -13,6 +13,7 @@ import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.ProjectParameterManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotProjectParameter;
+import za.co.apricotdb.ui.util.DefaultSchema;
 import za.co.apricotdb.ui.util.StringEncoder;
 
 @Component
@@ -23,6 +24,9 @@ public class DatabaseConnectionModelBuilder {
 
     @Autowired
     ProjectManager projectManager;
+
+    @Autowired
+    DefaultSchema defaultSchema;
 
     public DatabaseConnectionModel buildModel(ApricotProject project) {
         DatabaseConnectionModel model = new DatabaseConnectionModel(
@@ -61,10 +65,14 @@ public class DatabaseConnectionModelBuilder {
         for (ApricotProjectParameter p : prms) {
             Properties props = projectParameterManager.restorePropertiesFromString(p.getValue());
             String sDatabase = props.getProperty(ProjectParameterManager.CONNECTION_DATABASE);
+            String sSchema = props.getProperty(ProjectParameterManager.CONNECTION_SCHEMA);
             String sPort = props.getProperty(ProjectParameterManager.CONNECTION_PORT);
             String sUser = props.getProperty(ProjectParameterManager.CONNECTION_USER);
             if (!model.getDatabases().contains(sDatabase)) {
                 model.getDatabases().add(sDatabase);
+            }
+            if (!model.getSchemas().contains(sSchema)) {
+                model.getSchemas().add(sSchema);
             }
             model.setPort(sPort);
             if (!model.getUsers().contains(sUser)) {
@@ -73,6 +81,14 @@ public class DatabaseConnectionModelBuilder {
 
             model.savePassword(sUser,
                     StringEncoder.decode(props.getProperty(ProjectParameterManager.CONNECTION_PASSWORD)));
+        }
+
+        String defSchema = defaultSchema.getDefaultSchema(model.getTargetDb());
+        if (defSchema != null) {
+            if (model.getSchemas().isEmpty()) {
+                model.setSchema(defSchema);
+            }
+            model.getSchemas().add(defSchema);
         }
     }
 }

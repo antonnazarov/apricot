@@ -5,16 +5,17 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
-
+<?import javafx.scene.text.Font?>
 
 <Pane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="160.0" prefWidth="511.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.ScriptGenerateController">
    <children>
       <VBox prefHeight="158.0" prefWidth="511.0">
          <children>
-            <Label prefHeight="17.0" prefWidth="378.0" text="Entities to be included into the script:">
+            <Label prefHeight="17.0" prefWidth="378.0" text="The Entities to be included into the script:">
                <padding>
                   <Insets bottom="5.0" left="10.0" top="5.0" />
                </padding>
@@ -23,22 +24,32 @@
                <children>
                   <RadioButton fx:id="selectedOption" mnemonicParsing="false" text="Selected Only" />
                   <RadioButton fx:id="currentViewOption" layoutX="15.0" layoutY="15.0" mnemonicParsing="false" text="The Current View Only" />
-                  <RadioButton fx:id="snapshotOption" layoutX="129.0" layoutY="15.0" mnemonicParsing="false" text="All Entities in The Current Snapshot" />
+                  <RadioButton fx:id="snapshotOption" layoutX="129.0" layoutY="15.0" mnemonicParsing="false" text="All Entities in the Current Snapshot" />
                </children>
                <padding>
                   <Insets bottom="5.0" left="10.0" right="5.0" top="5.0" />
                </padding>
             </HBox>
             <Separator prefWidth="200.0" />
-            <Label layoutX="10.0" layoutY="10.0" prefHeight="17.0" prefWidth="378.0" text="The target of the generated Script:">
+            <Label layoutX="10.0" layoutY="10.0" prefHeight="17.0" prefWidth="378.0" text="The Script target:">
                <padding>
                   <Insets bottom="5.0" left="10.0" top="5.0" />
                </padding>
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
             </Label>
-            <HBox layoutX="10.0" layoutY="37.0" prefHeight="22.0" prefWidth="600.0" spacing="20.0">
+            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="37.0" prefHeight="22.0" prefWidth="600.0" spacing="10.0">
                <children>
                   <RadioButton fx:id="targetFile" mnemonicParsing="false" text="File" />
                   <RadioButton fx:id="targetSqlEditor" layoutX="15.0" layoutY="15.0" mnemonicParsing="false" text="SQL Editor" />
+                  <Separator orientation="VERTICAL" prefHeight="200.0">
+                     <padding>
+                        <Insets left="30.0" />
+                     </padding>
+                  </Separator>
+                  <Label text="Schema:" />
+                  <TextField prefHeight="25.0" prefWidth="254.0" />
                </children>
                <padding>
                   <Insets bottom="5.0" left="10.0" right="5.0" top="5.0" />

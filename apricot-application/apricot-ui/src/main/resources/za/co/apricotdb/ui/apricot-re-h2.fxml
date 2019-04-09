@@ -11,9 +11,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="158.0" prefWidth="537.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.ConnectionH2Controller">
+<VBox fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="181.0" prefWidth="537.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.ConnectionH2Controller">
    <children>
-      <GridPane prefHeight="108.0" prefWidth="517.0">
+      <GridPane prefHeight="169.0" prefWidth="517.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="295.0" minWidth="10.0" prefWidth="74.0" />
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="488.0" minWidth="10.0" prefWidth="443.0" />
@@ -22,11 +22,12 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <Label text="H2 File:" />
-            <Label text="User:" GridPane.rowIndex="1" />
-            <Label text="Password:" GridPane.rowIndex="2" />
+            <Label text="User:" GridPane.rowIndex="2" />
+            <Label text="Password:" GridPane.rowIndex="3" />
             <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1">
                <children>
                   <TextField fx:id="fileName" prefHeight="25.0" prefWidth="337.0" />
@@ -36,7 +37,7 @@
                   <Insets bottom="5.0" top="5.0" />
                </padding>
             </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <children>
                   <TextField fx:id="userName" prefHeight="25.0" prefWidth="336.0" />
                </children>
@@ -47,12 +48,21 @@
                   <Insets bottom="5.0" right="5.0" top="5.0" />
                </padding>
             </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <HBox prefHeight="49.0" prefWidth="443.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <children>
                   <PasswordField fx:id="password" prefHeight="25.0" prefWidth="336.0" />
                </children>
                <padding>
                   <Insets right="5.0" top="5.0" />
+               </padding>
+            </HBox>
+            <Label text="Schema:" GridPane.rowIndex="1" />
+            <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <TextField fx:id="schema" prefHeight="25.0" prefWidth="336.0" />
+               </children>
+               <padding>
+                  <Insets bottom="5.0" right="5.0" top="5.0" />
                </padding>
             </HBox>
          </children>

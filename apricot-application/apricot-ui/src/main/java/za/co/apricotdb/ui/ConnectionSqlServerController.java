@@ -82,6 +82,9 @@ public class ConnectionSqlServerController {
 
     @FXML
     ComboBox<String> database;
+    
+    @FXML
+    ComboBox<String> schema;
 
     @FXML
     ComboBox<String> user;
@@ -148,6 +151,7 @@ public class ConnectionSqlServerController {
         params.setProperty(ProjectParameterManager.CONNECTION_SERVER, server.getSelectionModel().getSelectedItem());
         params.setProperty(ProjectParameterManager.CONNECTION_PORT, port.getSelectionModel().getSelectedItem());
         params.setProperty(ProjectParameterManager.CONNECTION_DATABASE, database.getSelectionModel().getSelectedItem());
+        params.setProperty(ProjectParameterManager.CONNECTION_SCHEMA, schema.getSelectionModel().getSelectedItem());
         params.setProperty(ProjectParameterManager.CONNECTION_USER, user.getSelectionModel().getSelectedItem());
         params.setProperty(ProjectParameterManager.CONNECTION_PASSWORD, StringEncoder.encode(password.getText()));
 
@@ -218,6 +222,11 @@ public class ConnectionSqlServerController {
         if (model.getDatabase() != null) {
             database.getSelectionModel().select(model.getDatabase());
         }
+        
+        schema.getItems().addAll(model.getSchemas());
+        if (model.getSchemas() != null) {
+            schema.getSelectionModel().select(model.getSchema());
+        }
 
         user.getItems().addAll(model.getUsers());
         if (model.getUser() != null) {
@@ -255,6 +264,9 @@ public class ConnectionSqlServerController {
             }
             if (props.getProperty(ProjectParameterManager.CONNECTION_DATABASE) != null) {
                 database.setValue(props.getProperty(ProjectParameterManager.CONNECTION_DATABASE));
+            }
+            if (props.getProperty(ProjectParameterManager.CONNECTION_SCHEMA) != null) {
+                schema.setValue(props.getProperty(ProjectParameterManager.CONNECTION_SCHEMA));
             }
             if (props.getProperty(ProjectParameterManager.CONNECTION_USER) != null) {
                 user.setValue(props.getProperty(ProjectParameterManager.CONNECTION_USER));

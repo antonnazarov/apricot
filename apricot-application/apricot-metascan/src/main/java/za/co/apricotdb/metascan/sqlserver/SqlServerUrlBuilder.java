@@ -25,4 +25,9 @@ public class SqlServerUrlBuilder implements DatabaseUrlBuilder {
     public String getDriverClass() {
         return "com.microsoft.sqlserver.jdbc.SQLServerDriver";
     }
+    
+    @Override
+    public String getDefaultSchemaName() {
+        return "dbo";
+    }
 }

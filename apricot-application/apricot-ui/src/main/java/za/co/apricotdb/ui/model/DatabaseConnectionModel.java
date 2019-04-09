@@ -22,12 +22,14 @@ public class DatabaseConnectionModel implements Serializable {
     private String server;
     private String port;
     private String database;
+    private String schema;
     private String user;
     private String password;
     private Map<String, String> passwords = new HashMap<>();
 
     private List<String> servers = new ArrayList<>();
     private List<String> databases = new ArrayList<>();
+    private List<String> schemas = new ArrayList<>();
     private List<String> users = new ArrayList<>();
 
     public DatabaseConnectionModel(ApricotTargetDatabase targetDb) {
@@ -112,5 +114,21 @@ public class DatabaseConnectionModel implements Serializable {
     
     public String getPassword(String user) {
         return passwords.get(user);
+    }
+
+    public String getSchema() {
+        return schema;
+    }
+
+    public void setSchema(String schema) {
+        this.schema = schema;
+    }
+
+    public List<String> getSchemas() {
+        return schemas;
+    }
+
+    public void setSchemas(List<String> schemas) {
+        this.schemas = schemas;
     }
 }

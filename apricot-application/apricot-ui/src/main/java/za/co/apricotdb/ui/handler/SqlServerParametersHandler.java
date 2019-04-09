@@ -53,19 +53,20 @@ public class SqlServerParametersHandler implements ConnectionParametersHandler {
                     ProjectParameterManager.DATABASE_CONNECTION_PARAM_PREFIX + project.getTargetDatabase() + "." + idx,
                     paramsValue);
         }
-        
-        //  save the latest successful connection for this project
-        projectParameterManager.saveParameter(project, ProjectParameterManager.DATABASE_CONNECTION_LATEST, paramsValue);        
+
+        // save the latest successful connection for this project
+        projectParameterManager.saveParameter(project, ProjectParameterManager.DATABASE_CONNECTION_LATEST, paramsValue);
     }
-    
+
     public Properties getLatestConnectionProperties(ApricotProject project) {
         Properties ret = null;
-        ApricotProjectParameter param = projectParameterManager.getParameterByName(project, ProjectParameterManager.DATABASE_CONNECTION_LATEST);
-        
+        ApricotProjectParameter param = projectParameterManager.getParameterByName(project,
+                ProjectParameterManager.DATABASE_CONNECTION_LATEST);
+
         if (param != null) {
             ret = projectParameterManager.restorePropertiesFromString(param.getValue());
         }
-        
+
         return ret;
     }
 
