@@ -1,1 +1,1 @@
-mvn -e exec:java -Dexec.mainClass="za.co.apricotdb.ui.ApricotMainApp"
+mvn -e exec:java -Dexec.cleanupDaemonThreads=false -Dexec.mainClass="za.co.apricotdb.ui.ApricotMainApp"
