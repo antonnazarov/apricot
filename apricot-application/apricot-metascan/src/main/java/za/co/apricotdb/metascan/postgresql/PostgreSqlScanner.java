@@ -27,7 +27,7 @@ public class PostgreSqlScanner extends MetaDataScannerBase {
     @Override
     public Map<String, ApricotTable> getTables(JdbcOperations jdbc, ApricotSnapshot snapshot, String schema) {
         List<ApricotTable> tables = jdbc.query(
-                "select table_name from information_schema.tables where table_schema='public' and table_type = 'BASE TABLE' order by table_name;",
+                "select table_name from information_schema.tables where table_schema='public' and table_type = 'BASE TABLE' order by table_name",
                 (rs, rowNum) -> {
                     ApricotTable t = new ApricotTable();
                     t.setName(rs.getString("table_name"));

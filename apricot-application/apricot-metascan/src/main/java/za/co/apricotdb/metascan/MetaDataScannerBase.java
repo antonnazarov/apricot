@@ -25,7 +25,7 @@ public abstract class MetaDataScannerBase implements MetaDataScanner {
             ApricotSnapshot snapshot) {
         if (StringUtils.isEmpty(schema)) {
             ApricotTargetDatabase targetDb = scannerFactory.getTargetDatabase(url);
-            String defSchema = scannerFactory.getDefaultSchema(targetDb);
+            String defSchema = scannerFactory.getDefaultSchema(url, userName);
             if (StringUtils.isEmpty(defSchema)) {
                 schema = null;
             } else {

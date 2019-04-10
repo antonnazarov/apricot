@@ -28,7 +28,7 @@ public class SqlServerUrlBuilder implements DatabaseUrlBuilder {
     }
     
     @Override
-    public String getDefaultSchemaName() {
+    public String getDefaultSchemaName(String url, String userName) {
         return "dbo";
     }
 }

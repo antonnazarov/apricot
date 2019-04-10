@@ -30,7 +30,7 @@ public class H2UrlBuilder implements DatabaseUrlBuilder {
     }
 
     @Override
-    public String getDefaultSchemaName() {
+    public String getDefaultSchemaName(String url, String userName) {
         return "PUBLIC";
     }
 }

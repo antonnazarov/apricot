@@ -29,7 +29,7 @@ public class PostgreSqlUrlBuilder implements DatabaseUrlBuilder {
     }
     
     @Override
-    public String getDefaultSchemaName() {
-        return null;
+    public String getDefaultSchemaName(String url, String userName) {
+        return "public";
     }
 }

@@ -10,7 +10,7 @@ public interface DatabaseUrlBuilder {
     
     String getDriverClass();
     
-    String getDefaultSchemaName();
+    String getDefaultSchemaName(String url, String userName);
     
     String getUrl(String server, String port, String database);
 }

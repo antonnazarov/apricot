@@ -102,6 +102,13 @@
             <version>42.2.5</version>
         </dependency>
 
+        <!-- MySQL -->
+        <dependency>
+            <groupId>org.mysql</groupId>
+            <artifactId>mysql-connector</artifactId>
+            <version>8.0.15</version>
+        </dependency>
+
         <!-- Utilities -->
         <dependency>
             <groupId>com.h2database</groupId>

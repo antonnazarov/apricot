@@ -109,10 +109,10 @@ public class MetaDataScannerFactory {
         return null;
     }
 
-    public String getDefaultSchema(ApricotTargetDatabase targetDb) {
-        DatabaseUrlBuilder urlBuilder = getDatabaseUrlBuilder(targetDb);
+    public String getDefaultSchema(String url, String userName) {
+        DatabaseUrlBuilder urlBuilder = getDatabaseUrlBuilder(getTargetDatabase(url));
         if (urlBuilder != null) {
-            return urlBuilder.getDefaultSchemaName();
+            return urlBuilder.getDefaultSchemaName(url, userName);
         }
 
         return null;

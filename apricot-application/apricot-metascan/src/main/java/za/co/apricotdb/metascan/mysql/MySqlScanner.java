@@ -1,5 +1,6 @@
 package za.co.apricotdb.metascan.mysql;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,8 +25,22 @@ public class MySqlScanner extends MetaDataScannerBase {
 
     @Override
     public Map<String, ApricotTable> getTables(JdbcOperations jdbc, ApricotSnapshot snapshot, String schema) {
-        // TODO Auto-generated method stub
-        return null;
+        List<ApricotTable> tables = jdbc.query(
+                "select table_name from information_schema.tables where table_schema='public' and table_type = 'BASE TABLE' order by table_name",
+                (rs, rowNum) -> {
+                    ApricotTable t = new ApricotTable();
+                    t.setName(rs.getString("table_name"));
+                    t.setSnapshot(snapshot);
+
+                    return t;
+                });
+
+        Map<String, ApricotTable> ret = new HashMap<>();
+        for (ApricotTable t : tables) {
+            ret.put(t.getName(), t);
+        }
+
+        return ret;
     }
 
     @Override
