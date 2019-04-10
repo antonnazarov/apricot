@@ -14,7 +14,7 @@ import za.co.apricotdb.metascan.sqlserver.SqlServerScanner;
 import za.co.apricotdb.metascan.sqlserver.SqlServerUrlBuilder;
 
 /**
- * This class recognises the appropriate scanner to scan the target database.
+ * This class recognizes the appropriate scanner to scan the target database.
  *
  * @author Anton Nazarov
  * @since 04/10/2018
@@ -76,9 +76,9 @@ public class MetaDataScannerFactory {
     }
 
     /**
-     * Recognise the database type, using the given JDBC URL.
+     * Recognize the database type, using the given JDBC URL.
      */
-    private ApricotTargetDatabase getTargetDatabase(String url) {
+    public ApricotTargetDatabase getTargetDatabase(String url) {
         if (url.contains("jdbc:sqlserver://")) {
             return ApricotTargetDatabase.MSSQLServer;
         } else if (url.contains("jdbc:oracle:thin:@")) {

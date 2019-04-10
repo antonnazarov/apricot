@@ -205,6 +205,9 @@ public class ReverseEngineHandler {
             break;
         case H2 :
             loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-re-h2.fxml"));
+            loader.setControllerFactory(context::getBean);
+            window = loader.load();
+            
             title = "Connect to H2 database";
         default:
             break;

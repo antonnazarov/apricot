@@ -118,18 +118,19 @@ public class GenerateScriptHandler {
     }
 
     @Transactional
-    public boolean generateScript(ScriptSource source, ScriptTarget target, DBScriptType scriptType, Window window) {
+    public boolean generateScript(ScriptSource source, ScriptTarget target, DBScriptType scriptType, Window window,
+            String schema) {
         String operationName = null;
         String script = null;
 
         switch (scriptType) {
         case CREATE_SCRIPT:
             operationName = "CREATE";
-            script = generateCreateScript(source);
+            script = generateCreateScript(source, schema);
             break;
         case DROP_SCRIPT:
             operationName = "DROP";
-            script = generateDropScript(source);
+            script = generateDropScript(source, schema);
             break;
         default:
             break;
@@ -173,7 +174,7 @@ public class GenerateScriptHandler {
         return formHeader;
     }
 
-    private String generateCreateScript(ScriptSource source) {
+    private String generateCreateScript(ScriptSource source, String schema) {
         StringBuilder sb = new StringBuilder();
 
         List<ApricotTable> tables = getScriptTables(source);
@@ -189,7 +190,7 @@ public class GenerateScriptHandler {
         for (ApricotTable table : sortedTables) {
             List<ApricotRelationship> relationships = relationshipManager.getRelationshipsForTable(table);
             String sTable = null;
-            sTable = scriptGenerator.createTableAll(table, relationships);
+            sTable = scriptGenerator.createTableAll(table, relationships, schema);
             sb.append(sTable).append("\n");
         }
 
@@ -208,7 +209,7 @@ public class GenerateScriptHandler {
         }
     }
 
-    private String generateDropScript(ScriptSource source) {
+    private String generateDropScript(ScriptSource source, String schema) {
         String ret = null;
 
         List<ApricotTable> tables = getScriptTables(source);
@@ -222,9 +223,9 @@ public class GenerateScriptHandler {
         }
 
         if (source == ScriptSource.CURRENT_SNAPSHOT) {
-            ret = scriptGenerator.dropAllTables(sortedTables);
+            ret = scriptGenerator.dropAllTables(sortedTables, schema);
         } else {
-            ret = scriptGenerator.dropSelectedTables(sortedTables);
+            ret = scriptGenerator.dropSelectedTables(sortedTables, schema);
         }
 
         return ret;
@@ -269,6 +270,11 @@ public class GenerateScriptHandler {
         }
 
         return false;
+    }
+
+    public List<String> getSchemaNames() {
+        return parameterManager.getPropertyValues(projectManager.findCurrentProject(),
+                ProjectParameterManager.CONNECTION_SCHEMA);
     }
 
     private List<ApricotTable> getScriptTables(ScriptSource source) {

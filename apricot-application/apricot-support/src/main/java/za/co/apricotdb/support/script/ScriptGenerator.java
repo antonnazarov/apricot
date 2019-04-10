@@ -8,17 +8,17 @@ import za.co.apricotdb.persistence.entity.ApricotTable;
 
 public interface ScriptGenerator {
 
-    String createTable(ApricotTable table);
+    String createTable(ApricotTable table, String schema);
 
-    String createConstraints(ApricotTable table);
+    String createConstraints(ApricotTable table, String schema);
 
-    String createForeignKeyConstraint(ApricotRelationship relationship);
+    String createForeignKeyConstraint(ApricotRelationship relationship, String schema);
     
-    String createTableAll(ApricotTable table, List<ApricotRelationship> relationships);
+    String createTableAll(ApricotTable table, List<ApricotRelationship> relationships, String schema);
     
-    String dropAllTables(List<ApricotTable> tables);
+    String dropAllTables(List<ApricotTable> tables, String schema);
     
-    String dropSelectedTables(List<ApricotTable> tables);
+    String dropSelectedTables(List<ApricotTable> tables, String schema);
     
-    String dropConstraint(ApricotConstraint constraint);
+    String dropConstraint(ApricotConstraint constraint, String schema);
 }

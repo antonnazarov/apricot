@@ -206,6 +206,7 @@ public class ConnectionSqlServerController {
         port.getItems().clear();
         database.getItems().clear();
         user.getItems().clear();
+        schema.getItems().clear();
 
         if (server.getItems().isEmpty()) {
             server.getItems().addAll(model.getServers());
@@ -222,7 +223,7 @@ public class ConnectionSqlServerController {
         }
 
         schema.getItems().addAll(model.getSchemas());
-        if (model.getSchemas() != null) {
+        if (model.getSchema() != null) {
             schema.getSelectionModel().select(model.getSchema());
         }
 

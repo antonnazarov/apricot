@@ -1,10 +1,13 @@
 package za.co.apricotdb.ui;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
@@ -41,6 +44,9 @@ public class ScriptGenerateController {
     @FXML
     RadioButton targetSqlEditor;
 
+    @FXML
+    ComboBox<String> schema;
+
     private DBScriptType scriptType;
     private ToggleGroup sourceGroup = new ToggleGroup();
     private ToggleGroup targetGroup = new ToggleGroup();
@@ -54,7 +60,7 @@ public class ScriptGenerateController {
     }
 
     /**
-     * Initialise the controller on startup.
+     * Initialize the controller on startup.
      */
     public void init(DBScriptType scriptType, boolean hasSelected) {
         this.scriptType = scriptType;
@@ -73,6 +79,11 @@ public class ScriptGenerateController {
         targetFile.setToggleGroup(targetGroup);
         targetSqlEditor.setToggleGroup(targetGroup);
         targetFile.setSelected(true);
+
+        List<String> schemaNames = generateScriptHandler.getSchemaNames();
+        if (!schemaNames.isEmpty()) {
+            schema.getItems().addAll(schemaNames);
+        }
     }
 
     private ScriptSource getScriptSource() {
@@ -106,7 +117,7 @@ public class ScriptGenerateController {
     @FXML
     public void generate(ActionEvent event) {
         if (generateScriptHandler.generateScript(getScriptSource(), getScriptTarget(), scriptType,
-                mainPane.getScene().getWindow())) {
+                mainPane.getScene().getWindow(), schema.getValue())) {
             getStage().close();
         }
     }

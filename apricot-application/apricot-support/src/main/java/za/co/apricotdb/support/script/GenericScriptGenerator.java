@@ -19,24 +19,24 @@ import za.co.apricotdb.persistence.entity.ConstraintType;
 public class GenericScriptGenerator implements ScriptGenerator {
 
     public static final String INDENT = "   ";
-    public static final int COMMENT_LENGTH = 45;
+    public static final int COMMENT_LENGTH = 55;
 
     @Autowired
     RelationshipManager relationshipManager;
 
     @Override
-    public String createTableAll(ApricotTable table, List<ApricotRelationship> relationships) {
+    public String createTableAll(ApricotTable table, List<ApricotRelationship> relationships, String schema) {
         StringBuilder sb = new StringBuilder();
 
         sb.append(StringUtils.rightPad("-- ", COMMENT_LENGTH, "*")).append("\n");
         sb.append("-- * ").append(StringUtils.center(table.getName(), COMMENT_LENGTH - 6)).append("*\n");
         sb.append(StringUtils.rightPad("-- ", COMMENT_LENGTH, "*")).append("\n");
 
-        sb.append(createTable(table));
-        sb.append(createConstraints(table));
+        sb.append(createTable(table, schema));
+        sb.append(createConstraints(table, schema));
         for (ApricotRelationship r : relationships) {
             if (table.equals(r.getChild().getTable())) {
-                sb.append(createForeignKeyConstraint(r));
+                sb.append(createForeignKeyConstraint(r, schema));
             }
         }
 
@@ -44,12 +44,17 @@ public class GenericScriptGenerator implements ScriptGenerator {
     }
 
     @Override
-    public String createTable(ApricotTable table) {
+    public String createTable(ApricotTable table, String schema) {
         StringBuilder sb = new StringBuilder();
+
+        String tableName = table.getName();
+        if (schema != null) {
+            tableName = schema + "." + tableName;
+        }
 
         int maxLength = getMaxFieldName(table);
         boolean first = true;
-        sb.append("create table ").append(table.getName()).append(" (\n");
+        sb.append("create table ").append(tableName).append(" (\n");
         for (ApricotColumn col : table.getColumns()) {
             if (!first) {
                 sb.append(",\n");
@@ -92,20 +97,20 @@ public class GenericScriptGenerator implements ScriptGenerator {
     }
 
     @Override
-    public String createConstraints(ApricotTable table) {
+    public String createConstraints(ApricotTable table, String schema) {
         StringBuilder sb = new StringBuilder();
 
         for (ApricotConstraint constr : table.getConstraints()) {
             if (constr.getType() != ConstraintType.PRIMARY_KEY && constr.getType() != ConstraintType.FOREIGN_KEY) {
                 switch (constr.getType()) {
                 case UNIQUE_INDEX:
-                    sb.append(createIndex(constr, true)).append("\n\n");
+                    sb.append(createIndex(constr, true, schema)).append("\n\n");
                     break;
                 case NON_UNIQUE_INDEX:
-                    sb.append(createIndex(constr, false)).append("\n\n");
+                    sb.append(createIndex(constr, false, schema)).append("\n\n");
                     break;
                 case UNIQUE:
-                    sb.append(createUniqueConstraint(constr)).append("\n\n");
+                    sb.append(createUniqueConstraint(constr, schema)).append("\n\n");
                     break;
                 default:
                     break;
@@ -117,52 +122,71 @@ public class GenericScriptGenerator implements ScriptGenerator {
     }
 
     @Override
-    public String createForeignKeyConstraint(ApricotRelationship relationship) {
+    public String createForeignKeyConstraint(ApricotRelationship relationship, String schema) {
         StringBuilder sb = new StringBuilder();
         ApricotTable parent = relationship.getParent().getTable();
         ApricotTable child = relationship.getChild().getTable();
 
-        sb.append("alter table ").append(child.getName()).append("\n").append("add constraint ")
+        String parentTableName = parent.getName();
+        String childTableName = child.getName();
+        if (schema != null) {
+            parentTableName = schema + "." + parentTableName;
+            childTableName = schema + "." + childTableName;
+        }
+
+        sb.append("alter table ").append(childTableName).append("\n").append("add constraint ")
                 .append(relationship.getChild().getName()).append("\n").append("foreign key (")
                 .append(getConstraintColumnsAsString(relationship.getChild())).append(") ").append("references ")
-                .append(parent.getName()).append(" (").append(getConstraintColumnsAsString(relationship.getParent()))
+                .append(parentTableName).append(" (").append(getConstraintColumnsAsString(relationship.getParent()))
                 .append(");\n\n");
 
         return sb.toString();
     }
 
     @Override
-    public String dropAllTables(List<ApricotTable> tables) {
+    public String dropAllTables(List<ApricotTable> tables, String schema) {
         StringBuilder sb = new StringBuilder();
 
         for (ApricotTable table : tables) {
-            sb.append("drop table ").append(table.getName()).append(";\n");
+            String tableName = table.getName();
+            if (schema != null) {
+                tableName = schema + "." + tableName;
+            }
+
+            sb.append("drop table ").append(tableName).append(";\n");
         }
 
         return sb.toString();
     }
 
     @Override
-    public String dropSelectedTables(List<ApricotTable> tables) {
+    public String dropSelectedTables(List<ApricotTable> tables, String schema) {
         StringBuilder sb = new StringBuilder();
 
         // first drop the outgoing/external relationships
         List<ApricotRelationship> externalRelationships = relationshipManager.findExernalRelationships(tables, true);
         for (ApricotRelationship r : externalRelationships) {
-            sb.append(dropConstraint(r.getChild()));
+            sb.append(dropConstraint(r.getChild(), schema));
         }
-        sb.append("\n");
-        sb.append(dropAllTables(tables));
+        if (sb.length() > 0) {
+            sb.append("\n");
+        }
+        sb.append(dropAllTables(tables, schema));
 
         return sb.toString();
     }
 
     @Override
-    public String dropConstraint(ApricotConstraint constraint) {
+    public String dropConstraint(ApricotConstraint constraint, String schema) {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("alter table ").append(constraint.getTable().getName()).append("\n").append("drop constraint ")
-                .append(constraint.getName()).append(";\n");
+        String tableName = constraint.getTable().getName();
+        if (schema != null) {
+            tableName = schema + "." + tableName;
+        }
+
+        sb.append("alter table ").append(tableName).append("\n").append("drop constraint ").append(constraint.getName())
+                .append(";\n");
 
         return sb.toString();
     }
@@ -205,25 +229,32 @@ public class GenericScriptGenerator implements ScriptGenerator {
         return sb.toString();
     }
 
-    private String createUniqueConstraint(ApricotConstraint constraint) {
+    private String createUniqueConstraint(ApricotConstraint constraint, String schema) {
         StringBuilder sb = new StringBuilder();
+        String tableName = constraint.getTable().getName();
+        if (schema != null) {
+            tableName = schema + "." + tableName;
+        }
 
-        sb.append("alter table ").append(constraint.getTable().getName()).append("\n").append("add constraint ")
-                .append(constraint.getName()).append(" unique (").append(getConstraintColumnsAsString(constraint))
-                .append(");");
+        sb.append("alter table ").append(tableName).append("\n").append("add constraint ").append(constraint.getName())
+                .append(" unique (").append(getConstraintColumnsAsString(constraint)).append(");");
 
         return sb.toString();
     }
 
-    private String createIndex(ApricotConstraint constraint, boolean unique) {
+    private String createIndex(ApricotConstraint constraint, boolean unique, String schema) {
         StringBuilder sb = new StringBuilder();
+        String tableName = constraint.getTable().getName();
+        if (schema != null) {
+            tableName = schema + "." + tableName;
+        }
 
         if (unique) {
             sb.append("create unique index ");
         } else {
             sb.append("create index ");
         }
-        sb.append(constraint.getName()).append(" on ").append(constraint.getTable().getName()).append("(")
+        sb.append(constraint.getName()).append(" on ").append(tableName).append("(")
                 .append(getConstraintColumnsAsString(constraint)).append(");");
 
         return sb.toString();

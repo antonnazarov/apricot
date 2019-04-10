@@ -62,6 +62,7 @@ public class DatabaseConnectionModelBuilder {
 
         model.getDatabases().clear();
         model.getUsers().clear();
+        model.getSchemas().clear();
 
         for (ApricotProjectParameter p : prms) {
             Properties props = projectParameterManager.restorePropertiesFromString(p.getValue());

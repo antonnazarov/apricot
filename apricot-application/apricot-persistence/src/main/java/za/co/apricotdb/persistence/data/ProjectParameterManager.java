@@ -15,6 +15,8 @@ import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Component;
 
+import com.microsoft.sqlserver.jdbc.StringUtils;
+
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotProjectParameter;
 import za.co.apricotdb.persistence.repository.ApricotProjectParameterRepository;
@@ -43,7 +45,7 @@ public class ProjectParameterManager {
 
     @Resource
     EntityManager em;
-    
+
     @Resource
     ApricotProjectParameterRepository projectParameterRepository;
 
@@ -79,14 +81,14 @@ public class ProjectParameterManager {
 
         return ret;
     }
-    
+
     public ApricotProjectParameter getParameterByName(ApricotProject project, String name) {
         ApricotProjectParameter ret = null;
-        TypedQuery<ApricotProjectParameter> query = em
-                .createNamedQuery("ApricotProjectParameter.getParameterByName", ApricotProjectParameter.class);
+        TypedQuery<ApricotProjectParameter> query = em.createNamedQuery("ApricotProjectParameter.getParameterByName",
+                ApricotProjectParameter.class);
         query.setParameter("project", project);
         query.setParameter("name", name);
-        
+
         List<ApricotProjectParameter> params = query.getResultList();
         if (params != null && params.size() > 0) {
             ret = params.get(0);
@@ -94,13 +96,13 @@ public class ProjectParameterManager {
 
         return ret;
     }
-    
+
     public void saveParameter(ApricotProject project, String name, String value) {
-        TypedQuery<ApricotProjectParameter> query = em
-                .createNamedQuery("ApricotProjectParameter.getParameterByName", ApricotProjectParameter.class);
+        TypedQuery<ApricotProjectParameter> query = em.createNamedQuery("ApricotProjectParameter.getParameterByName",
+                ApricotProjectParameter.class);
         query.setParameter("project", project);
         query.setParameter("name", name);
-        
+
         List<ApricotProjectParameter> params = query.getResultList();
         ApricotProjectParameter p = null;
         if (params != null && params.size() > 0) {
@@ -112,7 +114,7 @@ public class ProjectParameterManager {
             p.setName(name);
             p.setValue(value);
         }
-        
+
         projectParameterRepository.saveAndFlush(p);
     }
 
@@ -150,5 +152,20 @@ public class ProjectParameterManager {
         }
 
         return properties;
+    }
+
+    public List<String> getPropertyValues(ApricotProject project, String propertyName) {
+        List<String> ret = new ArrayList<>();
+
+        List<ApricotProjectParameter> params = getConnectionParametersForTargetDb(project, project.getTargetDatabase());
+        for (ApricotProjectParameter pp : params) {
+            Properties props = restorePropertiesFromString(pp.getValue());
+            String v = props.getProperty(propertyName);
+            if (!StringUtils.isEmpty(v)) {
+                ret.add(v);
+            }
+        }
+
+        return ret;
     }
 }
