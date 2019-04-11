@@ -60,7 +60,7 @@ public class H2Scanner extends MetaDataScannerBase {
                 c.setNullable(false);
             }
             c.setDataType(rs.getString("type_name"));
-            if (c.getDataType().equals("VARCHAR2")) {
+            if (c.getDataType().contains("VARCHAR") && rs.getString("character_maximum_length") != null) {
                 c.setValueLength(rs.getString("character_maximum_length"));
             }
 
