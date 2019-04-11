@@ -252,6 +252,15 @@ public class MainAppController {
             e.printStackTrace();
         }
     }
+    
+    @FXML
+    public void generateDeleteScript(ActionEvent event) {
+        try {
+            generateScriptHandler.createGenerateScriptForm(DBScriptType.DELETE_SCRIPT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public TabPane getViewsTabPane() {
         return viewsTabPane;

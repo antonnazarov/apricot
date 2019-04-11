@@ -89,13 +89,10 @@ public class DatabaseConnectionModelBuilder {
             }
         }
 
-        String defSchema = scannerFactory.getDefaultSchema(null, null);
+        String defSchema = scannerFactory.getDefaultSchema(null, null, model.getTargetDb());
         if (defSchema != null) {
             if (!model.getSchemas().contains(defSchema)) {
-                model.getSchemas().add(defSchema);                
-            }
-            if (model.getSchema().isEmpty()) {
-                model.setSchema(defSchema);
+                model.getSchemas().add(defSchema);
             }
         }
     }

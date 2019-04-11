@@ -26,12 +26,9 @@ public class SqlServerScanner extends MetaDataScannerBase {
 
     @Override
     public Map<String, ApricotTable> getTables(JdbcOperations jdbc, ApricotSnapshot snapshot, String schema) {
-        String sql = "select table_name from INFORMATION_SCHEMA.tables where table_type='BASE TABLE' order by table_name";
-        if (schema != null) {
-            sql = String.format(
-                    "select table_name from INFORMATION_SCHEMA.tables where table_type='BASE TABLE' and table_schema='%s' order by table_name",
-                    schema);
-        }
+        String sql = String.format(
+                "select table_name from INFORMATION_SCHEMA.tables where table_type='BASE TABLE' and table_schema='%s' order by table_name",
+                schema);
         List<ApricotTable> tables = jdbc.query(sql, (rs, rowNum) -> {
             ApricotTable t = new ApricotTable();
             t.setName(rs.getString("table_name"));
@@ -50,12 +47,9 @@ public class SqlServerScanner extends MetaDataScannerBase {
 
     @Override
     public Map<String, ApricotColumn> getColumns(JdbcOperations jdbc, Map<String, ApricotTable> tables, String schema) {
-        String sql = "select table_name, column_name, ordinal_position, is_nullable, data_type, character_maximum_length from INFORMATION_SCHEMA.COLUMNS order by table_name, ordinal_position";
-        if (schema != null) {
-            sql = String.format(
-                    "select table_name, column_name, ordinal_position, is_nullable, data_type, character_maximum_length from INFORMATION_SCHEMA.COLUMNS where table_schema='%s' order by table_name, ordinal_position",
-                    schema);
-        }
+        String sql = String.format(
+                "select table_name, column_name, ordinal_position, is_nullable, data_type, character_maximum_length from INFORMATION_SCHEMA.COLUMNS where table_schema='%s' order by table_name, ordinal_position",
+                schema);
         List<ApricotColumn> columns = jdbc.query(sql, (rs, rowNum) -> {
             ApricotColumn c = new ApricotColumn();
             c.setName(rs.getString("column_name"));
@@ -98,13 +92,9 @@ public class SqlServerScanner extends MetaDataScannerBase {
     @Override
     public Map<String, ApricotConstraint> getConstraints(JdbcOperations jdbc, Map<String, ApricotTable> tables,
             String schema) {
-
-        String sql = "select table_name, constraint_type, constraint_name from INFORMATION_SCHEMA.TABLE_CONSTRAINTS order by table_name, constraint_type, constraint_name";
-        if (schema != null) {
-            sql = String.format(
-                    "select table_name, constraint_type, constraint_name from INFORMATION_SCHEMA.TABLE_CONSTRAINTS where constraint_schema='%s' order by table_name, constraint_type, constraint_name",
-                    schema);
-        }
+        String sql = String.format(
+                "select table_name, constraint_type, constraint_name from INFORMATION_SCHEMA.TABLE_CONSTRAINTS where constraint_schema='%s' order by table_name, constraint_type, constraint_name",
+                schema);
         Map<String, ApricotConstraint> constraints = new HashMap<>();
         jdbc.query(sql, (rs, rowNum) -> {
             ApricotTable table = tables.get(rs.getString("table_name"));
@@ -132,12 +122,9 @@ public class SqlServerScanner extends MetaDataScannerBase {
         });
 
         // populate the newly created constraints with the related fields
-        String fSql = "select table_name, constraint_name, ordinal_position, column_name from INFORMATION_SCHEMA.KEY_COLUMN_USAGE order by table_name, constraint_name, ordinal_position";
-        if (schema != null) {
-            fSql = String.format(
-                    "select table_name, constraint_name, ordinal_position, column_name from INFORMATION_SCHEMA.KEY_COLUMN_USAGE where constraint_schema='%s' order by table_name, constraint_name, ordinal_position",
-                    schema);
-        }
+        String fSql = String.format(
+                "select table_name, constraint_name, ordinal_position, column_name from INFORMATION_SCHEMA.KEY_COLUMN_USAGE where constraint_schema='%s' order by table_name, constraint_name, ordinal_position",
+                schema);
         jdbc.query(fSql, (rs, rowNum) -> {
             ApricotConstraint c = constraints.get(rs.getString("constraint_name"));
             if (c != null) {
@@ -156,12 +143,9 @@ public class SqlServerScanner extends MetaDataScannerBase {
     @Override
     public List<ApricotRelationship> getRelationships(JdbcOperations jdbc, Map<String, ApricotConstraint> constraints,
             String schema) {
-        String sql = "select unique_constraint_name, constraint_name from INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS order by unique_constraint_name";
-        if (schema != null) {
-            sql = String.format(
-                    "select unique_constraint_name, constraint_name from INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS where constraint_schema='%s' order by unique_constraint_name",
-                    schema);
-        }
+        String sql = String.format(
+                "select unique_constraint_name, constraint_name from INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS where constraint_schema='%s' order by unique_constraint_name",
+                schema);
         List<ApricotRelationship> ret = jdbc.query(sql, (rs, rowNum) -> {
             String sParent = rs.getString("unique_constraint_name");
             String sChild = rs.getString("constraint_name");

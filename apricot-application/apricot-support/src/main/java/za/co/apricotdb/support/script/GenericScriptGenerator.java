@@ -177,6 +177,60 @@ public class GenericScriptGenerator implements ScriptGenerator {
     }
 
     @Override
+    public String deleteInAllTables(List<ApricotTable> tables, String schema) {
+        StringBuilder sb = new StringBuilder();
+
+        for (ApricotTable table : tables) {
+            String tableName = table.getName();
+            if (schema != null) {
+                tableName = schema + "." + tableName;
+            }
+
+            sb.append("delete from ").append(tableName).append(";\n");
+        }
+
+        return sb.toString();
+    }
+
+    @Override
+    public String deleteInSelectedTables(List<ApricotTable> tables, String schema) {
+        StringBuilder sb = new StringBuilder();
+
+        // first delete in all "children"- tables (maximum depth)
+        List<ApricotTable> children = getChildrenFullDepth(tables);
+        if (children.size() > 0) {
+            sb.append(deleteInAllTables(children, schema)).append("\n");
+        }
+        
+        sb.append(deleteInAllTables(tables, schema));
+
+        return sb.toString();
+    }
+
+    /**
+     * Get the child table in full depth of the current object net.
+     */
+    private List<ApricotTable> getChildrenFullDepth(List<ApricotTable> tables) {
+        List<ApricotTable> ret = new ArrayList<>();
+
+        List<ApricotTable> tbl = new ArrayList<>(tables);
+        while (true) {
+            List<ApricotRelationship> externalRelationships = relationshipManager.findExernalRelationships(tbl, true);
+            if (externalRelationships.size() == 0) {
+                break;
+            }
+
+            for (ApricotRelationship r : externalRelationships) {
+                tbl.add(r.getChild().getTable());
+            }
+            ret.addAll(tbl);
+            tbl = new ArrayList<>();
+        }
+
+        return ret;
+    }
+
+    @Override
     public String dropConstraint(ApricotConstraint constraint, String schema) {
         StringBuilder sb = new StringBuilder();
 

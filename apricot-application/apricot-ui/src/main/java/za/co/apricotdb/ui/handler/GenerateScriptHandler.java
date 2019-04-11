@@ -132,6 +132,10 @@ public class GenerateScriptHandler {
             operationName = "DROP";
             script = generateDropScript(source, schema);
             break;
+        case DELETE_SCRIPT:
+            operationName = "DELETE";
+            script = generateDeleteScript(source, schema);
+            break;
         default:
             break;
         }
@@ -179,7 +183,7 @@ public class GenerateScriptHandler {
 
         List<ApricotTable> tables = getScriptTables(source);
         List<ApricotRelationship> allRel = relationshipManager.getRelationshipsForTables(tables);
-        List<ApricotTable> sortedTables = entityChainHandler.getParentChildChain(tables, allRel);
+        List<ApricotTable> sortedTables = sortTables(tables, allRel, false);
 
         if (sortedTables == null) {
             // the dead loop? Check and report.
@@ -214,7 +218,7 @@ public class GenerateScriptHandler {
 
         List<ApricotTable> tables = getScriptTables(source);
         List<ApricotRelationship> allRel = relationshipManager.getRelationshipsForTables(tables);
-        List<ApricotTable> sortedTables = entityChainHandler.getChildParentChain(tables, allRel);
+        List<ApricotTable> sortedTables = sortTables(tables, allRel, true);
 
         if (sortedTables == null) {
             // the dead loop? Check and report.
@@ -226,6 +230,40 @@ public class GenerateScriptHandler {
             ret = scriptGenerator.dropAllTables(sortedTables, schema);
         } else {
             ret = scriptGenerator.dropSelectedTables(sortedTables, schema);
+        }
+
+        return ret;
+    }
+
+    private List<ApricotTable> sortTables(List<ApricotTable> tables, List<ApricotRelationship> rels,
+            boolean isChildToParent) {
+        List<ApricotTable> sortedTables = null;
+        if (isChildToParent) {
+            sortedTables = entityChainHandler.getChildParentChain(tables, rels);
+        } else {
+            sortedTables = entityChainHandler.getParentChildChain(tables, rels);
+        }
+
+        return sortedTables;
+    }
+
+    private String generateDeleteScript(ScriptSource source, String schema) {
+        String ret = null;
+
+        List<ApricotTable> tables = getScriptTables(source);
+        List<ApricotRelationship> allRel = relationshipManager.getRelationshipsForTables(tables);
+        List<ApricotTable> sortedTables = sortTables(tables, allRel, true);
+
+        if (sortedTables == null) {
+            // the dead loop? Check and report.
+            handleDeadLoop(tables, allRel);
+            return null;
+        }
+
+        if (source == ScriptSource.CURRENT_SNAPSHOT) {
+            ret = scriptGenerator.deleteInAllTables(sortedTables, schema);
+        } else {
+            ret = scriptGenerator.deleteInSelectedTables(sortedTables, schema);
         }
 
         return ret;

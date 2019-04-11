@@ -38,6 +38,7 @@ import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
+import za.co.apricotdb.ui.ConnectionH2Controller;
 import za.co.apricotdb.ui.ConnectionSqlServerController;
 import za.co.apricotdb.ui.ReversedTablesController;
 import za.co.apricotdb.ui.model.DatabaseConnectionModel;
@@ -194,7 +195,7 @@ public class ReverseEngineHandler {
         FXMLLoader loader = null;
         String title = null;
         switch (targetDatabase) {
-        case MSSQLServer :
+        case MSSQLServer:
             loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-re-sqlserver.fxml"));
             loader.setControllerFactory(context::getBean);
             window = loader.load();
@@ -203,16 +204,20 @@ public class ReverseEngineHandler {
             ConnectionSqlServerController controller = loader.<ConnectionSqlServerController>getController();
             controller.init(model);
             break;
-        case H2 :
+        case H2:
             loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-re-h2.fxml"));
             loader.setControllerFactory(context::getBean);
             window = loader.load();
-            
+
             title = "Connect to H2 database";
+            ConnectionH2Controller h2controller = loader.<ConnectionH2Controller>getController();
+            h2controller.init(model);
+            break;
+
         default:
             break;
         }
-        
+
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setTitle(title);

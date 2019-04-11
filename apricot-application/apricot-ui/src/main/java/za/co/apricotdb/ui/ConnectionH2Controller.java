@@ -2,6 +2,7 @@ package za.co.apricotdb.ui;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,10 @@ import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.entity.ApricotProjectParameter;
 import za.co.apricotdb.ui.handler.BlackListHandler;
 import za.co.apricotdb.ui.handler.ReverseEngineHandler;
+import za.co.apricotdb.ui.handler.SqlServerParametersHandler;
+import za.co.apricotdb.ui.model.DatabaseConnectionModel;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
+import za.co.apricotdb.ui.util.StringEncoder;
 
 /**
  * The controller under the apricot-re-h2.fxml form.
@@ -58,12 +62,15 @@ public class ConnectionH2Controller {
     @Autowired
     ReverseEngineHandler reverseEngineHandler;
 
+    @Autowired
+    SqlServerParametersHandler parametersHandler;
+
     @FXML
     Pane mainPane;
 
     @FXML
     TextField fileName;
-    
+
     @FXML
     TextField schema;
 
@@ -72,6 +79,24 @@ public class ConnectionH2Controller {
 
     @FXML
     PasswordField password;
+
+    public void init(DatabaseConnectionModel model) {
+        Properties props = parametersHandler.getLatestConnectionProperties(projectManager.findCurrentProject());
+        if (props != null) {
+            String sFileName = props.getProperty(ProjectParameterManager.CONNECTION_SERVER);
+            if (sFileName != null) {
+                fileName.setText(sFileName);
+            }
+            String sSchema = props.getProperty(ProjectParameterManager.CONNECTION_SCHEMA);
+            if (sSchema != null) {
+                schema.setText(sSchema);
+            }
+            String sUser = props.getProperty(ProjectParameterManager.CONNECTION_USER);
+            if (sUser != null) {
+                userName.setText(sUser);
+            }
+        }
+    }
 
     @FXML
     public void openFile(ActionEvent event) {
@@ -115,6 +140,11 @@ public class ConnectionH2Controller {
         try {
             getStage().close();
             reverseEngineHandler.openScanResultForm(metaData, blackList);
+
+            // save the parameters filed in the form
+            Properties params = getConnectionParameters();
+            parametersHandler.saveConnectionParameters(params);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -128,14 +158,26 @@ public class ConnectionH2Controller {
     private Stage getStage() {
         return (Stage) mainPane.getScene().getWindow();
     }
-    
+
     private String getH2DbName(String path) {
         int pos = path.indexOf("mv.db");
         if (pos != -1) {
             return path.substring(0, pos);
         }
-        
+
         return null;
-        
+    }
+
+    private Properties getConnectionParameters() {
+        Properties params = new Properties();
+
+        params.setProperty(ProjectParameterManager.CONNECTION_SERVER, fileName.getText());
+        params.setProperty(ProjectParameterManager.CONNECTION_PORT, "N/A");
+        params.setProperty(ProjectParameterManager.CONNECTION_DATABASE, "N/A");
+        params.setProperty(ProjectParameterManager.CONNECTION_SCHEMA, schema.getText());
+        params.setProperty(ProjectParameterManager.CONNECTION_USER, userName.getText());
+        params.setProperty(ProjectParameterManager.CONNECTION_PASSWORD, StringEncoder.encode(password.getText()));
+
+        return params;
     }
 }

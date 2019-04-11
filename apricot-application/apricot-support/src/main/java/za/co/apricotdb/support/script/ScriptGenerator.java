@@ -21,4 +21,8 @@ public interface ScriptGenerator {
     String dropSelectedTables(List<ApricotTable> tables, String schema);
     
     String dropConstraint(ApricotConstraint constraint, String schema);
+    
+    String deleteInAllTables(List<ApricotTable> tables, String schema);
+    
+    String deleteInSelectedTables(List<ApricotTable> tables, String schema);
 }
