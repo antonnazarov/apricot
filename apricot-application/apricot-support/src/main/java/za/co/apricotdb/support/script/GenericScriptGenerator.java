@@ -23,6 +23,9 @@ public class GenericScriptGenerator implements ScriptGenerator {
 
     @Autowired
     RelationshipManager relationshipManager;
+    
+    @Autowired
+    EntityChainHandler entityChainHandler;
 
     @Override
     public String createTableAll(ApricotTable table, List<ApricotRelationship> relationships, String schema) {
@@ -198,6 +201,8 @@ public class GenericScriptGenerator implements ScriptGenerator {
 
         // first delete in all "children"- tables (maximum depth)
         List<ApricotTable> children = getChildrenFullDepth(tables);
+        List<ApricotRelationship> rels = relationshipManager.getRelationshipsForTables(children);
+        children = entityChainHandler.getChildParentChain(children, rels);
         if (children.size() > 0) {
             sb.append(deleteInAllTables(children, schema)).append("\n");
         }
@@ -220,11 +225,11 @@ public class GenericScriptGenerator implements ScriptGenerator {
                 break;
             }
 
+            tbl = new ArrayList<>();
             for (ApricotRelationship r : externalRelationships) {
                 tbl.add(r.getChild().getTable());
             }
             ret.addAll(tbl);
-            tbl = new ArrayList<>();
         }
 
         return ret;

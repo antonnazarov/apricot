@@ -24,9 +24,9 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "apricot_table")
-@NamedQuery(name="ApricotTable.getTablesByName", query="SELECT at FROM ApricotTable at WHERE at.name IN (:tables) AND at.snapshot = :snapshot")
-@NamedQuery(name="ApricotTable.getTablesBySnapshot", query="SELECT at FROM ApricotTable at WHERE at.snapshot = :snapshot ORDER BY LOWER(at.name)")
-@NamedQuery(name="ApricotTable.getTableByName", query="SELECT at FROM ApricotTable at WHERE at.name = :name AND at.snapshot = :snapshot")
+@NamedQuery(name = "ApricotTable.getTablesByName", query = "SELECT at FROM ApricotTable at WHERE at.name IN (:tables) AND at.snapshot = :snapshot")
+@NamedQuery(name = "ApricotTable.getTablesBySnapshot", query = "SELECT at FROM ApricotTable at WHERE at.snapshot = :snapshot ORDER BY LOWER(at.name)")
+@NamedQuery(name = "ApricotTable.getTableByName", query = "SELECT at FROM ApricotTable at WHERE at.name = :name AND at.snapshot = :snapshot")
 public class ApricotTable implements Serializable {
 
     private static final long serialVersionUID = 7279471522618380758L;
@@ -34,8 +34,8 @@ public class ApricotTable implements Serializable {
     public ApricotTable() {
     }
 
-    public ApricotTable(String name, List<ApricotColumn> columns, 
-            List<ApricotConstraint> constraints, ApricotSnapshot snapshot) {
+    public ApricotTable(String name, List<ApricotColumn> columns, List<ApricotConstraint> constraints,
+            ApricotSnapshot snapshot) {
         this.name = name;
         this.columns = columns;
         this.constraints = constraints;
@@ -55,7 +55,7 @@ public class ApricotTable implements Serializable {
 
     @OneToMany(mappedBy = "table", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ApricotConstraint> constraints = new ArrayList<>();
-    
+
     @ManyToOne
     @JoinColumn(name = "snapshot_id")
     private ApricotSnapshot snapshot;
@@ -78,7 +78,7 @@ public class ApricotTable implements Serializable {
 
     public List<ApricotColumn> getColumns() {
         columns.sort((c1, c2) -> {
-            return c1.getOrdinalPosition()-c2.getOrdinalPosition();
+            return c1.getOrdinalPosition() - c2.getOrdinalPosition();
         });
         return columns;
     }
@@ -105,16 +105,11 @@ public class ApricotTable implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("\nApricotTable: ");
-        sb.append("id=[").append(id).append("], ");
-        sb.append("name=[").append(name).append("], ");
-        sb.append("\ncolumns=[").append(columns).append("], ");
-        sb.append("\nconstraints=[").append(constraints).append("]\n");
-        sb.append("\nproject=[").append(snapshot.getName()).append("]\n");
+        StringBuilder sb = new StringBuilder("ApricotTable (").append(id).append("): [").append(name).append("]");
 
         return sb.toString();
     }
-    
+
     /**
      * Get column by its name.
      */
@@ -124,7 +119,7 @@ public class ApricotTable implements Serializable {
                 return c;
             }
         }
-        
+
         return null;
     }
 
@@ -134,7 +129,7 @@ public class ApricotTable implements Serializable {
                 return c;
             }
         }
-        
+
         return null;
     }
 
@@ -150,49 +145,50 @@ public class ApricotTable implements Serializable {
                 columns.add(c);
             }
         }
-        
+
         return columns;
     }
-    
-    public ApricotRelationship establishChildConstraint(String parentConstraintName, ApricotTable childTable, String childConstraintName) {
+
+    public ApricotRelationship establishChildConstraint(String parentConstraintName, ApricotTable childTable,
+            String childConstraintName) {
         ApricotConstraint parent = getConstraintByName(parentConstraintName);
         ApricotConstraint child = childTable.getConstraintByName(childConstraintName);
-        
+
         ApricotRelationship r = new ApricotRelationship(parent, child);
-        
+
         return r;
     }
-    
+
     public ApricotConstraint getConstraintByName(String name) {
         for (ApricotConstraint c : constraints) {
             if (c.getName().equals(name)) {
                 return c;
             }
         }
-        
+
         return null;
     }
-    
+
     public ApricotConstraint getConstraintById(long id) {
         for (ApricotConstraint c : constraints) {
             if (c.getId() == id) {
                 return c;
             }
         }
-        
+
         return null;
     }
-    
+
     @Override
     public boolean equals(Object o) {
         if (o instanceof ApricotTable) {
             ApricotTable t = (ApricotTable) o;
             return this.name.equals(t.name);
         }
-        
+
         return false;
     }
-    
+
     @Override
     public int hashCode() {
         return name.hashCode();

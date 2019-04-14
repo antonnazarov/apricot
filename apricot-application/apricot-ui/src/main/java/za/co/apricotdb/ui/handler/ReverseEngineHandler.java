@@ -1,6 +1,8 @@
 package za.co.apricotdb.ui.handler;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 
 import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,12 +102,12 @@ public class ReverseEngineHandler {
         return false;
     }
 
-    public void openScanResultForm(MetaData metaData, String[] blackList) throws IOException {
+    public void openScanResultForm(MetaData metaData, String[] blackList, String reverseEngineeringParameters) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-re-tables-list.fxml"));
         loader.setControllerFactory(context::getBean);
         Pane window = loader.load();
         ReversedTablesController controller = loader.<ReversedTablesController>getController();
-        controller.init(metaData, blackList);
+        controller.init(metaData, blackList, reverseEngineeringParameters);
 
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
@@ -117,7 +120,7 @@ public class ReverseEngineHandler {
     }
 
     public boolean saveReversedObjects(List<ApricotTable> included, List<ApricotTable> excluded,
-            List<ApricotRelationship> relationships) {
+            List<ApricotRelationship> relationships, String reverseEngineeringParameters) {
         Map<ApricotTable, ApricotTable> extraExclude = consistencyHandler.getFullConsistentExclude(excluded,
                 relationships);
         if (!extraExclude.isEmpty()) {
@@ -161,6 +164,8 @@ public class ReverseEngineHandler {
         md.setTables(included);
         md.setRelationships(filteredRelationships);
         dataSaver.saveMetaData(md);
+        
+        
 
         return true;
     }
@@ -234,5 +239,18 @@ public class ReverseEngineHandler {
         });
 
         dialog.show();
+    }
+    
+    private void setSnapshotReverseResultMessage(String reverseEngineeringParameters) {
+        ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
+        
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        StringBuilder sb = new StringBuilder(snapshot.getComment());
+        sb.append("\n\n");
+        sb.append(df.format(new java.util.Date())).append("->");
+        sb.append("The Reverse Engineering was successfully performed into this Snapshot with the following connection parameters:\n");
+        
+        snapshot.setComment(sb.toString());
+        snapshotManager.saveSnapshot(snapshot);
     }
 }

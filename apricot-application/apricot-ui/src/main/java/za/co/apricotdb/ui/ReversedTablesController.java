@@ -53,9 +53,11 @@ public class ReversedTablesController {
     Pane mainPane;
 
     private MetaData metaData = null;
+    private String reverseEngineeringParameters = null;
 
-    public void init(MetaData metaData, String[] blackList) {
+    public void init(MetaData metaData, String[] blackList, String reverseEngineeringParameters) {
         this.metaData = metaData;
+        this.reverseEngineeringParameters = reverseEngineeringParameters;
 
         reversedTablesList.getItems().clear();
         List<ApricotTable> tables = metaData.getTables();
@@ -103,7 +105,8 @@ public class ReversedTablesController {
             }
         }
 
-        if (reverseEngineHandler.saveReversedObjects(included, excluded, metaData.getRelationships())) {
+        if (reverseEngineHandler.saveReversedObjects(included, excluded, metaData.getRelationships(),
+                reverseEngineeringParameters)) {
             // refresh the snapshot view
             applicationInitializer.initializeDefault();
             getStage().close();
