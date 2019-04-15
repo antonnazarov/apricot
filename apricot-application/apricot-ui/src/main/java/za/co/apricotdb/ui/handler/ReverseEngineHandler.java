@@ -11,7 +11,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
-import javax.transaction.Transactional;
 
 import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,7 +146,6 @@ public class ReverseEngineHandler {
                 // save the black list
                 excluded.sort((ApricotTable t1, ApricotTable t2) -> {
                     return t1.getName().compareTo(t2.getName());
-
                 });
                 blackListHandler.saveBlackList(projectManager.findCurrentProject(), excluded);
             } else {
@@ -165,7 +163,8 @@ public class ReverseEngineHandler {
         md.setRelationships(filteredRelationships);
         dataSaver.saveMetaData(md);
         
-        
+        //  save the extension of the snapshot comment
+        setSnapshotReverseResultMessage(reverseEngineeringParameters);
 
         return true;
     }
@@ -249,6 +248,7 @@ public class ReverseEngineHandler {
         sb.append("\n\n");
         sb.append(df.format(new java.util.Date())).append("->");
         sb.append("The Reverse Engineering was successfully performed into this Snapshot with the following connection parameters:\n");
+        sb.append(reverseEngineeringParameters);
         
         snapshot.setComment(sb.toString());
         snapshotManager.saveSnapshot(snapshot);

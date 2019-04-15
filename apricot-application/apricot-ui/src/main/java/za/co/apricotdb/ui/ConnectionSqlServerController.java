@@ -280,10 +280,10 @@ public class ConnectionSqlServerController {
         StringBuilder sb = new StringBuilder();
 
         sb.append("Database Type: ").append(model.getTargetDb().name()).append("\n");
-        sb.append("Server       : ").append(server.getSelectionModel().getSelectedItem()).append("\n");
-        sb.append("Port         : ").append(port.getSelectionModel().getSelectedItem()).append("\n");
-        sb.append("Database     : ").append(database.getSelectionModel().getSelectedItem()).append("\n");
-        sb.append("User         : ").append(user.getSelectionModel().getSelectedItem()).append("\n");
+        sb.append("Server: ").append(server.getSelectionModel().getSelectedItem()).append("\n");
+        sb.append("Port: ").append(port.getSelectionModel().getSelectedItem()).append("\n");
+        sb.append("Database: ").append(database.getSelectionModel().getSelectedItem()).append("\n");
+        sb.append("User: ").append(user.getSelectionModel().getSelectedItem()).append("\n");
 
         return sb.toString();
     }

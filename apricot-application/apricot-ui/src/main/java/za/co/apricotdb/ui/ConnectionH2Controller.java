@@ -15,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import za.co.apricotdb.metascan.ApricotTargetDatabase;
 import za.co.apricotdb.metascan.h2.H2Scanner;
 import za.co.apricotdb.metascan.h2.H2UrlBuilder;
 import za.co.apricotdb.persistence.data.MetaData;
@@ -139,7 +140,7 @@ public class ConnectionH2Controller {
         String[] blackList = blackListHandler.getBlackListTables(projectManager.findCurrentProject());
         try {
             getStage().close();
-            reverseEngineHandler.openScanResultForm(metaData, blackList);
+            reverseEngineHandler.openScanResultForm(metaData, blackList, composeReverseEngineeringParameters());
 
             // save the parameters filed in the form
             Properties params = getConnectionParameters();
@@ -179,5 +180,16 @@ public class ConnectionH2Controller {
         params.setProperty(ProjectParameterManager.CONNECTION_PASSWORD, StringEncoder.encode(password.getText()));
 
         return params;
+    }
+    
+    private String composeReverseEngineeringParameters() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Database Type: ").append(ApricotTargetDatabase.H2.name()).append("\n");
+        sb.append("H2 file: ").append(fileName.getText()).append("\n");
+        sb.append("Schema: ").append(schema.getText()).append("\n");
+        sb.append("User: ").append(userName.getText()).append("\n");
+
+        return sb.toString();
     }
 }
