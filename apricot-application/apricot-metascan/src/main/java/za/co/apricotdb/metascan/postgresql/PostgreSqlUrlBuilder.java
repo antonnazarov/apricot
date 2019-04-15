@@ -27,9 +27,15 @@ public class PostgreSqlUrlBuilder implements DatabaseUrlBuilder {
     public String getDriverClass() {
         return "org.postgresql.Driver";
     }
-    
+
     @Override
     public String getDefaultSchemaName(String url, String userName) {
         return "public";
+    }
+
+    @Override
+    public String getTestSQL() {
+        // TODO Auto-generated method stub
+        return "TODO IMPLEMENT!";
     }
 }

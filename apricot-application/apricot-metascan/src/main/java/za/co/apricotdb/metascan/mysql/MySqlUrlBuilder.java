@@ -35,4 +35,10 @@ public class MySqlUrlBuilder implements DatabaseUrlBuilder {
         
         return sb.toString();
     }
+
+    @Override
+    public String getTestSQL() {
+        // TODO Auto-generated method stub
+        return "TODO IMPLEMENT!";
+    }
 }

@@ -101,7 +101,8 @@ public class ReverseEngineHandler {
         return false;
     }
 
-    public void openScanResultForm(MetaData metaData, String[] blackList, String reverseEngineeringParameters) throws IOException {
+    public void openScanResultForm(MetaData metaData, String[] blackList, String reverseEngineeringParameters)
+            throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-re-tables-list.fxml"));
         loader.setControllerFactory(context::getBean);
         Pane window = loader.load();
@@ -162,8 +163,8 @@ public class ReverseEngineHandler {
         md.setTables(included);
         md.setRelationships(filteredRelationships);
         dataSaver.saveMetaData(md);
-        
-        //  save the extension of the snapshot comment
+
+        // save the extension of the snapshot comment
         setSnapshotReverseResultMessage(reverseEngineeringParameters);
 
         return true;
@@ -200,13 +201,12 @@ public class ReverseEngineHandler {
         String title = null;
         switch (targetDatabase) {
         case MSSQLServer:
-            loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-re-sqlserver.fxml"));
-            loader.setControllerFactory(context::getBean);
-            window = loader.load();
-
             title = "Connect to SQL Server database";
-            ConnectionSqlServerController controller = loader.<ConnectionSqlServerController>getController();
-            controller.init(model);
+            window = initFormController(model);
+            break;
+        case Oracle:
+            title = "Connect to Oracle database";
+            window = initFormController(model);
             break;
         case H2:
             loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-re-h2.fxml"));
@@ -239,18 +239,30 @@ public class ReverseEngineHandler {
 
         dialog.show();
     }
-    
+
     private void setSnapshotReverseResultMessage(String reverseEngineeringParameters) {
         ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
-        
+
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         StringBuilder sb = new StringBuilder(snapshot.getComment());
         sb.append("\n\n");
         sb.append(df.format(new java.util.Date())).append("->");
-        sb.append("The Reverse Engineering was successfully performed into this Snapshot with the following connection parameters:\n");
+        sb.append(
+                "The Reverse Engineering was successfully performed into this Snapshot with the following connection parameters:\n");
         sb.append(reverseEngineeringParameters);
-        
+
         snapshot.setComment(sb.toString());
         snapshotManager.saveSnapshot(snapshot);
+    }
+
+    private Pane initFormController(DatabaseConnectionModel model) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-re-sqlserver.fxml"));
+        loader.setControllerFactory(context::getBean);
+        Pane window = loader.load();
+
+        ConnectionSqlServerController controller = loader.<ConnectionSqlServerController>getController();
+        controller.init(model);
+
+        return window;
     }
 }

@@ -29,7 +29,7 @@
          <children>
             <Label text="Server:" />
             <Label text="Port:" GridPane.rowIndex="1" />
-            <Label text="Database:" GridPane.rowIndex="2" />
+            <Label fx:id="serviceLabel" text="Database:" GridPane.rowIndex="2" />
             <Label text="User:" GridPane.rowIndex="4" />
             <Label text="Password:" GridPane.rowIndex="5" />
             <ComboBox fx:id="server" editable="true" onAction="#serverSelected" prefHeight="25.0" prefWidth="315.0" GridPane.columnIndex="1" />

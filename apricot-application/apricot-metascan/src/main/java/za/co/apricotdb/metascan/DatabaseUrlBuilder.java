@@ -13,4 +13,6 @@ public interface DatabaseUrlBuilder {
     String getDefaultSchemaName(String url, String userName);
     
     String getUrl(String server, String port, String database);
+    
+    String getTestSQL();
 }

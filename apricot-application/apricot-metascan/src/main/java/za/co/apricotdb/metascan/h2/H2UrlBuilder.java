@@ -33,4 +33,9 @@ public class H2UrlBuilder implements DatabaseUrlBuilder {
     public String getDefaultSchemaName(String url, String userName) {
         return "PUBLIC";
     }
+
+    @Override
+    public String getTestSQL() {
+        return null;
+    }
 }

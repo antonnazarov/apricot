@@ -135,4 +135,13 @@ public class MetaDataScannerFactory {
 
         return null;
     }
+    
+    public String getTestSQL(ApricotTargetDatabase targetDb) {
+        DatabaseUrlBuilder urlBuilder = getDatabaseUrlBuilder(targetDb);
+        if (urlBuilder != null) {
+            return urlBuilder.getTestSQL();
+        }
+
+        return null;
+    }
 }

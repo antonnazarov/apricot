@@ -31,4 +31,9 @@ public class SqlServerUrlBuilder implements DatabaseUrlBuilder {
     public String getDefaultSchemaName(String url, String userName) {
         return "dbo";
     }
+
+    @Override
+    public String getTestSQL() {
+        return "select name from sys.tables;";
+    }
 }

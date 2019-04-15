@@ -31,4 +31,9 @@ public class OracleUrlBuilder implements DatabaseUrlBuilder {
     public String getDefaultSchemaName(String url, String userName) {
         return userName;
     }
+
+    @Override
+    public String getTestSQL() {
+        return "select table_name from user_tables";
+    }
 }

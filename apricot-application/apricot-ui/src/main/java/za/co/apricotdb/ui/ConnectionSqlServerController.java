@@ -3,6 +3,7 @@ package za.co.apricotdb.ui;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcOperations;
@@ -15,6 +16,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -89,6 +91,9 @@ public class ConnectionSqlServerController {
     @FXML
     PasswordField password;
 
+    @FXML
+    Label serviceLabel;
+
     private DatabaseConnectionModel model;
     private ApricotSnapshot snapshot;
     private ApricotProject project;
@@ -101,6 +106,11 @@ public class ConnectionSqlServerController {
 
         applyModel(model);
         setLatestConnectionParameters();
+
+        if (model.getTargetDb() == ApricotTargetDatabase.Oracle) {
+            serviceLabel.setText("SID:");
+            schema.setDisable(true);
+        }
     }
 
     @FXML
@@ -129,16 +139,16 @@ public class ConnectionSqlServerController {
 
         try {
             JdbcOperations op = MetaDataScanner.getTargetJdbcOperations(driverClass, url, user, password);
-
             RowMapper<String> rowMapper = (rs, rowNum) -> {
-                return rs.getString("name");
+                return "Connection test";
             };
-            op.query("select name from sys.tables;", rowMapper);
+            op.query(scannerFactory.getTestSQL(targetDb), rowMapper);
 
             // Success! Save the connection parameters in the project- parameter
             Properties params = getConnectionParameters();
             parametersHandler.saveConnectionParameters(params);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new Exception("Unable to connect to the database server:\n" + WordUtils.wrap(e.getMessage(), 60));
         }
     }
@@ -149,7 +159,9 @@ public class ConnectionSqlServerController {
         params.setProperty(ProjectParameterManager.CONNECTION_SERVER, server.getSelectionModel().getSelectedItem());
         params.setProperty(ProjectParameterManager.CONNECTION_PORT, port.getSelectionModel().getSelectedItem());
         params.setProperty(ProjectParameterManager.CONNECTION_DATABASE, database.getSelectionModel().getSelectedItem());
-        params.setProperty(ProjectParameterManager.CONNECTION_SCHEMA, schema.getSelectionModel().getSelectedItem());
+        if (StringUtils.isNotEmpty(schema.getSelectionModel().getSelectedItem())) {
+            params.setProperty(ProjectParameterManager.CONNECTION_SCHEMA, schema.getSelectionModel().getSelectedItem());
+        }
         params.setProperty(ProjectParameterManager.CONNECTION_USER, user.getSelectionModel().getSelectedItem());
         params.setProperty(ProjectParameterManager.CONNECTION_PASSWORD, StringEncoder.encode(password.getText()));
 
