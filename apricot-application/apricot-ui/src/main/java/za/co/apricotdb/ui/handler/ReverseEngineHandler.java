@@ -245,14 +245,18 @@ public class ReverseEngineHandler {
 
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         StringBuilder sb = new StringBuilder(snapshot.getComment());
-        sb.append("\n\n");
+        if (sb.length() > 0) {
+            sb.append("\n\n");
+        }
         sb.append(df.format(new java.util.Date())).append("->");
         sb.append(
                 "The Reverse Engineering was successfully performed into this Snapshot with the following connection parameters:\n");
         sb.append(reverseEngineeringParameters);
 
-        snapshot.setComment(sb.toString());
-        snapshotManager.saveSnapshot(snapshot);
+        if (sb.length() < ApricotSnapshot.SNAPSHOT_COMMENT_LENGTH) {
+            snapshot.setComment(sb.toString());
+            snapshotManager.saveSnapshot(snapshot);
+        }
     }
 
     private Pane initFormController(DatabaseConnectionModel model) throws IOException {

@@ -31,6 +31,7 @@ import javax.persistence.TemporalType;
 @NamedQuery(name="ApricotSnapshot.getSnapshotByName", query="SELECT sn FROM ApricotSnapshot sn WHERE sn.name = :name AND sn.project = :project")
 public class ApricotSnapshot implements Serializable {
 
+    public final static int SNAPSHOT_COMMENT_LENGTH = 500; 
     private static final long serialVersionUID = -8750109610659026590L;
     
     public ApricotSnapshot() {}

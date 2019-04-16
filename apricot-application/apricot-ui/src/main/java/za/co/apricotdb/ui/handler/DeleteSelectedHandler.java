@@ -67,21 +67,21 @@ public class DeleteSelectedHandler {
                                 .findRelationshipById(r.getRelationshipId());
                         relationshipHandler.deleteRelationship(rel);
                     }
+                    snapshotHandler.syncronizeSnapshot();
                 }
-                snapshotHandler.syncronizeSnapshot();
             }
         } else {
             StringBuilder sb = new StringBuilder();
             sb.append("The following Entity(s) will be deleted:\n");
             for (ApricotEntity e : entities) {
-                sb.append(" * ").append(e.getTableName()).append("\n");
+                sb.append("*").append(e.getTableName()).append("\n");
             }
             if (alert.requestYesNoOption("Delete Entity(s)", sb.toString(), "Delete")) {
                 for (ApricotEntity e : entities) {
                     entityHandler.deleteEntity(e.getTableName());
                 }
+                snapshotHandler.syncronizeSnapshot();
             }
-            snapshotHandler.syncronizeSnapshot();
         }
     }
 }

@@ -14,7 +14,7 @@ import javafx.scene.control.DialogPane;
 @Component
 public class AlertMessageDecorator {
 
-    public final static int STANDARD_MESSAGE_LENGTH = 75;
+    public final static int STANDARD_MESSAGE_LENGTH = 100;
 
     /**
      * Apply the custom style sheet to the Alert given.
@@ -54,7 +54,6 @@ public class AlertMessageDecorator {
         alert.setHeaderText(WordUtils.wrap(text, STANDARD_MESSAGE_LENGTH));
         decorateAlert(alert);
         Optional<ButtonType> result = alert.showAndWait();
-
         if (result.orElse(no) == yes) {
             return true;
         } else {
