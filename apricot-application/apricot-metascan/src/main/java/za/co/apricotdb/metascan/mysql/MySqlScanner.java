@@ -25,15 +25,16 @@ public class MySqlScanner extends MetaDataScannerBase {
 
     @Override
     public Map<String, ApricotTable> getTables(JdbcOperations jdbc, ApricotSnapshot snapshot, String schema) {
-        List<ApricotTable> tables = jdbc.query(
-                "select table_name from information_schema.tables where table_schema='public' and table_type = 'BASE TABLE' order by table_name",
-                (rs, rowNum) -> {
-                    ApricotTable t = new ApricotTable();
-                    t.setName(rs.getString("table_name"));
-                    t.setSnapshot(snapshot);
+        String sql = String.format(
+                "select table_name from information_schema.tables where table_schema='%s' and table_type = 'BASE TABLE' order by table_name",
+                schema);
+        List<ApricotTable> tables = jdbc.query(sql, (rs, rowNum) -> {
+            ApricotTable t = new ApricotTable();
+            t.setName(rs.getString("table_name"));
+            t.setSnapshot(snapshot);
 
-                    return t;
-                });
+            return t;
+        });
 
         Map<String, ApricotTable> ret = new HashMap<>();
         for (ApricotTable t : tables) {
