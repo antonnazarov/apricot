@@ -191,10 +191,8 @@ public class SqlServerScanner extends MetaDataScannerBase {
                             table.getConstraints().add(c);
 
                             // get the fields of the index
-                            List<String> columns = jdbc.query("select name as column_name "
-                                    + "from sys.index_columns ic "
-                                    + "join sys.all_columns c on c.column_id = ic.column_id and c.object_id = ic.object_id "
-                                    + "where ic.object_id = ? and ic.index_id = ? " + "order by ic.key_ordinal",
+                            List<String> columns = jdbc.query(
+                                    "select name as column_name from sys.index_columns ic join sys.all_columns c on c.column_id = ic.column_id and c.object_id = ic.object_id where ic.object_id = ? and ic.index_id = ? order by ic.key_ordinal",
                                     new Object[] { rs.getLong("object_id"), rs.getInt("index_id") },
                                     (rs01, rowNum01) -> {
                                         return rs01.getString("column_name");

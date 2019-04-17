@@ -38,7 +38,6 @@ public class MySqlUrlBuilder implements DatabaseUrlBuilder {
 
     @Override
     public String getTestSQL() {
-        // TODO Auto-generated method stub
-        return "TODO IMPLEMENT!";
+        return "select table_name from information_schema.tables";
     }
 }

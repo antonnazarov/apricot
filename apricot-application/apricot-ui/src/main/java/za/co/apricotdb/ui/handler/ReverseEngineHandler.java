@@ -208,6 +208,14 @@ public class ReverseEngineHandler {
             title = "Connect to Oracle database";
             window = initFormController(model);
             break;
+        case PostrgeSQL:
+            title = "Connect to PostgreSQL database";
+            window = initFormController(model);
+            break;
+        case MySQL:
+            title = "Connect to MySQL database";
+            window = initFormController(model);
+            break;
         case H2:
             loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-re-h2.fxml"));
             loader.setControllerFactory(context::getBean);

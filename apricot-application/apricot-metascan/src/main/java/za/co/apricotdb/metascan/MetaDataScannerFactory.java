@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import za.co.apricotdb.metascan.h2.H2Scanner;
 import za.co.apricotdb.metascan.h2.H2UrlBuilder;
 import za.co.apricotdb.metascan.mysql.MySqlScanner;
+import za.co.apricotdb.metascan.mysql.MySqlUrlBuilder;
 import za.co.apricotdb.metascan.oracle.OracleScanner;
 import za.co.apricotdb.metascan.oracle.OracleUrlBuilder;
 import za.co.apricotdb.metascan.postgresql.PostgreSqlScanner;
@@ -42,6 +43,9 @@ public class MetaDataScannerFactory {
 
     @Autowired
     MySqlScanner mySqlScanner;
+    
+    @Autowired
+    MySqlUrlBuilder mySqlUrlBuilder;
 
     @Autowired
     PostgreSqlScanner postgreSqlScanner;
@@ -67,6 +71,9 @@ public class MetaDataScannerFactory {
         case PostrgeSQL:
             scanner = postgreSqlScanner;
             break;
+        case MySQL:
+            scanner = mySqlScanner;
+            break;
         default:
             scanner = sqlServerScanner;
             break;
@@ -87,6 +94,8 @@ public class MetaDataScannerFactory {
             return ApricotTargetDatabase.H2;
         } else if (url.contains("jdbc:postgresql://")) {
             return ApricotTargetDatabase.PostrgeSQL;
+        } else if (url.contains("jdbc:mysql://")) {
+            return ApricotTargetDatabase.MySQL;
         }
 
         return ApricotTargetDatabase.MSSQLServer;
@@ -103,7 +112,7 @@ public class MetaDataScannerFactory {
         case PostrgeSQL:
             return postgreSqlUrlBuilder;
         case MySQL:
-            break;
+            return mySqlUrlBuilder;
         }
 
         return null;
