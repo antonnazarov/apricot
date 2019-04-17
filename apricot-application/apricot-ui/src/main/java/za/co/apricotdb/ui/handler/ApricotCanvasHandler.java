@@ -279,7 +279,7 @@ public class ApricotCanvasHandler {
         Tab t = parentWindow.getProjectTabPane().getSelectionModel().getSelectedItem();
         if (t.getUserData() instanceof TabInfoObject) {
             TabInfoObject o = (TabInfoObject) t.getUserData();
-            if (o.getView().getName().equals("Main View")) {
+            if (o.getView().getName().equals(ApricotView.MAIN_VIEW)) {
                 return true;
             }
         }
@@ -291,7 +291,7 @@ public class ApricotCanvasHandler {
         for (Tab t : parentWindow.getProjectTabPane().getTabs()) {
             if (t.getUserData() instanceof TabInfoObject) {
                 TabInfoObject o = (TabInfoObject) t.getUserData();
-                if (o.getView().getName().equals("Main View")) {
+                if (o.getView().getName().equals(ApricotView.MAIN_VIEW)) {
                     return o;
                 }
             }

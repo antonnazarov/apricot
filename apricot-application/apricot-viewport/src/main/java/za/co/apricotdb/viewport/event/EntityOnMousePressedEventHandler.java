@@ -1,6 +1,7 @@
 package za.co.apricotdb.viewport.event;
 
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
@@ -8,6 +9,7 @@ import za.co.apricotdb.viewport.canvas.ApricotElement;
 import za.co.apricotdb.viewport.canvas.ElementStatus;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
 import za.co.apricotdb.viewport.notification.EditEntityEvent;
+import za.co.apricotdb.viewport.notification.EntityContextMenuEvent;
 
 /**
  * The mouse is pressed.
@@ -29,27 +31,41 @@ public class EntityOnMousePressedEventHandler implements EventHandler<MouseEvent
 
     @Override
     public void handle(MouseEvent event) {
-        if (event.getSource() instanceof ApricotEntityShape && event.getButton() == MouseButton.PRIMARY) {
+        if (event.getSource() instanceof ApricotEntityShape
+                && tableName.equals(((ApricotEntityShape) event.getSource()).getId())) {
             ApricotEntityShape entityShape = (ApricotEntityShape) event.getSource();
-            if (tableName.equals(entityShape.getId())) {
+            ApricotElement entity = entityShape.getElement();
+
+            if (event.getButton() == MouseButton.PRIMARY) {
                 DraggingType type = getDraggingType(entityShape, event.getX(), event.getY());
                 registerEntityOriginalPosition(entityShape, event.getSceneX(), event.getSceneY(), type);
-                
-                ApricotElement entity = entityShape.getElement();
                 if (!event.isControlDown()) {
                     canvas.changeAllElementsStatus(ElementStatus.DEFAULT);
                     entity.setElementStatus(ElementStatus.SELECTED);
                 } else {
-                    entity.setElementStatus(ElementStatus.SELECTED);                    
+                    entity.setElementStatus(ElementStatus.SELECTED);
                 }
-                
-                //  the double click runs the Edit Entity command
+
+                // the double click runs the Edit Entity command
                 if (event.getClickCount() == 2) {
                     canvas.publishEvent(new EditEntityEvent(canvas, tableName));
                 }
 
-                event.consume();
+            } else if (event.getButton() == MouseButton.SECONDARY) {
+                // handle the context menu
+                if (entity.getElementStatus() == ElementStatus.DEFAULT) {
+                    canvas.changeAllElementsStatus(ElementStatus.DEFAULT);
+                    entity.setElementStatus(ElementStatus.SELECTED);
+                }
+
+                if (entity.getElementStatus() == ElementStatus.SELECTED) {
+                    Node entityNode = entity.getShape();
+                    EntityContextMenuEvent cmEvent = new EntityContextMenuEvent(entityNode, event.getSceneX(), event.getSceneY());
+                    canvas.publishEvent(cmEvent);
+                }
             }
+
+            event.consume();
         }
     }
 

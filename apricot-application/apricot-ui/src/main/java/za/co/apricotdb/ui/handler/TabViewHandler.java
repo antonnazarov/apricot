@@ -197,7 +197,7 @@ public class TabViewHandler {
     }
 
     private void createTabContextMenu(Tab tab, TabInfoObject tabInfo) {
-        if (tab.getText().equals("Main View")) {
+        if (tab.getText().equals(ApricotView.MAIN_VIEW)) {
             // not for the Main (General) view
             return;
         }

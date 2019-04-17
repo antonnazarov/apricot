@@ -106,7 +106,7 @@ public class ApricotViewHandler {
     }
 
     private ApricotView createGeneralView(ApricotProject project) {
-        ApricotView generalView = new ApricotView("Main View",
+        ApricotView generalView = new ApricotView(ApricotView.MAIN_VIEW,
                 "The main (general) view of the project " + project.getName(), new java.util.Date(), null, true, 0,
                 project, null);
         return viewManager.saveView(generalView);
@@ -213,7 +213,7 @@ public class ApricotViewHandler {
     }
 
     public void createDefaultView(ApricotProject project) {
-        ApricotView v = new ApricotView("Main View", "The main view of the project", new java.util.Date(), null, true,
+        ApricotView v = new ApricotView(ApricotView.MAIN_VIEW, "The main view of the project", new java.util.Date(), null, true,
                 0, project, new ArrayList<ApricotObjectLayout>());
         project.getViews().add(v);
     }

@@ -33,6 +33,7 @@ import javax.persistence.TemporalType;
 @NamedQuery(name = "ApricotView.getViewsByObjectName", query = "SELECT vw FROM ApricotView vw JOIN vw.objectLayouts l WHERE vw.project = :project AND l.objectType = :objectType AND l.objectName = :objectName")
 public class ApricotView implements Serializable {
 
+    public static final String MAIN_VIEW = "Main View";
     private static final long serialVersionUID = 8705614293066261879L;
 
     public ApricotView() {

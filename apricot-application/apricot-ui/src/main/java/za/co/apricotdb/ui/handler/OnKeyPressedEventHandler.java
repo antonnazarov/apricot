@@ -8,7 +8,10 @@ import org.springframework.stereotype.Component;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
+import za.co.apricotdb.ui.MainAppController;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
+import za.co.apricotdb.viewport.canvas.ApricotElement;
+import za.co.apricotdb.viewport.canvas.ElementStatus;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 
 /**
@@ -28,15 +31,18 @@ public class OnKeyPressedEventHandler implements EventHandler<KeyEvent> {
     
     @Autowired
     ApricotEntityHandler entityHandler;
+    
+    @Autowired
+    MainAppController appController;
 
     @Override
     public void handle(KeyEvent event) {
+        ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
         switch (event.getCode()) {
         case DELETE:
             deleteSelectedHandler.deleteSelected();
             break;
         case ENTER:
-            ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
             List<ApricotEntity> ent = canvas.getSelectedEntities();
             if (ent.size() == 1) {
                 try {
@@ -46,10 +52,29 @@ public class OnKeyPressedEventHandler implements EventHandler<KeyEvent> {
                 }                
             }
             break;
+        case A:
+            if (event.isControlDown()) {
+                //  select all
+                selectAllEntities(canvas);
+            }
+            break;
+        case S:
+            if (event.isControlDown()) {
+                //  save the unsaved changes in canvas
+                appController.save(null);
+            }
+            break;
         default:
             break;
         }
         
         event.consume();
+    }
+    
+    private void selectAllEntities(ApricotCanvas canvas) {
+        List<ApricotElement> elements = canvas.getElements();
+        for (ApricotElement elm : elements) {
+            elm.setElementStatus(ElementStatus.SELECTED);
+        }
     }
 }
