@@ -1,6 +1,7 @@
 package za.co.apricotdb.ui.handler;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,12 @@ public class EntityContextMenuHandler {
     @Autowired
     ApricotEntityHandler entityHandler;
 
+    @Autowired
+    DeleteSelectedHandler deleteSelectedHandler;
+
+    @Autowired
+    TreeViewHandler treeViewHandler;
+
     public void createEntityContextMenu(ApricotEntity entity, double x, double y) {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
         ApricotView view = canvasHandler.getCurrentView();
@@ -37,6 +44,7 @@ public class EntityContextMenuHandler {
             ContextMenu contextMenu = new ContextMenu();
             MenuItem removeFromView = new MenuItem("Remove from View");
             MenuItem selectInList = new MenuItem("Select in List");
+
             if (selected.size() == 1) {
                 // one entity was selected
                 MenuItem editEntity = new MenuItem("Edit <Enter>");
@@ -46,9 +54,10 @@ public class EntityContextMenuHandler {
                 } else {
                     contextMenu.getItems().addAll(editEntity, deleteEntity, selectInList);
                 }
-                
+
                 initEditEntityEvent(editEntity, entity);
-                
+                initDeleteEntityEvent(deleteEntity);
+
             } else if (selected.size() > 1) {
                 // a group of entities was selected
                 MenuItem deleteSelected = new MenuItem("Delete selected <Del>");
@@ -64,14 +73,23 @@ public class EntityContextMenuHandler {
                     contextMenu.getItems().addAll(deleteSelected, selectInList, new SeparatorMenuItem(), sameWidth,
                             alignLeft, alignRight, alignUp, alignDown);
                 }
+
+                initDeleteEntityEvent(deleteSelected);
+                initDefault(sameWidth);
+                initDefault(alignLeft);
+                initDefault(alignRight);
+                initDefault(alignUp);
+                initDefault(alignDown);
             }
-            
+            initSelectInListEvent(selectInList, selected);
+            initRemoveFromView(removeFromView, selected);
+
             contextMenu.show(entity.getShape(), x, y);
         }
     }
 
-    private void initEditEntityEvent(MenuItem editEntity, ApricotEntity entity) {
-        editEntity.setOnAction(e -> {
+    private void initEditEntityEvent(MenuItem item, ApricotEntity entity) {
+        item.setOnAction(e -> {
             try {
                 entityHandler.openEntityEditorForm(false, entity.getTableName());
             } catch (IOException ex) {
@@ -79,4 +97,29 @@ public class EntityContextMenuHandler {
             }
         });
     }
+
+    private void initDeleteEntityEvent(MenuItem item) {
+        item.setOnAction(e -> {
+            deleteSelectedHandler.deleteSelected();
+        });
+    }
+
+    private void initSelectInListEvent(MenuItem item, List<ApricotEntity> entities) {
+        item.setOnAction(e -> {
+            List<String> sEnts = new ArrayList<>();
+            for (ApricotEntity ent : entities) {
+                sEnts.add(ent.getTableName());
+            }
+            treeViewHandler.selectEntities(sEnts);
+        });
+    }
+    
+    private void initRemoveFromView(MenuItem item, List<ApricotEntity> entities) {
+        item.setDisable(true);
+    }
+    
+    private void initDefault(MenuItem item) {
+        item.setDisable(true);
+    }
+    
 }

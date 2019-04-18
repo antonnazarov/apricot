@@ -68,6 +68,7 @@ public class TreeViewHandler {
     
     public void selectEntities(List<String> entities) {
         TreeView<String> tw = parentWindow.getProjectTreeView();
+        tw.getSelectionModel().clearSelection();
         TreeItem<String> root = tw.getRoot();
         Map<String, TreeItem<String>> items = getTreeItemsMap(root.getChildren());
         for (String entity : entities) {
@@ -77,7 +78,7 @@ public class TreeViewHandler {
             }
         }
     }
-
+    
     private Map<String, TreeItem<String>> getTreeItemsMap(List<TreeItem<String>> items) {
         Map<String, TreeItem<String>> ret = new HashMap<>();
 

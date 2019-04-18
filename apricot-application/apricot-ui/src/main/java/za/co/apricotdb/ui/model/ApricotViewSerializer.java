@@ -34,7 +34,7 @@ public class ApricotViewSerializer {
 
     @Autowired
     ObjectLayoutManager layoutManager;
-    
+
     @Autowired
     AlertMessageDecorator alertDecorator;
 
@@ -54,15 +54,6 @@ public class ApricotViewSerializer {
         }
 
         return true;
-    }
-
-    private Alert getAlert(String text) {
-        Alert alert = new Alert(AlertType.ERROR, null, ButtonType.OK);
-        alert.setTitle("Save View");
-        alert.setHeaderText(text);
-        alertDecorator.decorateAlert(alert);
-
-        return alert;
     }
 
     @Transactional
@@ -144,10 +135,10 @@ public class ApricotViewSerializer {
     /**
      * Handle those tables, which were removed from the right side- list.
      */
-    private void handleDeletedTables(List<String> origTables, List<String> newTables, ApricotView view) {
+    private void handleDeletedTables(List<String> origTables, List<String> renewedTables, ApricotView view) {
         List<ApricotObjectLayout> targetLayouts = new ArrayList<>(view.getObjectLayouts());
         for (String orig : origTables) {
-            if (!newTables.contains(orig)) {
+            if (!renewedTables.contains(orig)) {
                 // delete all layout artifacts, related to the original table
                 for (ApricotObjectLayout layout : view.getObjectLayouts()) {
                     if (layout.getObjectName().equals(orig)) {
@@ -209,5 +200,14 @@ public class ApricotViewSerializer {
         }
 
         return true;
+    }
+
+    private Alert getAlert(String text) {
+        Alert alert = new Alert(AlertType.ERROR, null, ButtonType.OK);
+        alert.setTitle("Save View");
+        alert.setHeaderText(text);
+        alertDecorator.decorateAlert(alert);
+
+        return alert;
     }
 }
