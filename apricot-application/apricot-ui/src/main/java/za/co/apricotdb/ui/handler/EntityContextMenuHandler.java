@@ -1,11 +1,11 @@
 package za.co.apricotdb.ui.handler;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -25,7 +25,10 @@ public class EntityContextMenuHandler {
     @Autowired
     ApricotCanvasHandler canvasHandler;
 
-    public void createEntityContextMenu(Node entity, double x, double y) {
+    @Autowired
+    ApricotEntityHandler entityHandler;
+
+    public void createEntityContextMenu(ApricotEntity entity, double x, double y) {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
         ApricotView view = canvasHandler.getCurrentView();
 
@@ -43,6 +46,9 @@ public class EntityContextMenuHandler {
                 } else {
                     contextMenu.getItems().addAll(editEntity, deleteEntity, selectInList);
                 }
+                
+                initEditEntityEvent(editEntity, entity);
+                
             } else if (selected.size() > 1) {
                 // a group of entities was selected
                 MenuItem deleteSelected = new MenuItem("Delete selected <Del>");
@@ -52,15 +58,25 @@ public class EntityContextMenuHandler {
                 MenuItem alignUp = new MenuItem("Align up <Ctrl+Up>");
                 MenuItem alignDown = new MenuItem("Align down <Ctrl+Down>");
                 if (!view.getName().equals(ApricotView.MAIN_VIEW)) {
-                contextMenu.getItems().addAll(deleteSelected, removeFromView, selectInList, new SeparatorMenuItem(),
-                        sameWidth, alignLeft, alignRight, alignUp, alignDown);
-                } else {
-                    contextMenu.getItems().addAll(deleteSelected, selectInList, new SeparatorMenuItem(),
+                    contextMenu.getItems().addAll(deleteSelected, removeFromView, selectInList, new SeparatorMenuItem(),
                             sameWidth, alignLeft, alignRight, alignUp, alignDown);
+                } else {
+                    contextMenu.getItems().addAll(deleteSelected, selectInList, new SeparatorMenuItem(), sameWidth,
+                            alignLeft, alignRight, alignUp, alignDown);
                 }
             }
-
-            contextMenu.show(entity, x, y);
+            
+            contextMenu.show(entity.getShape(), x, y);
         }
+    }
+
+    private void initEditEntityEvent(MenuItem editEntity, ApricotEntity entity) {
+        editEntity.setOnAction(e -> {
+            try {
+                entityHandler.openEntityEditorForm(false, entity.getTableName());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
     }
 }

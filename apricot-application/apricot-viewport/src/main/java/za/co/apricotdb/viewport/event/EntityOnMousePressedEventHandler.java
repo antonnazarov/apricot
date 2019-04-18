@@ -1,12 +1,12 @@
 package za.co.apricotdb.viewport.event;
 
 import javafx.event.EventHandler;
-import javafx.scene.Node;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ApricotElement;
 import za.co.apricotdb.viewport.canvas.ElementStatus;
+import za.co.apricotdb.viewport.entity.ApricotEntity;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
 import za.co.apricotdb.viewport.notification.EditEntityEvent;
 import za.co.apricotdb.viewport.notification.EntityContextMenuEvent;
@@ -59,8 +59,8 @@ public class EntityOnMousePressedEventHandler implements EventHandler<MouseEvent
                 }
 
                 if (entity.getElementStatus() == ElementStatus.SELECTED) {
-                    Node entityNode = entity.getShape();
-                    EntityContextMenuEvent cmEvent = new EntityContextMenuEvent(entityNode, event.getSceneX(), event.getSceneY());
+                    EntityContextMenuEvent cmEvent = new EntityContextMenuEvent((ApricotEntity) entity,
+                            event.getScreenX(), event.getScreenY());
                     canvas.publishEvent(cmEvent);
                 }
             }
