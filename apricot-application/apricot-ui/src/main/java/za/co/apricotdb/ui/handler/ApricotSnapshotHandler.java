@@ -25,7 +25,6 @@ import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -98,7 +97,7 @@ public class ApricotSnapshotHandler {
     /**
      * Create the snapshot editing form for a new or existing snapshot.
      */
-    public void createEditSnapshotForm(boolean isCreateNew, BorderPane mainBorderPane) throws Exception {
+    public void createEditSnapshotForm(boolean isCreateNew, Pane mainAppPane) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-snapshot-editor.fxml"));
         loader.setControllerFactory(context::getBean);
         Pane window = loader.load();

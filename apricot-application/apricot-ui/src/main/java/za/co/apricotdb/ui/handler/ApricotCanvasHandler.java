@@ -300,7 +300,7 @@ public class ApricotCanvasHandler {
         return null;
     }
 
-    private TabInfoObject getCurrentViewTabInfo() {
+    public TabInfoObject getCurrentViewTabInfo() {
         Tab t = parentWindow.getProjectTabPane().getSelectionModel().getSelectedItem();
         if (t.getUserData() instanceof TabInfoObject) {
             TabInfoObject o = (TabInfoObject) t.getUserData();

@@ -110,21 +110,47 @@ public class ApricotViewSerializer {
             view.setComment(model.getComment());
             view.setUpdated(new java.util.Date());
 
-            List<String> original = getOriginalViewTables(tabInfo.getSnapshot(), tabInfo.getView());
+            List<String> original = getOriginalViewTables(tabInfo);
             handleDeletedTables(original, model.getViewTables(), tabInfo.getView());
-            handleNewTables(original, model.getViewTables(), tabInfo.getSnapshot().getProject(), model,
-                    tabInfo.getView());
+            handleNewTables(original, model.getViewTables(), tabInfo);
 
             ret = viewManager.saveView(view);
         }
 
         return ret;
     }
+    
+    @Transactional
+    public void addEntitiesToView(List<String> entities, TabInfoObject tabInfo) {
+        List<String> original = getOriginalViewTables(tabInfo);
+        
+        List<String> renewed = new ArrayList<>(original);
+        for (String ent : entities) {
+            if (!original.contains(ent)) {
+                renewed.add(ent);
+            }
+        }
+        
+        handleNewTables(original, renewed, tabInfo);
+    }
+    
+    @Transactional
+    public void deleteEntitiesFromView(List<String> entities, TabInfoObject tabInfo) {
+        List<String> original = getOriginalViewTables(tabInfo);
+        List<String> renewed = new ArrayList<>(original);
+        for (String ent : entities) {
+            if (original.contains(ent)) {
+                renewed.remove(ent);
+            }
+        }
+        
+        handleDeletedTables(original, renewed, tabInfo.getView());
+    }
 
-    private List<String> getOriginalViewTables(ApricotSnapshot snapshot, ApricotView view) {
+    private List<String> getOriginalViewTables(TabInfoObject tabInfo) {
         List<String> ret = new ArrayList<>();
 
-        List<ApricotTable> origViewTables = viewHandler.getTablesForView(snapshot, view);
+        List<ApricotTable> origViewTables = viewHandler.getTablesForView(tabInfo.getSnapshot(), tabInfo.getView());
         for (ApricotTable t : origViewTables) {
             ret.add(t.getName());
         }
@@ -155,19 +181,18 @@ public class ApricotViewSerializer {
     /**
      * Handle tables and relationships, which were added in the editing session.
      */
-    private void handleNewTables(List<String> origTables, List<String> newTables, ApricotProject project,
-            ViewFormModel model, ApricotView view) {
-        ApricotView generalView = viewManager.getGeneralView(project);
-        List<ApricotObjectLayout> layouts = viewHandler.getObjectLayoutsFromPatternView(model.getViewTables(),
-                generalView, model.getSnapshot());
+    private void handleNewTables(List<String> origTables, List<String> renewedTables, TabInfoObject tabInfo) {
+        ApricotView generalView = viewManager.getGeneralView(tabInfo.getSnapshot().getProject());
+        List<ApricotObjectLayout> layouts = viewHandler.getObjectLayoutsFromPatternView(renewedTables, generalView,
+                tabInfo.getSnapshot());
 
-        for (String nt : newTables) {
+        for (String nt : renewedTables) {
             if (!origTables.contains(nt)) {
                 for (ApricotObjectLayout l : layouts) {
                     if (l.getObjectType() == LayoutObjectType.TABLE && l.getObjectName().equals(nt)) {
                         ApricotObjectLayout layout = new ApricotObjectLayout(l.getObjectType(), l.getObjectName(),
-                                l.getObjectLayout(), view);
-                        view.getObjectLayouts().add(layout);
+                                l.getObjectLayout(), tabInfo.getView());
+                        tabInfo.getView().getObjectLayouts().add(layout);
                     }
                 }
             }

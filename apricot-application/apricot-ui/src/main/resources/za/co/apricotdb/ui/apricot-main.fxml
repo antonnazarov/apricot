@@ -15,135 +15,125 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="mainBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.MainAppController">
-   <bottom>
-      <AnchorPane prefHeight="25.0" prefWidth="1400.0" style="-fx-background-color: lightgray;" BorderPane.alignment="CENTER" />
-   </bottom>
-   <top>
-      <HBox id="mainBox" prefHeight="22.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+
+<AnchorPane fx:id="mainPane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.MainAppController">
+   <children>
+      <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <MenuBar id="mainMenu" prefHeight="35.0" prefWidth="284.0">
-              <menus>
-                <Menu id="menuProject" mnemonicParsing="false" text="Project">
-                  <items>
-                    <MenuItem mnemonicParsing="false" onAction="#newProject" text="New                     " />
-                        <MenuItem id="menuOpen" mnemonicParsing="false" onAction="#openProject" text="Open" />
-                        <MenuItem id="menuEdit" mnemonicParsing="false" onAction="#editProject" text="Edit" />
-                        <MenuItem disable="true" mnemonicParsing="false" text="Export" />
-                        <MenuItem disable="true" mnemonicParsing="false" text="Import" />
-                        <MenuItem id="menuDelete" mnemonicParsing="false" onAction="#deleteProject" text="Delete" />
-                  </items>
-                </Menu>
-                <Menu disable="true" mnemonicParsing="false" text="Edit">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="Select All (Ctrl+A)" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <Menu mnemonicParsing="false" text="Align Selected">
-                          <items>
-                            <MenuItem mnemonicParsing="false" text="Left (Ctrl+Left)" />
-                              <MenuItem mnemonicParsing="false" text="Right (Ctrl+Right)" />
-                              <MenuItem mnemonicParsing="false" text="Top (Ctrl+Up)" />
-                              <MenuItem mnemonicParsing="false" text="Bottom (Ctrl+Down)" />
-                              <MenuItem mnemonicParsing="false" text="Width (Ctrl+Shift+Right)" />
-                          </items>
+            <HBox id="mainBox">
+               <children>
+                  <MenuBar id="mainMenu" prefHeight="35.0" prefWidth="292.0">
+                    <menus>
+                      <Menu id="menuProject" mnemonicParsing="false" text="Project">
+                        <items>
+                          <MenuItem mnemonicParsing="false" onAction="#newProject" text="New                     " />
+                              <MenuItem id="menuOpen" mnemonicParsing="false" onAction="#openProject" text="Open" />
+                              <MenuItem id="menuEdit" mnemonicParsing="false" onAction="#editProject" text="Edit" />
+                              <MenuItem disable="true" mnemonicParsing="false" text="Export" />
+                              <MenuItem disable="true" mnemonicParsing="false" text="Import" />
+                              <MenuItem id="menuDelete" mnemonicParsing="false" onAction="#deleteProject" text="Delete" />
+                        </items>
+                      </Menu>
+                      <Menu disable="true" mnemonicParsing="false" text="Edit">
+                        <items>
+                          <MenuItem mnemonicParsing="false" text="Select All (Ctrl+A)" />
+                              <SeparatorMenuItem mnemonicParsing="false" />
+                              <Menu mnemonicParsing="false" text="Align Selected">
+                                <items>
+                                  <MenuItem mnemonicParsing="false" text="Left (Ctrl+Left)" />
+                                    <MenuItem mnemonicParsing="false" text="Right (Ctrl+Right)" />
+                                    <MenuItem mnemonicParsing="false" text="Top (Ctrl+Up)" />
+                                    <MenuItem mnemonicParsing="false" text="Bottom (Ctrl+Down)" />
+                                    <MenuItem mnemonicParsing="false" text="Width (Ctrl+Shift+Right)" />
+                                </items>
+                              </Menu>
+                        </items>
+                      </Menu>
+                        <Menu id="menuOperations" mnemonicParsing="false" text="Operations">
+                           <items>
+                              <MenuItem mnemonicParsing="false" onAction="#reverseEngineer" text="Reverse Engineering" />
+                              <MenuItem disable="true" mnemonicParsing="false" text="Compare Snapshots" />
+                              <MenuItem mnemonicParsing="false" onAction="#createExcelReport" text="Excel Report" />
+                              <Menu mnemonicParsing="false" text="Scripts">
+                                <items>
+                                  <MenuItem mnemonicParsing="false" onAction="#generateCreateScript" text="Generate &quot;Create&quot; Script" />
+                                    <MenuItem mnemonicParsing="false" onAction="#generateDropScript" text="Generate &quot;Drop&quot; Script" />
+                                    <MenuItem mnemonicParsing="false" onAction="#generateDeleteScript" text="Generate &quot;Delete&quot; Script" />
+                                </items>
+                              </Menu>
+                              <MenuItem disable="true" mnemonicParsing="false" text="Print Diagram" />
+                           </items>
                         </Menu>
-                  </items>
-                </Menu>
-                  <Menu id="menuOperations" mnemonicParsing="false" text="Operations">
-                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#reverseEngineer" text="Reverse Engineering" />
-                        <MenuItem disable="true" mnemonicParsing="false" text="Compare Snapshots" />
-                        <MenuItem mnemonicParsing="false" onAction="#createExcelReport" text="Excel Report" />
-                        <Menu mnemonicParsing="false" text="Scripts">
-                          <items>
-                            <MenuItem mnemonicParsing="false" onAction="#generateCreateScript" text="Generate &quot;Create&quot; Script" />
-                              <MenuItem mnemonicParsing="false" onAction="#generateDropScript" text="Generate &quot;Drop&quot; Script" />
-                              <MenuItem mnemonicParsing="false" onAction="#generateDeleteScript" text="Generate &quot;Delete&quot; Script" />
-                          </items>
-                        </Menu>
-                        <MenuItem disable="true" mnemonicParsing="false" text="Print Diagram" />
-                     </items>
-                  </Menu>
-                <Menu disable="true" mnemonicParsing="false" text="Help">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="About" />
-                  </items>
-                </Menu>
-              </menus>
+                      <Menu disable="true" mnemonicParsing="false" text="Help">
+                        <items>
+                          <MenuItem mnemonicParsing="false" text="About" />
+                        </items>
+                      </Menu>
+                      <Menu id="menuSnapshot" mnemonicParsing="false" text="Snapshot:">
+                        <items>
+                          <MenuItem mnemonicParsing="false" onAction="#editSnapshot" text="Edit" />
+                              <MenuItem mnemonicParsing="false" onAction="#deleteSnapshot" text="Delete             " />
+                        </items>
+                      </Menu>
+                    </menus>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </MenuBar>
+                  <ComboBox id="snapshot_dropdown" fx:id="snapshotCombo" onAction="#selectSnapshot" prefWidth="250.0">
+                     <HBox.margin>
+                        <Insets top="6.0" />
+                     </HBox.margin>
+                  </ComboBox>
+                  <ButtonBar id="mainButtons" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="681.0">
+                    <buttons>
+                        <Button id="buttonSave" fx:id="saveButton" minWidth="34.0" mnemonicParsing="false" onAction="#save" prefHeight="25.0" text="Save" />
+                      <Button disable="true" minWidth="34.0" mnemonicParsing="false" prefHeight="25.0" text="Undo" />
+                        <Label alignment="CENTER_RIGHT" minWidth="27.0" prefHeight="17.0" text="New:" />
+                        <Button id="buttonSnapshot" layoutX="455.0" layoutY="10.0" minWidth="34.0" mnemonicParsing="false" onAction="#newSnapshot" prefHeight="25.0" text="Snapshot" />
+                        <Button id="buttonView" layoutX="540.0" layoutY="10.0" minWidth="34.0" mnemonicParsing="false" onAction="#newView" prefHeight="25.0" text="View" />
+                        <Button minWidth="34.0" mnemonicParsing="false" onAction="#newEntity" prefHeight="25.0" text="Entity" />
+                        <Button minWidth="50.0" mnemonicParsing="false" onAction="#newRelationship" prefHeight="25.0" text="Relationship" />
+                    </buttons>
+                     <HBox.margin>
+                        <Insets bottom="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </ButtonBar>
+                  <Label alignment="CENTER_RIGHT" minWidth="44.0" prefHeight="17.0" text="Scale:">
+                     <HBox.margin>
+                        <Insets left="10.0" right="5.0" top="9.0" />
+                     </HBox.margin>
+                  </Label>
+                  <TextField editable="false" prefHeight="25.0" prefWidth="54.0" text="100%">
+                     <HBox.margin>
+                        <Insets top="6.0" />
+                     </HBox.margin>
+                  </TextField>
+               </children>
                <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                  <Insets right="10.0" />
                </padding>
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-            </MenuBar>
-            <MenuBar id="snapshotMenu" prefHeight="36.0" prefWidth="68.0">
-              <menus>
-                <Menu id="menuSnapshot" mnemonicParsing="false" text="Snapshot:">
-                  <items>
-                    <MenuItem mnemonicParsing="false" onAction="#editSnapshot" text="Edit" />
-                        <MenuItem mnemonicParsing="false" onAction="#deleteSnapshot" text="Delete             " />
-                  </items>
-                </Menu>
-              </menus>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <padding>
-                  <Insets top="5.0" />
-               </padding>
-               <HBox.margin>
-                  <Insets right="3.0" top="1.0" />
-               </HBox.margin>
-            </MenuBar>
-            <ComboBox id="snapshot_dropdown" fx:id="snapshotCombo" onAction="#selectSnapshot" prefWidth="250.0">
-               <HBox.margin>
-                  <Insets top="6.0" />
-               </HBox.margin>
-            </ComboBox>
-            <ButtonBar id="mainButtons" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="681.0">
-              <buttons>
-                  <Button id="buttonSave" fx:id="saveButton" minWidth="34.0" mnemonicParsing="false" onAction="#save" prefHeight="25.0" text="Save" />
-                <Button disable="true" minWidth="34.0" mnemonicParsing="false" prefHeight="25.0" text="Undo" />
-                  <Label alignment="CENTER_RIGHT" minWidth="44.0" prefHeight="17.0" text="New:" />
-                  <Button id="buttonSnapshot" layoutX="455.0" layoutY="10.0" minWidth="34.0" mnemonicParsing="false" onAction="#newSnapshot" prefHeight="25.0" text="Snapshot" />
-                  <Button id="buttonView" layoutX="540.0" layoutY="10.0" minWidth="34.0" mnemonicParsing="false" onAction="#newView" prefHeight="25.0" text="View" />
-                  <Button minWidth="34.0" mnemonicParsing="false" onAction="#newEntity" prefHeight="25.0" text="Entity" />
-                  <Button minWidth="50.0" mnemonicParsing="false" onAction="#newRelationship" prefHeight="25.0" text="Relationship" />
-              </buttons>
-               <HBox.margin>
-                  <Insets bottom="5.0" right="5.0" top="5.0" />
-               </HBox.margin>
-            </ButtonBar>
-            <Label alignment="CENTER_RIGHT" minWidth="44.0" prefHeight="17.0" text="Scale:">
-               <HBox.margin>
-                  <Insets left="10.0" right="5.0" top="9.0" />
-               </HBox.margin>
-            </Label>
-            <TextField editable="false" prefHeight="25.0" prefWidth="54.0" text="100%">
-               <HBox.margin>
-                  <Insets top="6.0" />
-               </HBox.margin>
-            </TextField>
+            </HBox>
+            <SplitPane dividerPositions="0.2" VBox.vgrow="ALWAYS">
+              <items>
+                  <TreeView fx:id="projectsTreeView" maxHeight="1.7976931348623157E308" />
+                  <TabPane fx:id="viewsTabPane" tabClosingPolicy="UNAVAILABLE">
+                    <tabs>
+                      <Tab text="Main View" />
+                    </tabs>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </TabPane>
+              </items>
+            </SplitPane>
          </children>
-      </HBox>
-   </top>
-   <center>
-      <SplitPane dividerPositions="0.2" BorderPane.alignment="CENTER">
-        <items>
-            <TreeView fx:id="projectsTreeView" maxHeight="1.7976931348623157E308" maxWidth="280.0" prefHeight="696.0" prefWidth="279.0" />
-            <TabPane fx:id="viewsTabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
-              <tabs>
-                <Tab text="Main View" />
-              </tabs>
-               <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding>
-            </TabPane>
-        </items>
-      </SplitPane>
-   </center>
-</BorderPane>
+      </VBox>
+   </children>
+</AnchorPane>

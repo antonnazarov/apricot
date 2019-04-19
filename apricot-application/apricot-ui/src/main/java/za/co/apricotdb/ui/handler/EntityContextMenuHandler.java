@@ -10,7 +10,9 @@ import org.springframework.stereotype.Component;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.entity.ApricotView;
+import za.co.apricotdb.ui.model.ApricotViewSerializer;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 
@@ -34,6 +36,12 @@ public class EntityContextMenuHandler {
 
     @Autowired
     TreeViewHandler treeViewHandler;
+
+    @Autowired
+    ApricotViewSerializer viewSerializer;
+
+    @Autowired
+    SnapshotManager snapshotManager;
 
     public void createEntityContextMenu(ApricotEntity entity, double x, double y) {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
@@ -113,13 +121,22 @@ public class EntityContextMenuHandler {
             treeViewHandler.selectEntities(sEnts);
         });
     }
-    
+
     private void initRemoveFromView(MenuItem item, List<ApricotEntity> entities) {
-        item.setDisable(true);
+        item.setOnAction(e -> {
+            TabInfoObject tabInfo = canvasHandler.getCurrentViewTabInfo();
+            List<String> rem = new ArrayList<>();
+            for (ApricotEntity ae : entities) {
+                rem.add(ae.getTableName());
+            }
+            viewSerializer.deleteEntitiesFromView(rem, tabInfo);
+            canvasHandler.populateCanvas(snapshotManager.getDefaultSnapshot(), canvasHandler.getCurrentView(),
+                    canvasHandler.getSelectedCanvas());
+        });
     }
-    
+
     private void initDefault(MenuItem item) {
         item.setDisable(true);
     }
-    
+
 }

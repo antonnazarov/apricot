@@ -12,7 +12,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import za.co.apricotdb.persistence.data.ProjectManager;
@@ -23,7 +22,7 @@ import za.co.apricotdb.ui.handler.ApplicationInitializer;
  * The controller for apricot-project-open.fxml form.
  * 
  * @author Anton Nazarov
- * @since 02/02/2012
+ * @since 02/02/2019
  *
  */
 @Component
@@ -56,7 +55,7 @@ public class OpenProjectController {
     @FXML
     TableColumn<ApricotProject, String> createdColumn;
 
-    private BorderPane mainBorderPane;
+    private Pane mainAppPane;
 
     @FXML
     public void cancel(ActionEvent event) {
@@ -65,7 +64,7 @@ public class OpenProjectController {
 
     @FXML
     public void openProject(ActionEvent event) {
-        parentWindow.setParentPane(mainBorderPane);
+        parentWindow.setParentPane(mainAppPane);
         ApricotProject selectedProject = projectsList.getSelectionModel().getSelectedItem();
         projectManager.setProjectCurrent(selectedProject);
         applicationInitializer.initializeDefault();
@@ -77,8 +76,8 @@ public class OpenProjectController {
         return (Stage) mainPane.getScene().getWindow();
     }
 
-    public void init(BorderPane mainBorderPane) {
-        this.mainBorderPane = mainBorderPane;
+    public void init(Pane mainAppPane) {
+        this.mainAppPane = mainAppPane;
 
         ApricotProject currentProject = projectManager.findCurrentProject();
         List<ApricotProject> projects = projectManager.getAllProjects();

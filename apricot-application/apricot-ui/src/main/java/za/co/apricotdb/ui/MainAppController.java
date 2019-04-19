@@ -11,7 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.AnchorPane;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
@@ -72,7 +72,7 @@ public class MainAppController {
     GenerateScriptHandler generateScriptHandler;
 
     @FXML
-    BorderPane mainBorderPane;
+    AnchorPane mainPane;
 
     @FXML
     TabPane viewsTabPane;
@@ -115,7 +115,7 @@ public class MainAppController {
     @FXML
     public void openProject(ActionEvent event) {
         try {
-            projectHandler.createOpenProjectForm(mainBorderPane);
+            projectHandler.createOpenProjectForm(mainPane);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -127,7 +127,7 @@ public class MainAppController {
     @FXML
     public void newProject(ActionEvent event) {
         try {
-            projectHandler.createEditProjectForm(true, mainBorderPane);
+            projectHandler.createEditProjectForm(true, mainPane);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -139,7 +139,7 @@ public class MainAppController {
     @FXML
     public void editProject(ActionEvent event) {
         try {
-            projectHandler.createEditProjectForm(false, mainBorderPane);
+            projectHandler.createEditProjectForm(false, mainPane);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -151,7 +151,7 @@ public class MainAppController {
     @FXML
     public void newSnapshot(ActionEvent event) {
         try {
-            snapshotHandler.createEditSnapshotForm(true, mainBorderPane);
+            snapshotHandler.createEditSnapshotForm(true, mainPane);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -184,7 +184,7 @@ public class MainAppController {
     @FXML
     public void editSnapshot(ActionEvent event) {
         try {
-            snapshotHandler.createEditSnapshotForm(false, mainBorderPane);
+            snapshotHandler.createEditSnapshotForm(false, mainPane);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -232,7 +232,7 @@ public class MainAppController {
 
     @FXML
     public void createExcelReport(ActionEvent event) {
-        excelReportHandler.createExcelReport(mainBorderPane.getScene().getWindow());
+        excelReportHandler.createExcelReport(mainPane.getScene().getWindow());
     }
 
     @FXML

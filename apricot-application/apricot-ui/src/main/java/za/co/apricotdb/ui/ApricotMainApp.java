@@ -8,9 +8,9 @@ import org.springframework.context.annotation.Configuration;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
 import za.co.apricotdb.ui.handler.OnKeyPressedEventHandler;
@@ -21,7 +21,7 @@ import za.co.apricotdb.ui.handler.OnKeyPressedEventHandler;
 public class ApricotMainApp extends Application {
 
     private ConfigurableApplicationContext context;
-    private Parent rootNode;
+    private Pane rootNode;
 
     ApplicationInitializer initializer;
 
@@ -49,6 +49,7 @@ public class ApricotMainApp extends Application {
         primaryStage.centerOnScreen();
         primaryStage.setTitle("Apricot DB");
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("favicon-32x32.png")));
+        primaryStage.setMaximized(true);
         primaryStage.show();
         
         //  handling key pressed in the main scene

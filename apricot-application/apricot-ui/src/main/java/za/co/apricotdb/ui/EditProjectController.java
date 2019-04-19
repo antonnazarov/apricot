@@ -10,7 +10,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import za.co.apricotdb.metascan.ApricotTargetDatabase;
@@ -62,11 +61,11 @@ public class EditProjectController {
 
     private boolean isCreateNew = false;
     private ProjectFormModel model = null;
-    private BorderPane mainBorderPane = null;
+    private Pane mainAppPane = null;
 
     @FXML
     public void save(ActionEvent event) {
-        parentWindow.setParentPane(mainBorderPane);
+        parentWindow.setParentPane(mainAppPane);
 
         model.setProjectName(projectName.getText());
         model.setProjectDescription(projectDescription.getText());
@@ -96,10 +95,10 @@ public class EditProjectController {
         getStage().close();
     }
 
-    public void init(boolean isCreateNew, ProjectFormModel model, BorderPane mainBorderPane) {
+    public void init(boolean isCreateNew, ProjectFormModel model, Pane mainAppPane) {
         this.isCreateNew = isCreateNew;
         this.model = model;
-        this.mainBorderPane = mainBorderPane;
+        this.mainAppPane = mainAppPane;
 
         // initialize the project target database
         for (ApricotTargetDatabase d : ApricotTargetDatabase.values()) {

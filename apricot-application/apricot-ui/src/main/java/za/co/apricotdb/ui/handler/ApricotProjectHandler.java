@@ -59,7 +59,7 @@ public class ApricotProjectHandler {
     @Autowired
     AlertMessageDecorator alertDecorator;
     
-    public void createOpenProjectForm(BorderPane mainBorderPane)
+    public void createOpenProjectForm(Pane mainPane)
             throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-project-open.fxml"));
         loader.setControllerFactory(context::getBean);
@@ -82,12 +82,12 @@ public class ApricotProjectHandler {
         });
 
         OpenProjectController controller = loader.<OpenProjectController>getController();
-        controller.init(mainBorderPane);
+        controller.init(mainPane);
 
         dialog.show();
     }
     
-    public void createEditProjectForm(boolean isCreateNew, BorderPane mainBorderPane) throws Exception {
+    public void createEditProjectForm(boolean isCreateNew, Pane mainAppPane) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-project-editor.fxml"));
         loader.setControllerFactory(context::getBean);
         Pane window = loader.load();
@@ -101,7 +101,7 @@ public class ApricotProjectHandler {
             model = newProjectModelBuilder.buildModel();
         } else {
             dialog.setTitle("Edit Project");
-            parentWindow.setParentPane(mainBorderPane);
+            parentWindow.setParentPane(mainAppPane);
             model = editProjectModelBuilder.buildModel(parentWindow.getApplicationData().getCurrentProject());
         }
         
@@ -119,7 +119,7 @@ public class ApricotProjectHandler {
         });
 
         EditProjectController controller = loader.<EditProjectController>getController();
-        controller.init(isCreateNew, model, mainBorderPane);
+        controller.init(isCreateNew, model, mainAppPane);
 
         dialog.show();
     }
