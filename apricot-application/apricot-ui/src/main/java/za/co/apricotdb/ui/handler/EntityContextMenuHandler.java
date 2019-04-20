@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javafx.geometry.Side;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -43,6 +44,9 @@ public class EntityContextMenuHandler {
     @Autowired
     SnapshotManager snapshotManager;
 
+    @Autowired
+    EntityAlignHandler alignHandler;
+
     public void createEntityContextMenu(ApricotEntity entity, double x, double y) {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
         ApricotView view = canvasHandler.getCurrentView();
@@ -68,26 +72,28 @@ public class EntityContextMenuHandler {
 
             } else if (selected.size() > 1) {
                 // a group of entities was selected
-                MenuItem deleteSelected = new MenuItem("Delete selected <Del>");
-                MenuItem sameWidth = new MenuItem("Make same width");
-                MenuItem alignLeft = new MenuItem("Align left <Ctrl+Left>");
-                MenuItem alignRight = new MenuItem("Align right <Ctrl+Right>");
-                MenuItem alignUp = new MenuItem("Align up <Ctrl+Up>");
-                MenuItem alignDown = new MenuItem("Align down <Ctrl+Down>");
+                MenuItem deleteSelected = new MenuItem("Delete Selected <Del>");
+                MenuItem sameWidth = new MenuItem("Make Same Width");
+                MenuItem minimizeWidth = new MenuItem("Minimize Width");
+                MenuItem alignLeft = new MenuItem("Align Left <Ctrl+Left>");
+                MenuItem alignRight = new MenuItem("Align Right <Ctrl+Right>");
+                MenuItem alignUp = new MenuItem("Align Up <Ctrl+Up>");
+                MenuItem alignDown = new MenuItem("Align Down <Ctrl+Down>");
                 if (!view.getName().equals(ApricotView.MAIN_VIEW)) {
                     contextMenu.getItems().addAll(deleteSelected, removeFromView, selectInList, new SeparatorMenuItem(),
-                            sameWidth, alignLeft, alignRight, alignUp, alignDown);
+                            sameWidth, minimizeWidth, alignLeft, alignRight, alignUp, alignDown);
                 } else {
                     contextMenu.getItems().addAll(deleteSelected, selectInList, new SeparatorMenuItem(), sameWidth,
-                            alignLeft, alignRight, alignUp, alignDown);
+                            minimizeWidth, alignLeft, alignRight, alignUp, alignDown);
                 }
 
                 initDeleteEntityEvent(deleteSelected);
-                initDefault(sameWidth);
-                initDefault(alignLeft);
-                initDefault(alignRight);
-                initDefault(alignUp);
-                initDefault(alignDown);
+                initSameSizeWidth(sameWidth);
+                initMinimizeWidth(minimizeWidth);
+                initAlignLeft(alignLeft);
+                initAlignRight(alignRight);
+                initAlignUp(alignUp);
+                initAlignDown(alignDown);
             }
             initSelectInListEvent(selectInList, selected);
             initRemoveFromView(removeFromView, selected);
@@ -135,8 +141,39 @@ public class EntityContextMenuHandler {
         });
     }
 
-    private void initDefault(MenuItem item) {
-        item.setDisable(true);
+    private void initAlignLeft(MenuItem item) {
+        item.setOnAction(e -> {
+            alignHandler.alignSelectedEntities(Side.LEFT);
+        });
     }
 
+    private void initAlignRight(MenuItem item) {
+        item.setOnAction(e -> {
+            alignHandler.alignSelectedEntities(Side.RIGHT);
+        });
+    }
+
+    private void initAlignUp(MenuItem item) {
+        item.setOnAction(e -> {
+            alignHandler.alignSelectedEntities(Side.TOP);
+        });
+    }
+
+    private void initAlignDown(MenuItem item) {
+        item.setOnAction(e -> {
+            alignHandler.alignSelectedEntities(Side.BOTTOM);
+        });
+    }
+
+    private void initMinimizeWidth(MenuItem item) {
+        item.setOnAction(e -> {
+            alignHandler.alignEntitySize(true);
+        });
+    }
+
+    private void initSameSizeWidth(MenuItem item) {
+        item.setOnAction(e -> {
+            alignHandler.alignEntitySize(false);
+        });
+    }
 }

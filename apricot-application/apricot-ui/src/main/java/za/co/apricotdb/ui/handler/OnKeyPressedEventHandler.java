@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javafx.event.EventHandler;
+import javafx.geometry.Side;
 import javafx.scene.input.KeyEvent;
 import za.co.apricotdb.ui.MainAppController;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
@@ -25,15 +26,18 @@ public class OnKeyPressedEventHandler implements EventHandler<KeyEvent> {
 
     @Autowired
     DeleteSelectedHandler deleteSelectedHandler;
-    
+
     @Autowired
     ApricotCanvasHandler canvasHandler;
-    
+
     @Autowired
     ApricotEntityHandler entityHandler;
-    
+
     @Autowired
     MainAppController appController;
+
+    @Autowired
+    EntityAlignHandler alignHandler;
 
     @Override
     public void handle(KeyEvent event) {
@@ -49,28 +53,48 @@ public class OnKeyPressedEventHandler implements EventHandler<KeyEvent> {
                     entityHandler.openEntityEditorForm(false, ent.get(0).getTableName());
                 } catch (IOException e) {
                     e.printStackTrace();
-                }                
+                }
             }
             break;
         case A:
             if (event.isControlDown()) {
-                //  select all
+                // select all
                 selectAllEntities(canvas);
             }
             break;
         case S:
             if (event.isControlDown()) {
-                //  save the unsaved changes in canvas
+                // save the unsaved changes in canvas
                 appController.save(null);
+            }
+            break;
+        case LEFT:
+            if (event.isControlDown()) {
+                alignHandler.alignSelectedEntities(Side.LEFT);
+            }
+            break;
+        case RIGHT:
+            if (event.isControlDown()) {
+                alignHandler.alignSelectedEntities(Side.RIGHT);
+            }
+            break;
+        case UP:
+            if (event.isControlDown()) {
+                alignHandler.alignSelectedEntities(Side.TOP);
+            }
+            break;
+        case DOWN:
+            if (event.isControlDown()) {
+                alignHandler.alignSelectedEntities(Side.BOTTOM);
             }
             break;
         default:
             break;
         }
-        
+
         event.consume();
     }
-    
+
     private void selectAllEntities(ApricotCanvas canvas) {
         List<ApricotElement> elements = canvas.getElements();
         for (ApricotElement elm : elements) {

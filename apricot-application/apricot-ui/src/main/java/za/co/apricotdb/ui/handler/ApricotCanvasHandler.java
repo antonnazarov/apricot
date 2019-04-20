@@ -139,13 +139,13 @@ public class ApricotCanvasHandler {
 
         return ret;
     }
-    
+
     public ApricotView getCurrentView() {
         TabInfoObject tabInfo = getCurrentViewTabInfo();
         if (tabInfo != null) {
             return tabInfo.getView();
         }
-        
+
         return null;
     }
 
@@ -310,7 +310,7 @@ public class ApricotCanvasHandler {
 
         return null;
     }
-    
+
     /**
      * Update (or add from scratch) the given entity on the canvas.
      */

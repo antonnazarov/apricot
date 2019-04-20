@@ -169,7 +169,11 @@ create table apricot_app_parameter (
 );
 
 insert into apricot_app_parameter (app_parameter_name, app_parameter_value) values ('database_version', '1.3');
-insert into apricot_app_parameter (app_parameter_name, app_parameter_value) values ('MSSQLServer.datatypes', 'bigint;int;smallint;tinyint;bit;decimal;float;numeric;varchar;char;nvarchar;text;varbinary;date;datetime;datetime2');
+insert into apricot_app_parameter (app_parameter_name, app_parameter_value) values ('MSSQLServer.datatypes', 'bigint;int;smallint;tinyint;bit;decimal;float;numeric;varchar;char;nvarchar;text;varbinary;date;datetime;datetime2'); 
+insert into apricot_app_parameter (app_parameter_name, app_parameter_value) values ('Oracle.datatypes', 'CHAR;VARCHAR2;NCHAR;NVARCHAR2;CLOB;NCLOB;LONG;NUMBER;DATE;BLOB;BFILE;RAW;LONG;ROWID;MLSLABEL');
+insert into apricot_app_parameter (app_parameter_name, app_parameter_value) values ('MySQL.datatypes', 'CHAR;VARCHAR;BINARY;VARBINARY;BLOB;TEXT;ENUM;SET;INTEGER;SMALLINT;DECIMAL;NUMERIC;FLOAT;REAL;DOUBLE;DATE;TIME;DATETIME;TIMESTAMP;YEAR');
+insert into apricot_app_parameter (app_parameter_name, app_parameter_value) values ('PostrgeSQL.datatypes', 'CHAR;VARCHAR;TEXT;SMALLINT;INT;FLOAT;REAL;NUMERIC;DATE;TIME;TIMESTAMP;TIMESTAMPZ;INTERVAL');
+insert into apricot_app_parameter (app_parameter_name, app_parameter_value) values ('H2.datatypes', 'VARCHAR;CHAR;BLOB;CLOB;INT;BOOLEAN;TINYINT;SMALLINT;BIGINT;DECIMAL;DOUBLE;REAL;TIME;DATE;TIMESTAMP');
 
 -- views
 create view vw_column as
