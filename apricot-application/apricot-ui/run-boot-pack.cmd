@@ -1,2 +1,2 @@
 cd target
-java -jar apricot-ui-0.2.jar
+java -jar apricot-ui-1.0-beta.jar
