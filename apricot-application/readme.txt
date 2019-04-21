@@ -1,5 +1,5 @@
 ----------------------------
-ApricotDB, Release 0.3 (alpha), 18/04/2019
+ApricotDB, Release 0.3 (alpha), 21/04/2019
 ----------------------------
 This version of "Apricot DB" covers most of the crucial functions planned for the application.
 Release 0.3 allows to create new Projects, Snapshots inside the Projects, create and edit Views, 
@@ -38,7 +38,7 @@ java -jar apricot-launcher-0.3.jar
 java -jar apricot-ui-0.3.jar
 
 ----------------------------
-* Option C (multi platform): running from the sources
+* Option C (multi platform): compiling and running from the sources
 ----------------------------
 A. Install Java 1.8 (not tested on earlier or later versions, therefore Java 1.8 is essential).
 Set JAVA_HOME system variable, and include <JAVA_HOME>/bin into your system PATH.
