@@ -2,6 +2,7 @@ package za.co.apricotdb.viewport.canvas;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.Serializable;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -13,7 +14,10 @@ import java.util.Properties;
  * @author Anton Nazarov
  * @since 17/01/2019
  */
-public class CanvasAllocationItem {
+public class CanvasAllocationItem implements Serializable {
+    
+    private static final long serialVersionUID = 7200256775287613665L;
+    
     private String name;
     private ElementType type;
     private Properties properties = new Properties();
