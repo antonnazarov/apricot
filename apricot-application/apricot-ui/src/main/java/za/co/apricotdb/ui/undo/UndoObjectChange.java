@@ -1,4 +1,4 @@
-package za.co.apricotdb.support.undo;
+package za.co.apricotdb.ui.undo;
 
 /**
  * The undo information storage specific for the changes in objects.

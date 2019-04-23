@@ -3,10 +3,10 @@ package za.co.apricotdb.ui;
 import java.util.ArrayDeque;
 
 import za.co.apricotdb.persistence.entity.ApricotProject;
-import za.co.apricotdb.support.undo.ApricotUndoManager;
-import za.co.apricotdb.support.undo.CircularUndoStack;
-import za.co.apricotdb.support.undo.UndoChunk;
-import za.co.apricotdb.support.undo.UndoLayoutChange;
+import za.co.apricotdb.ui.undo.ApricotUndoManager;
+import za.co.apricotdb.ui.undo.CircularUndoStack;
+import za.co.apricotdb.ui.undo.UndoChunk;
+import za.co.apricotdb.ui.undo.UndoLayoutChange;
 
 /**
  * This Java- bean contains the overall application data.
