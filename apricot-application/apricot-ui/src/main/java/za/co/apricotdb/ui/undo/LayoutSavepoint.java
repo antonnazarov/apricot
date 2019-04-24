@@ -4,7 +4,6 @@ import java.util.List;
 
 import javafx.geometry.Point2D;
 import javafx.scene.control.Tab;
-import za.co.apricotdb.viewport.canvas.ApricotElement;
 import za.co.apricotdb.viewport.canvas.CanvasAllocationMap;
 
 /**
@@ -13,17 +12,15 @@ import za.co.apricotdb.viewport.canvas.CanvasAllocationMap;
  * @author Anton Nazarov
  * @since 23/04/2019
  */
-public class UndoLayoutChange extends BaseUndoChunk {
+public class LayoutSavepoint extends BaseUndoChunk {
 
     private static final long serialVersionUID = -2677861347453699229L;
 
     private CanvasAllocationMap currentAllocationMap;
 
-    public UndoLayoutChange(Point2D screenPosition, List<ApricotElement> elements, Tab currentTab,
+    public LayoutSavepoint(Point2D screenPosition, List<String> elements, Tab currentTab,
             CanvasAllocationMap allocationMap) {
-        setScreenPosition(screenPosition);
-        setInvolvedElements(elements);
-        setCurrentTab(currentTab);
+        super(screenPosition, elements, currentTab);
         this.currentAllocationMap = allocationMap;
     }
 

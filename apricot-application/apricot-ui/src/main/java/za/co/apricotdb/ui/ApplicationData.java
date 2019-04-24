@@ -6,7 +6,7 @@ import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.ui.undo.ApricotUndoManager;
 import za.co.apricotdb.ui.undo.CircularUndoStack;
 import za.co.apricotdb.ui.undo.UndoChunk;
-import za.co.apricotdb.ui.undo.UndoLayoutChange;
+import za.co.apricotdb.ui.undo.LayoutSavepoint;
 
 /**
  * This Java- bean contains the overall application data.
@@ -19,7 +19,7 @@ public class ApplicationData {
     private ApricotProject currentProject;
     private boolean emptyEnv;
     private ArrayDeque<UndoChunk> undoBuffer = new CircularUndoStack<>(ApricotUndoManager.UNDO_STACK_SIZE);
-    private UndoLayoutChange currentLayout; 
+    private LayoutSavepoint currentLayout;
 
     public ApricotProject getCurrentProject() {
         return currentProject;
@@ -40,11 +40,12 @@ public class ApplicationData {
     public ArrayDeque<UndoChunk> getUndoBuffer() {
         return undoBuffer;
     }
-    
-    public void setCurrentLayout(UndoLayoutChange currentLayout) {
+
+    public void saveCurrentLayout(LayoutSavepoint currentLayout) {
         if (this.currentLayout != null) {
             undoBuffer.addFirst(currentLayout);
-            this.currentLayout = currentLayout;
         }
+        
+        this.currentLayout = currentLayout;
     }
 }

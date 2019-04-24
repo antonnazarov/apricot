@@ -5,7 +5,6 @@ import java.util.List;
 
 import javafx.geometry.Point2D;
 import javafx.scene.control.Tab;
-import za.co.apricotdb.viewport.canvas.ApricotElement;
 
 /**
  * An atomic data storage for undo- command.
@@ -21,9 +20,9 @@ public interface UndoChunk extends Serializable {
 
     Point2D getScreenPosition();
     
-    List<ApricotElement> getInvolvedElements();
+    List<String> getInvolvedElements();
     
-    void setInvolvedElements(List<ApricotElement> involvedElements);
+    void setInvolvedElements(List<String> involvedElements);
     
     Tab getCurrentTab();
     
