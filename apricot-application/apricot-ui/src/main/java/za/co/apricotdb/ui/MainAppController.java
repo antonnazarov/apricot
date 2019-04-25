@@ -25,6 +25,7 @@ import za.co.apricotdb.ui.handler.GenerateScriptHandler;
 import za.co.apricotdb.ui.handler.ReverseEngineHandler;
 import za.co.apricotdb.ui.handler.TabInfoObject;
 import za.co.apricotdb.ui.handler.TabViewHandler;
+import za.co.apricotdb.ui.undo.ApricotUndoManager;
 
 /**
  * This controller serves the main application form apricot-main.fxml.
@@ -70,6 +71,9 @@ public class MainAppController {
 
     @Autowired
     GenerateScriptHandler generateScriptHandler;
+    
+    @Autowired
+    ApricotUndoManager undoManager;
 
     @FXML
     AnchorPane mainPane;
@@ -79,6 +83,9 @@ public class MainAppController {
 
     @FXML
     Button saveButton;
+    
+    @FXML
+    Button undoButton;
 
     @FXML
     ComboBox<String> snapshotCombo;
@@ -261,6 +268,11 @@ public class MainAppController {
             e.printStackTrace();
         }
     }
+    
+    @FXML
+    public void undo(ActionEvent event) {
+        undoManager.undo();
+    }
 
     public TabPane getViewsTabPane() {
         return viewsTabPane;
@@ -268,5 +280,9 @@ public class MainAppController {
 
     public Button getSaveButton() {
         return saveButton;
+    }
+    
+    public Button getUndoButton() {
+        return undoButton;
     }
 }

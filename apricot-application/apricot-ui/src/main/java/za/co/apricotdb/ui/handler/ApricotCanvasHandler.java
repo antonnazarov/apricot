@@ -425,7 +425,7 @@ public class ApricotCanvasHandler {
             @Override
             protected Void call() throws Exception {
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(delay);
                 } catch (InterruptedException e) {
                 }
                 return null;
