@@ -15,19 +15,19 @@ import za.co.apricotdb.viewport.canvas.CanvasAllocationMap;
  */
 @Component
 public class LayoutUndoManager {
-    
+
     /**
      * Perform the Layout- specific undo operation.
      */
     public void undo(UndoChunk chunk) {
-        
+
     }
-    
+
     public UndoChunk buildChunk(Point2D screenPosition, List<String> elements, String currentTabName) {
         CanvasAllocationMap map = getAllocationMap();
         return new LayoutSavepoint(screenPosition, elements, currentTabName, map);
     }
-    
+
     private CanvasAllocationMap getAllocationMap() {
         return null;
     }

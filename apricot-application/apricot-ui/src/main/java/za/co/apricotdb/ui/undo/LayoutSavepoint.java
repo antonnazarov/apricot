@@ -11,15 +11,20 @@ import za.co.apricotdb.viewport.canvas.CanvasAllocationMap;
  * @author Anton Nazarov
  * @since 23/04/2019
  */
-public class LayoutSavepoint extends BaseUndoChunk {
+public class LayoutSavepoint implements UndoChunk {
 
     private static final long serialVersionUID = -2677861347453699229L;
 
+    private Point2D screenPosition;
+    private List<String> involvedElements;
+    private String currentTabName;
     private CanvasAllocationMap currentAllocationMap;
 
     public LayoutSavepoint(Point2D screenPosition, List<String> elements, String currentTabName,
             CanvasAllocationMap allocationMap) {
-        super(screenPosition, elements, currentTabName);
+        this.screenPosition = screenPosition;
+        this.involvedElements = elements;
+        this.currentTabName = currentTabName;
         this.currentAllocationMap = allocationMap;
     }
 
@@ -32,7 +37,15 @@ public class LayoutSavepoint extends BaseUndoChunk {
         return currentAllocationMap;
     }
 
-    public void setCurrentAllocationMap(CanvasAllocationMap currentAllocationMap) {
-        this.currentAllocationMap = currentAllocationMap;
+    public Point2D getScreenPosition() {
+        return screenPosition;
+    }
+
+    public List<String> getInvolvedElements() {
+        return involvedElements;
+    }
+
+    public String getCurrentTabName() {
+        return currentTabName;
     }
 }

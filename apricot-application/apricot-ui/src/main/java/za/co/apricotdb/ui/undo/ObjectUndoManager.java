@@ -2,6 +2,7 @@ package za.co.apricotdb.ui.undo;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javafx.geometry.Point2D;
@@ -16,6 +17,9 @@ import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 @Component
 public class ObjectUndoManager {
 
+    @Autowired
+    LayoutUndoManager layoutUndoManager;
+
     /**
      * Perform the Object- specific undo operation.
      */
@@ -25,7 +29,9 @@ public class ObjectUndoManager {
 
     public UndoChunk buildChunk(Point2D screenPosition, List<String> elements, String currentTabName) {
         ApricotSnapshot savepointSnapshot = getSavepointSnapshot();
-        return new ObjectSavepoint(screenPosition, elements, currentTabName, savepointSnapshot);
+        LayoutSavepoint lSave = (LayoutSavepoint) layoutUndoManager.buildChunk(screenPosition, elements,
+                currentTabName);
+        return new ObjectSavepoint(savepointSnapshot, lSave);
     }
 
     private ApricotSnapshot getSavepointSnapshot() {

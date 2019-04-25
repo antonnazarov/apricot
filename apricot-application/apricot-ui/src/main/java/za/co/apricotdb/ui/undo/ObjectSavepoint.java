@@ -1,8 +1,5 @@
 package za.co.apricotdb.ui.undo;
 
-import java.util.List;
-
-import javafx.geometry.Point2D;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 
 /**
@@ -12,16 +9,16 @@ import za.co.apricotdb.persistence.entity.ApricotSnapshot;
  * @author Anton Nazarov
  * @since 23/04/2019
  */
-public class ObjectSavepoint extends BaseUndoChunk {
+public class ObjectSavepoint implements UndoChunk {
 
     private static final long serialVersionUID = -8403595923151574710L;
 
     private ApricotSnapshot savepointSnapshot;
+    private LayoutSavepoint layoutSavepoint;
 
-    public ObjectSavepoint(Point2D screenPosition, List<String> elements, String currentTabName,
-            ApricotSnapshot savepointSnapshot) {
-        super(screenPosition, elements, currentTabName);
+    public ObjectSavepoint(ApricotSnapshot savepointSnapshot, LayoutSavepoint layoutSavepoint) {
         this.savepointSnapshot = savepointSnapshot;
+        this.layoutSavepoint = layoutSavepoint;
     }
 
     @Override
@@ -35,5 +32,13 @@ public class ObjectSavepoint extends BaseUndoChunk {
 
     public void setSavepointSnapshot(ApricotSnapshot savepointSnapshot) {
         this.savepointSnapshot = savepointSnapshot;
+    }
+
+    public LayoutSavepoint getLayoutSavepoint() {
+        return layoutSavepoint;
+    }
+
+    public void setLayoutSavepoint(LayoutSavepoint layoutSavepoint) {
+        this.layoutSavepoint = layoutSavepoint;
     }
 }
