@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import javafx.geometry.Point2D;
-import javafx.scene.control.Tab;
 import za.co.apricotdb.viewport.canvas.CanvasAllocationMap;
 
 /**
@@ -24,9 +23,9 @@ public class LayoutUndoManager {
         
     }
     
-    public UndoChunk buildChunk(Point2D screenPosition, List<String> elements, Tab currentTab) {
+    public UndoChunk buildChunk(Point2D screenPosition, List<String> elements, String currentTabName) {
         CanvasAllocationMap map = getAllocationMap();
-        return new LayoutSavepoint(screenPosition, elements, currentTab, map);
+        return new LayoutSavepoint(screenPosition, elements, currentTabName, map);
     }
     
     private CanvasAllocationMap getAllocationMap() {

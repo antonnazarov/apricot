@@ -3,7 +3,6 @@ package za.co.apricotdb.ui.undo;
 import java.util.List;
 
 import javafx.geometry.Point2D;
-import javafx.scene.control.Tab;
 
 /**
  * This abstract UndoChunk contains data common for layout and objects.
@@ -17,12 +16,12 @@ public abstract class BaseUndoChunk implements UndoChunk {
 
     private Point2D screenPosition;
     private List<String> involvedElements;
-    private Tab currentTab;
+    private String currentTabName;
 
-    public BaseUndoChunk(Point2D screenPosition, List<String> elements, Tab currentTab) {
+    public BaseUndoChunk(Point2D screenPosition, List<String> elements, String currentTabName) {
         setScreenPosition(screenPosition);
         setInvolvedElements(elements);
-        setCurrentTab(currentTab);
+        setCurrentTabName(currentTabName);
     }
 
     @Override
@@ -46,12 +45,12 @@ public abstract class BaseUndoChunk implements UndoChunk {
     }
 
     @Override
-    public Tab getCurrentTab() {
-        return currentTab;
+    public String getCurrentTabName() {
+        return currentTabName;
     }
 
     @Override
-    public void setCurrentTab(Tab currentTab) {
-        this.currentTab = currentTab;
+    public void setCurrentTabName(String currentTabName) {
+        this.currentTabName = currentTabName;
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import javafx.geometry.Point2D;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
+import za.co.apricotdb.ui.MainAppController;
 import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.handler.ApricotCanvasHandler;
 import za.co.apricotdb.ui.handler.TabInfoObject;
@@ -38,6 +39,9 @@ public class ApricotUndoManager {
 
     @Autowired
     ApricotCanvasHandler canvasHandler;
+    
+    @Autowired
+    MainAppController appController;    
 
     public static final int UNDO_STACK_SIZE = 10;
 
@@ -70,14 +74,14 @@ public class ApricotUndoManager {
         UndoChunk chunk = null;
         switch (type) {
         case LAYOUT_CHANGED:
-            chunk = layoutUndoManager.buildChunk(getScreenPosition(), getElenments(), getCurrentTab());
+            chunk = layoutUndoManager.buildChunk(getScreenPosition(), getElenments(), getCurrentTabName());
+            parent.getApplicationData().saveCurrentLayout((LayoutSavepoint) chunk);
             break;
         case OBJECT_EDITED:
-            chunk = objectUndoManager.buildChunk(getScreenPosition(), getElenments(), getCurrentTab());
+            chunk = objectUndoManager.buildChunk(getScreenPosition(), getElenments(), getCurrentTabName());
+            getUndoBuffer().addFirst(chunk);
             break;
         }
-
-        getUndoBuffer().addFirst(chunk);
 
         // @TODO inform app that there is an undo chunk in the undo buffer
     }
@@ -119,8 +123,13 @@ public class ApricotUndoManager {
         return ret;
     }
 
-    private Tab getCurrentTab() {
-        Tab ret = null;
+    private String getCurrentTabName() {
+        String ret = null;
+        
+        Tab selectedTab = appController.getViewsTabPane().getSelectionModel().getSelectedItem();
+        if (selectedTab != null) {
+            ret = selectedTab.getText();
+        }
 
         return ret;
     }

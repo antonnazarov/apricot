@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import javafx.geometry.Point2D;
-import javafx.scene.control.Tab;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 
 /**
@@ -24,9 +23,9 @@ public class ObjectUndoManager {
 
     }
 
-    public UndoChunk buildChunk(Point2D screenPosition, List<String> elements, Tab currentTab) {
+    public UndoChunk buildChunk(Point2D screenPosition, List<String> elements, String currentTabName) {
         ApricotSnapshot savepointSnapshot = getSavepointSnapshot();
-        return new ObjectSavepoint(screenPosition, elements, currentTab, savepointSnapshot);
+        return new ObjectSavepoint(screenPosition, elements, currentTabName, savepointSnapshot);
     }
 
     private ApricotSnapshot getSavepointSnapshot() {

@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import javafx.geometry.Point2D;
-import javafx.scene.control.Tab;
 
 /**
  * An atomic data storage for undo- command.
@@ -24,7 +23,7 @@ public interface UndoChunk extends Serializable {
     
     void setInvolvedElements(List<String> involvedElements);
     
-    Tab getCurrentTab();
+    String getCurrentTabName();
     
-    void setCurrentTab(Tab tab);
+    void setCurrentTabName(String tab);
 }

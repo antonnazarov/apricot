@@ -3,7 +3,6 @@ package za.co.apricotdb.ui.undo;
 import java.util.List;
 
 import javafx.geometry.Point2D;
-import javafx.scene.control.Tab;
 import za.co.apricotdb.viewport.canvas.CanvasAllocationMap;
 
 /**
@@ -18,9 +17,9 @@ public class LayoutSavepoint extends BaseUndoChunk {
 
     private CanvasAllocationMap currentAllocationMap;
 
-    public LayoutSavepoint(Point2D screenPosition, List<String> elements, Tab currentTab,
+    public LayoutSavepoint(Point2D screenPosition, List<String> elements, String currentTabName,
             CanvasAllocationMap allocationMap) {
-        super(screenPosition, elements, currentTab);
+        super(screenPosition, elements, currentTabName);
         this.currentAllocationMap = allocationMap;
     }
 
