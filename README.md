@@ -1,24 +1,3 @@
-# apricot
-------------------------------------
-The "Apricot" ER-database visualizer
-------------------------------------
-
-The "develop" branch was created on 17/08/2018.
-
-----------
-The "Apricot DB"- catalogues
-----------
-apricot-application -> the Java- project;
-apricot-db -> the project database;
-apricot-docs -> the project documentation;
-apricot-examples -> the example project database;
-apricot-incubator -> the standalone work in progress;
-apricot-reports -> the example of the Excel- reports, generated from different databases;
-apricot-scripts -> SQL- scripts
-
-* For installation instructions go to apricot-application/readme.txt
-
-
-
-
-
+"Apricot DB" is a database tool for design and analysis of the relational database structure. It represents the DB- structure in the form of editable Entity/Relationship Diagrams (ERD). "Apricot DB" allows to perform reverse engineering on the existing database, as well as to create a new database structure from scratch. Allows to generate the essential DDL- scripts for CREATE/DROP/DELETE- operations based on the current ERD.
+The graphical representation of ER Diagrams complies with the IDEF1x- standard.
+The current version (0.3 Alpha, the develop branch), includes most of the essential functions planned for "ApricotDB".
