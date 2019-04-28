@@ -36,6 +36,7 @@ import za.co.apricotdb.ui.ViewFormController;
 import za.co.apricotdb.ui.model.EditViewModelBuilder;
 import za.co.apricotdb.ui.model.NewViewModelBuilder;
 import za.co.apricotdb.ui.model.ViewFormModel;
+import za.co.apricotdb.ui.undo.ApricotUndoManager;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.CanvasBuilder;
 
@@ -77,6 +78,9 @@ public class ApricotViewHandler {
 
     @Autowired
     TabViewHandler tabViewHandler;
+    
+    @Autowired
+    ApricotUndoManager undoManager;
 
     public List<ApricotView> getAllViews(ApricotProject project) {
         checkGeneralView(project);
@@ -190,6 +194,9 @@ public class ApricotViewHandler {
     public Tab createViewTab(ApricotSnapshot snapshot, ApricotView view, TabPane tabPane) {
         ApricotCanvas canvas = canvasBuilder.buildCanvas();
         Tab tab = tabViewHandler.buildTab(snapshot, view, canvas);
+        tab.setOnSelectionChanged(e -> {
+            undoManager.resetCurrentLayout();
+        });
         tabPane.getTabs().add(tab);
 
         canvasHandler.populateCanvas(snapshot, view, canvas);

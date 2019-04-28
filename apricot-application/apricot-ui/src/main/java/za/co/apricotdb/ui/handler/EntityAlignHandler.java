@@ -10,6 +10,7 @@ import javafx.util.Duration;
 import za.co.apricotdb.viewport.align.EntityPositionAligner;
 import za.co.apricotdb.viewport.align.EntitySizeAligner;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
+import za.co.apricotdb.viewport.notification.AddLayoutSavepointEvent;
 import za.co.apricotdb.viewport.notification.CanvasChangedEvent;
 
 /**
@@ -72,8 +73,11 @@ public class EntityAlignHandler {
     }
 
     private void setEditedAlert(ApricotCanvas canvas) {
-        CanvasChangedEvent event = new CanvasChangedEvent(canvas);
-        eventPublisher.publishEvent(event);
+        CanvasChangedEvent canvasChangedEvent = new CanvasChangedEvent(canvas);
+        eventPublisher.publishEvent(canvasChangedEvent);
+        AddLayoutSavepointEvent addSavepointEvent = new AddLayoutSavepointEvent(canvas);
+        eventPublisher.publishEvent(addSavepointEvent);
+        
         PauseTransition delay = new PauseTransition(Duration.seconds(0.01));
         delay.setOnFinished(e -> canvas.buildRelationships());
         delay.play();

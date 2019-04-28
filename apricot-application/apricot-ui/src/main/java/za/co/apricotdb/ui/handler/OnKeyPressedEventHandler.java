@@ -10,6 +10,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Side;
 import javafx.scene.input.KeyEvent;
 import za.co.apricotdb.ui.MainAppController;
+import za.co.apricotdb.ui.undo.ApricotUndoManager;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ApricotElement;
 import za.co.apricotdb.viewport.canvas.ElementStatus;
@@ -38,6 +39,9 @@ public class OnKeyPressedEventHandler implements EventHandler<KeyEvent> {
 
     @Autowired
     EntityAlignHandler alignHandler;
+    
+    @Autowired
+    ApricotUndoManager undoManager;
 
     @Override
     public void handle(KeyEvent event) {
@@ -88,6 +92,10 @@ public class OnKeyPressedEventHandler implements EventHandler<KeyEvent> {
                 alignHandler.alignSelectedEntities(Side.BOTTOM);
             }
             break;
+        case Z:
+            if (event.isControlDown()) {
+                undoManager.undo();
+            }
         default:
             break;
         }

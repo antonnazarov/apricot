@@ -83,16 +83,18 @@ public class ApricotUndoManager {
     public void resetUndoBuffer() {
         getUndoBuffer().clear();
         resetCurrentLayout();
-        addSavepoint(UndoType.LAYOUT_CHANGED);
         enableUndoButton(false, 0);
+    }
+
+    public void resetCurrentLayout() {
+        UndoChunk chunk = layoutUndoManager.buildChunk();
+        if (chunk != null) {
+            parent.getApplicationData().setCurrentLayout((LayoutSavepoint) chunk);
+        }
     }
 
     private ArrayDeque<UndoChunk> getUndoBuffer() {
         return parent.getApplicationData().getUndoBuffer();
-    }
-
-    private void resetCurrentLayout() {
-        parent.getApplicationData().setCurrentLayout(null);
     }
 
     private void enableUndoButton(boolean enable, int steps) {

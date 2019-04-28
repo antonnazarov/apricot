@@ -56,4 +56,8 @@ public class LayoutSavepoint implements UndoChunk {
     public String getCurrentTabName() {
         return currentTabName;
     }
+    
+    public void setCurrentTabName(String tabName) {
+        this.currentTabName = tabName;
+    }
 }
