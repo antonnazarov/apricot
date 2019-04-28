@@ -104,6 +104,8 @@ public class MainAppController {
             }
         }
         saveButton.setStyle("-fx-font-weight: normal;");
+        
+        parentWindow.getApplicationData().setLayoutEdited(false);
     }
 
     @FXML

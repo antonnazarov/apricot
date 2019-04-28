@@ -20,6 +20,7 @@ public class ApplicationData {
     private boolean emptyEnv;
     private ArrayDeque<UndoChunk> undoBuffer = new CircularUndoStack<>(ApricotUndoManager.UNDO_STACK_SIZE);
     private LayoutSavepoint currentLayout;
+    private boolean layoutEdited = false;
 
     public ApricotProject getCurrentProject() {
         return currentProject;
@@ -53,5 +54,13 @@ public class ApplicationData {
 
     public void setCurrentLayout(LayoutSavepoint currentLayout) {
         this.currentLayout = currentLayout;
+    }
+
+    public boolean isLayoutEdited() {
+        return layoutEdited;
+    }
+
+    public void setLayoutEdited(boolean layoutEdited) {
+        this.layoutEdited = layoutEdited;
     }
 }
