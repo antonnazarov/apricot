@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import javafx.animation.PauseTransition;
@@ -21,6 +22,7 @@ import za.co.apricotdb.viewport.canvas.CanvasAllocationMap;
 import za.co.apricotdb.viewport.canvas.ElementStatus;
 import za.co.apricotdb.viewport.canvas.ElementType;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
+import za.co.apricotdb.viewport.notification.CanvasChangedEvent;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 
 /**
@@ -40,14 +42,18 @@ public class LayoutUndoManager {
 
     @Autowired
     MainAppController appController;
+    
+    @Autowired
+    ApplicationEventPublisher eventPublisher;
 
     /**
      * Perform the Layout- specific undo operation.
      */
     public void undo(UndoChunk chunk) {
         LayoutSavepoint lsp = (LayoutSavepoint) chunk;
-        ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
-        if (selectUndoTab(lsp) && canvas != null) {
+        setCurrentLayout(lsp);
+        ApricotCanvas canvas = selectUndoTab(lsp);
+        if (canvas != null) {
             setScreenPosition(lsp.getScreenPosition());
             selectCanvasElements(canvas, lsp.getInvolvedElements());
             canvas.applyAllocationMap(lsp.getCurrentAllocationMap(), ElementType.ENTITY);
@@ -56,6 +62,9 @@ public class LayoutUndoManager {
             PauseTransition delay = new PauseTransition(Duration.seconds(0.01));
             delay.setOnFinished(e -> canvas.buildRelationships());
             delay.play();
+            
+            CanvasChangedEvent event = new CanvasChangedEvent(canvas);
+            eventPublisher.publishEvent(event);
         }
     }
 
@@ -80,17 +89,18 @@ public class LayoutUndoManager {
         return null;
     }
 
-    private boolean selectUndoTab(LayoutSavepoint chunk) {
+    private ApricotCanvas selectUndoTab(LayoutSavepoint chunk) {
 
         TabPane tp = parent.getProjectTabPane();
         for (Tab tab : tp.getTabs()) {
             if (chunk.getCurrentTabName().equals(tab.getText())) {
                 tp.getSelectionModel().select(tab);
-                return true;
+                TabInfoObject tabInfo = TabInfoObject.getTabInfo(tab);
+                return tabInfo.getCanvas();
             }
         }
 
-        return false;
+        return null;
     }
 
     /**
@@ -124,8 +134,8 @@ public class LayoutUndoManager {
         for (ApricotEntity e : canvas.getSelectedEntities()) {
             ret.add("T->" + e.getTableName());
         }
-        for (ApricotRelationship e : canvas.getSelectedRelationships()) {
-            ret.add("R->" + e.getRelationshipName());
+        for (ApricotRelationship r : canvas.getSelectedRelationships()) {
+            ret.add("R->" + r.getRelationshipName());
         }
 
         return ret;
@@ -164,5 +174,9 @@ public class LayoutUndoManager {
                 }
             }
         }
+    }
+
+    private void setCurrentLayout(LayoutSavepoint currentLayout) {
+        parent.getApplicationData().setCurrentLayout(currentLayout);
     }
 }

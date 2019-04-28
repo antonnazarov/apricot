@@ -43,9 +43,15 @@ public class ApplicationData {
 
     public void saveCurrentLayout(LayoutSavepoint currentLayout) {
         if (this.currentLayout != null) {
-            undoBuffer.addFirst(currentLayout);
+            this.currentLayout.setInvolvedElements(currentLayout.getInvolvedElements());
+            this.currentLayout.setScreenPosition(currentLayout.getScreenPosition());
+            undoBuffer.addFirst(this.currentLayout);
         }
-        
+
+        this.currentLayout = currentLayout;
+    }
+
+    public void setCurrentLayout(LayoutSavepoint currentLayout) {
         this.currentLayout = currentLayout;
     }
 }

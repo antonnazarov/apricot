@@ -65,4 +65,19 @@ public class DragInitPosition implements Serializable {
     public void setInitRuler(double initRuler) {
         this.initRuler = initRuler;
     }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("DragInitPosition: ");
+        sb.append("orgSceneX=[").append(orgSceneX).append("], ");
+        sb.append("orgSceneY=[").append(orgSceneY).append("], ");
+        sb.append("orgTranslateX=[").append(orgTranslateX).append("], ");
+        sb.append("orgTranslateY=[").append(orgTranslateY).append("], ");
+        sb.append("draggingType=[").append(draggingType).append("], ");
+        sb.append("origWidth=[").append(origWidth).append("], ");
+        sb.append("origHeight=[").append(origHeight).append("], ");
+        sb.append("initRuler=[").append(initRuler).append("]");
+        
+        return sb.toString();
+    }
 }

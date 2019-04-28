@@ -21,7 +21,7 @@ public class GroupOperationHandler {
 
         for (ApricotElement element : canvas.getElements()) {
             if (element.getElementType() == ElementType.ENTITY && element.getElementStatus() == elementStatus) {
-                ApricotEntity entity = (ApricotEntity) element; 
+                ApricotEntity entity = (ApricotEntity) element;
                 ApricotEntityShape entityShape = entity.getEntityShape();
                 entityShape.setTranslateX(translateX);
                 entityShape.setTranslateY(translateY);
@@ -31,15 +31,16 @@ public class GroupOperationHandler {
 
     /**
      * Translate the rulers of the relationships with the given status of element.
-     * If the parameter elementStatus is null, the operation will be applied for all entities/relationships.
+     * If the parameter elementStatus is null, the operation will be applied for all
+     * entities/relationships.
      */
     public void translateRelationshipRulers(ApricotCanvas canvas, double translateX, double translateY,
             ElementStatus elementStatus) {
         // prepare a list of the selected Entities
         List<ApricotEntity> entities = new ArrayList<>();
         for (ApricotElement element : canvas.getElements()) {
-            if (element.getElementType() == ElementType.ENTITY && 
-                    (element.getElementStatus() == elementStatus || elementStatus == null)) {
+            if (element.getElementType() == ElementType.ENTITY
+                    && (element.getElementStatus() == elementStatus || elementStatus == null)) {
                 entities.add((ApricotEntity) element);
             }
         }
@@ -58,11 +59,19 @@ public class GroupOperationHandler {
         }
     }
 
-    public void applyCurrentPosition(ApricotCanvas canvas, ElementStatus elementStatus) {
+    /**
+     * This method returns true if there were non zero translations found for the
+     * handled objects.
+     */
+    public boolean applyCurrentPosition(ApricotCanvas canvas, ElementStatus elementStatus) {
+        boolean ret = false;
         for (ApricotElement element : canvas.getElements()) {
             if (element.getElementType() == ElementType.ENTITY && element.getElementStatus() == elementStatus) {
-                ApricotEntity entity = (ApricotEntity) element;  
+                ApricotEntity entity = (ApricotEntity) element;
                 ApricotEntityShape shape = entity.getEntityShape();
+                if (shape.getTranslateX() != 0 || shape.getTranslateY() != 0) {
+                    ret = true;
+                }
                 shape.setLayoutX(shape.getLayoutX() + shape.getTranslateX());
                 shape.setLayoutY(shape.getLayoutY() + shape.getTranslateY());
                 shape.setTranslateX(0);
@@ -72,6 +81,8 @@ public class GroupOperationHandler {
                 applyPrimaryKeyStacks(entity);
             }
         }
+
+        return ret;
     }
 
     private void resetRelationshipRulers(ApricotEntity entity) {
@@ -82,7 +93,7 @@ public class GroupOperationHandler {
             }
         }
     }
-    
+
     public void resetRelationshipRulers(ApricotCanvas canvas) {
         for (ApricotElement element : canvas.getElements()) {
             if (element.getElementType() == ElementType.ENTITY) {

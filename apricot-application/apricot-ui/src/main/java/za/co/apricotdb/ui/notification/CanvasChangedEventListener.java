@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import javafx.scene.control.Tab;
 import za.co.apricotdb.ui.MainAppController;
 import za.co.apricotdb.ui.undo.ApricotUndoManager;
-import za.co.apricotdb.ui.undo.UndoType;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.notification.CanvasChangedEvent;
 
@@ -28,7 +27,5 @@ public class CanvasChangedEventListener implements ApplicationListener<CanvasCha
 
         ApricotCanvas canvas = (ApricotCanvas) event.getSource();
         canvas.setCanvasChanged(true);
-
-        undoManager.addSavepoint(UndoType.LAYOUT_CHANGED);
     }
 }

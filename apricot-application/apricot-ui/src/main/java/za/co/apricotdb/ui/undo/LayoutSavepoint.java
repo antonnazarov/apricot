@@ -40,9 +40,17 @@ public class LayoutSavepoint implements UndoChunk {
     public Point2D getScreenPosition() {
         return screenPosition;
     }
+    
+    public void setScreenPosition(Point2D screenPosition) {
+        this.screenPosition = screenPosition;
+    }
 
     public List<String> getInvolvedElements() {
         return involvedElements;
+    }
+    
+    public void setInvolvedElements(List<String> elements) {
+        this.involvedElements = elements;
     }
 
     public String getCurrentTabName() {

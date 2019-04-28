@@ -27,7 +27,7 @@ public class ApricotUndoManager {
 
     @Autowired
     ObjectUndoManager objectUndoManager;
-    
+
     @Autowired
     MainAppController appController;
 
@@ -37,21 +37,24 @@ public class ApricotUndoManager {
      * Perform the UNDO operation.
      */
     public void undo() {
-        UndoChunk chunk = getUndoBuffer().removeFirst();
-        if (chunk != null) {
-            switch (chunk.getUndoType()) {
-            case LAYOUT_CHANGED:
-                layoutUndoManager.undo(chunk);
-                break;
-            case OBJECT_EDITED:
-                objectUndoManager.undo(chunk);
-                break;
+        if (getUndoBuffer().size() > 0) {
+            UndoChunk chunk = getUndoBuffer().removeFirst();
+            if (chunk != null) {
+                switch (chunk.getUndoType()) {
+                case LAYOUT_CHANGED:
+                    layoutUndoManager.undo(chunk);
+                    break;
+                case OBJECT_EDITED:
+                    objectUndoManager.undo(chunk);
+                    break;
+                }
             }
         }
 
-        if (getUndoBuffer().size() == 0) {
-            // there is no undo chunks anymore
-            enableUndoButton(false);
+        if (getUndoBuffer().size() > 0) {
+            enableUndoButton(true, getUndoBuffer().size());
+        } else {
+            enableUndoButton(false, 0);
         }
     }
 
@@ -74,27 +77,36 @@ public class ApricotUndoManager {
         }
 
         // inform app that there is an undo chunk in the undo buffer
-        enableUndoButton(true);
+        enableUndoButton(true, getUndoBuffer().size());
     }
 
     public void resetUndoBuffer() {
         getUndoBuffer().clear();
+        resetCurrentLayout();
         addSavepoint(UndoType.LAYOUT_CHANGED);
-        enableUndoButton(false);
+        enableUndoButton(false, 0);
     }
 
     private ArrayDeque<UndoChunk> getUndoBuffer() {
         return parent.getApplicationData().getUndoBuffer();
     }
-    
-    private void enableUndoButton(boolean enable) {
+
+    private void resetCurrentLayout() {
+        parent.getApplicationData().setCurrentLayout(null);
+    }
+
+    private void enableUndoButton(boolean enable, int steps) {
         Button undoBttn = appController.getUndoButton();
         if (enable) {
             undoBttn.setDisable(false);
-            appController.getSaveButton().setStyle("-fx-font-weight: bold;");
+            undoBttn.setStyle("-fx-font-weight: bold;");
+            if (steps > 0) {
+                undoBttn.setText("Undo (" + steps + ")");
+            }
         } else {
             undoBttn.setDisable(true);
-            appController.getSaveButton().setStyle("-fx-font-weight: normal;");
+            undoBttn.setStyle("-fx-font-weight: normal;");
+            undoBttn.setText("Undo");
         }
     }
 }

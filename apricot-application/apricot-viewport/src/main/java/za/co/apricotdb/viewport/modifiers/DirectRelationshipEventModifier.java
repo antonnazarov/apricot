@@ -9,6 +9,7 @@ import za.co.apricotdb.viewport.event.RelationshipOnMouseEnteredHorizontalRulerE
 import za.co.apricotdb.viewport.event.RelationshipOnMouseExitedRulerEventHandler;
 import za.co.apricotdb.viewport.event.RelationshipOnMousePressedEventHandler;
 import za.co.apricotdb.viewport.event.RelationshipOnMousePressedRulerEventHandler;
+import za.co.apricotdb.viewport.event.RelationshipOnMouseReleasedEventHandler;
 import za.co.apricotdb.viewport.relationship.shape.DirectRelationship;
 
 public class DirectRelationshipEventModifier implements ElementVisualModifier {
@@ -18,6 +19,7 @@ public class DirectRelationshipEventModifier implements ElementVisualModifier {
     private EventHandler<MouseEvent> mouseRulerPressedHandler = null;
     private EventHandler<MouseEvent> mouseRulerDraggedHandler = null;
     private EventHandler<MouseEvent> mousePressedHandler = null;
+    private EventHandler<MouseEvent> mouseRulerReleasedHandler = null;
 
     public DirectRelationshipEventModifier(ApricotCanvas canvas) {
         mouseRulerEnteredHandler = new RelationshipOnMouseEnteredHorizontalRulerEventHandler(canvas);
@@ -25,6 +27,7 @@ public class DirectRelationshipEventModifier implements ElementVisualModifier {
         mouseRulerPressedHandler = new RelationshipOnMousePressedRulerEventHandler("RulerX");
         mouseRulerDraggedHandler = new RelationshipOnMouseDraggedHorizontalRulerEventHandler("RulerX", canvas);
         mousePressedHandler = new RelationshipOnMousePressedEventHandler();
+        mouseRulerReleasedHandler = new RelationshipOnMouseReleasedEventHandler(canvas);
     }
 
     @Override
@@ -35,5 +38,6 @@ public class DirectRelationshipEventModifier implements ElementVisualModifier {
         relationship.getRuler().setOnMouseExited(mouseRulerExitedHandler);
         relationship.getRuler().setOnMousePressed(mouseRulerPressedHandler);
         relationship.getRuler().setOnMouseDragged(mouseRulerDraggedHandler);
+        relationship.getRuler().setOnMouseReleased(mouseRulerReleasedHandler);
     }
 }
