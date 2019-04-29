@@ -5,6 +5,8 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -89,6 +91,15 @@ public class MainAppController {
 
     @FXML
     ComboBox<String> snapshotCombo;
+    
+    public void init() {
+        viewsTabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
+            @Override
+            public void changed(ObservableValue<? extends Tab> ov, Tab t, Tab t1) {
+                undoManager.resetCurrentLayout();
+            }
+        });
+    }
 
     @FXML
     public void save(ActionEvent event) {

@@ -35,6 +35,7 @@ public class ApricotMainApp extends Application {
         rootNode = loader.load();
         
         MainAppController controller = loader.<MainAppController>getController();
+        controller.init();
         System.out.println("ApricotMainApp: the main app controller was instantiated: " + controller.toString());
     }
 

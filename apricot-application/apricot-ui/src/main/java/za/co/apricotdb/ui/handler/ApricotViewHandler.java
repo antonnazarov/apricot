@@ -78,7 +78,7 @@ public class ApricotViewHandler {
 
     @Autowired
     TabViewHandler tabViewHandler;
-    
+
     @Autowired
     ApricotUndoManager undoManager;
 
@@ -194,9 +194,6 @@ public class ApricotViewHandler {
     public Tab createViewTab(ApricotSnapshot snapshot, ApricotView view, TabPane tabPane) {
         ApricotCanvas canvas = canvasBuilder.buildCanvas();
         Tab tab = tabViewHandler.buildTab(snapshot, view, canvas);
-        tab.setOnSelectionChanged(e -> {
-            undoManager.resetCurrentLayout();
-        });
         tabPane.getTabs().add(tab);
 
         canvasHandler.populateCanvas(snapshot, view, canvas);
@@ -220,8 +217,8 @@ public class ApricotViewHandler {
     }
 
     public void createDefaultView(ApricotProject project) {
-        ApricotView v = new ApricotView(ApricotView.MAIN_VIEW, "The main view of the project", new java.util.Date(), null, true,
-                0, project, new ArrayList<ApricotObjectLayout>());
+        ApricotView v = new ApricotView(ApricotView.MAIN_VIEW, "The main view of the project", new java.util.Date(),
+                null, true, 0, project, new ArrayList<ApricotObjectLayout>());
         project.getViews().add(v);
     }
 }

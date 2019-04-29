@@ -24,6 +24,10 @@ import za.co.apricotdb.persistence.repository.ApricotProjectRepository;
  */
 @Component
 public class ProjectManager {
+    
+    //  the "undo" project contains the historic undo information  
+    //  of the current snapshot of the current project
+    public static final String UNDO_PROJECT_NAME = "$UNDO_PROJECT$";
 
     @Resource
     private ApricotProjectRepository projectRepository;
@@ -77,6 +81,7 @@ public class ProjectManager {
     
     public List<ApricotProject> getAllProjects() {
         TypedQuery<ApricotProject> query = em.createNamedQuery("ApricotProject.getAllProjects", ApricotProject.class);
+        query.setParameter("undo_project", UNDO_PROJECT_NAME);
         return query.getResultList();
     }
     

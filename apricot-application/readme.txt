@@ -1,5 +1,5 @@
 ----------------------------
-ApricotDB, Release 0.3 (alpha), 21/04/2019
+ApricotDB, Release 0.3, 21/04/2019
 ----------------------------
 This version of "Apricot DB" covers most of the crucial functions planned for the application.
 Release 0.3 allows to create new Projects, Snapshots inside the Projects, create and edit Views, 
