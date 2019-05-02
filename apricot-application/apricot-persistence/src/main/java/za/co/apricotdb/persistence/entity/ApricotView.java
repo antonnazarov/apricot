@@ -7,6 +7,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -31,6 +33,7 @@ import javax.persistence.TemporalType;
 @NamedQuery(name = "ApricotView.getViewByName", query = "SELECT vw FROM ApricotView vw WHERE vw.project = :project AND vw.name = :name")
 @NamedQuery(name = "ApricotView.getViewMaxOrdinalPosition", query = "SELECT MAX(vw.ordinalPosition) FROM ApricotView vw WHERE vw.project = :project")
 @NamedQuery(name = "ApricotView.getViewsByObjectName", query = "SELECT vw FROM ApricotView vw JOIN vw.objectLayouts l WHERE vw.project = :project AND l.objectType = :objectType AND l.objectName = :objectName")
+@NamedQuery(name = "ApricotView.getCurrentView", query = "SELECT vw FROM ApricotView vw WHERE vw.project = :project AND vw.current = :current")
 public class ApricotView implements Serializable {
 
     public static final String MAIN_VIEW = "Main View";
@@ -40,7 +43,8 @@ public class ApricotView implements Serializable {
     }
 
     public ApricotView(String name, String comment, java.util.Date created, java.util.Date updated, boolean general,
-            int ordinalPosition, ApricotProject project, List<ApricotObjectLayout> objectLayouts) {
+            int ordinalPosition, ApricotProject project, List<ApricotObjectLayout> objectLayouts, boolean current,
+            ViewDetailLevel detailLevel) {
         this.name = name;
         this.comment = comment;
         this.created = created;
@@ -49,6 +53,8 @@ public class ApricotView implements Serializable {
         this.ordinalPosition = ordinalPosition;
         this.project = project;
         this.objectLayouts = objectLayouts;
+        this.current = current;
+        this.detailLevel = detailLevel;
     }
 
     @Id
@@ -75,6 +81,13 @@ public class ApricotView implements Serializable {
 
     @Column(name = "ordinal_position")
     private int ordinalPosition;
+
+    @Column(name = "is_current")
+    private boolean current;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "detail_level")
+    private ViewDetailLevel detailLevel;
 
     @ManyToOne
     @JoinColumn(name = "project_id")
@@ -153,6 +166,22 @@ public class ApricotView implements Serializable {
 
     public void setObjectLayouts(List<ApricotObjectLayout> objectLayouts) {
         this.objectLayouts = objectLayouts;
+    }
+
+    public boolean isCurrent() {
+        return current;
+    }
+
+    public void setCurrent(boolean current) {
+        this.current = current;
+    }
+
+    public ViewDetailLevel getDetailLevel() {
+        return detailLevel;
+    }
+
+    public void setDetailLevel(ViewDetailLevel detailLevel) {
+        this.detailLevel = detailLevel;
     }
 
     @Override

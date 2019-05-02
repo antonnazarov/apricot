@@ -15,6 +15,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import za.co.apricotdb.persistence.data.SnapshotManager;
+import za.co.apricotdb.persistence.data.ViewManager;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
 import za.co.apricotdb.ui.handler.ApricotEntityHandler;
@@ -28,6 +29,7 @@ import za.co.apricotdb.ui.handler.ReverseEngineHandler;
 import za.co.apricotdb.ui.handler.TabInfoObject;
 import za.co.apricotdb.ui.handler.TabViewHandler;
 import za.co.apricotdb.ui.undo.ApricotUndoManager;
+import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
 /**
  * This controller serves the main application form apricot-main.fxml.
@@ -43,6 +45,9 @@ public class MainAppController {
 
     @Autowired
     ApricotViewHandler viewHandler;
+
+    @Autowired
+    ViewManager viewManager;
 
     @Autowired
     ApricotProjectHandler projectHandler;
@@ -73,9 +78,12 @@ public class MainAppController {
 
     @Autowired
     GenerateScriptHandler generateScriptHandler;
-    
+
     @Autowired
     ApricotUndoManager undoManager;
+
+    @Autowired
+    AlertMessageDecorator alert;
 
     @FXML
     AnchorPane mainPane;
@@ -85,18 +93,24 @@ public class MainAppController {
 
     @FXML
     Button saveButton;
-    
+
     @FXML
     Button undoButton;
 
     @FXML
     ComboBox<String> snapshotCombo;
-    
+
     public void init() {
+        parentWindow.setParentPane(mainPane);
+
         viewsTabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
             @Override
             public void changed(ObservableValue<? extends Tab> ov, Tab t, Tab t1) {
                 undoManager.resetCurrentLayout();
+                if (t1 != null) {
+                    TabInfoObject tabInfo = TabInfoObject.getTabInfo(t1);
+                    viewManager.setCurrentView(tabInfo.getView());
+                }
             }
         });
     }
@@ -115,7 +129,7 @@ public class MainAppController {
             }
         }
         saveButton.setStyle("-fx-font-weight: normal;");
-        
+
         parentWindow.getApplicationData().setLayoutEdited(false);
     }
 
@@ -182,6 +196,17 @@ public class MainAppController {
      */
     @FXML
     public void selectSnapshot(ActionEvent event) {
+        // check if there are some changes made
+        if (parentWindow.getApplicationData().isLayoutEdited()) {
+            if (alert.requestYesNoOption("Save changes",
+                    "There are not saved changed made on the current diagram. Do you want to save them", "Save")) {
+                save(event);
+            } else {
+                saveButton.setStyle("-fx-font-weight: normal;");
+                parentWindow.getApplicationData().setLayoutEdited(false);
+            }
+        }
+
         if (snapshotCombo.getUserData() != null && snapshotCombo.getUserData().equals("AppInitialize")) {
             snapshotCombo.setUserData("reset");
         } else {
@@ -263,7 +288,7 @@ public class MainAppController {
             e.printStackTrace();
         }
     }
-    
+
     @FXML
     public void generateDropScript(ActionEvent event) {
         try {
@@ -272,7 +297,7 @@ public class MainAppController {
             e.printStackTrace();
         }
     }
-    
+
     @FXML
     public void generateDeleteScript(ActionEvent event) {
         try {
@@ -281,7 +306,7 @@ public class MainAppController {
             e.printStackTrace();
         }
     }
-    
+
     @FXML
     public void undo(ActionEvent event) {
         undoManager.undo();
@@ -294,7 +319,7 @@ public class MainAppController {
     public Button getSaveButton() {
         return saveButton;
     }
-    
+
     public Button getUndoButton() {
         return undoButton;
     }

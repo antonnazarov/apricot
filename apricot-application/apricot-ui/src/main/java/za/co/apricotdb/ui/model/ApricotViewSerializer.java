@@ -93,8 +93,9 @@ public class ApricotViewSerializer {
         }
 
         view.setObjectLayouts(targetLayouts);
+        viewManager.saveView(view);
 
-        return viewManager.saveView(view);
+        return viewManager.setCurrentView(view);
     }
 
     /**

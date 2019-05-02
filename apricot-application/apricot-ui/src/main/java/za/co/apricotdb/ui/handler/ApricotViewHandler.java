@@ -32,6 +32,7 @@ import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.persistence.entity.LayoutObjectType;
+import za.co.apricotdb.persistence.entity.ViewDetailLevel;
 import za.co.apricotdb.ui.ViewFormController;
 import za.co.apricotdb.ui.model.EditViewModelBuilder;
 import za.co.apricotdb.ui.model.NewViewModelBuilder;
@@ -112,7 +113,7 @@ public class ApricotViewHandler {
     private ApricotView createGeneralView(ApricotProject project) {
         ApricotView generalView = new ApricotView(ApricotView.MAIN_VIEW,
                 "The main (general) view of the project " + project.getName(), new java.util.Date(), null, true, 0,
-                project, null);
+                project, null, true, ViewDetailLevel.DEFAULT);
         return viewManager.saveView(generalView);
     }
 
@@ -218,7 +219,7 @@ public class ApricotViewHandler {
 
     public void createDefaultView(ApricotProject project) {
         ApricotView v = new ApricotView(ApricotView.MAIN_VIEW, "The main view of the project", new java.util.Date(),
-                null, true, 0, project, new ArrayList<ApricotObjectLayout>());
+                null, true, 0, project, new ArrayList<ApricotObjectLayout>(), true, ViewDetailLevel.DEFAULT);
         project.getViews().add(v);
     }
 }

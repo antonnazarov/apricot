@@ -2,10 +2,13 @@ package za.co.apricotdb.ui.undo;
 
 import java.util.ArrayDeque;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javafx.scene.control.Button;
+import za.co.apricotdb.persistence.data.UndoSnapshotManager;
 import za.co.apricotdb.ui.MainAppController;
 import za.co.apricotdb.ui.ParentWindow;
 
@@ -30,6 +33,9 @@ public class ApricotUndoManager {
 
     @Autowired
     MainAppController appController;
+    
+    @Autowired
+    UndoSnapshotManager undoSnapshotManager;
 
     public static final int UNDO_STACK_SIZE = 10;
 
@@ -80,9 +86,11 @@ public class ApricotUndoManager {
         enableUndoButton(true, getUndoBuffer().size());
     }
 
+    @Transactional
     public void resetUndoBuffer() {
         getUndoBuffer().clear();
         resetCurrentLayout();
+        undoSnapshotManager.cleanUndoProject();
         enableUndoButton(false, 0);
     }
 

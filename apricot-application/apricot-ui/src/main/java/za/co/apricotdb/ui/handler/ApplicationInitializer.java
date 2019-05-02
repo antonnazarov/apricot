@@ -9,12 +9,14 @@ import org.springframework.stereotype.Component;
 
 import javafx.animation.PauseTransition;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
 import javafx.util.Duration;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.TableManager;
+import za.co.apricotdb.persistence.data.ViewManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotView;
@@ -47,6 +49,9 @@ public class ApplicationInitializer {
     @Autowired
     ApricotViewHandler viewHandler;
 
+    @Autowired
+    ViewManager viewManager;
+    
     @Autowired
     CanvasBuilder canvasBuilder;
 
@@ -102,13 +107,21 @@ public class ApplicationInitializer {
             initCombo(project, snapshot, combo);
         }
 
+        ApricotView currentView = viewManager.getCurrentView(project);
+        Tab currentTab = null;
         TabPane tabPane = parentWindow.getProjectTabPane();
         tabPane.getTabs().clear();
         for (ApricotView view : viewHandler.getAllViews(project)) {
             // create Tabs for General view and for other views with the Layout Objects
             if (view.isGeneral() || view.getObjectLayouts().size() != 0) {
-                viewHandler.createViewTab(snapshot, view, tabPane);
+                Tab tb = viewHandler.createViewTab(snapshot, view, tabPane);
+                if (view.equals(currentView)) {
+                    currentTab = tb;
+                }
             }
+        }
+        if (currentTab != null) {
+            tabPane.getSelectionModel().select(currentTab);
         }
 
         // initialize the undo stack

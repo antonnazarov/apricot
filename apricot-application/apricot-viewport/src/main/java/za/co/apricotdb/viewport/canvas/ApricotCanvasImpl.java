@@ -34,7 +34,7 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
     private final List<ApricotRelationship> relationships = new ArrayList<>();
     private final RelationshipTopology topology = new RelationshipTopologyImpl(this);
     private final ApplicationEventPublisher applicationEventPublisher;
-    
+
     private boolean canvasChanged;
 
     public ApricotCanvasImpl(ApplicationEventPublisher applicationEventPublisher) {
@@ -69,7 +69,7 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
     public ApricotEntity findEntityByName(String name) {
         return entities.get(name);
     }
-    
+
     @Override
     public ApricotRelationship findRelationshipByName(String name) {
         for (ApricotRelationship r : relationships) {
@@ -77,7 +77,7 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
                 return r;
             }
         }
-        
+
         return null;
     }
 
@@ -92,14 +92,14 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
         }
         this.getChildren().remove(element.getShape());
     }
-    
+
     /**
-     * Remove all relationships, linked to the entity. 
+     * Remove all relationships, linked to the entity.
      */
     private void removeEntityLinkedRelationships(ApricotEntity entity) {
         List<ApricotRelationship> relationships = new ArrayList<>(entity.getPrimaryLinks());
         relationships.addAll(entity.getForeignLinks());
-        
+
         for (ApricotRelationship r : relationships) {
             r.getParent().getPrimaryLinks().remove(r);
             r.getParent().getForeignLinks().remove(r);
@@ -221,8 +221,10 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
                 shape = (ApricotShape) ae.getShape();
             }
 
-            CanvasAllocationItem item = shape.getAllocation();
-            allocationMap.addCanvasAllocationItem(item);
+            if (shape != null) {
+                CanvasAllocationItem item = shape.getAllocation();
+                allocationMap.addCanvasAllocationItem(item);
+            }
         }
 
         return allocationMap;
@@ -253,7 +255,9 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
                     if (relationship != null) {
                         ApricotRelationshipShape shape = (ApricotRelationshipShape) relationship.getShape();
 
-                        shape.applyAllocation(item);
+                        if (shape != null) {
+                            shape.applyAllocation(item);
+                        }
                     }
                 }
             }
@@ -282,7 +286,7 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
 
         return ret;
     }
-    
+
     @Override
     public List<ApricotRelationship> getSelectedRelationships() {
         List<ApricotRelationship> ret = new ArrayList<>();

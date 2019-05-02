@@ -117,4 +117,33 @@ public class ViewManager {
 
         return query.getSingleResult();
     }
+
+    public ApricotView getCurrentView(ApricotProject project) {
+        ApricotView ret = null;
+        TypedQuery<ApricotView> query = em.createNamedQuery("ApricotView.getCurrentView", ApricotView.class);
+        query.setParameter("project", project);
+        query.setParameter("current", true);
+
+        List<ApricotView> res = query.getResultList();
+        if (res == null || res.isEmpty()) {
+            ret = getGeneralView(project);
+        } else {
+            ret = res.get(0);
+        }
+
+        return ret;
+    }
+    
+    public ApricotView setCurrentView(ApricotView currentView) {
+        ApricotView view = getCurrentView(currentView.getProject());
+        
+        if (view == null) {
+            view = getGeneralView(currentView.getProject());
+        }
+        
+        view.setCurrent(false);
+        saveView(view);
+        currentView.setCurrent(true);
+        return saveView(currentView);
+    }
 }

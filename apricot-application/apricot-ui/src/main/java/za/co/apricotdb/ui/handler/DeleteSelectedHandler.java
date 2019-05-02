@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.RelationshipManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.TableManager;
+import za.co.apricotdb.ui.undo.ApricotUndoManager;
+import za.co.apricotdb.ui.undo.UndoType;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
@@ -48,6 +50,9 @@ public class DeleteSelectedHandler {
     @Autowired
     ApricotSnapshotHandler snapshotHandler;
 
+    @Autowired
+    ApricotUndoManager undoManager;
+
     @Transactional
     public void deleteSelected() {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
@@ -62,6 +67,8 @@ public class DeleteSelectedHandler {
                             .append(r.getChild().getTableName()).append("\n");
                 }
                 if (alert.requestYesNoOption("Delete Relationship(s)", sb.toString(), "Delete")) {
+                    undoManager.addSavepoint(UndoType.OBJECT_EDITED);
+
                     for (ApricotRelationship r : relationships) {
                         za.co.apricotdb.persistence.entity.ApricotRelationship rel = relationshipManager
                                 .findRelationshipById(r.getRelationshipId());
@@ -77,6 +84,8 @@ public class DeleteSelectedHandler {
                 sb.append("*").append(e.getTableName()).append("\n");
             }
             if (alert.requestYesNoOption("Delete Entity(s)", sb.toString(), "Delete")) {
+                undoManager.addSavepoint(UndoType.OBJECT_EDITED);
+
                 for (ApricotEntity e : entities) {
                     entityHandler.deleteEntity(e.getTableName());
                 }

@@ -3,7 +3,10 @@ package za.co.apricotdb.ui.undo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import za.co.apricotdb.persistence.data.SnapshotManager;
+import za.co.apricotdb.persistence.data.UndoSnapshotManager;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
+import za.co.apricotdb.ui.handler.ApplicationInitializer;
 
 /**
  * The manager of the undo operations on the object undo type.
@@ -17,29 +20,40 @@ public class ObjectUndoManager {
     @Autowired
     LayoutUndoManager layoutUndoManager;
 
+    @Autowired
+    UndoSnapshotManager undoManager;
+
+    @Autowired
+    SnapshotManager snapshotManager;
+    
+    @Autowired
+    ApplicationInitializer initializer;
+
     /**
      * Perform the Object- specific undo operation.
      */
     public void undo(UndoChunk chunk) {
         ObjectSavepoint osp = (ObjectSavepoint) chunk;
+
+        // do object changes undo
+        undoManager.undoCurrentSnapshot(osp.getSavepointSnapshot());
+        initializer.initializeDefault();
         
-        //  undo the layout first
+        // undo the layout
         LayoutSavepoint lsp = osp.getLayoutSavepoint();
         if (lsp != null) {
             layoutUndoManager.undo(lsp);
         }
-        
-        //  do object changes undo
-        
     }
 
     public UndoChunk buildChunk() {
         ApricotSnapshot savepointSnapshot = getSavepointSnapshot();
         LayoutSavepoint lSave = (LayoutSavepoint) layoutUndoManager.buildChunk();
+
         return new ObjectSavepoint(savepointSnapshot, lSave);
     }
 
     private ApricotSnapshot getSavepointSnapshot() {
-        return null;
+        return undoManager.addUndoSnapshot(snapshotManager.getDefaultSnapshot());
     }
 }

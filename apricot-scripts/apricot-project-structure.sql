@@ -59,6 +59,8 @@ create table apricot_view (
    view_updated datetime,
    is_general boolean not null,
    ordinal_position int not null,
+   is_current boolean not null,
+   detail_level varchar(10) not null,
    unique key view_unique_key (project_id, view_name)
 );
 

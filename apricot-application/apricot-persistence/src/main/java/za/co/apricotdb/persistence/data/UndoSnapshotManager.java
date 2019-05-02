@@ -67,4 +67,18 @@ public class UndoSnapshotManager {
                 snapshot);
         return snapshotManager.saveSnapshot(clone);
     }
+    
+    public void undoCurrentSnapshot(ApricotSnapshot undoSnapshot) {
+        ApricotProject project = projectManager.findCurrentProject(); 
+        ApricotSnapshot currSnapshot = snapshotManager.getDefaultSnapshot();
+        
+        undoSnapshot.setName(currSnapshot.getName());
+        undoSnapshot.setComment(currSnapshot.getComment());
+        undoSnapshot.setUpdated(new java.util.Date());
+        undoSnapshot.setProject(project);
+        snapshotManager.deleteSnapshot(currSnapshot);
+        
+        undoSnapshot.setDefaultSnapshot(true);
+        snapshotManager.saveSnapshot(undoSnapshot);
+    }
 }
