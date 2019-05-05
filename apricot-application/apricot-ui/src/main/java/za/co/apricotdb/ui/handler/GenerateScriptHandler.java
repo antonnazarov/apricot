@@ -183,14 +183,12 @@ public class GenerateScriptHandler {
 
         List<ApricotTable> tables = getScriptTables(source);
         List<ApricotRelationship> allRel = relationshipManager.getRelationshipsForTables(tables);
-        List<ApricotTable> sortedTables = sortTables(tables, allRel, false);
 
-        if (sortedTables == null) {
-            // the dead loop? Check and report.
-            handleDeadLoop(tables, allRel);
+        if (!handleDeadLoop(tables, allRel)) {
             return null;
         }
 
+        List<ApricotTable> sortedTables = sortTables(tables, allRel, false);
         for (ApricotTable table : sortedTables) {
             List<ApricotRelationship> relationships = relationshipManager.getRelationshipsForTable(table);
             String sTable = null;
@@ -201,7 +199,7 @@ public class GenerateScriptHandler {
         return sb.toString();
     }
 
-    private void handleDeadLoop(List<ApricotTable> tables, List<ApricotRelationship> allRel) {
+    private boolean handleDeadLoop(List<ApricotTable> tables, List<ApricotRelationship> allRel) {
         List<ApricotTable> deadLoop = entityChainHandler.getDeadLoopTables(tables, allRel);
         if (deadLoop != null && deadLoop.size() > 0) {
             Alert alert = alertDecorator.getAlert("Dead Loop",
@@ -210,7 +208,10 @@ public class GenerateScriptHandler {
                     AlertType.ERROR);
             alert.showAndWait();
 
+            return false;
         }
+
+        return true;
     }
 
     private String generateDropScript(ScriptSource source, String schema) {
@@ -218,14 +219,12 @@ public class GenerateScriptHandler {
 
         List<ApricotTable> tables = getScriptTables(source);
         List<ApricotRelationship> allRel = relationshipManager.getRelationshipsForTables(tables);
-        List<ApricotTable> sortedTables = sortTables(tables, allRel, true);
 
-        if (sortedTables == null) {
-            // the dead loop? Check and report.
-            handleDeadLoop(tables, allRel);
+        if (!handleDeadLoop(tables, allRel)) {
             return null;
         }
 
+        List<ApricotTable> sortedTables = sortTables(tables, allRel, true);
         if (source == ScriptSource.CURRENT_SNAPSHOT) {
             ret = scriptGenerator.dropAllTables(sortedTables, schema);
         } else {
@@ -252,14 +251,12 @@ public class GenerateScriptHandler {
 
         List<ApricotTable> tables = getScriptTables(source);
         List<ApricotRelationship> allRel = relationshipManager.getRelationshipsForTables(tables);
-        List<ApricotTable> sortedTables = sortTables(tables, allRel, true);
 
-        if (sortedTables == null) {
-            // the dead loop? Check and report.
-            handleDeadLoop(tables, allRel);
+        if (!handleDeadLoop(tables, allRel)) {
             return null;
         }
 
+        List<ApricotTable> sortedTables = sortTables(tables, allRel, true);
         if (source == ScriptSource.CURRENT_SNAPSHOT) {
             ret = scriptGenerator.deleteInAllTables(sortedTables, schema);
         } else {

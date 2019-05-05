@@ -140,4 +140,20 @@ public class ApricotSnapshot implements Serializable {
     public void setTables(List<ApricotTable> tables) {
         this.tables = tables;
     }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        
+        List<ApricotTable> sorted = new ArrayList<>(tables);
+        sorted.sort((t1, t2) -> {
+            return t1.getName().compareTo(t2.getName());
+        });
+        sb.append("snapshot: ").append(name).append(" (").append(id).append(")\n");
+        for (ApricotTable t : sorted) {
+            sb.append(t.getName()).append("\n");
+        }
+        
+        return sb.toString();
+    }
 }

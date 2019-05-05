@@ -33,10 +33,10 @@ public class SnapshotManager {
 
     @Resource
     ApricotSnapshotRepository snapshotRepository;
-    
+
     @Resource
     ApricotColumnConstraintRepository columnConstraintRepository;
-    
+
     @Resource
     ApricotRelationshipRepository relationshipRepository;
 
@@ -45,10 +45,10 @@ public class SnapshotManager {
 
     @Autowired
     TableManager tableManager;
-    
+
     @Autowired
     ConstraintManager constraintManager;
-    
+
     @Autowired
     RelationshipManager relationshipManager;
 
@@ -115,12 +115,27 @@ public class SnapshotManager {
                 columnConstraintRepository.delete(cc);
             }
         }
-        
+
         List<ApricotRelationship> relationships = relationshipManager.getRelationshipsForTables(tables);
         for (ApricotRelationship r : relationships) {
             relationshipRepository.delete(r);
         }
 
         snapshotRepository.delete(snapshot);
+    }
+
+    public void setDefaultSnapshot(ApricotSnapshot snapshot) {
+        if (snapshot == null) {
+            return;
+        }
+
+        List<ApricotSnapshot> snapshots = getAllSnapshots(snapshot.getProject());
+        for (ApricotSnapshot s : snapshots) {
+            s.setDefaultSnapshot(false);
+            saveSnapshot(s);
+        }
+
+        snapshot.setDefaultSnapshot(true);
+        saveSnapshot(snapshot);
     }
 }

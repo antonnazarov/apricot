@@ -3,6 +3,7 @@ package za.co.apricotdb.persistence.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +29,7 @@ public class UndoSnapshotManager {
 
     @Autowired
     SnapshotManager snapshotManager;
-
+    
     @Autowired
     SnapshotCloneManager cloneManager;
 
@@ -52,7 +53,7 @@ public class UndoSnapshotManager {
         }
     }
 
-    public ApricotSnapshot addUndoSnapshot(ApricotSnapshot snapshot) {
+    public ApricotSnapshot buildUndoSnapshot(ApricotSnapshot snapshot) {
         ApricotProject undoProject = getUndoProject();
         List<ApricotSnapshot> snapshots = undoProject.getSnapshots();
         snapshots.sort((s1, s2) -> {
@@ -60,24 +61,28 @@ public class UndoSnapshotManager {
         });
 
         while (snapshots.size() >= UNDO_SNAPSHOTS_NUM) {
-            snapshots.remove(0);
+            snapshotManager.deleteSnapshot(snapshots.get(0));
         }
 
-        ApricotSnapshot clone = cloneManager.cloneSnapshot(snapshot.getName(), snapshot.getComment(), undoProject,
-                snapshot);
-        return snapshotManager.saveSnapshot(clone);
-    }
-    
-    public void undoCurrentSnapshot(ApricotSnapshot undoSnapshot) {
-        ApricotProject project = projectManager.findCurrentProject(); 
-        ApricotSnapshot currSnapshot = snapshotManager.getDefaultSnapshot();
+        ApricotSnapshot clone = cloneManager.cloneSnapshot(
+                snapshot.getName() + " (" + RandomStringUtils.randomAlphanumeric(8) + ")", snapshot.getComment(),
+                undoProject, snapshot);
+        snapshotManager.saveSnapshot(clone);
+        snapshotManager.setDefaultSnapshot(clone);
         
+        return clone;
+    }
+
+    public void undoCurrentSnapshot(ApricotSnapshot undoSnapshot) {
+        ApricotProject project = projectManager.findCurrentProject();
+        ApricotSnapshot currSnapshot = snapshotManager.getDefaultSnapshot();
+
         undoSnapshot.setName(currSnapshot.getName());
         undoSnapshot.setComment(currSnapshot.getComment());
         undoSnapshot.setUpdated(new java.util.Date());
         undoSnapshot.setProject(project);
         snapshotManager.deleteSnapshot(currSnapshot);
-        
+
         undoSnapshot.setDefaultSnapshot(true);
         snapshotManager.saveSnapshot(undoSnapshot);
     }

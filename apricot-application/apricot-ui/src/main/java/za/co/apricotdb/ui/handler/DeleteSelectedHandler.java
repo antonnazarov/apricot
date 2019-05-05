@@ -2,8 +2,6 @@ package za.co.apricotdb.ui.handler;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -52,8 +50,8 @@ public class DeleteSelectedHandler {
 
     @Autowired
     ApricotUndoManager undoManager;
-
-    @Transactional
+    
+    // @Transactional
     public void deleteSelected() {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
         List<ApricotEntity> entities = canvas.getSelectedEntities();
@@ -67,7 +65,7 @@ public class DeleteSelectedHandler {
                             .append(r.getChild().getTableName()).append("\n");
                 }
                 if (alert.requestYesNoOption("Delete Relationship(s)", sb.toString(), "Delete")) {
-                    undoManager.addSavepoint(UndoType.OBJECT_EDITED);
+                    // undoManager.addSavepoint(UndoType.OBJECT_EDITED);
 
                     for (ApricotRelationship r : relationships) {
                         za.co.apricotdb.persistence.entity.ApricotRelationship rel = relationshipManager
@@ -89,6 +87,7 @@ public class DeleteSelectedHandler {
                 for (ApricotEntity e : entities) {
                     entityHandler.deleteEntity(e.getTableName());
                 }
+                
                 snapshotHandler.syncronizeSnapshot();
             }
         }

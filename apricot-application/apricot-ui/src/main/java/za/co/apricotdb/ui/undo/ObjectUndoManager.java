@@ -25,7 +25,7 @@ public class ObjectUndoManager {
 
     @Autowired
     SnapshotManager snapshotManager;
-    
+
     @Autowired
     ApplicationInitializer initializer;
 
@@ -38,7 +38,7 @@ public class ObjectUndoManager {
         // do object changes undo
         undoManager.undoCurrentSnapshot(osp.getSavepointSnapshot());
         initializer.initializeDefault();
-        
+
         // undo the layout
         LayoutSavepoint lsp = osp.getLayoutSavepoint();
         if (lsp != null) {
@@ -47,13 +47,9 @@ public class ObjectUndoManager {
     }
 
     public UndoChunk buildChunk() {
-        ApricotSnapshot savepointSnapshot = getSavepointSnapshot();
+        ApricotSnapshot savepointSnapshot = undoManager.buildUndoSnapshot(snapshotManager.getDefaultSnapshot());
         LayoutSavepoint lSave = (LayoutSavepoint) layoutUndoManager.buildChunk();
 
         return new ObjectSavepoint(savepointSnapshot, lSave);
-    }
-
-    private ApricotSnapshot getSavepointSnapshot() {
-        return undoManager.addUndoSnapshot(snapshotManager.getDefaultSnapshot());
     }
 }

@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Resource;
-import javax.transaction.Transactional;
 
 import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,22 +77,6 @@ public class ApricotSnapshotHandler {
         project.getSnapshots().add(snapshot);
     }
 
-    @Transactional
-    public void setDefaultSnapshot(ApricotSnapshot snapshot) {
-        if (snapshot == null) {
-            return;
-        }
-
-        List<ApricotSnapshot> snapshots = snapshotManager.getAllSnapshots(snapshot.getProject());
-        for (ApricotSnapshot s : snapshots) {
-            s.setDefaultSnapshot(false);
-            snapshotManager.saveSnapshot(s);
-        }
-
-        snapshot.setDefaultSnapshot(true);
-        snapshotManager.saveSnapshot(snapshot);
-    }
-
     /**
      * Create the snapshot editing form for a new or existing snapshot.
      */
@@ -160,7 +143,7 @@ public class ApricotSnapshotHandler {
             snapshotManager.deleteSnapshot(snapshot);
             List<ApricotSnapshot> snapshots = snapshotManager.getAllSnapshots(project);
             ApricotSnapshot defSnapshot = snapshots.get(snapshots.size() - 1);
-            setDefaultSnapshot(defSnapshot);
+            snapshotManager.setDefaultSnapshot(defSnapshot);
 
             return true;
         }

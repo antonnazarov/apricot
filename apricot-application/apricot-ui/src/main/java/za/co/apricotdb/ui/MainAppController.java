@@ -218,7 +218,7 @@ public class MainAppController {
             if (snapshot == null) {
                 return;
             }
-            snapshotHandler.setDefaultSnapshot(snapshot);
+            snapshotManager.setDefaultSnapshot(snapshot);
             applicationInitializer.initialize(snapshot.getProject(), snapshot);
         }
     }

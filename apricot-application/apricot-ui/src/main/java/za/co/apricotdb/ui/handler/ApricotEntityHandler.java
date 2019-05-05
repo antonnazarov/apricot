@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -67,7 +68,7 @@ public class ApricotEntityHandler {
 
     @Autowired
     SnapshotManager snapshotManager;
-    
+
     @Autowired
     ApricotSnapshotHandler snapshotHandler;
 
@@ -82,10 +83,10 @@ public class ApricotEntityHandler {
 
     @Autowired
     ConstraintManager constraintManager;
-    
+
     @Autowired
     ApricotEntityValidator entityValidator;
-    
+
     @Autowired
     EditEntityKeyHandler keyHandler;
 
@@ -121,14 +122,14 @@ public class ApricotEntityHandler {
         dialog.show();
     }
 
-    @Transactional    
+    @Transactional
     public boolean saveEntity(EditEntityModel model, String entityName, EditEntityController controller) {
         model.setEntityName(entityName);
-        
+
         if (!entityValidator.validate(model, controller)) {
             return false;
         }
-            
+
         entitySerializer.serialize(model);
 
         // handle when the entity name was changed
@@ -140,14 +141,14 @@ public class ApricotEntityHandler {
         canvasHandler.updateEntity(model.getTable(), model.isNewEntity());
         treeViewHandler.populate(projectManager.findCurrentProject(), snapshotManager.getDefaultSnapshot());
         treeViewHandler.selectEntity(entityName);
-        
+
         return true;
     }
 
     /**
      * Delete the entity.
      */
-    @Transactional
+    @Transactional(value = TxType.REQUIRES_NEW)
     public void deleteEntity(String entityName) {
         ApricotTable table = tableManager.getTableByName(entityName, snapshotManager.getDefaultSnapshot());
         if (table != null) {
@@ -157,7 +158,7 @@ public class ApricotEntityHandler {
             }
 
             for (ApricotConstraint constr : table.getConstraints()) {
-                if (constr.getType() != ConstraintType.FOREIGN_KEY) {
+                if (relationships.isEmpty() || constr.getType() != ConstraintType.FOREIGN_KEY) {
                     constraintManager.deleteConstraint(constr);
                 }
             }

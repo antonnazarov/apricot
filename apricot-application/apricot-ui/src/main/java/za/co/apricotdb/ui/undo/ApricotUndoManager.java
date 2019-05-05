@@ -3,6 +3,7 @@ package za.co.apricotdb.ui.undo;
 import java.util.ArrayDeque;
 
 import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -67,6 +68,7 @@ public class ApricotUndoManager {
     /**
      * Add the savepoint to the undo buffer.
      */
+    @Transactional(value=TxType.REQUIRES_NEW)
     public void addSavepoint(UndoType type) {
         UndoChunk chunk = null;
         switch (type) {

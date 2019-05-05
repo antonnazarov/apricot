@@ -165,7 +165,7 @@ public class ReverseEngineHandler {
         dataSaver.saveMetaData(md);
 
         // save the extension of the snapshot comment
-        setSnapshotReverseResultMessage(reverseEngineeringParameters);
+        setSnapshotReverseResultComment(reverseEngineeringParameters);
 
         return true;
     }
@@ -248,7 +248,7 @@ public class ReverseEngineHandler {
         dialog.show();
     }
 
-    private void setSnapshotReverseResultMessage(String reverseEngineeringParameters) {
+    private void setSnapshotReverseResultComment(String reverseEngineeringParameters) {
         ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
 
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");

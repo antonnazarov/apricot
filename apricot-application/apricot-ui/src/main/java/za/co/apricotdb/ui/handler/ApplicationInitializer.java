@@ -51,7 +51,7 @@ public class ApplicationInitializer {
 
     @Autowired
     ViewManager viewManager;
-    
+
     @Autowired
     CanvasBuilder canvasBuilder;
 

@@ -110,20 +110,13 @@ public class ApricotViewHandler {
         return ret;
     }
 
-    private ApricotView createGeneralView(ApricotProject project) {
-        ApricotView generalView = new ApricotView(ApricotView.MAIN_VIEW,
-                "The main (general) view of the project " + project.getName(), new java.util.Date(), null, true, 0,
-                project, null, true, ViewDetailLevel.DEFAULT);
-        return viewManager.saveView(generalView);
-    }
-
     private void checkGeneralView(ApricotProject project) {
         try {
             viewManager.getGeneralView(project);
         } catch (Exception e) {
             // if exception of any type takes place, try to re-create the General View
             viewManager.removeGeneralView(project);
-            createGeneralView(project);
+            viewManager.createGeneralView(project);
         }
     }
 
