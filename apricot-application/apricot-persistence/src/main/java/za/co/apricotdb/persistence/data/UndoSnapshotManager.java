@@ -62,6 +62,7 @@ public class UndoSnapshotManager {
 
         while (snapshots.size() >= UNDO_SNAPSHOTS_NUM) {
             snapshotManager.deleteSnapshot(snapshots.get(0));
+            snapshots.remove(0);
         }
 
         ApricotSnapshot clone = cloneManager.cloneSnapshot(

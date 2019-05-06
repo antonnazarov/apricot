@@ -39,9 +39,12 @@ public class OnKeyPressedEventHandler implements EventHandler<KeyEvent> {
 
     @Autowired
     EntityAlignHandler alignHandler;
-    
+
     @Autowired
     ApricotUndoManager undoManager;
+    
+    @Autowired
+    ApricotSnapshotHandler snapshotHandler;
 
     @Override
     public void handle(KeyEvent event) {
@@ -96,6 +99,10 @@ public class OnKeyPressedEventHandler implements EventHandler<KeyEvent> {
             if (event.isControlDown()) {
                 undoManager.undo();
             }
+            break;
+        case F5:
+            snapshotHandler.syncronizeSnapshot();
+            break;
         default:
             break;
         }
