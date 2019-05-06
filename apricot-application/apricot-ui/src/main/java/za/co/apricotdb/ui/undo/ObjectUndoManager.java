@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.UndoSnapshotManager;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
-import za.co.apricotdb.ui.handler.ApplicationInitializer;
+import za.co.apricotdb.ui.handler.ApricotSnapshotHandler;
 
 /**
  * The manager of the undo operations on the object undo type.
@@ -27,7 +27,7 @@ public class ObjectUndoManager {
     SnapshotManager snapshotManager;
 
     @Autowired
-    ApplicationInitializer initializer;
+    ApricotSnapshotHandler snapshotHandler;
 
     /**
      * Perform the Object- specific undo operation.
@@ -37,7 +37,7 @@ public class ObjectUndoManager {
 
         // do object changes undo
         undoManager.undoCurrentSnapshot(osp.getSavepointSnapshot());
-        initializer.initializeDefault();
+        snapshotHandler.syncronizeSnapshot();
 
         // undo the layout
         LayoutSavepoint lsp = osp.getLayoutSavepoint();

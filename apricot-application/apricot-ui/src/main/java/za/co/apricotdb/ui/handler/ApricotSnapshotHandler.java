@@ -156,12 +156,12 @@ public class ApricotSnapshotHandler {
      * tree view representation of the data
      */
     public void syncronizeSnapshot() {
+        ApricotProject project = projectManager.findCurrentProject();
+        ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
         TabPane tp = parentWindow.getProjectTabPane();
         for (Tab tab : tp.getTabs()) {
             TabInfoObject tabInfo = TabInfoObject.getTabInfo(tab);
             if (tabInfo != null) {
-                ApricotProject project = projectManager.findCurrentProject();
-                ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
                 treeViewHandler.populate(project, snapshot);
                 canvasHandler.populateCanvas(snapshot, tabInfo.getView(), tabInfo.getCanvas());
             }

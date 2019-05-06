@@ -19,6 +19,7 @@ import javafx.scene.layout.Pane;
 import za.co.apricotdb.persistence.data.ObjectLayoutManager;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.RelationshipManager;
+import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.TableManager;
 import za.co.apricotdb.persistence.data.ViewManager;
 import za.co.apricotdb.persistence.entity.ApricotColumn;
@@ -80,6 +81,9 @@ public class ApricotCanvasHandler {
     @Autowired
     ObjectLayoutManager objectLayoutManager;
 
+    @Autowired
+    SnapshotManager snapshotManager;
+
     /**
      * Populate the given canvas with the information of snapshot, using the
      * provided skin.
@@ -104,6 +108,7 @@ public class ApricotCanvasHandler {
             runAllocationAfterDelay(canvas, view);
         }
     }
+
 
     /**
      * Update or add entity on view port.

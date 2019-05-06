@@ -28,10 +28,13 @@ import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ConstraintType;
 import za.co.apricotdb.ui.EditEntityController;
+import za.co.apricotdb.ui.MainAppController;
 import za.co.apricotdb.ui.model.ApricotEntitySerializer;
 import za.co.apricotdb.ui.model.ApricotEntityValidator;
 import za.co.apricotdb.ui.model.EditEntityModel;
 import za.co.apricotdb.ui.model.EditEntityModelBuilder;
+import za.co.apricotdb.ui.undo.ApricotUndoManager;
+import za.co.apricotdb.ui.undo.UndoType;
 
 /**
  * The handled of Apricot Entity (Table).
@@ -89,6 +92,12 @@ public class ApricotEntityHandler {
 
     @Autowired
     EditEntityKeyHandler keyHandler;
+    
+    @Autowired
+    ApricotUndoManager undoManager;
+
+    @Autowired
+    MainAppController appController;
 
     @Transactional
     public void openEntityEditorForm(boolean newEntity, String tableName) throws IOException {
@@ -130,6 +139,9 @@ public class ApricotEntityHandler {
             return false;
         }
 
+        appController.save(null);
+        undoManager.addSavepoint(UndoType.OBJECT_EDITED);
+        
         entitySerializer.serialize(model);
 
         // handle when the entity name was changed

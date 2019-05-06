@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javafx.animation.PauseTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -14,6 +15,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
+import javafx.util.Duration;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.ViewManager;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
@@ -106,11 +108,15 @@ public class MainAppController {
         viewsTabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
             @Override
             public void changed(ObservableValue<? extends Tab> ov, Tab t, Tab t1) {
-                undoManager.resetCurrentLayout();
                 if (t1 != null) {
                     TabInfoObject tabInfo = TabInfoObject.getTabInfo(t1);
                     viewManager.setCurrentView(tabInfo.getView());
                 }
+
+                // reset the current undo layout
+                PauseTransition delay = new PauseTransition(Duration.seconds(0.5));
+                delay.setOnFinished(e -> undoManager.resetCurrentLayout());
+                delay.play();
             }
         });
     }
