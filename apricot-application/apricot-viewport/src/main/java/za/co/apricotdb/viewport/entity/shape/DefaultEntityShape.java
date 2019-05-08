@@ -23,7 +23,7 @@ import za.co.apricotdb.viewport.relationship.ApricotRelationship;
  * @author Anton Nazarov
  * @since 27/11/2018
  */
-public abstract class DetailedEntityShape extends ApricotEntityShape {
+public abstract class DefaultEntityShape extends ApricotEntityShape {
     
     public static final double VERTICAL_PRIMARY_ENDPOINT_CORRECTION = 12;
     public static final double VERTICAL_NON_PRIMARY_ENDPOINT_CORRECTION = -3;
@@ -49,7 +49,7 @@ public abstract class DetailedEntityShape extends ApricotEntityShape {
     private final NonIdentifyingStack rightStack = new NonIdentifyingStack(this, Side.RIGHT);
     private final IdentifyingStack topStack = new IdentifyingStack(this);
 
-    public DetailedEntityShape(ApricotEntity entity, Text header, GridPane primaryPanel, GridPane nonPrimaryPanel) {
+    public DefaultEntityShape(ApricotEntity entity, Text header, GridPane primaryPanel, GridPane nonPrimaryPanel) {
         super(entity);
 
         this.header = header;

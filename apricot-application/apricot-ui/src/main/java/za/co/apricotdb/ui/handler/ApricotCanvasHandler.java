@@ -40,7 +40,7 @@ import za.co.apricotdb.viewport.canvas.CanvasAllocationMap;
 import za.co.apricotdb.viewport.canvas.ElementStatus;
 import za.co.apricotdb.viewport.canvas.ElementType;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
-import za.co.apricotdb.viewport.entity.ApricotEntityBuilder;
+import za.co.apricotdb.viewport.entity.DefaultEntityBuilder;
 import za.co.apricotdb.viewport.entity.EntityBuilder;
 import za.co.apricotdb.viewport.entity.FieldDetail;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
@@ -166,7 +166,7 @@ public class ApricotCanvasHandler {
         List<ApricotRelationship> relationships = relationshipManager.getRelationshipsForTables(tables);
 
         Map<String, List<FieldDetail>> fieldDetails = new HashMap<>();
-        EntityBuilder eBuilder = new ApricotEntityBuilder(canvas);
+        EntityBuilder eBuilder = new DefaultEntityBuilder(canvas);
         for (ApricotTable t : tables) {
             List<FieldDetail> fd = getFieldDetails(t, relationships);
             if (canvas.findEntityByName(t.getName()) == null) {

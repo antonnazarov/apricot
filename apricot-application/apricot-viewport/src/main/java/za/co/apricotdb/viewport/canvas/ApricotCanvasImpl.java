@@ -15,7 +15,7 @@ import javafx.scene.layout.Pane;
 import za.co.apricotdb.viewport.align.OrderManager;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
-import za.co.apricotdb.viewport.entity.shape.DetailedEntityShape;
+import za.co.apricotdb.viewport.entity.shape.DefaultEntityShape;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 import za.co.apricotdb.viewport.relationship.shape.ApricotRelationshipShape;
 import za.co.apricotdb.viewport.relationship.shape.RelationshipTopology;
@@ -156,8 +156,8 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
             if (e.getElementType() == ElementType.ENTITY) {
                 ApricotEntity entity = (ApricotEntity) e;
                 if (entity.getEntityShape() != null) {
-                    if (entity.getEntityShape() instanceof DetailedEntityShape) {
-                        DetailedEntityShape entityShape = (DetailedEntityShape) entity.getEntityShape();
+                    if (entity.getEntityShape() instanceof DefaultEntityShape) {
+                        DefaultEntityShape entityShape = (DefaultEntityShape) entity.getEntityShape();
                         entityShape.resetAllStacks();
                         entityShape.getEntityGroup().getChildren().remove(entityShape.getLeftStack());
                         entityShape.getEntityGroup().getChildren().remove(entityShape.getRightStack());

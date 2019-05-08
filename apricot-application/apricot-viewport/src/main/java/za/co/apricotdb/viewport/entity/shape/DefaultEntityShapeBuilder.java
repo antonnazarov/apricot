@@ -16,14 +16,14 @@ import za.co.apricotdb.viewport.modifiers.ElementVisualModifier;
  * @author Anton Nazarov
  * @since 28/11/2018
  */
-public class DetailedEntityShapeBuilder implements EntityShapeBuilder {
+public class DefaultEntityShapeBuilder implements EntityShapeBuilder {
 
     public static final double FIELDS_HORIZONTAL_GAP = 10;
     public static final double FIELDS_VERTICAL_GAP = 3;
 
     private final ElementVisualModifier[] modifiers;
 
-    public DetailedEntityShapeBuilder(ElementVisualModifier... modifiers) {
+    public DefaultEntityShapeBuilder(ElementVisualModifier... modifiers) {
         this.modifiers = modifiers;
     }
 
@@ -33,10 +33,10 @@ public class DetailedEntityShapeBuilder implements EntityShapeBuilder {
         ApricotEntityShape shape = null;
 
         if (!entity.isSlave()) {
-            shape = new DetailedMasterEntityShape(entity, buildEntityHeader(entity.getTableName()),
+            shape = new DefaultMasterEntityShape(entity, buildEntityHeader(entity.getTableName()),
                     buildPrimaryKeyPanel(entity.getDetails()), buildNonPrimaryKeyPanel(entity.getDetails()));
         } else {
-            shape = new DetailedSlaveEntityShape(entity, buildEntityHeader(entity.getTableName()),
+            shape = new DefaultSlaveEntityShape(entity, buildEntityHeader(entity.getTableName()),
                     buildPrimaryKeyPanel(entity.getDetails()), buildNonPrimaryKeyPanel(entity.getDetails()));
         }
 

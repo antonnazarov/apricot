@@ -9,7 +9,7 @@ import za.co.apricotdb.viewport.canvas.ElementStatus;
 import za.co.apricotdb.viewport.canvas.ElementType;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
-import za.co.apricotdb.viewport.entity.shape.DetailedEntityShape;
+import za.co.apricotdb.viewport.entity.shape.DefaultEntityShape;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 import za.co.apricotdb.viewport.relationship.shape.ApricotRelationshipShape;
 
@@ -120,8 +120,8 @@ public class GroupOperationHandler {
      */
     public void translatePrimaryKeyStacks(ApricotEntity entity, double translateX, double translateY) {
         ApricotEntityShape s = entity.getEntityShape();
-        if (s instanceof DetailedEntityShape) {
-            DetailedEntityShape entityShape = (DetailedEntityShape) s;
+        if (s instanceof DefaultEntityShape) {
+            DefaultEntityShape entityShape = (DefaultEntityShape) s;
             entityShape.getLeftStack().translateStack(translateX, translateY);
             entityShape.getRightStack().translateStack(translateX, translateY);
             entityShape.getTopStack().translateStack(translateX, translateY);
@@ -130,8 +130,8 @@ public class GroupOperationHandler {
 
     private void applyPrimaryKeyStacks(ApricotEntity entity) {
         ApricotEntityShape s = entity.getEntityShape();
-        if (s instanceof DetailedEntityShape) {
-            DetailedEntityShape entityShape = (DetailedEntityShape) s;
+        if (s instanceof DefaultEntityShape) {
+            DefaultEntityShape entityShape = (DefaultEntityShape) s;
             entityShape.getLeftStack().applyStackPosition();
             entityShape.getRightStack().applyStackPosition();
             entityShape.getTopStack().applyStackPosition();
