@@ -54,7 +54,7 @@ public class DefaultEntityShapeBuilder implements EntityShapeBuilder {
         return header;
     }
 
-    private GridPane buildPrimaryKeyPanel(List<FieldDetail> details) {
+    public GridPane buildPrimaryKeyPanel(List<FieldDetail> details) {
         GridPane pkPanel = new GridPane();
 
         pkPanel.setHgap(FIELDS_HORIZONTAL_GAP);
@@ -76,7 +76,7 @@ public class DefaultEntityShapeBuilder implements EntityShapeBuilder {
         return pkPanel;
     }
 
-    private GridPane buildNonPrimaryKeyPanel(List<FieldDetail> details) {
+    public GridPane buildNonPrimaryKeyPanel(List<FieldDetail> details) {
         GridPane fPanel = new GridPane();
 
         fPanel.setHgap(FIELDS_HORIZONTAL_GAP);

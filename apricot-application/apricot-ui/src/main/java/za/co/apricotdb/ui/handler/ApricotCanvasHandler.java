@@ -28,6 +28,7 @@ import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.persistence.entity.LayoutObjectType;
+import za.co.apricotdb.persistence.entity.ViewDetailLevel;
 import za.co.apricotdb.support.excel.TableWrapper;
 import za.co.apricotdb.support.excel.TableWrapper.ReportRow;
 import za.co.apricotdb.ui.ParentWindow;
@@ -99,7 +100,7 @@ public class ApricotCanvasHandler {
         } else {
             tables = viewHandler.getTablesForView(snapshot, view);
         }
-        populateCanvas(canvas, tables);
+        populateCanvas(canvas, tables, view.getDetailLevel());
 
         // if view does not contain layout definitions, do default alignment
         if ((view.getObjectLayouts() == null || view.getObjectLayouts().size() == 0) && view.isGeneral()) {
@@ -108,7 +109,6 @@ public class ApricotCanvasHandler {
             runAllocationAfterDelay(canvas, view);
         }
     }
-
 
     /**
      * Update or add entity on view port.
@@ -159,14 +159,14 @@ public class ApricotCanvasHandler {
      */
     private void populateCanvas(ApricotCanvas canvas, ApricotTable table, ApricotView view) {
         List<ApricotTable> tables = getRelatedTables(table, view);
-        populateCanvas(canvas, tables);
+        populateCanvas(canvas, tables, view.getDetailLevel());
     }
 
-    private void populateCanvas(ApricotCanvas canvas, List<ApricotTable> tables) {
+    private void populateCanvas(ApricotCanvas canvas, List<ApricotTable> tables, ViewDetailLevel detailLevel) {
         List<ApricotRelationship> relationships = relationshipManager.getRelationshipsForTables(tables);
 
         Map<String, List<FieldDetail>> fieldDetails = new HashMap<>();
-        EntityBuilder eBuilder = new DefaultEntityBuilder(canvas);
+        EntityBuilder eBuilder = new DefaultEntityBuilder(canvas, detailLevel.name());
         for (ApricotTable t : tables) {
             List<FieldDetail> fd = getFieldDetails(t, relationships);
             if (canvas.findEntityByName(t.getName()) == null) {
