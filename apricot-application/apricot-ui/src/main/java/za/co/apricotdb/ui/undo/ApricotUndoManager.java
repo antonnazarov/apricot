@@ -79,8 +79,8 @@ public class ApricotUndoManager {
             }
             break;
         case OBJECT_EDITED:
-            chunk = objectUndoManager.buildChunk();
-            getUndoBuffer().addFirst(chunk);
+            // chunk = objectUndoManager.buildChunk();
+            // getUndoBuffer().addFirst(chunk);
             break;
         }
 
@@ -92,7 +92,7 @@ public class ApricotUndoManager {
     public void resetUndoBuffer() {
         getUndoBuffer().clear();
         resetCurrentLayout();
-        undoSnapshotManager.cleanUndoProject();
+        //  undoSnapshotManager.cleanUndoProject();
         enableUndoButton(false, 0);
     }
 

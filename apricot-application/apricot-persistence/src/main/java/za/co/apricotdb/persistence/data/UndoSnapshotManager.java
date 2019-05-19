@@ -3,6 +3,8 @@ package za.co.apricotdb.persistence.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -53,6 +55,7 @@ public class UndoSnapshotManager {
         }
     }
 
+    @Transactional
     public ApricotSnapshot buildUndoSnapshot(ApricotSnapshot snapshot) {
         ApricotProject undoProject = getUndoProject();
         List<ApricotSnapshot> snapshots = undoProject.getSnapshots();
@@ -74,6 +77,7 @@ public class UndoSnapshotManager {
         return clone;
     }
 
+    @Transactional
     public void undoCurrentSnapshot(ApricotSnapshot undoSnapshot) {
         ApricotProject project = projectManager.findCurrentProject();
         ApricotSnapshot currSnapshot = snapshotManager.getDefaultSnapshot();
