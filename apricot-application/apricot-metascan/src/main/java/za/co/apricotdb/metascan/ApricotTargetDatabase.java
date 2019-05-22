@@ -7,7 +7,7 @@ package za.co.apricotdb.metascan;
  * @since 05/02/2019
  */
 public enum ApricotTargetDatabase {
-    MSSQLServer(true), Oracle(true), MySQL(true), PostrgeSQL(true), H2(true);
+    MSSQLServer(true), Oracle(true), MySQL(true), PostrgeSQL(true), DB2(true), H2(true);
 
     private boolean supported;
 

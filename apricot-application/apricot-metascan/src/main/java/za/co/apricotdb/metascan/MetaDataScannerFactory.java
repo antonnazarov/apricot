@@ -3,6 +3,8 @@ package za.co.apricotdb.metascan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import za.co.apricotdb.metascan.db2.DB2Scanner;
+import za.co.apricotdb.metascan.db2.DB2UrlBuilder;
 import za.co.apricotdb.metascan.h2.H2Scanner;
 import za.co.apricotdb.metascan.h2.H2UrlBuilder;
 import za.co.apricotdb.metascan.mysql.MySqlScanner;
@@ -43,7 +45,7 @@ public class MetaDataScannerFactory {
 
     @Autowired
     MySqlScanner mySqlScanner;
-    
+
     @Autowired
     MySqlUrlBuilder mySqlUrlBuilder;
 
@@ -53,8 +55,14 @@ public class MetaDataScannerFactory {
     @Autowired
     PostgreSqlUrlBuilder postgreSqlUrlBuilder;
 
+    @Autowired
+    DB2Scanner db2Scanner;
+
+    @Autowired
+    DB2UrlBuilder db2UrlBuilder;
+
     /**
-     * Recognise the appropriate scanner.
+     * Recognize the appropriate scanner.
      */
     public MetaDataScanner getScanner(String url) {
         MetaDataScanner scanner = null;
@@ -74,8 +82,8 @@ public class MetaDataScannerFactory {
         case MySQL:
             scanner = mySqlScanner;
             break;
-        default:
-            scanner = sqlServerScanner;
+        case DB2:
+            scanner = db2Scanner;
             break;
         }
 
@@ -96,6 +104,8 @@ public class MetaDataScannerFactory {
             return ApricotTargetDatabase.PostrgeSQL;
         } else if (url.contains("jdbc:mysql://")) {
             return ApricotTargetDatabase.MySQL;
+        } else if (url.contains("jdbc:db2://")) {
+            return ApricotTargetDatabase.DB2;
         }
 
         return ApricotTargetDatabase.MSSQLServer;
@@ -113,6 +123,8 @@ public class MetaDataScannerFactory {
             return postgreSqlUrlBuilder;
         case MySQL:
             return mySqlUrlBuilder;
+        case DB2:
+            return db2UrlBuilder;
         }
 
         return null;
@@ -144,7 +156,7 @@ public class MetaDataScannerFactory {
 
         return null;
     }
-    
+
     public String getTestSQL(ApricotTargetDatabase targetDb) {
         DatabaseUrlBuilder urlBuilder = getDatabaseUrlBuilder(targetDb);
         if (urlBuilder != null) {

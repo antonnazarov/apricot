@@ -216,6 +216,10 @@ public class ReverseEngineHandler {
             title = "Connect to MySQL database";
             window = initFormController(model);
             break;
+        case DB2:
+            title = "Connect to DB2 database";
+            window = initFormController(model);
+            break;
         case H2:
             loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-re-h2.fxml"));
             loader.setControllerFactory(context::getBean);

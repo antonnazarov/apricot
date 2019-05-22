@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.jdbc.core.JdbcOperations;
+import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.metascan.MetaDataScannerBase;
 import za.co.apricotdb.persistence.entity.ApricotColumn;
@@ -20,6 +22,7 @@ import za.co.apricotdb.persistence.entity.ConstraintType;
  * @author Anton Nazarov
  * @since 07/05/2019
  */
+@Component
 public class DB2Scanner extends MetaDataScannerBase {
 
     @Override
@@ -50,7 +53,7 @@ public class DB2Scanner extends MetaDataScannerBase {
             ApricotColumn c = new ApricotColumn();
             c.setName(rs.getString("name"));
             c.setOrdinalPosition(rs.getInt("colno"));
-            if (rs.getString("is_nullable").equals("N")) {
+            if (rs.getString("nulls").equals("N")) {
                 c.setNullable(false);
             } else {
                 c.setNullable(true);
@@ -103,8 +106,9 @@ public class DB2Scanner extends MetaDataScannerBase {
                 }
 
                 ApricotConstraint c = new ApricotConstraint(constraintName, constraintType, table);
-                table.getConstraints().add(c);
-                constraints.put(c.getName(), c);
+                if (addConstraintToTable(table, c)) {
+                    addConstraintToMap(c, constraints);
+                }
             }
 
             return null;
@@ -115,9 +119,12 @@ public class DB2Scanner extends MetaDataScannerBase {
                 "select tbname, constname, colname, colseq from SYSIBM.SYSKEYCOLUSE where tbcreator = '%s' order by tbname, constname, colseq",
                 schema);
         jdbc.query(sql, (rs, rowNum) -> {
-            ApricotConstraint c = constraints.get(rs.getString("constname"));
-            if (c != null) {
-                c.addColumn(rs.getString("colname"));
+            ApricotTable table = tables.get(rs.getString("tbname"));
+            if (table != null) {
+                ApricotConstraint c = getConstraintByName(rs.getString("constname"), constraints, table);
+                if (c != null) {
+                    c.addColumn(rs.getString("colname"));
+                }
             }
 
             return null;
@@ -142,8 +149,9 @@ public class DB2Scanner extends MetaDataScannerBase {
                 }
 
                 ApricotConstraint c = new ApricotConstraint(indexnameName, constraintType, table);
-                table.getConstraints().add(c);
-                constraints.put(c.getName(), c);
+                if (addConstraintToTable(table, c)) {
+                    addConstraintToMap(c, constraints);
+                }
             }
 
             return null;
@@ -164,8 +172,7 @@ public class DB2Scanner extends MetaDataScannerBase {
         });
 
         // the foreign keys
-        Map<ApricotTable, ApricotConstraint> fk = getForeignKeys(jdbc, tables, schema);
-        fixForeignKeyNames(fk, constraints);
+        getForeignKeys(jdbc, tables, schema, constraints);
 
         return constraints;
     }
@@ -173,20 +180,36 @@ public class DB2Scanner extends MetaDataScannerBase {
     @Override
     public List<ApricotRelationship> getRelationships(JdbcOperations jdbc, Map<String, ApricotConstraint> constraints,
             String schema) {
+        Map<String, ApricotTable> tables = getConstraintTables(constraints);
+
         String sql = String.format(
                 "select tbname, reftbname, relname from SYSIBM.SYSRELS where creator = '%s' and reftbcreator = '%s' order by tbname",
                 schema, schema);
         List<ApricotRelationship> ret = jdbc.query(sql, (rs, rowNum) -> {
-
-            ApricotConstraint pk = getPrimaryKey(rs.getString("reftbname"), constraints);
-            if (pk == null) {
-                throw new IllegalArgumentException(
-                        "Unable to find the primary key for the parent table=[" + rs.getString("reftabname") + "]");
+            ApricotConstraint pk = null;
+            ApricotTable table = tables.get(rs.getString("reftbname"));
+            if (table != null) {
+                pk = getPrimaryKey(table);
+                if (pk == null) {
+                    throw new IllegalArgumentException(
+                            "Unable to find the primary key for the parent table=[" + rs.getString("reftbname") + "]");
+                }
+            } else {
+                throw new IllegalArgumentException("Unable to find table=[" + rs.getString("reftbname")
+                        + "], which is a part of the relationship");
             }
-            ApricotConstraint fk = getForeignKey(rs.getString("tbname"), rs.getString("relname"), constraints);
-            if (fk == null) {
-                throw new IllegalArgumentException("Unable to find the foreign key constraint for the child table=["
-                        + rs.getString("tbname") + "] and relationship name=[" + rs.getString("relname") + "]");
+
+            ApricotConstraint fk = null;
+            table = tables.get(rs.getString("tbname"));
+            if (table != null) {
+                fk = getConstraintByName(rs.getString("relname"), constraints, table);
+                if (fk == null) {
+                    throw new IllegalArgumentException("Unable to find the foreign key constraint for the child table=["
+                            + rs.getString("tbname") + "] and relationship name=[" + rs.getString("relname") + "]");
+                }
+            } else {
+                throw new IllegalArgumentException("Unable to find the child table=[" + rs.getString("tbname")
+                        + "] for the foreign constraint=[" + rs.getString("relname") + "]");
             }
 
             return new ApricotRelationship(pk, fk);
@@ -195,45 +218,48 @@ public class DB2Scanner extends MetaDataScannerBase {
         return ret;
     }
 
-    private ApricotConstraint getPrimaryKey(String tableName, Map<String, ApricotConstraint> constraints) {
-        ApricotConstraint pk = null;
+    private Map<String, ApricotTable> getConstraintTables(Map<String, ApricotConstraint> constraints) {
+        Map<String, ApricotTable> ret = new HashMap<>();
 
         for (ApricotConstraint c : constraints.values()) {
-            if (c.getType() == ConstraintType.PRIMARY_KEY && c.getTable().getName().equals(tableName)) {
-                pk = c;
-                break;
+            if (!ret.containsKey(c.getTable().getName())) {
+                ret.put(c.getTable().getName(), c.getTable());
             }
+        }
+
+        return ret;
+    }
+
+    private ApricotConstraint getPrimaryKey(ApricotTable table) {
+        ApricotConstraint pk = getConstraintOfType(table, ConstraintType.PRIMARY_KEY);
+        if (pk == null) {
+            pk = getConstraintOfType(table, ConstraintType.UNIQUE);
+        }
+        if (pk == null) {
+            pk = getConstraintOfType(table, ConstraintType.UNIQUE_INDEX);
         }
 
         return pk;
     }
 
-    private ApricotConstraint getForeignKey(String tableName, String constraintName,
-            Map<String, ApricotConstraint> constraints) {
-        ApricotConstraint fk = null;
+    private ApricotConstraint getConstraintOfType(ApricotTable table, ConstraintType type) {
+        ApricotConstraint ret = null;
 
-        for (ApricotConstraint c : constraints.values()) {
-            if (c.getType() == ConstraintType.FOREIGN_KEY && c.getTable().getName().equals(tableName)) {
-                if (constraintName.equals(c.getName())) {
-                    fk = c;
-                } else if (constraintName.contains("___") && constraintName.contains(c.getName())) {
-                    fk = c;
-                }
+        for (ApricotConstraint c : table.getConstraints()) {
+            if (c.getType() == type) {
+                ret = c;
                 break;
             }
         }
 
-        return fk;
+        return ret;
     }
 
     /**
      * Get foreign key constraints per table.
      */
-    private Map<ApricotTable, ApricotConstraint> getForeignKeys(JdbcOperations jdbc, Map<String, ApricotTable> tables,
-            String schema) {
-
-        // relationship per child table
-        Map<ApricotTable, ApricotConstraint> cnstr = new HashMap<>();
+    private void getForeignKeys(JdbcOperations jdbc, Map<String, ApricotTable> tables, String schema,
+            Map<String, ApricotConstraint> constraints) {
         String sql = String.format(
                 "select distinct tbname, relname from SYSIBM.SYSFOREIGNKEYS where CREATOR = '%s' order by tbname, relname",
                 schema);
@@ -241,43 +267,59 @@ public class DB2Scanner extends MetaDataScannerBase {
                 "select colname, colseq from SYSIBM.SYSFOREIGNKEYS where CREATOR = '%s' and tbname=? and relname=? order by colseq",
                 schema);
         jdbc.query(sql, (rs, rowNum) -> {
-            ApricotTable tbl = tables.get(rs.getString("tbname"));
-            if (tbl != null) {
+            ApricotTable table = tables.get(rs.getString("tbname"));
+            if (table != null) {
                 final ApricotConstraint c = new ApricotConstraint(rs.getString("relname"), ConstraintType.FOREIGN_KEY,
-                        tbl);
-                cnstr.put(tbl, c);
+                        table);
+                if (addConstraintToTable(table, c)) {
+                    addConstraintToMap(c, constraints);
+                }
 
                 jdbc.query(subSql, new Object[] { rs.getString("tbname"), rs.getString("relname") }, (rs1, rowNum1) -> {
-                    c.addColumn(rs.getString("colname"));
+                    c.addColumn(rs1.getString("colname"));
 
                     return null;
                 });
             }
             return null;
         });
-
-        return cnstr;
     }
 
     /**
-     * Handle the foreign key constraint with the same name.
+     * This method adds a constraint to the constraint map resolving the possible
+     * constraint name conflicts.
      */
-    private void fixForeignKeyNames(Map<ApricotTable, ApricotConstraint> fkConstraints,
-            Map<String, ApricotConstraint> constraints) {
-        Map<String, Short> register = new HashMap<>();
+    private void addConstraintToMap(ApricotConstraint constraint, Map<String, ApricotConstraint> constraints) {
+        String keyName = constraint.getName();
+        if (constraints.containsKey(keyName)) {
+            keyName = constraint.getName() + "___" + RandomStringUtils.randomAlphanumeric(5);
+        }
 
-        for (ApricotConstraint c : fkConstraints.values()) {
-            Short cnt = register.get(c.getName());
-            if (cnt == null) {
-                register.put(c.getName(), (short) 0);
-                constraints.put(c.getName(), c);
-            } else {
-                cnt++;
-                register.put(c.getName(), cnt);
-                String cNewName = c.getName() + "___" + cnt;
-                c.setName(cNewName);
-                constraints.put(cNewName, c);
+        constraints.put(keyName, constraint);
+    }
+
+    private boolean addConstraintToTable(ApricotTable table, ApricotConstraint constraint) {
+        for (ApricotConstraint c : table.getConstraints()) {
+            if (c.equals(constraint)) {
+                return false;
             }
         }
+
+        table.getConstraints().add(constraint);
+        return true;
+    }
+
+    /**
+     * Get a constraint by the provided constraint name and its hosting table.
+     */
+    private ApricotConstraint getConstraintByName(String constraintName, Map<String, ApricotConstraint> constraints,
+            ApricotTable table) {
+        for (ApricotConstraint c : constraints.values()) {
+            if (c.getTable().equals(table) && c.getName().equals(constraintName)) {
+                return c;
+            }
+        }
+
+        return null;
     }
 }

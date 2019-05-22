@@ -109,6 +109,25 @@
             <version>8.0.15</version>
         </dependency>
 
+        <!-- DB2 -->
+        <dependency>
+            <groupId>com.ibm.db2</groupId>
+            <artifactId>db2-driver</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ibm.db2</groupId>
+            <artifactId>license_cisuz</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ibm.db2</groupId>
+            <artifactId>license_cu</artifactId>
+            <version>1.0</version>
+        </dependency>
+
         <!-- Utilities -->
         <dependency>
             <groupId>com.h2database</groupId>
