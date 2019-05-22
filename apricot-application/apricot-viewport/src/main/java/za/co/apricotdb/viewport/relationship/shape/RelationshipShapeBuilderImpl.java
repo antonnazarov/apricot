@@ -32,13 +32,11 @@ public abstract class RelationshipShapeBuilderImpl implements RelationshipShapeB
         Point2D ret = null;
 
         // check the relationship in the stack
-        ApricotEntityShape entityShape = relationship.getParent().getEntityShape();
-        ret = entityShape.getStackRelationshipStart(relationship);
+        ApricotEntityShape parentEntityShape = relationship.getParent().getEntityShape();
+        ret = parentEntityShape.getStackRelationshipStart(relationship);
         if (ret != null) {
             return ret;
         }
-
-        ApricotEntityShape parentEntityShape = relationship.getParent().getEntityShape();
 
         switch (parentSide) {
         case LEFT:

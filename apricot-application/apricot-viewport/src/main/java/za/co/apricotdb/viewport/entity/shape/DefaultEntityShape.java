@@ -62,9 +62,14 @@ public abstract class DefaultEntityShape extends ApricotEntityShape {
 
     @Override
     public Text getFieldByName(String fieldName) {
-        return fieldsMapping.get(fieldName);
+        Text text = fieldsMapping.get(fieldName);
+        if (text == null) {
+            text = fieldsMapping.get("ellipsis");
+        }
+        return text;
     }
     
+    @Override
     public double getFieldLocalY(String name) {
         double localY = 0;
         Text field = getFieldByName(name);
