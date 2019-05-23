@@ -36,7 +36,7 @@ public class CanvasContextMenuHandler {
     
     @Autowired
     ApricotSnapshotHandler snapshotHandler;
-
+    
     public void createCanvasContextMenu(ApricotCanvas canvas, double x, double y) {
         ApricotView view = canvasHandler.getCurrentView();
 
@@ -87,6 +87,10 @@ public class CanvasContextMenuHandler {
     private void changeViewDetailLevel(ViewDetailLevel detailLevel, ApricotView view) {
         view.setDetailLevel(detailLevel);
         viewManager.saveView(view);
-        snapshotHandler.syncronizeSnapshot();
+        
+        ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
+        canvas.setDetailLevel(view.getDetailLevel().toString());
+        
+        snapshotHandler.syncronizeSnapshot(false);
     }
 }

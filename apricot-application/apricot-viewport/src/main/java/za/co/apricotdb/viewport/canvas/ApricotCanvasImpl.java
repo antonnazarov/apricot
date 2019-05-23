@@ -34,11 +34,13 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
     private final List<ApricotRelationship> relationships = new ArrayList<>();
     private final RelationshipTopology topology = new RelationshipTopologyImpl(this);
     private final ApplicationEventPublisher applicationEventPublisher;
+    private String detailLevel;
 
     private boolean canvasChanged;
 
-    public ApricotCanvasImpl(ApplicationEventPublisher applicationEventPublisher) {
+    public ApricotCanvasImpl(ApplicationEventPublisher applicationEventPublisher, String detailLevel) {
         this.applicationEventPublisher = applicationEventPublisher;
+        this.detailLevel = detailLevel;
     }
 
     /**
@@ -177,6 +179,26 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
                                 break;
                             default:
                                 break;
+                            }
+                        }
+                        
+                        // the simplified view requires 
+                        if (detailLevel.equals("SIMPLE")) {
+                            for (ApricotRelationship r : entity.getForeignLinks()) {
+                                Side side = topology.getRelationshipSide(r, false);
+                                switch (side) {
+                                case LEFT:
+                                    entityShape.getLeftStack().addChildRelationship(r);
+                                    break;
+                                case RIGHT:
+                                    entityShape.getRightStack().addChildRelationship(r);
+                                    break;
+                                case TOP:
+                                    entityShape.getTopStack().addChildRelationship(r);
+                                    break;
+                                default:
+                                    break;
+                                }
                             }
                         }
 
@@ -332,5 +354,13 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
             entity.setTableName(newName);
             entities.put(newName, entity);
         }
+    }
+
+    /**
+     * Sets the current detail level of the canvas. 
+     */
+    @Override
+    public void setDetailLevel(String level) {
+        this.detailLevel = level;
     }
 }

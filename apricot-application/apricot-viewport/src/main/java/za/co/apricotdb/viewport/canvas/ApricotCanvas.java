@@ -60,4 +60,6 @@ public interface ApricotCanvas {
     void setCanvasChanged(boolean changed);
     
     void renameEntity(String oldName, String newName);
+    
+    void setDetailLevel(String level);
 }

@@ -84,7 +84,7 @@ public class DeleteSelectedHandler {
                         .findRelationshipById(r.getRelationshipId());
                 relationshipHandler.deleteRelationship(rel);
             }
-            snapshotHandler.syncronizeSnapshot();
+            snapshotHandler.syncronizeSnapshot(true);
         }
     }
 
@@ -102,7 +102,7 @@ public class DeleteSelectedHandler {
                 entityHandler.deleteEntity(e.getTableName());
             }
 
-            snapshotHandler.syncronizeSnapshot();
+            snapshotHandler.syncronizeSnapshot(true);
         }
     }
 }

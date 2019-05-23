@@ -37,7 +37,7 @@ public class ObjectUndoManager {
 
         // do object changes undo
         undoManager.undoCurrentSnapshot(osp.getSavepointSnapshot());
-        snapshotHandler.syncronizeSnapshot();
+        snapshotHandler.syncronizeSnapshot(true);
 
         // undo the layout
         LayoutSavepoint lsp = osp.getLayoutSavepoint();

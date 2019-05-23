@@ -186,7 +186,7 @@ public class ApricotViewHandler {
 
     @Transactional
     public Tab createViewTab(ApricotSnapshot snapshot, ApricotView view, TabPane tabPane) {
-        ApricotCanvas canvas = canvasBuilder.buildCanvas();
+        ApricotCanvas canvas = canvasBuilder.buildCanvas(view.getDetailLevel().toString());
         Tab tab = tabViewHandler.buildTab(snapshot, view, canvas);
         tabPane.getTabs().add(tab);
 

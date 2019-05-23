@@ -133,4 +133,18 @@ public abstract class DefaultEntityShape extends ApricotEntityShape {
         
         return ret;
     }
+    
+    @Override
+    public Point2D getStackRelationshipEnd(ApricotRelationship relationship) {
+        Point2D ret = null;
+        ret = leftStack.getRelationshipEnd(relationship);
+        if (ret == null) {
+            ret = rightStack.getRelationshipEnd(relationship);
+        }
+        if (ret == null) {
+            ret = topStack.getRelationshipEnd(relationship);
+        }
+        
+        return ret;
+    }
 }

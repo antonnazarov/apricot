@@ -2,5 +2,5 @@ package za.co.apricotdb.viewport.canvas;
 
 public interface CanvasBuilder {
     
-    ApricotCanvas buildCanvas();
+    ApricotCanvas buildCanvas(String detailLevel);
 }

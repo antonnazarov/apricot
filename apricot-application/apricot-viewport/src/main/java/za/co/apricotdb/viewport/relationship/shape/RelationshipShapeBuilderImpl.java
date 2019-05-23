@@ -61,6 +61,10 @@ public abstract class RelationshipShapeBuilderImpl implements RelationshipShapeB
         Point2D ret = null;
 
         ApricotEntityShape entityShape = relationship.getChild().getEntityShape();
+        ret = entityShape.getStackRelationshipEnd(relationship);
+        if (ret != null) {
+            return ret;
+        }
 
         switch (childSide) {
         case LEFT:

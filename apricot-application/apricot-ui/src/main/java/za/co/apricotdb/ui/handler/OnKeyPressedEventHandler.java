@@ -101,7 +101,7 @@ public class OnKeyPressedEventHandler implements EventHandler<KeyEvent> {
             }
             break;
         case F5:
-            snapshotHandler.syncronizeSnapshot();
+            snapshotHandler.syncronizeSnapshot(false);
             break;
         default:
             break;
