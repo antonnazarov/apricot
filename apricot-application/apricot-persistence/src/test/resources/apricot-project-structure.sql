@@ -4,6 +4,7 @@
 -- 04/01/2019 v.1.1, the apricot_project was added
 -- 24/02/2019 v.1.2 added table apricot_app_parameters
 -- 07/04/2019 v.1.3 added unique constraints for all major tables
+-- 24/05/2019 v.1.4 added field erd_notation into the apricot_project table
 --
 -- PROJECT
 --
@@ -14,6 +15,7 @@ create table apricot_project (
    target_database varchar(50) not null,
    is_current boolean not null,
    project_created datetime not null,
+   erd_notation varchar(20) not null,
    unique key project_name_unique_key (project_name)
 );
 

@@ -63,7 +63,7 @@ public class DefaultEntityShapeBuilder implements EntityShapeBuilder {
         int cnt = 0;
         for (FieldDetail fd : details) {
             if (fd.isPrimaryKey()) {
-                Text field = new Text(getShortField(fd));
+                Text field = new Text(getFieldAsString(fd));
                 field.setId(fd.getName());
                 field.setFont(HEADER_FONT);
                 Tooltip.install(field, getFieldTooltip(fd));
@@ -85,7 +85,7 @@ public class DefaultEntityShapeBuilder implements EntityShapeBuilder {
         int cnt = 0;
         for (FieldDetail fd : details) {
             if (!fd.isPrimaryKey()) {
-                Text field = new Text(getShortField(fd));
+                Text field = new Text(getFieldAsString(fd));
                 field.setId(fd.getName());
                 Tooltip.install(field, getFieldTooltip(fd));
 
@@ -102,7 +102,7 @@ public class DefaultEntityShapeBuilder implements EntityShapeBuilder {
         return fPanel;
     }
 
-    private String getShortField(FieldDetail fd) {
+    protected String getFieldAsString(FieldDetail fd) {
         StringBuilder sb = new StringBuilder(fd.getName());
         if (fd.isMandatory()) {
             sb.append(" *");

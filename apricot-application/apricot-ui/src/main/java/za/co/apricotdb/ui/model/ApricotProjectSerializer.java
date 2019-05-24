@@ -38,7 +38,7 @@ public class ApricotProjectSerializer {
     public ApricotProject serializeNewProject(ProjectFormModel model) {
         ApricotProject p = new ApricotProject(model.getProjectName(), model.getProjectDescription(),
                 model.getProjectDatabase(), true, new java.util.Date(), new ArrayList<ApricotSnapshot>(),
-                new ArrayList<ApricotProjectParameter>(), new ArrayList<ApricotView>());
+                new ArrayList<ApricotProjectParameter>(), new ArrayList<ApricotView>(), model.getErdNotation());
 
         snapshotHandler.createDefaultSnapshot(p);
         viewHandler.createDefaultView(p);
@@ -53,6 +53,7 @@ public class ApricotProjectSerializer {
         project.setName(model.getProjectName());
         project.setDescription(model.getProjectDescription());
         project.setTargetDatabase(model.getProjectDatabase());
+        project.setErdNotation(model.getErdNotation());
 
         return projectManager.saveApricotProject(project);
     }

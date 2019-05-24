@@ -14,7 +14,7 @@ delete from apricot_project;
 -------------------------
 -- add test data
 -------------------------
-insert into apricot_project values (1, 'test_project_001', 'This is the test project', 'MSSQLServer', true, '2019-01-04');
+insert into apricot_project values (1, 'test_project_001', 'This is the test project', 'MSSQLServer', true, '2019-01-04', 'IDEF1x');
 insert into apricot_project_parameter values (1, 1, 'test', 'test');
 insert into apricot_snapshot values (1, 1, '2019-01-04', '2019-01-04', 'test comment', true);
 insert into apricot_view values (1, 1, 'main view', null, '2019-01-04', '2019-01-04', true, 0);

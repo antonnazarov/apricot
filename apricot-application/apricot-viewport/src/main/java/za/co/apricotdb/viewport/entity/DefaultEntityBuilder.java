@@ -8,6 +8,7 @@ import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ElementStatus;
 import za.co.apricotdb.viewport.entity.shape.DefaultEntityShapeBuilder;
 import za.co.apricotdb.viewport.entity.shape.EntityShapeBuilder;
+import za.co.apricotdb.viewport.entity.shape.ExtendedEntityShapeBuilder;
 import za.co.apricotdb.viewport.entity.shape.SimpleEntityShapeBuilder;
 import za.co.apricotdb.viewport.event.GroupOperationHandler;
 import za.co.apricotdb.viewport.modifiers.ElementVisualModifier;
@@ -39,6 +40,8 @@ public class DefaultEntityBuilder implements EntityBuilder {
             shapeBuilder = new DefaultEntityShapeBuilder(modifiers);
         } else if (detailLevel.equals("SIMPLE")) {
             shapeBuilder = new SimpleEntityShapeBuilder(modifiers);
+        } else if (detailLevel.equals("EXTENDED")) {
+            shapeBuilder = new ExtendedEntityShapeBuilder(modifiers);
         }
     }
 

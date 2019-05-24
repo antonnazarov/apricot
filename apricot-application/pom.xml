@@ -73,12 +73,18 @@
             <version>1.5.16.RELEASE</version>
         </dependency>
 
-
-        <!-- Hibernate -->
+        <!-- hibernate -->
         <dependency>
             <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>5.3.6.Final</version>
+            <artifactId>hibernate-core</artifactId>
+            <version>5.4.2.Final</version>
+        </dependency>
+        
+        <!-- hibernate ehcache -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-ehcache</artifactId>
+            <version>5.4.2.Final</version>
         </dependency>
 
         <!-- SQL Server -->

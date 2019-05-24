@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import za.co.apricotdb.metascan.ApricotTargetDatabase;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
+import za.co.apricotdb.persistence.entity.ERDNotation;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
 import za.co.apricotdb.ui.handler.BlackListHandler;
 import za.co.apricotdb.ui.model.ApricotProjectSerializer;
@@ -57,6 +58,9 @@ public class EditProjectController {
     ChoiceBox<String> projectDatabase;
 
     @FXML
+    ChoiceBox<String> erdNotation;
+
+    @FXML
     TextArea blackList;
 
     private boolean isCreateNew = false;
@@ -70,6 +74,7 @@ public class EditProjectController {
         model.setProjectName(projectName.getText());
         model.setProjectDescription(projectDescription.getText());
         model.setProjectDatabase(projectDatabase.getSelectionModel().getSelectedItem());
+        model.setErdNotation(ERDNotation.parseNotation(erdNotation.getSelectionModel().getSelectedItem()));
 
         if (!projectSerializer.validate(model)) {
             return;
@@ -106,10 +111,15 @@ public class EditProjectController {
                 projectDatabase.getItems().add(d.toString());
             }
         }
+        
+        for (ERDNotation n : ERDNotation.values()) {
+            erdNotation.getItems().add(n.getDefinition());
+        }
 
         projectName.setText(model.getProjectName());
         projectDescription.setText(model.getProjectDescription());
         projectDatabase.getSelectionModel().select(model.getProjectDatabase());
+        erdNotation.getSelectionModel().select(model.getErdNotation().getDefinition());
         if (isCreateNew) {
             blackList.setDisable(true);
         } else {

@@ -25,6 +25,7 @@ public class EditProjectModelBuilder {
         model.setProjectName(p.getName());
         model.setProjectDescription(p.getDescription());
         model.setProjectDatabase(p.getTargetDatabase());
+        model.setErdNotation(p.getErdNotation());
         model.setProjectId(currentProject.getId());
         model.setBlackList(blackList);
         

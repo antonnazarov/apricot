@@ -34,7 +34,7 @@ public class ApricotUndoManager {
 
     @Autowired
     MainAppController appController;
-    
+
     @Autowired
     UndoSnapshotManager undoSnapshotManager;
 
@@ -52,8 +52,8 @@ public class ApricotUndoManager {
                     layoutUndoManager.undo(chunk);
                     break;
                 case OBJECT_EDITED:
-                    objectUndoManager.undo(chunk);
-                    break;
+                    // objectUndoManager.undo(chunk);
+                    // break;
                 }
             }
         }
@@ -68,7 +68,7 @@ public class ApricotUndoManager {
     /**
      * Add the savepoint to the undo buffer.
      */
-    @Transactional(value=TxType.REQUIRES_NEW)
+    @Transactional(value = TxType.REQUIRES_NEW)
     public void addSavepoint(UndoType type) {
         UndoChunk chunk = null;
         switch (type) {
@@ -81,7 +81,7 @@ public class ApricotUndoManager {
         case OBJECT_EDITED:
             // chunk = objectUndoManager.buildChunk();
             // getUndoBuffer().addFirst(chunk);
-            break;
+            // break;
         }
 
         // inform app that there is an undo chunk in the undo buffer
@@ -92,7 +92,7 @@ public class ApricotUndoManager {
     public void resetUndoBuffer() {
         getUndoBuffer().clear();
         resetCurrentLayout();
-        //  undoSnapshotManager.cleanUndoProject();
+        // undoSnapshotManager.cleanUndoProject();
         enableUndoButton(false, 0);
     }
 

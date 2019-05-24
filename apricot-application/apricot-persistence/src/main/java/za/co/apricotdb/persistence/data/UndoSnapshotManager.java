@@ -13,6 +13,7 @@ import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotProjectParameter;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotView;
+import za.co.apricotdb.persistence.entity.ERDNotation;
 
 /**
  * This undo manager is responsible for registering undo data in the undo-
@@ -31,7 +32,7 @@ public class UndoSnapshotManager {
 
     @Autowired
     SnapshotManager snapshotManager;
-    
+
     @Autowired
     SnapshotCloneManager cloneManager;
 
@@ -40,7 +41,7 @@ public class UndoSnapshotManager {
         if (undoProject == null) {
             undoProject = new ApricotProject(ProjectManager.UNDO_PROJECT_NAME, "The invisible UNDO project", "N/A",
                     false, new java.util.Date(), new ArrayList<ApricotSnapshot>(),
-                    new ArrayList<ApricotProjectParameter>(), new ArrayList<ApricotView>());
+                    new ArrayList<ApricotProjectParameter>(), new ArrayList<ApricotView>(), ERDNotation.IDEF1x);
             projectManager.saveApricotProject(undoProject);
         }
 
@@ -73,11 +74,10 @@ public class UndoSnapshotManager {
                 undoProject, snapshot);
         snapshotManager.saveSnapshot(clone);
         snapshotManager.setDefaultSnapshot(clone);
-        
+
         return clone;
     }
 
-    @Transactional
     public void undoCurrentSnapshot(ApricotSnapshot undoSnapshot) {
         ApricotProject project = projectManager.findCurrentProject();
         ApricotSnapshot currSnapshot = snapshotManager.getDefaultSnapshot();

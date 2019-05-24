@@ -2,6 +2,8 @@ package za.co.apricotdb.ui.model;
 
 import java.io.Serializable;
 
+import za.co.apricotdb.persistence.entity.ERDNotation;
+
 /**
  * The model- object for the New/Edit Project- form.
  * 
@@ -11,7 +13,7 @@ import java.io.Serializable;
 public class ProjectFormModel implements Serializable {
 
     private static final long serialVersionUID = -5353358137642361288L;
-    
+
     private boolean newView;
     private String projectName;
     private String projectDescription;
@@ -19,35 +21,36 @@ public class ProjectFormModel implements Serializable {
     private String projectBlackList;
     private long projectId;
     private String blackList;
-    
+    private ERDNotation erdNotation;
+
     public String getProjectName() {
         return projectName;
     }
-    
+
     public void setProjectName(String projectName) {
         this.projectName = projectName;
     }
-    
+
     public String getProjectDescription() {
         return projectDescription;
     }
-    
+
     public void setProjectDescription(String projectDescription) {
         this.projectDescription = projectDescription;
     }
-    
+
     public String getProjectDatabase() {
         return projectDatabase;
     }
-    
+
     public void setProjectDatabase(String projectDatabase) {
         this.projectDatabase = projectDatabase;
     }
-    
+
     public String getProjectBlackList() {
         return projectBlackList;
     }
-    
+
     public void setProjectBlackList(String projectBlackList) {
         this.projectBlackList = projectBlackList;
     }
@@ -74,5 +77,13 @@ public class ProjectFormModel implements Serializable {
 
     public void setBlackList(String blackList) {
         this.blackList = blackList;
+    }
+
+    public ERDNotation getErdNotation() {
+        return erdNotation;
+    }
+
+    public void setErdNotation(ERDNotation erdNotation) {
+        this.erdNotation = erdNotation;
     }
 }
