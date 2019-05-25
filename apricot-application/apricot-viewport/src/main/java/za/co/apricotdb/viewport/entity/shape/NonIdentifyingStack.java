@@ -128,7 +128,7 @@ public class NonIdentifyingStack extends PrimaryKeyStack {
         }
 
         this.getElements().add(
-                new VLineTo(start.getY() + (relationships.size() + childRelationships.size()) * STACK_PARTICLE_LENGTH));
+                new VLineTo(start.getY() + (relationships.size() + childRelationships.size()) * STACK_PARTICLE_LENGTH + 5));
 
         sortRelationships();
     }
