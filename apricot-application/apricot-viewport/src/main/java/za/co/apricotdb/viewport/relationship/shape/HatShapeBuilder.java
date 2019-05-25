@@ -15,7 +15,7 @@ public class HatShapeBuilder extends RelationshipShapeBuilderImpl {
     public static final double HAT_HORIZONTAL_GAP = 30;
     public static final double HAT_VERTICAL_GAP = 10;
 
-    public HatShapeBuilder(RelationshipPrimitivesBuilder primitivesBuilder, RelationshipTopology relationshipTopology,
+    public HatShapeBuilder(PrimitivesBuilder primitivesBuilder, RelationshipTopology relationshipTopology,
             ElementVisualModifier[] shapeModifiers) {
         super(primitivesBuilder, relationshipTopology, shapeModifiers);
     }
@@ -103,7 +103,7 @@ public class HatShapeBuilder extends RelationshipShapeBuilderImpl {
             Side childSide, HatRelationship shape) {
         addPath(parentStart, childEnd, shape);
         addStartElement(relationship.getRelationshipType(), parentStart, parentSide, shape);
-        addEndElement(childEnd, childSide, shape);
+        addEndElement(relationship.getRelationshipType(), childEnd, childSide, shape);
         addRulers(parentStart, childEnd, shape);
     }
 
@@ -137,7 +137,7 @@ public class HatShapeBuilder extends RelationshipShapeBuilderImpl {
             ruler = primitivesBuilder.getRuler();
             shape.setLeftRuler(ruler);
         }
-        ruler.setLayoutX(shape.getLeftRulerX() - RelationshipPrimitivesBuilderImpl.RULER_LENGTH / 2);
+        ruler.setLayoutX(shape.getLeftRulerX() - PrimitivesBuilderImpl.RULER_LENGTH / 2);
         ruler.setLayoutY(shape.getCenterRulerY() + (left.getY() - shape.getCenterRulerY()) / 2);
 
         // right ruler
@@ -146,7 +146,7 @@ public class HatShapeBuilder extends RelationshipShapeBuilderImpl {
             ruler = primitivesBuilder.getRuler();
             shape.setRightRuler(ruler);
         }
-        ruler.setLayoutX(shape.getRightRulerX() - RelationshipPrimitivesBuilderImpl.RULER_LENGTH / 2);
+        ruler.setLayoutX(shape.getRightRulerX() - PrimitivesBuilderImpl.RULER_LENGTH / 2);
         ruler.setLayoutY(shape.getCenterRulerY() + (right.getY() - shape.getCenterRulerY()) / 2);
 
         // center ruler
@@ -156,7 +156,7 @@ public class HatShapeBuilder extends RelationshipShapeBuilderImpl {
             shape.setCenterRuler(ruler);
         }
         ruler.setLayoutX(shape.getLeftRulerX() + (shape.getRightRulerX() - shape.getLeftRulerX()) / 2);
-        ruler.setLayoutY(shape.getCenterRulerY() - RelationshipPrimitivesBuilderImpl.RULER_LENGTH / 2);
+        ruler.setLayoutY(shape.getCenterRulerY() - PrimitivesBuilderImpl.RULER_LENGTH / 2);
     }
 
     private Point2D getPointOnSide(Point2D parentStart, Point2D childEnd, boolean isLeft) {

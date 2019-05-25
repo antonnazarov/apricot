@@ -32,15 +32,18 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
     private final List<ApricotElement> elements = new ArrayList<>();
     private final Map<String, ApricotEntity> entities = new HashMap<>();
     private final List<ApricotRelationship> relationships = new ArrayList<>();
-    private final RelationshipTopology topology = new RelationshipTopologyImpl(this);
+    private final RelationshipTopology topology = new RelationshipTopologyImpl();
     private final ApplicationEventPublisher applicationEventPublisher;
     private String detailLevel;
+    private String erdNotation;
 
     private boolean canvasChanged;
 
-    public ApricotCanvasImpl(ApplicationEventPublisher applicationEventPublisher, String detailLevel) {
+    public ApricotCanvasImpl(ApplicationEventPublisher applicationEventPublisher, String detailLevel,
+            String erdNotation) {
         this.applicationEventPublisher = applicationEventPublisher;
         this.detailLevel = detailLevel;
+        this.erdNotation = erdNotation;
     }
 
     /**
@@ -181,8 +184,8 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
                                 break;
                             }
                         }
-                        
-                        // the simplified view requires 
+
+                        // the simplified view requires
                         if (detailLevel.equals("SIMPLE")) {
                             for (ApricotRelationship r : entity.getForeignLinks()) {
                                 Side side = topology.getRelationshipSide(r, false);
@@ -357,10 +360,20 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
     }
 
     /**
-     * Sets the current detail level of the canvas. 
+     * Sets the current detail level of the canvas.
      */
     @Override
     public void setDetailLevel(String level) {
         this.detailLevel = level;
+    }
+
+    @Override
+    public String getErdNotation() {
+        return erdNotation;
+    }
+
+    @Override
+    public void setErdNotation(String erdNotation) {
+        this.erdNotation = erdNotation;
     }
 }

@@ -21,7 +21,7 @@ public class DadsHandShapeBuilder extends RelationshipShapeBuilderImpl {
     public static final double DH_HORIZONTAL_GAP = 30;
     public static final double DH_VERTICAL_GAP = 10;
 
-    public DadsHandShapeBuilder(RelationshipPrimitivesBuilder primitivesBuilder,
+    public DadsHandShapeBuilder(PrimitivesBuilder primitivesBuilder,
             RelationshipTopology relationshipTopology, ElementVisualModifier[] shapeModifiers) {
         super(primitivesBuilder, relationshipTopology, shapeModifiers);
     }
@@ -65,7 +65,7 @@ public class DadsHandShapeBuilder extends RelationshipShapeBuilderImpl {
             Side childSide, DadsHandRelationship shape) {
         addPath(parentStart, childEnd, shape);
         addStartElement(relationship.getRelationshipType(), parentStart, parentSide, shape);
-        addEndElement(childEnd, childSide, shape);
+        addEndElement(relationship.getRelationshipType(), childEnd, childSide, shape);
         addRuler(parentStart, childEnd, shape);
     }
 
@@ -90,7 +90,7 @@ public class DadsHandShapeBuilder extends RelationshipShapeBuilderImpl {
             ruler = primitivesBuilder.getRuler();
             shape.setRuler(ruler);
         }
-        ruler.setLayoutX(shape.getRulerX() - RelationshipPrimitivesBuilderImpl.RULER_LENGTH / 2);
+        ruler.setLayoutX(shape.getRulerX() - PrimitivesBuilderImpl.RULER_LENGTH / 2);
         double minY = Math.min(parentStart.getY(), childEnd.getY());
         ruler.setLayoutY(minY + Math.abs(parentStart.getY() - childEnd.getY()) / 2);
     }

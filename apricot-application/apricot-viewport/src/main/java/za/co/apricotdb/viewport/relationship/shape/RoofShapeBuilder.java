@@ -14,7 +14,7 @@ public class RoofShapeBuilder extends RelationshipShapeBuilderImpl {
     
     public static final double ROOF_VERTICAL_GAP = 20;
 
-    public RoofShapeBuilder(RelationshipPrimitivesBuilder primitivesBuilder, RelationshipTopology relationshipTopology,
+    public RoofShapeBuilder(PrimitivesBuilder primitivesBuilder, RelationshipTopology relationshipTopology,
             ElementVisualModifier[] shapeModifiers) {
         super(primitivesBuilder, relationshipTopology, shapeModifiers);
     }
@@ -53,7 +53,7 @@ public class RoofShapeBuilder extends RelationshipShapeBuilderImpl {
     
     private void addElements(ApricotRelationship relationship, Point2D parentStart, Point2D childEnd, RoofRelationship shape) {
         addPath(parentStart, childEnd, shape);
-        addEndElement(childEnd, Side.TOP, shape);
+        addEndElement(relationship.getRelationshipType(), childEnd, Side.TOP, shape);
         addRuler(parentStart, childEnd, shape);
     }
 
@@ -63,7 +63,7 @@ public class RoofShapeBuilder extends RelationshipShapeBuilderImpl {
             ruler = primitivesBuilder.getRuler();
             shape.setRuler(ruler);
         }
-        ruler.setLayoutY(shape.getRulerY() - RelationshipPrimitivesBuilderImpl.RULER_LENGTH / 2);
+        ruler.setLayoutY(shape.getRulerY() - PrimitivesBuilderImpl.RULER_LENGTH / 2);
         double minX = Math.min(parentStart.getX(), childEnd.getX());
         ruler.setLayoutX(minX + Math.abs(parentStart.getX() - childEnd.getX()) / 2);
     }
