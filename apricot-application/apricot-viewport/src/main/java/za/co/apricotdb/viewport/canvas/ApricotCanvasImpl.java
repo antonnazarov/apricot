@@ -258,16 +258,8 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
     @Override
     public void applyAllocationMap(CanvasAllocationMap map, ElementType elementType) {
         Map<String, ApricotRelationship> relMap = getRelationshipMap();
-        List<CanvasAllocationItem> allocations = map.getAllocations();
-        allocations.sort((o1, o2) -> {
-            if (o1.getType() == ElementType.ENTITY && o2.getType() == ElementType.RELATIONSHIP) {
-                return -1;
-            } else if (o1.getType() == ElementType.RELATIONSHIP && o2.getType() == ElementType.ENTITY) {
-                return 1;
-            }
-            return 0;
-        });
-        for (CanvasAllocationItem item : allocations) {
+
+        for (CanvasAllocationItem item : map.getAllocations()) {
             if (item.getType() == elementType) {
                 if (item.getType() == ElementType.ENTITY) {
                     ApricotEntity entity = entities.get(item.getName());
@@ -279,7 +271,6 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
                     ApricotRelationship relationship = relMap.get(item.getName());
                     if (relationship != null) {
                         ApricotRelationshipShape shape = (ApricotRelationshipShape) relationship.getShape();
-
                         if (shape != null) {
                             shape.applyAllocation(item);
                         }

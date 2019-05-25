@@ -92,7 +92,7 @@ public class ApricotEntityHandler {
 
     @Autowired
     EditEntityKeyHandler keyHandler;
-    
+
     @Autowired
     ApricotUndoManager undoManager;
 
@@ -141,7 +141,7 @@ public class ApricotEntityHandler {
 
         appController.save(null);
         undoManager.addSavepoint(UndoType.OBJECT_EDITED);
-        
+
         entitySerializer.serialize(model);
 
         // handle when the entity name was changed
@@ -150,9 +150,14 @@ public class ApricotEntityHandler {
                     model.getEntityName());
             canvasHandler.renameEntityOnCanvas(model.getEntityOriginalName(), model.getEntityName());
         }
-        canvasHandler.updateEntity(model.getTable(), model.isNewEntity());
-        treeViewHandler.populate(projectManager.findCurrentProject(), snapshotManager.getDefaultSnapshot());
+
+        TabInfoObject tabInfo = canvasHandler.getCurrentViewTabInfo();
+        snapshotHandler.syncronizeSnapshot(true);
         treeViewHandler.selectEntity(entityName);
+        if (model.isNewEntity()) {
+            canvasHandler.centerEntityOnView(tabInfo, entityName);
+        }
+        canvasHandler.makeEntitySelected(tabInfo, entityName, true);
 
         return true;
     }
