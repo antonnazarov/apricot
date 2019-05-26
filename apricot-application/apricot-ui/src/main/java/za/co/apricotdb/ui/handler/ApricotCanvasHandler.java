@@ -89,7 +89,7 @@ public class ApricotCanvasHandler {
             runAlignerAfterDelay(canvas, view, 0.1).play();
         } else {
             runAllocationAfterDelay(canvas, view, 0, ElementType.ENTITY).play();
-            runAllocationAfterDelay(canvas, view, 0.3, ElementType.RELATIONSHIP).play();
+            runAllocationAfterDelay(canvas, view, 0.8, ElementType.RELATIONSHIP).play();
         }
     }
 
