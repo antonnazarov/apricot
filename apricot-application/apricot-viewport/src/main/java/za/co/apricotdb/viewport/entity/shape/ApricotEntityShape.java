@@ -39,6 +39,8 @@ public abstract class ApricotEntityShape extends VBox implements ApricotShape {
     public abstract void resetAllStacks();
 
     public abstract Point2D getStackRelationshipStart(ApricotRelationship relationship);
+    
+    public abstract Point2D getStackRelationshipEnd(ApricotRelationship relationship);
 
     public ApricotEntityGroup getEntityGroup() {
         return entityGroup;

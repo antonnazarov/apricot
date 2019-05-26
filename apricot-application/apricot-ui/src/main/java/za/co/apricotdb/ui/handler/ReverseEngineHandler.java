@@ -165,7 +165,7 @@ public class ReverseEngineHandler {
         dataSaver.saveMetaData(md);
 
         // save the extension of the snapshot comment
-        setSnapshotReverseResultMessage(reverseEngineeringParameters);
+        setSnapshotReverseResultComment(reverseEngineeringParameters);
 
         return true;
     }
@@ -216,6 +216,10 @@ public class ReverseEngineHandler {
             title = "Connect to MySQL database";
             window = initFormController(model);
             break;
+        case DB2:
+            title = "Connect to DB2 database";
+            window = initFormController(model);
+            break;
         case H2:
             loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-re-h2.fxml"));
             loader.setControllerFactory(context::getBean);
@@ -248,7 +252,7 @@ public class ReverseEngineHandler {
         dialog.show();
     }
 
-    private void setSnapshotReverseResultMessage(String reverseEngineeringParameters) {
+    private void setSnapshotReverseResultComment(String reverseEngineeringParameters) {
         ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
 
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");

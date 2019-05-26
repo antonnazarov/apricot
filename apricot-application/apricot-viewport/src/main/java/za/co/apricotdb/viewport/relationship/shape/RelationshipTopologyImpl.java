@@ -3,12 +3,7 @@ package za.co.apricotdb.viewport.relationship.shape;
 import javafx.geometry.Side;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
-import za.co.apricotdb.viewport.modifiers.DadsHandRelationshipEventModifier;
-import za.co.apricotdb.viewport.modifiers.DirectRelationshipEventModifier;
-import za.co.apricotdb.viewport.modifiers.ElementVisualModifier;
-import za.co.apricotdb.viewport.modifiers.HatRelationshipEventModifier;
-import za.co.apricotdb.viewport.modifiers.NonIdentifyingRelationshipShapeModifier;
-import za.co.apricotdb.viewport.modifiers.RoofRelationshipEventModifier;
+import za.co.apricotdb.viewport.modifiers.ShapeModifierFactory;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 
 public class RelationshipTopologyImpl implements RelationshipTopology {
@@ -18,23 +13,21 @@ public class RelationshipTopologyImpl implements RelationshipTopology {
     private RelationshipShapeBuilder dadsHandBuilder = null;
     private RelationshipShapeBuilder roofHandBuilder = null;
 
+    public RelationshipTopologyImpl() {
+    }
+
     public RelationshipTopologyImpl(ApricotCanvas canvas) {
-        RelationshipPrimitivesBuilder primitivesBuilder = new RelationshipPrimitivesBuilderImpl();
+        init(canvas);
+    }
 
-        ElementVisualModifier[] shapeModifiers = new ElementVisualModifier[] {
-                new NonIdentifyingRelationshipShapeModifier(), new DirectRelationshipEventModifier(canvas) };
-        directBuilder = new DirectShapeBuilder(primitivesBuilder, this, shapeModifiers);
+    private void init(ApricotCanvas canvas) {
+        PrimitivesBuilder primitivesBuilder = PrimitivesBuilder.instantiateBuilder(canvas);
+        ShapeModifierFactory factory = ShapeModifierFactory.instantiateFactory(canvas);
 
-        shapeModifiers = new ElementVisualModifier[] { new NonIdentifyingRelationshipShapeModifier(),
-                new HatRelationshipEventModifier(canvas) };
-        hatBuilder = new HatShapeBuilder(primitivesBuilder, this, shapeModifiers);
-
-        shapeModifiers = new ElementVisualModifier[] { new NonIdentifyingRelationshipShapeModifier(),
-                new DadsHandRelationshipEventModifier(canvas) };
-        dadsHandBuilder = new DadsHandShapeBuilder(primitivesBuilder, this, shapeModifiers);
-
-        shapeModifiers = new ElementVisualModifier[] { new RoofRelationshipEventModifier(canvas) };
-        roofHandBuilder = new RoofShapeBuilder(primitivesBuilder, this, shapeModifiers);
+        directBuilder = new DirectShapeBuilder(primitivesBuilder, this, factory.getDirectShapeModifiers(canvas));
+        hatBuilder = new HatShapeBuilder(primitivesBuilder, this, factory.getHatShapeModifiers(canvas));
+        dadsHandBuilder = new DadsHandShapeBuilder(primitivesBuilder, this, factory.getDadsHandShapeModifiers(canvas));
+        roofHandBuilder = new RoofShapeBuilder(primitivesBuilder, this, factory.getRoofShapeModifiers(canvas));
     }
 
     @Override

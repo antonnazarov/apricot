@@ -19,6 +19,7 @@ import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.persistence.entity.LayoutObjectType;
+import za.co.apricotdb.persistence.entity.ViewDetailLevel;
 import za.co.apricotdb.ui.handler.ApricotViewHandler;
 import za.co.apricotdb.ui.handler.TabInfoObject;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
@@ -80,6 +81,7 @@ public class ApricotViewSerializer {
         view.setProject(project);
         view.setGeneral(false);
         view.setOrdinalPosition(viewManager.getMaxOrdinalPosition(project) + 1);
+        view.setDetailLevel(ViewDetailLevel.DEFAULT);
 
         ApricotView generalView = viewManager.getGeneralView(project);
         List<ApricotObjectLayout> layouts = viewHandler.getObjectLayoutsFromPatternView(model.getViewTables(),
@@ -93,8 +95,9 @@ public class ApricotViewSerializer {
         }
 
         view.setObjectLayouts(targetLayouts);
+        viewManager.saveView(view);
 
-        return viewManager.saveView(view);
+        return viewManager.setCurrentView(view);
     }
 
     /**

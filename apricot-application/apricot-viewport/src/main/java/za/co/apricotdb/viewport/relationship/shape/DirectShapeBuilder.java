@@ -12,7 +12,7 @@ import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 
 public class DirectShapeBuilder extends RelationshipShapeBuilderImpl {
 
-    public DirectShapeBuilder(RelationshipPrimitivesBuilder primitivesBuilder,
+    public DirectShapeBuilder(PrimitivesBuilder primitivesBuilder,
             RelationshipTopology relationshipTopology, ElementVisualModifier[] shapeModifiers) {
         super(primitivesBuilder, relationshipTopology, shapeModifiers);
     }
@@ -57,7 +57,7 @@ public class DirectShapeBuilder extends RelationshipShapeBuilderImpl {
             Side childSide, double rulerX, DirectRelationship shape) {
         addPath(parentStart, childEnd, rulerX, shape);
         addStartElement(relationship.getRelationshipType(), parentStart, parentSide, shape);
-        addEndElement(childEnd, childSide, shape);
+        addEndElement(relationship.getRelationshipType(), childEnd, childSide, shape);
         addRuler(parentStart, childEnd, rulerX, shape);
     }
 
@@ -69,9 +69,9 @@ public class DirectShapeBuilder extends RelationshipShapeBuilderImpl {
             shape.setRuler(ruler);
         }
 
-        ruler.setLayoutX(rulerX - RelationshipPrimitivesBuilderImpl.RULER_LENGTH / 2);
+        ruler.setLayoutX(rulerX - PrimitivesBuilderImpl.RULER_LENGTH / 2);
         double midY = Math.min(parentStart.getY(), childEnd.getY()) + Math.abs(parentStart.getY() - childEnd.getY()) / 2
-                - RelationshipPrimitivesBuilderImpl.RULER_LENGTH / 2;
+                - PrimitivesBuilderImpl.RULER_LENGTH / 2;
         ruler.setLayoutY(midY);
     }
 

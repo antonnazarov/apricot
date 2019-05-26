@@ -22,6 +22,7 @@ import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ElementStatus;
+import za.co.apricotdb.viewport.notification.CanvasContextMenuEvent;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 import za.co.apricotdb.viewport.relationship.shape.ApricotRelationshipShape;
 import za.co.apricotdb.viewport.topology.LineSegment;
@@ -30,7 +31,7 @@ import za.co.apricotdb.viewport.topology.TopologyManager;
 @Component
 @Qualifier("CanvasOnMousePressedEventHandler")
 public class CanvasOnMousePressedEventHandler implements EventHandler<MouseEvent> {
-    
+
     public static final double SELECTION_SPOT_SIZE = 15;
 
     @Autowired
@@ -38,24 +39,31 @@ public class CanvasOnMousePressedEventHandler implements EventHandler<MouseEvent
 
     @Override
     public void handle(MouseEvent event) {
-        if (event.getSource() instanceof ApricotCanvas && event.getButton() == MouseButton.PRIMARY) {
+        if (event.getSource() instanceof ApricotCanvas) {
             ApricotCanvas canvas = (ApricotCanvas) event.getSource();
 
-            canvas.changeAllElementsStatus(ElementStatus.DEFAULT);
-            selectNearestRelationship(canvas, event);
-            
-            Pane pane = (Pane) canvas;
-            Scene scene = pane.getScene();
-            scene.setCursor(Cursor.NW_RESIZE);
+            if (event.getButton() == MouseButton.PRIMARY) {
+                canvas.changeAllElementsStatus(ElementStatus.DEFAULT);
+                selectNearestRelationship(canvas, event);
 
-            Rectangle lasso = createLasso(event);
-            Map<String, Object> ud = getUserData(pane);
-            ud.put("lasso", lasso);
-            pane.getChildren().add(lasso);
+                Pane pane = (Pane) canvas;
+                Scene scene = pane.getScene();
+                scene.setCursor(Cursor.NW_RESIZE);
 
-            Map<String, Bounds> bounds = canvas.getEntityBounds();
-            ud.put("bounds", bounds);
-            
+                Rectangle lasso = createLasso(event);
+                Map<String, Object> ud = getUserData(pane);
+                ud.put("lasso", lasso);
+                pane.getChildren().add(lasso);
+
+                Map<String, Bounds> bounds = canvas.getEntityBounds();
+                ud.put("bounds", bounds);
+            } else {
+                // the right click on canvas - call the context menu
+                CanvasContextMenuEvent cmEvent = new CanvasContextMenuEvent(canvas, event.getScreenX(),
+                        event.getScreenY());
+                canvas.publishEvent(cmEvent);
+            }
+
             event.consume();
         }
     }
@@ -111,15 +119,16 @@ public class CanvasOnMousePressedEventHandler implements EventHandler<MouseEvent
 
         return userData;
     }
-    
+
     private void selectNearestRelationship(ApricotCanvas canvas, MouseEvent event) {
         List<ApricotRelationship> relationships = canvas.getRelationships();
-        Rectangle2D spot = new Rectangle2D(event.getX()-SELECTION_SPOT_SIZE/2, event.getY()-SELECTION_SPOT_SIZE/2, SELECTION_SPOT_SIZE, SELECTION_SPOT_SIZE);
-        
+        Rectangle2D spot = new Rectangle2D(event.getX() - SELECTION_SPOT_SIZE / 2,
+                event.getY() - SELECTION_SPOT_SIZE / 2, SELECTION_SPOT_SIZE, SELECTION_SPOT_SIZE);
+
         for (ApricotRelationship r : relationships) {
             ApricotRelationshipShape shape = (ApricotRelationshipShape) r.getShape();
             Path path = shape.getPath();
-            
+
             List<LineSegment> sgmts = topologyManager.getSegments(path);
             for (LineSegment ls : sgmts) {
                 if (topologyManager.intersects(ls, spot)) {
@@ -128,6 +137,6 @@ public class CanvasOnMousePressedEventHandler implements EventHandler<MouseEvent
                 }
             }
         }
-        
+
     }
 }

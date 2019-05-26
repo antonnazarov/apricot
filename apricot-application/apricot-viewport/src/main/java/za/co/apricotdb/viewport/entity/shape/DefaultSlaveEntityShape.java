@@ -11,9 +11,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 
-public class DetailedSlaveEntityShape extends DetailedEntityShape {
+public class DefaultSlaveEntityShape extends DefaultEntityShape {
 
-    public DetailedSlaveEntityShape(ApricotEntity entity, Text header, GridPane primaryPanel,
+    public DefaultSlaveEntityShape(ApricotEntity entity, Text header, GridPane primaryPanel,
             GridPane nonPrimaryPanel) {
         super(entity, header, primaryPanel, nonPrimaryPanel);
     }

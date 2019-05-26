@@ -93,7 +93,7 @@
                   <ButtonBar id="mainButtons" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="681.0">
                     <buttons>
                         <Button id="buttonSave" fx:id="saveButton" minWidth="34.0" mnemonicParsing="false" onAction="#save" prefHeight="25.0" text="Save" />
-                      <Button disable="true" minWidth="34.0" mnemonicParsing="false" prefHeight="25.0" text="Undo" />
+                      <Button fx:id="undoButton" disable="true" minWidth="34.0" mnemonicParsing="false" onAction="#undo" prefHeight="25.0" text="Undo" />
                         <Label alignment="CENTER_RIGHT" minWidth="27.0" prefHeight="17.0" text="New:" />
                         <Button id="buttonSnapshot" layoutX="455.0" layoutY="10.0" minWidth="34.0" mnemonicParsing="false" onAction="#newSnapshot" prefHeight="25.0" text="Snapshot" />
                         <Button id="buttonView" layoutX="540.0" layoutY="10.0" minWidth="34.0" mnemonicParsing="false" onAction="#newView" prefHeight="25.0" text="View" />

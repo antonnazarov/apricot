@@ -1,5 +1,6 @@
 package za.co.apricotdb.viewport.canvas;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +12,9 @@ import java.util.Map;
  * @author Anton Nazarov
  * @since 17/01/2019
  */
-public class CanvasAllocationMap {
+public class CanvasAllocationMap implements Serializable {
+    
+    private static final long serialVersionUID = -8123393340945466942L;
     
     private Map<String, CanvasAllocationItem> allocations = new HashMap<>();
     

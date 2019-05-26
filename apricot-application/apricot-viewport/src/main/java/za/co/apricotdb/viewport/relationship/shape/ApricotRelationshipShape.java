@@ -1,6 +1,7 @@
 package za.co.apricotdb.viewport.relationship.shape;
 
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
 import za.co.apricotdb.viewport.canvas.ApricotElement;
@@ -21,8 +22,8 @@ public abstract class ApricotRelationshipShape extends Group implements ApricotS
     private final ApricotRelationship relationship;
     private RelationshipShapeType shapeType;
     private Path path;
-    private Shape startElement;
-    private Shape endElement;
+    private Group startElement;
+    private Group endElement;
 
     public ApricotRelationshipShape(ApricotRelationship relationship, RelationshipShapeType shapeType) {
         this.relationship = relationship;
@@ -38,8 +39,12 @@ public abstract class ApricotRelationshipShape extends Group implements ApricotS
         if (path != null) {
             path.setStrokeWidth(RELATIONSHIP_DEFAULT_STROKE_WIDTH);
         }
+
         if (startElement != null) {
-            startElement.setStrokeWidth(RELATIONSHIP_DEFAULT_STROKE_WIDTH);
+            setGroupStroke(startElement, RELATIONSHIP_DEFAULT_STROKE_WIDTH);
+        }
+        if (endElement != null) {
+            setGroupStroke(endElement, RELATIONSHIP_DEFAULT_STROKE_WIDTH);
         }
     }
 
@@ -48,8 +53,20 @@ public abstract class ApricotRelationshipShape extends Group implements ApricotS
         if (path != null) {
             path.setStrokeWidth(RELATIONSHIP_SELECTED_STROKE_WIDTH);
         }
+
         if (startElement != null) {
-            startElement.setStrokeWidth(RELATIONSHIP_SELECTED_STROKE_WIDTH);
+            setGroupStroke(startElement, RELATIONSHIP_SELECTED_STROKE_WIDTH);
+        }
+        if (endElement != null) {
+            setGroupStroke(endElement, RELATIONSHIP_SELECTED_STROKE_WIDTH);
+        }
+    }
+
+    private void setGroupStroke(Group element, double strokeWidth) {
+        for (Node n : element.getChildren()) {
+            if (n instanceof Shape) {
+                ((Shape) n).setStrokeWidth(strokeWidth);
+            }
         }
     }
 
@@ -82,11 +99,11 @@ public abstract class ApricotRelationshipShape extends Group implements ApricotS
         this.path = path;
     }
 
-    public Shape getStartElement() {
+    public Group getStartElement() {
         return startElement;
     }
 
-    public void setStartElement(Shape startElement) {
+    public void setStartElement(Group startElement) {
         if (this.startElement != null) {
             this.getChildren().remove(this.startElement);
         }
@@ -94,11 +111,11 @@ public abstract class ApricotRelationshipShape extends Group implements ApricotS
         this.startElement = startElement;
     }
 
-    public Shape getEndElement() {
+    public Group getEndElement() {
         return endElement;
     }
 
-    public void setEndElement(Shape endElement) {
+    public void setEndElement(Group endElement) {
         if (this.endElement != null) {
             this.getChildren().remove(this.endElement);
         }

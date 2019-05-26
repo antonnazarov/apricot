@@ -26,7 +26,7 @@ public interface ApricotCanvas {
     void orderElements(OrderManager orderManager);
 
     ApricotEntity findEntityByName(String name);
-    
+
     ApricotRelationship findRelationshipByName(String name);
 
     void sendToFront(ApricotElement entity);
@@ -36,28 +36,34 @@ public interface ApricotCanvas {
     List<ApricotElement> getElements();
 
     List<Node> getShapes();
-    
+
     Map<String, Bounds> getEntityBounds();
-    
+
     void buildRelationships();
-    
+
     List<ApricotRelationship> getRelationships();
-    
+
     CanvasAllocationMap getAllocationMap();
-    
+
     void applyAllocationMap(CanvasAllocationMap map, ElementType elementType);
-    
+
     List<ApricotEntity> getSelectedEntities();
-    
+
     List<ApricotRelationship> getSelectedRelationships();
-    
+
     void cleanCanvas();
-    
+
     void publishEvent(ApplicationEvent event);
-    
+
     boolean isCanvasChanged();
-    
+
     void setCanvasChanged(boolean changed);
-    
+
     void renameEntity(String oldName, String newName);
+
+    void setDetailLevel(String level);
+
+    String getErdNotation();
+
+    void setErdNotation(String erdNotation);
 }

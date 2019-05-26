@@ -27,8 +27,8 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "apricot_constraint")
-@NamedQuery(name="ApricotConstraint.getConstraintsByTable", query="SELECT cnst FROM ApricotConstraint cnst WHERE cnst.table = :table")
-@NamedQuery(name="ApricotConstraint.getConstraintsByName", query="SELECT DISTINCT cnst FROM ApricotSnapshot snap JOIN snap.tables tbl JOIN tbl.constraints cnst WHERE snap = :snapshot AND cnst.name = :name")
+@NamedQuery(name = "ApricotConstraint.getConstraintsByTable", query = "SELECT cnst FROM ApricotConstraint cnst WHERE cnst.table = :table")
+@NamedQuery(name = "ApricotConstraint.getConstraintsByName", query = "SELECT DISTINCT cnst FROM ApricotSnapshot snap JOIN snap.tables tbl JOIN tbl.constraints cnst WHERE snap = :snapshot AND cnst.name = :name")
 public class ApricotConstraint implements Serializable {
 
     private static final long serialVersionUID = 3862015345366091286L;
@@ -43,7 +43,7 @@ public class ApricotConstraint implements Serializable {
 
         addColumns(columns);
     }
-    
+
     public ApricotConstraint(String name, ConstraintType type, ApricotTable table) {
         this.name = name;
         this.type = type;
@@ -155,14 +155,29 @@ public class ApricotConstraint implements Serializable {
             columns.add(acc);
         }
     }
-    
+
     /**
      * Add an individual column.
      */
     public void addColumn(String column) {
+        // check if the column is already included into the constraint
+        if (findConstraintColumn(column) != null) {
+            return;
+        }
+
         ApricotColumn c = table.getColumnByName(column);
         ApricotColumnConstraint acc = new ApricotColumnConstraint(this, c);
-        acc.setOrdinalPosition(columns.size()+1);
+        acc.setOrdinalPosition(columns.size() + 1);
         columns.add(acc);
+    }
+
+    private ApricotColumnConstraint findConstraintColumn(String column) {
+        for (ApricotColumnConstraint cc : columns) {
+            if (cc.getColumn().getName().equals(column)) {
+                return cc;
+            }
+        }
+
+        return null;
     }
 }

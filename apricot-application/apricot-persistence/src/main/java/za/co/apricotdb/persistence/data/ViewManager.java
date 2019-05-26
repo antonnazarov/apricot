@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.persistence.entity.LayoutObjectType;
+import za.co.apricotdb.persistence.entity.ViewDetailLevel;
 import za.co.apricotdb.persistence.repository.ApricotObjectLayoutRepository;
 import za.co.apricotdb.persistence.repository.ApricotViewRepository;
 
@@ -29,10 +30,19 @@ public class ViewManager {
     ApricotObjectLayoutRepository objectLayoutRepository;
 
     public ApricotView getGeneralView(ApricotProject project) {
+        ApricotView ret = null;
+
         TypedQuery<ApricotView> query = em.createNamedQuery("ApricotView.getGeneralView", ApricotView.class);
         query.setParameter("project", project);
 
-        return query.getSingleResult();
+        List<ApricotView> res = query.getResultList();
+        if (res == null || res.size() == 0) {
+            ret = createGeneralView(project);
+        } else {
+            ret = res.get(0);
+        }
+
+        return ret;
     }
 
     /**
@@ -116,5 +126,41 @@ public class ViewManager {
         query.setParameter("project", project);
 
         return query.getSingleResult();
+    }
+
+    public ApricotView getCurrentView(ApricotProject project) {
+        ApricotView ret = null;
+        TypedQuery<ApricotView> query = em.createNamedQuery("ApricotView.getCurrentView", ApricotView.class);
+        query.setParameter("project", project);
+        query.setParameter("current", true);
+
+        List<ApricotView> res = query.getResultList();
+        if (res == null || res.isEmpty()) {
+            ret = getGeneralView(project);
+        } else {
+            ret = res.get(0);
+        }
+
+        return ret;
+    }
+
+    public ApricotView setCurrentView(ApricotView currentView) {
+        ApricotView view = getCurrentView(currentView.getProject());
+
+        if (view == null) {
+            view = getGeneralView(currentView.getProject());
+        }
+
+        view.setCurrent(false);
+        saveView(view);
+        currentView.setCurrent(true);
+        return saveView(currentView);
+    }
+
+    public ApricotView createGeneralView(ApricotProject project) {
+        ApricotView generalView = new ApricotView(ApricotView.MAIN_VIEW,
+                "The main (general) view of the project " + project.getName(), new java.util.Date(), null, true, 0,
+                project, null, true, ViewDetailLevel.DEFAULT);
+        return saveView(generalView);
     }
 }

@@ -18,7 +18,6 @@ import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.ui.ParentWindow;
-import za.co.apricotdb.ui.handler.ApricotSnapshotHandler;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
 /**
@@ -34,9 +33,6 @@ public class ApricotSnapshotSerializer {
     SnapshotManager snapshotManager;
 
     @Autowired
-    ApricotSnapshotHandler snapshotHandler;
-
-    @Autowired
     ParentWindow parentWindow;
 
     @Autowired
@@ -44,10 +40,10 @@ public class ApricotSnapshotSerializer {
 
     @Autowired
     SnapshotCloneManager snapshotCloneManager;
-    
+
     @Autowired
     AlertMessageDecorator alertDecorator;
-    
+
     @Autowired
     ApricotSnapshotValidator snapshotValidator;
 
@@ -67,7 +63,7 @@ public class ApricotSnapshotSerializer {
         if (!snapshotValidator.validate(model)) {
             return false;
         }
-        
+
         if (model.isNewSnapshot()) {
             serializeNewSnapshot(model);
         } else {
@@ -97,7 +93,7 @@ public class ApricotSnapshotSerializer {
             snapshot = snapshotManager.saveSnapshot(snapshot);
         }
 
-        snapshotHandler.setDefaultSnapshot(snapshot);
+        snapshotManager.setDefaultSnapshot(snapshot);
 
         return snapshot;
     }

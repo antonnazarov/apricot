@@ -78,6 +78,9 @@ public class ApricotRelationshipHandler {
 
     @Autowired
     ConstraintManager constraintManager;
+    
+    @Autowired
+    ApricotSnapshotHandler snapshotHandler;
 
     @Transactional
     public void openRelationshipEditorForm(TabPane viewsTabPane) throws IOException {
@@ -145,7 +148,7 @@ public class ApricotRelationshipHandler {
             return false;
         }
         relationshipSerializer.serializeRelationship(model);
-        canvasHandler.updateEntity(model.getChildTable(), false);
+        snapshotHandler.syncronizeSnapshot(true);
 
         return true;
     }

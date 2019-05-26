@@ -14,6 +14,7 @@ import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.persistence.entity.ConstraintType;
+import za.co.apricotdb.persistence.entity.ERDNotation;
 
 /**
  * A creator of testing data.
@@ -31,33 +32,33 @@ public class TestDataBuilder {
 
     @Resource
     private ApricotProjectRepository projectRepository;
-    
+
     @Resource
     private ApricotSnapshotRepository snapshotRepository;
-    
+
     /**
      * Create the testing data.
      */
     public void createTestData() throws TestDataBuilderException {
-        
+
         List<ApricotTable> t = tableRepository.findAll();
         if (t != null && t.size() > 0) {
             throw new TestDataBuilderException("The database is not empty!");
         }
-        
+
         List<ApricotSnapshot> snapshots = new ArrayList<>();
         List<ApricotProjectParameter> parameters = new ArrayList<>();
         List<ApricotView> views = new ArrayList<>();
-        ApricotProject project = new ApricotProject("TEST_PROJ", "The test project description", 
-                "MSSQL", true, new java.util.Date(), snapshots, parameters, views);
+        ApricotProject project = new ApricotProject("TEST_PROJ", "The test project description", "MSSQL", true,
+                new java.util.Date(), snapshots, parameters, views, ERDNotation.IDEF1x);
         List<ApricotTable> tables = new ArrayList<>();
-        ApricotSnapshot snapshot = new ApricotSnapshot("Test snapshot", new java.util.Date(), new java.util.Date(), 
+        ApricotSnapshot snapshot = new ApricotSnapshot("Test snapshot", new java.util.Date(), new java.util.Date(),
                 "Test comment", true, project, tables);
         snapshots.add(snapshot);
-        
+
         projectRepository.save(project);
         snapshotRepository.save(snapshot);
-        
+
         ApricotTable person = createPerson(snapshot);
         ApricotTable department = createDepartment(snapshot);
         ApricotTable language = createLanguage(snapshot);
@@ -66,17 +67,17 @@ public class TestDataBuilder {
         tables.add(department);
         tables.add(language);
         tables.add(languageRef);
-        
 
         tableRepository.save(person);
         tableRepository.save(department);
         tableRepository.save(language);
         tableRepository.save(languageRef);
 
-        //  relationships
+        // relationships
         ApricotRelationship rPerson1 = department.establishChildConstraint("department_pk", person, "department_fk");
         ApricotRelationship rPerson2 = language.establishChildConstraint("language_pk", person, "language_fk");
-        ApricotRelationship rLanguage = languageRef.establishChildConstraint("language_ref_pk", language, "language_ref_fk");
+        ApricotRelationship rLanguage = languageRef.establishChildConstraint("language_ref_pk", language,
+                "language_ref_fk");
 
         relationshipRepository.save(rPerson1);
         relationshipRepository.save(rPerson2);
@@ -101,9 +102,11 @@ public class TestDataBuilder {
         column = new ApricotColumn("language_id", 6, false, "long", null, table);
         columns.add(column);
 
-        ApricotConstraint constraint = new ApricotConstraint("person_pk", ConstraintType.PRIMARY_KEY, table, "person_id");
+        ApricotConstraint constraint = new ApricotConstraint("person_pk", ConstraintType.PRIMARY_KEY, table,
+                "person_id");
         constraints.add(constraint);
-        constraint = new ApricotConstraint("name_surname_unique_idx", ConstraintType.UNIQUE_INDEX, table, "person_name;person_surename");
+        constraint = new ApricotConstraint("name_surname_unique_idx", ConstraintType.UNIQUE_INDEX, table,
+                "person_name;person_surename");
         constraints.add(constraint);
         constraint = new ApricotConstraint("department_fk", ConstraintType.FOREIGN_KEY, table, "department_id");
         constraints.add(constraint);
@@ -122,7 +125,8 @@ public class TestDataBuilder {
         column = new ApricotColumn("department_name", 2, false, "varchar", "100", table);
         columns.add(column);
 
-        ApricotConstraint constraint = new ApricotConstraint("department_pk", ConstraintType.PRIMARY_KEY, table, "department_id");
+        ApricotConstraint constraint = new ApricotConstraint("department_pk", ConstraintType.PRIMARY_KEY, table,
+                "department_id");
         constraints.add(constraint);
 
         return table;
@@ -141,9 +145,11 @@ public class TestDataBuilder {
         column = new ApricotColumn("language_suffix", 4, false, "int", null, table);
         columns.add(column);
 
-        ApricotConstraint constraint = new ApricotConstraint("language_pk", ConstraintType.PRIMARY_KEY, table, "language_id");
+        ApricotConstraint constraint = new ApricotConstraint("language_pk", ConstraintType.PRIMARY_KEY, table,
+                "language_id");
         constraints.add(constraint);
-        constraint = new ApricotConstraint("language_ref_fk", ConstraintType.FOREIGN_KEY, table, "language_prefix;language_suffix");
+        constraint = new ApricotConstraint("language_ref_fk", ConstraintType.FOREIGN_KEY, table,
+                "language_prefix;language_suffix");
         constraints.add(constraint);
 
         return table;
@@ -160,7 +166,8 @@ public class TestDataBuilder {
         column = new ApricotColumn("ref_definition", 3, false, "varchar", "1000", table);
         columns.add(column);
 
-        ApricotConstraint constraint = new ApricotConstraint("language_ref_pk", ConstraintType.PRIMARY_KEY, table, "ref_prefix;ref_suffix");
+        ApricotConstraint constraint = new ApricotConstraint("language_ref_pk", ConstraintType.PRIMARY_KEY, table,
+                "ref_prefix;ref_suffix");
         constraints.add(constraint);
 
         return table;

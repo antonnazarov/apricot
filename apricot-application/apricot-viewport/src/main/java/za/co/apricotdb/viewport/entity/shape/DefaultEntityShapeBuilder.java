@@ -16,14 +16,14 @@ import za.co.apricotdb.viewport.modifiers.ElementVisualModifier;
  * @author Anton Nazarov
  * @since 28/11/2018
  */
-public class DetailedEntityShapeBuilder implements EntityShapeBuilder {
+public class DefaultEntityShapeBuilder implements EntityShapeBuilder {
 
     public static final double FIELDS_HORIZONTAL_GAP = 10;
     public static final double FIELDS_VERTICAL_GAP = 3;
 
     private final ElementVisualModifier[] modifiers;
 
-    public DetailedEntityShapeBuilder(ElementVisualModifier... modifiers) {
+    public DefaultEntityShapeBuilder(ElementVisualModifier... modifiers) {
         this.modifiers = modifiers;
     }
 
@@ -33,10 +33,10 @@ public class DetailedEntityShapeBuilder implements EntityShapeBuilder {
         ApricotEntityShape shape = null;
 
         if (!entity.isSlave()) {
-            shape = new DetailedMasterEntityShape(entity, buildEntityHeader(entity.getTableName()),
+            shape = new DefaultMasterEntityShape(entity, buildEntityHeader(entity.getTableName()),
                     buildPrimaryKeyPanel(entity.getDetails()), buildNonPrimaryKeyPanel(entity.getDetails()));
         } else {
-            shape = new DetailedSlaveEntityShape(entity, buildEntityHeader(entity.getTableName()),
+            shape = new DefaultSlaveEntityShape(entity, buildEntityHeader(entity.getTableName()),
                     buildPrimaryKeyPanel(entity.getDetails()), buildNonPrimaryKeyPanel(entity.getDetails()));
         }
 
@@ -54,7 +54,7 @@ public class DetailedEntityShapeBuilder implements EntityShapeBuilder {
         return header;
     }
 
-    private GridPane buildPrimaryKeyPanel(List<FieldDetail> details) {
+    public GridPane buildPrimaryKeyPanel(List<FieldDetail> details) {
         GridPane pkPanel = new GridPane();
 
         pkPanel.setHgap(FIELDS_HORIZONTAL_GAP);
@@ -63,7 +63,7 @@ public class DetailedEntityShapeBuilder implements EntityShapeBuilder {
         int cnt = 0;
         for (FieldDetail fd : details) {
             if (fd.isPrimaryKey()) {
-                Text field = new Text(getShortField(fd));
+                Text field = new Text(getFieldAsString(fd));
                 field.setId(fd.getName());
                 field.setFont(HEADER_FONT);
                 Tooltip.install(field, getFieldTooltip(fd));
@@ -76,7 +76,7 @@ public class DetailedEntityShapeBuilder implements EntityShapeBuilder {
         return pkPanel;
     }
 
-    private GridPane buildNonPrimaryKeyPanel(List<FieldDetail> details) {
+    public GridPane buildNonPrimaryKeyPanel(List<FieldDetail> details) {
         GridPane fPanel = new GridPane();
 
         fPanel.setHgap(FIELDS_HORIZONTAL_GAP);
@@ -85,7 +85,7 @@ public class DetailedEntityShapeBuilder implements EntityShapeBuilder {
         int cnt = 0;
         for (FieldDetail fd : details) {
             if (!fd.isPrimaryKey()) {
-                Text field = new Text(getShortField(fd));
+                Text field = new Text(getFieldAsString(fd));
                 field.setId(fd.getName());
                 Tooltip.install(field, getFieldTooltip(fd));
 
@@ -102,7 +102,7 @@ public class DetailedEntityShapeBuilder implements EntityShapeBuilder {
         return fPanel;
     }
 
-    private String getShortField(FieldDetail fd) {
+    protected String getFieldAsString(FieldDetail fd) {
         StringBuilder sb = new StringBuilder(fd.getName());
         if (fd.isMandatory()) {
             sb.append(" *");

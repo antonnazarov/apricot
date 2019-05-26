@@ -8,7 +8,7 @@
     <parent>
         <groupId>za.co.apricot</groupId>
         <artifactId>apricotdb</artifactId>
-        <version>0.3</version>
+        <version>0.4</version>
     </parent>
 
     <artifactId>apricot-persistence</artifactId>

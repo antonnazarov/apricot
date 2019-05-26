@@ -14,11 +14,11 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<Pane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="484.0" prefWidth="566.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.EditProjectController">
+<Pane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="561.0" prefWidth="566.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.EditProjectController">
    <children>
-      <VBox prefHeight="488.0" prefWidth="566.0" spacing="10.0">
+      <VBox prefHeight="561.0" prefWidth="566.0" spacing="10.0">
          <children>
-            <HBox prefHeight="452.0" prefWidth="546.0">
+            <HBox prefHeight="503.0" prefWidth="546.0">
                <children>
                   <GridPane prefHeight="386.0" prefWidth="546.0" vgap="10.0">
                     <columnConstraints>
@@ -26,9 +26,10 @@
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="670.0" minWidth="0.0" prefWidth="357.0" />
                     </columnConstraints>
                     <rowConstraints>
-                      <RowConstraints maxHeight="97.0" minHeight="4.0" prefHeight="33.0" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="201.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="268.0" minHeight="10.0" prefHeight="235.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="97.0" minHeight="4.0" prefHeight="35.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="201.0" minHeight="10.0" prefHeight="27.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="268.0" minHeight="10.0" prefHeight="34.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="268.0" minHeight="10.0" prefHeight="261.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="268.0" minHeight="10.0" prefHeight="106.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
@@ -40,19 +41,21 @@
                         </TextField>
                         <Label text="Project Database:" GridPane.rowIndex="1" />
                         <ChoiceBox fx:id="projectDatabase" prefHeight="25.0" prefWidth="259.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="3">
                            <children>
                               <Label layoutY="6.0" text="Project Description:" />
                            </children>
                         </AnchorPane>
-                        <TextArea fx:id="projectDescription" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <AnchorPane layoutX="10.0" layoutY="76.0" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="3">
+                        <TextArea fx:id="projectDescription" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <AnchorPane layoutX="10.0" layoutY="76.0" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="4">
                            <children>
                               <Label layoutY="6.0" text="Project Black List:" />
                               <Button fx:id="editBlackListButton" layoutY="76.0" mnemonicParsing="false" onAction="#editBlackList" prefHeight="25.0" prefWidth="143.0" text="Edit Black List" />
                            </children>
                         </AnchorPane>
-                        <TextArea fx:id="blackList" editable="false" layoutX="162.0" layoutY="87.0" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <TextArea fx:id="blackList" editable="false" layoutX="162.0" layoutY="87.0" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <Label text="ERD Notation:" GridPane.rowIndex="2" />
+                        <ChoiceBox fx:id="erdNotation" prefHeight="25.0" prefWidth="259.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                      </children>
                   </GridPane>
                </children>
@@ -63,12 +66,12 @@
                   <Button mnemonicParsing="false" onAction="#save" prefWidth="90.0" text="Save" />
                </children>
                <padding>
-                  <Insets bottom="5.0" left="5.0" top="5.0" />
+                  <Insets left="5.0" top="5.0" />
                </padding>
             </HBox>
          </children>
          <padding>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            <Insets left="10.0" right="10.0" top="10.0" />
          </padding>
       </VBox>
    </children>

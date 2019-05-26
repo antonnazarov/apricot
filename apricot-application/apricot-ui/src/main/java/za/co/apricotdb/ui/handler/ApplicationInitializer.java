@@ -7,16 +7,21 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javafx.animation.PauseTransition;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
+import javafx.util.Duration;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.TableManager;
+import za.co.apricotdb.persistence.data.ViewManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.ParentWindow;
+import za.co.apricotdb.ui.undo.ApricotUndoManager;
 import za.co.apricotdb.viewport.canvas.CanvasBuilder;
 
 /**
@@ -45,6 +50,9 @@ public class ApplicationInitializer {
     ApricotViewHandler viewHandler;
 
     @Autowired
+    ViewManager viewManager;
+
+    @Autowired
     CanvasBuilder canvasBuilder;
 
     @Autowired
@@ -52,9 +60,12 @@ public class ApplicationInitializer {
 
     @Autowired
     ParentWindow parentWindow;
-    
+
     @Autowired
     TreeViewHandler treeViewHandler;
+
+    @Autowired
+    ApricotUndoManager undoManager;
 
     @Transactional
     public void initializeDefault() {
@@ -85,7 +96,7 @@ public class ApplicationInitializer {
     public void initialize(ApricotProject project, ApricotSnapshot snapshot) {
         // remember the current project
         parentWindow.getApplicationData().setCurrentProject(project);
-        
+
         treeViewHandler.populate(project, snapshot);
 
         ComboBox<String> combo = parentWindow.getSnapshotCombo();
@@ -96,14 +107,27 @@ public class ApplicationInitializer {
             initCombo(project, snapshot, combo);
         }
 
+        ApricotView currentView = viewManager.getCurrentView(project);
+        Tab currentTab = null;
         TabPane tabPane = parentWindow.getProjectTabPane();
         tabPane.getTabs().clear();
         for (ApricotView view : viewHandler.getAllViews(project)) {
             // create Tabs for General view and for other views with the Layout Objects
             if (view.isGeneral() || view.getObjectLayouts().size() != 0) {
-                viewHandler.createViewTab(snapshot, view, tabPane);
+                Tab tb = viewHandler.createViewTab(snapshot, view, tabPane);
+                if (view.equals(currentView)) {
+                    currentTab = tb;
+                }
             }
         }
+        if (currentTab != null) {
+            tabPane.getSelectionModel().select(currentTab);
+        }
+
+        // initialize the undo stack
+        PauseTransition delay = new PauseTransition(Duration.seconds(0.5));
+        delay.setOnFinished(e -> undoManager.resetUndoBuffer());
+        delay.play();
     }
 
     private void initCombo(ApricotProject project, ApricotSnapshot snapshot, ComboBox<String> combo) {

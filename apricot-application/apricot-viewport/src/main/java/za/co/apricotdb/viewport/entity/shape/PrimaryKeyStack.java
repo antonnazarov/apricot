@@ -25,6 +25,8 @@ public abstract class PrimaryKeyStack extends Path implements ApricotShape {
 
     protected final ApricotEntityShape entityShape;
     protected final List<ApricotRelationship> relationships = new ArrayList<>();
+    //  the "child" - relationships have been populated in case of the simplified entity representation
+    protected final List<ApricotRelationship> childRelationships = new ArrayList<>();
     
     public PrimaryKeyStack(ApricotEntityShape entityShape) {
         this.entityShape = entityShape;
@@ -36,15 +38,20 @@ public abstract class PrimaryKeyStack extends Path implements ApricotShape {
     }
 
     public boolean hasRelationships() {
-        return relationships.size() > 1;
+        return relationships.size()+childRelationships.size() > 1;
     }
 
     public void addRelationship(ApricotRelationship relationship) {
         relationships.add(relationship);
     }
+
+    public void addChildRelationship(ApricotRelationship relationship) {
+        childRelationships.add(relationship);
+    }
     
     public void clear() {
         relationships.clear();
+        childRelationships.clear();
     }
 
     public abstract void sortRelationships();
@@ -52,6 +59,8 @@ public abstract class PrimaryKeyStack extends Path implements ApricotShape {
     public abstract Side getSide();
     
     public abstract Point2D getRelationshipStart(ApricotRelationship relationship);
+    
+    public abstract Point2D getRelationshipEnd(ApricotRelationship relationship);
     
     public abstract void build();
 

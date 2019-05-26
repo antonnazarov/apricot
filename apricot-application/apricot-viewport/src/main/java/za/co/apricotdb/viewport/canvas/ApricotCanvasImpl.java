@@ -15,7 +15,7 @@ import javafx.scene.layout.Pane;
 import za.co.apricotdb.viewport.align.OrderManager;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
-import za.co.apricotdb.viewport.entity.shape.DetailedEntityShape;
+import za.co.apricotdb.viewport.entity.shape.DefaultEntityShape;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 import za.co.apricotdb.viewport.relationship.shape.ApricotRelationshipShape;
 import za.co.apricotdb.viewport.relationship.shape.RelationshipTopology;
@@ -32,13 +32,18 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
     private final List<ApricotElement> elements = new ArrayList<>();
     private final Map<String, ApricotEntity> entities = new HashMap<>();
     private final List<ApricotRelationship> relationships = new ArrayList<>();
-    private final RelationshipTopology topology = new RelationshipTopologyImpl(this);
+    private final RelationshipTopology topology = new RelationshipTopologyImpl();
     private final ApplicationEventPublisher applicationEventPublisher;
-    
+    private String detailLevel;
+    private String erdNotation;
+
     private boolean canvasChanged;
 
-    public ApricotCanvasImpl(ApplicationEventPublisher applicationEventPublisher) {
+    public ApricotCanvasImpl(ApplicationEventPublisher applicationEventPublisher, String detailLevel,
+            String erdNotation) {
         this.applicationEventPublisher = applicationEventPublisher;
+        this.detailLevel = detailLevel;
+        this.erdNotation = erdNotation;
     }
 
     /**
@@ -69,7 +74,7 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
     public ApricotEntity findEntityByName(String name) {
         return entities.get(name);
     }
-    
+
     @Override
     public ApricotRelationship findRelationshipByName(String name) {
         for (ApricotRelationship r : relationships) {
@@ -77,7 +82,7 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
                 return r;
             }
         }
-        
+
         return null;
     }
 
@@ -92,14 +97,14 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
         }
         this.getChildren().remove(element.getShape());
     }
-    
+
     /**
-     * Remove all relationships, linked to the entity. 
+     * Remove all relationships, linked to the entity.
      */
     private void removeEntityLinkedRelationships(ApricotEntity entity) {
         List<ApricotRelationship> relationships = new ArrayList<>(entity.getPrimaryLinks());
         relationships.addAll(entity.getForeignLinks());
-        
+
         for (ApricotRelationship r : relationships) {
             r.getParent().getPrimaryLinks().remove(r);
             r.getParent().getForeignLinks().remove(r);
@@ -156,8 +161,8 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
             if (e.getElementType() == ElementType.ENTITY) {
                 ApricotEntity entity = (ApricotEntity) e;
                 if (entity.getEntityShape() != null) {
-                    if (entity.getEntityShape() instanceof DetailedEntityShape) {
-                        DetailedEntityShape entityShape = (DetailedEntityShape) entity.getEntityShape();
+                    if (entity.getEntityShape() instanceof DefaultEntityShape) {
+                        DefaultEntityShape entityShape = (DefaultEntityShape) entity.getEntityShape();
                         entityShape.resetAllStacks();
                         entityShape.getEntityGroup().getChildren().remove(entityShape.getLeftStack());
                         entityShape.getEntityGroup().getChildren().remove(entityShape.getRightStack());
@@ -177,6 +182,26 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
                                 break;
                             default:
                                 break;
+                            }
+                        }
+
+                        // the simplified view requires
+                        if (detailLevel.equals("SIMPLE")) {
+                            for (ApricotRelationship r : entity.getForeignLinks()) {
+                                Side side = topology.getRelationshipSide(r, false);
+                                switch (side) {
+                                case LEFT:
+                                    entityShape.getLeftStack().addChildRelationship(r);
+                                    break;
+                                case RIGHT:
+                                    entityShape.getRightStack().addChildRelationship(r);
+                                    break;
+                                case TOP:
+                                    entityShape.getTopStack().addChildRelationship(r);
+                                    break;
+                                default:
+                                    break;
+                                }
                             }
                         }
 
@@ -221,8 +246,10 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
                 shape = (ApricotShape) ae.getShape();
             }
 
-            CanvasAllocationItem item = shape.getAllocation();
-            allocationMap.addCanvasAllocationItem(item);
+            if (shape != null) {
+                CanvasAllocationItem item = shape.getAllocation();
+                allocationMap.addCanvasAllocationItem(item);
+            }
         }
 
         return allocationMap;
@@ -231,16 +258,8 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
     @Override
     public void applyAllocationMap(CanvasAllocationMap map, ElementType elementType) {
         Map<String, ApricotRelationship> relMap = getRelationshipMap();
-        List<CanvasAllocationItem> allocations = map.getAllocations();
-        allocations.sort((o1, o2) -> {
-            if (o1.getType() == ElementType.ENTITY && o2.getType() == ElementType.RELATIONSHIP) {
-                return -1;
-            } else if (o1.getType() == ElementType.RELATIONSHIP && o2.getType() == ElementType.ENTITY) {
-                return 1;
-            }
-            return 0;
-        });
-        for (CanvasAllocationItem item : allocations) {
+
+        for (CanvasAllocationItem item : map.getAllocations()) {
             if (item.getType() == elementType) {
                 if (item.getType() == ElementType.ENTITY) {
                     ApricotEntity entity = entities.get(item.getName());
@@ -252,8 +271,9 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
                     ApricotRelationship relationship = relMap.get(item.getName());
                     if (relationship != null) {
                         ApricotRelationshipShape shape = (ApricotRelationshipShape) relationship.getShape();
-
-                        shape.applyAllocation(item);
+                        if (shape != null) {
+                            shape.applyAllocation(item);
+                        }
                     }
                 }
             }
@@ -282,7 +302,7 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
 
         return ret;
     }
-    
+
     @Override
     public List<ApricotRelationship> getSelectedRelationships() {
         List<ApricotRelationship> ret = new ArrayList<>();
@@ -328,5 +348,23 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
             entity.setTableName(newName);
             entities.put(newName, entity);
         }
+    }
+
+    /**
+     * Sets the current detail level of the canvas.
+     */
+    @Override
+    public void setDetailLevel(String level) {
+        this.detailLevel = level;
+    }
+
+    @Override
+    public String getErdNotation() {
+        return erdNotation;
+    }
+
+    @Override
+    public void setErdNotation(String erdNotation) {
+        this.erdNotation = erdNotation;
     }
 }

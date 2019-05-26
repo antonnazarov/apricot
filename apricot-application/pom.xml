@@ -7,7 +7,7 @@
 
     <groupId>za.co.apricot</groupId>
     <artifactId>apricotdb</artifactId>
-    <version>0.3</version>
+    <version>0.4</version>
     <packaging>pom</packaging>
     <name>The Apricot - database tool</name>
 
@@ -15,7 +15,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <revision>0.3</revision>
+        <revision>0.4</revision>
     </properties>
 
     <modules>
@@ -73,12 +73,18 @@
             <version>1.5.16.RELEASE</version>
         </dependency>
 
-
-        <!-- Hibernate -->
+        <!-- hibernate -->
         <dependency>
             <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>5.3.6.Final</version>
+            <artifactId>hibernate-core</artifactId>
+            <version>5.4.2.Final</version>
+        </dependency>
+        
+        <!-- hibernate ehcache -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-ehcache</artifactId>
+            <version>5.4.2.Final</version>
         </dependency>
 
         <!-- SQL Server -->
@@ -109,11 +115,30 @@
             <version>8.0.15</version>
         </dependency>
 
+        <!-- DB2 -->
+        <dependency>
+            <groupId>com.ibm.db2</groupId>
+            <artifactId>db2-driver</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ibm.db2</groupId>
+            <artifactId>license_cisuz</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ibm.db2</groupId>
+            <artifactId>license_cu</artifactId>
+            <version>1.0</version>
+        </dependency>
+
         <!-- Utilities -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>1.4.197</version>
+            <version>1.4.199</version>
         </dependency>
 
         <dependency>

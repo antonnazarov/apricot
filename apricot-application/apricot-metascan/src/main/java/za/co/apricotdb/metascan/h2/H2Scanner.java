@@ -93,7 +93,7 @@ public class H2Scanner extends MetaDataScannerBase {
             String constraintName = rs.getString("constraint_name");
             ConstraintType constraintType = null;
             switch (rs.getString("constraint_type")) {
-            case "PRIMARY_KEY":
+            case "PRIMARY KEY":
                 constraintType = ConstraintType.PRIMARY_KEY;
                 break;
             case "REFERENTIAL":
@@ -152,7 +152,7 @@ public class H2Scanner extends MetaDataScannerBase {
             String schema) {
         Map<String, String> indexMap = new HashMap<>();
         String sql = String.format(
-                "select unique_index_name, constraint_name, constraint_type from information_schema.constraints where constraint_schema = '%s' and constraint_type = 'PRIMARY_KEY' order by unique_index_name",
+                "select unique_index_name, constraint_name, constraint_type from information_schema.constraints where constraint_schema = '%s' and constraint_type = 'PRIMARY KEY' order by unique_index_name",
                 schema);
         jdbc.query(sql, (rs, rowNum) -> {
             indexMap.put(rs.getString("unique_index_name"), rs.getString("constraint_name"));

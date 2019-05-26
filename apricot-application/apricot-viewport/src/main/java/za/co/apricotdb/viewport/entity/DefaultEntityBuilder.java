@@ -6,8 +6,10 @@ import za.co.apricotdb.viewport.align.AlignCommand;
 import za.co.apricotdb.viewport.align.CanvasSizeAjustor;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ElementStatus;
-import za.co.apricotdb.viewport.entity.shape.DetailedEntityShapeBuilder;
+import za.co.apricotdb.viewport.entity.shape.DefaultEntityShapeBuilder;
 import za.co.apricotdb.viewport.entity.shape.EntityShapeBuilder;
+import za.co.apricotdb.viewport.entity.shape.ExtendedEntityShapeBuilder;
+import za.co.apricotdb.viewport.entity.shape.SimpleEntityShapeBuilder;
 import za.co.apricotdb.viewport.event.GroupOperationHandler;
 import za.co.apricotdb.viewport.modifiers.ElementVisualModifier;
 import za.co.apricotdb.viewport.modifiers.EntitySetDetailedEntityShadowModifier;
@@ -19,22 +21,28 @@ import za.co.apricotdb.viewport.modifiers.SetEntityEventsModifier;
  * @author Anton Nazarov
  * @since 04/12/2018
  */
-public class ApricotEntityBuilder implements EntityBuilder {
+public class DefaultEntityBuilder implements EntityBuilder {
 
     private EntityShapeBuilder shapeBuilder = null;
     private ApricotCanvas canvas = null;
 
-    public ApricotEntityBuilder(ApricotCanvas canvas) {
+    public DefaultEntityBuilder(ApricotCanvas canvas, String detailLevel) {
         this.canvas = canvas;
-        
+
         GroupOperationHandler groupHandler = new GroupOperationHandler();
         AlignCommand aligner = new CanvasSizeAjustor(canvas);
-        
+
         // collect all necessary modifiers
         ElementVisualModifier[] modifiers = new ElementVisualModifier[] { new EntitySetDetailedEntityShadowModifier(),
                 new SetEntityEventsModifier(canvas, groupHandler, aligner) };
 
-        shapeBuilder = new DetailedEntityShapeBuilder(modifiers);
+        if (detailLevel.equals("DEFAULT")) {
+            shapeBuilder = new DefaultEntityShapeBuilder(modifiers);
+        } else if (detailLevel.equals("SIMPLE")) {
+            shapeBuilder = new SimpleEntityShapeBuilder(modifiers);
+        } else if (detailLevel.equals("EXTENDED")) {
+            shapeBuilder = new ExtendedEntityShapeBuilder(modifiers);
+        }
     }
 
     @Override

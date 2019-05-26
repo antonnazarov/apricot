@@ -11,12 +11,13 @@ import za.co.apricotdb.viewport.event.RelationshipOnMouseEnteredVerticalRulerEve
 import za.co.apricotdb.viewport.event.RelationshipOnMouseExitedRulerEventHandler;
 import za.co.apricotdb.viewport.event.RelationshipOnMousePressedEventHandler;
 import za.co.apricotdb.viewport.event.RelationshipOnMousePressedRulerEventHandler;
+import za.co.apricotdb.viewport.event.RelationshipOnMouseReleasedEventHandler;
 import za.co.apricotdb.viewport.relationship.shape.HatRelationship;
 
 public class HatRelationshipEventModifier implements ElementVisualModifier {
-    
+
     private EventHandler<MouseEvent> mousePressedHandler = null;
-    
+
     private EventHandler<MouseEvent> mouseHRulerEnteredHandler = null;
     private EventHandler<MouseEvent> mouseVRulerEnteredHandler = null;
     private EventHandler<MouseEvent> mouseRulerExitedHandler = null;
@@ -26,8 +27,8 @@ public class HatRelationshipEventModifier implements ElementVisualModifier {
     private EventHandler<MouseEvent> mouseLeftRulerDraggedHandler = null;
     private EventHandler<MouseEvent> mouseRightRulerDraggedHandler = null;
     private EventHandler<MouseEvent> mouseVRulerDraggedHandler = null;
-    
-    
+    private EventHandler<MouseEvent> mouseRulerReleasedHandler = null;
+
     public HatRelationshipEventModifier(ApricotCanvas canvas) {
         mousePressedHandler = new RelationshipOnMousePressedEventHandler();
 
@@ -38,28 +39,33 @@ public class HatRelationshipEventModifier implements ElementVisualModifier {
         mouseRightRulerPressedHandler = new RelationshipOnMousePressedRulerEventHandler("rightRulerX");
         mouseCenterRulerPressedHandler = new RelationshipOnMousePressedRulerEventHandler("centerRulerY");
         mouseLeftRulerDraggedHandler = new RelationshipOnMouseDraggedHorizontalRulerEventHandler("leftRulerX", canvas);
-        mouseRightRulerDraggedHandler = new RelationshipOnMouseDraggedHorizontalRulerEventHandler("rightRulerX", canvas);
+        mouseRightRulerDraggedHandler = new RelationshipOnMouseDraggedHorizontalRulerEventHandler("rightRulerX",
+                canvas);
         mouseVRulerDraggedHandler = new RelationshipOnMouseDraggedVerticalRulerEventHandler("centerRulerY", canvas);
+        mouseRulerReleasedHandler = new RelationshipOnMouseReleasedEventHandler(canvas);
     }
 
     @Override
     public void modify(ApricotShape shape) {
-        HatRelationship relationship = (HatRelationship) shape; 
+        HatRelationship relationship = (HatRelationship) shape;
         relationship.setOnMousePressed(mousePressedHandler);
 
         relationship.getLeftRuler().setOnMouseEntered(mouseHRulerEnteredHandler);
         relationship.getLeftRuler().setOnMouseExited(mouseRulerExitedHandler);
         relationship.getLeftRuler().setOnMousePressed(mouseLeftRulerPressedHandler);
         relationship.getLeftRuler().setOnMouseDragged(mouseLeftRulerDraggedHandler);
-        
+        relationship.getLeftRuler().setOnMouseReleased(mouseRulerReleasedHandler);
+
         relationship.getRightRuler().setOnMouseEntered(mouseHRulerEnteredHandler);
         relationship.getRightRuler().setOnMouseExited(mouseRulerExitedHandler);
         relationship.getRightRuler().setOnMousePressed(mouseRightRulerPressedHandler);
         relationship.getRightRuler().setOnMouseDragged(mouseRightRulerDraggedHandler);
+        relationship.getRightRuler().setOnMouseReleased(mouseRulerReleasedHandler);
 
         relationship.getCenterRuler().setOnMouseEntered(mouseVRulerEnteredHandler);
         relationship.getCenterRuler().setOnMouseExited(mouseRulerExitedHandler);
         relationship.getCenterRuler().setOnMousePressed(mouseCenterRulerPressedHandler);
         relationship.getCenterRuler().setOnMouseDragged(mouseVRulerDraggedHandler);
+        relationship.getCenterRuler().setOnMouseReleased(mouseRulerReleasedHandler);
     }
 }

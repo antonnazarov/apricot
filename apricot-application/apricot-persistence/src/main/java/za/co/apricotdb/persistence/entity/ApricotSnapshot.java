@@ -19,26 +19,26 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
- * Entity for the apricot_snapshot table. 
+ * Entity for the apricot_snapshot table.
  * 
  * @author Anton Nazarov
  * @since 04/01/2019
  */
 @Entity
 @Table(name = "apricot_snapshot")
-@NamedQuery(name="ApricotSnapshot.getDefaultSnapshot", query="SELECT sn FROM ApricotSnapshot sn WHERE sn.project = :project AND sn.defaultSnapshot = true")
-@NamedQuery(name="ApricotSnapshot.getAllSnapshotsInProject", query="SELECT sn FROM ApricotSnapshot sn WHERE sn.project = :project ORDER by sn.created")
-@NamedQuery(name="ApricotSnapshot.getSnapshotByName", query="SELECT sn FROM ApricotSnapshot sn WHERE sn.name = :name AND sn.project = :project")
+@NamedQuery(name = "ApricotSnapshot.getDefaultSnapshot", query = "SELECT sn FROM ApricotSnapshot sn WHERE sn.project = :project AND sn.defaultSnapshot = true")
+@NamedQuery(name = "ApricotSnapshot.getAllSnapshotsInProject", query = "SELECT sn FROM ApricotSnapshot sn WHERE sn.project = :project ORDER by sn.created")
+@NamedQuery(name = "ApricotSnapshot.getSnapshotByName", query = "SELECT sn FROM ApricotSnapshot sn WHERE sn.name = :name AND sn.project = :project")
 public class ApricotSnapshot implements Serializable {
 
-    public final static int SNAPSHOT_COMMENT_LENGTH = 500; 
+    public final static int SNAPSHOT_COMMENT_LENGTH = 500;
     private static final long serialVersionUID = -8750109610659026590L;
-    
-    public ApricotSnapshot() {}
-    
-    public ApricotSnapshot(String name, java.util.Date created, 
-            java.util.Date updated, String comment, boolean defaultSnapshot,
-            ApricotProject project, List<ApricotTable> tables) {
+
+    public ApricotSnapshot() {
+    }
+
+    public ApricotSnapshot(String name, java.util.Date created, java.util.Date updated, String comment,
+            boolean defaultSnapshot, ApricotProject project, List<ApricotTable> tables) {
         this.name = name;
         this.created = created;
         this.updated = updated;
@@ -47,7 +47,7 @@ public class ApricotSnapshot implements Serializable {
         this.project = project;
         this.tables = tables;
     }
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "snapshot_id")
@@ -55,7 +55,7 @@ public class ApricotSnapshot implements Serializable {
 
     @Column(name = "snapshot_name")
     private String name;
-    
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "snapshot_created")
     private java.util.Date created;
@@ -63,17 +63,17 @@ public class ApricotSnapshot implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "snapshot_updated")
     private java.util.Date updated;
-    
+
     @Column(name = "snapshot_comment")
     private String comment;
 
     @Column(name = "is_default")
     private boolean defaultSnapshot;
-    
+
     @ManyToOne
     @JoinColumn(name = "project_id")
     private ApricotProject project;
-    
+
     @OneToMany(mappedBy = "snapshot", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ApricotTable> tables = new ArrayList<>();
 
@@ -139,5 +139,21 @@ public class ApricotSnapshot implements Serializable {
 
     public void setTables(List<ApricotTable> tables) {
         this.tables = tables;
+    }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        
+        List<ApricotTable> sorted = new ArrayList<>(tables);
+        sorted.sort((t1, t2) -> {
+            return t1.getName().compareTo(t2.getName());
+        });
+        sb.append("snapshot: ").append(name).append(" (").append(id).append(")\n");
+        for (ApricotTable t : sorted) {
+            sb.append(t.getName()).append("\n");
+        }
+        
+        return sb.toString();
     }
 }

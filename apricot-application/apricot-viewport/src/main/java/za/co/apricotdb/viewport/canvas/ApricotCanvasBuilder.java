@@ -28,13 +28,13 @@ public class ApricotCanvasBuilder implements CanvasBuilder {
     ApplicationEventPublisher applicationEventPublisher;
 
     @Override
-    public ApricotCanvas buildCanvas() {
-        ApricotCanvas canvas = new ApricotCanvasImpl(applicationEventPublisher);
+    public ApricotCanvas buildCanvas(String detailLevel, String erdNotation) {
+        ApricotCanvas canvas = new ApricotCanvasImpl(applicationEventPublisher, detailLevel, erdNotation);
         Pane p = (Pane) canvas;
         p.setOnMousePressed(canvasOnMousePressedEventHandler);
         p.setOnMouseReleased(canvasOnMouseReleasedEventHandler);
         p.setOnMouseDragged(canvasOnMouseDraggedEventHandler);
-        
+
         return canvas;
     }
 }

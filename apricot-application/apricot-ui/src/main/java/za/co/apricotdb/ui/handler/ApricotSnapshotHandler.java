@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Resource;
-import javax.transaction.Transactional;
 
 import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,22 +77,6 @@ public class ApricotSnapshotHandler {
         project.getSnapshots().add(snapshot);
     }
 
-    @Transactional
-    public void setDefaultSnapshot(ApricotSnapshot snapshot) {
-        if (snapshot == null) {
-            return;
-        }
-
-        List<ApricotSnapshot> snapshots = snapshotManager.getAllSnapshots(snapshot.getProject());
-        for (ApricotSnapshot s : snapshots) {
-            s.setDefaultSnapshot(false);
-            snapshotManager.saveSnapshot(s);
-        }
-
-        snapshot.setDefaultSnapshot(true);
-        snapshotManager.saveSnapshot(snapshot);
-    }
-
     /**
      * Create the snapshot editing form for a new or existing snapshot.
      */
@@ -160,7 +143,7 @@ public class ApricotSnapshotHandler {
             snapshotManager.deleteSnapshot(snapshot);
             List<ApricotSnapshot> snapshots = snapshotManager.getAllSnapshots(project);
             ApricotSnapshot defSnapshot = snapshots.get(snapshots.size() - 1);
-            setDefaultSnapshot(defSnapshot);
+            snapshotManager.setDefaultSnapshot(defSnapshot);
 
             return true;
         }
@@ -172,17 +155,27 @@ public class ApricotSnapshotHandler {
      * Re-draw all the views for the current (default) snapshot together with the
      * tree view representation of the data
      */
-    public void syncronizeSnapshot() {
-        TabPane tp = parentWindow.getProjectTabPane();
-        for (Tab tab : tp.getTabs()) {
-            TabInfoObject tabInfo = TabInfoObject.getTabInfo(tab);
+    public void syncronizeSnapshot(boolean synchAllViews) {
+        if (synchAllViews) {
+            TabPane tp = parentWindow.getProjectTabPane();
+            for (Tab tab : tp.getTabs()) {
+                TabInfoObject tabInfo = TabInfoObject.getTabInfo(tab);
+                if (tabInfo != null) {
+                    synchronizeViewTab(tabInfo);
+                }
+            }
+        } else {
+            TabInfoObject tabInfo = canvasHandler.getCurrentViewTabInfo();
             if (tabInfo != null) {
-                ApricotProject project = projectManager.findCurrentProject();
-                ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
-                treeViewHandler.populate(project, snapshot);
-                canvasHandler.populateCanvas(snapshot, tabInfo.getView(), tabInfo.getCanvas());
+                synchronizeViewTab(tabInfo);
             }
         }
+    }
+
+    private void synchronizeViewTab(TabInfoObject tabInfo) {
+        ApricotSnapshot snapshot = tabInfo.getSnapshot();
+        treeViewHandler.populate(snapshot.getProject(), snapshot);
+        canvasHandler.populateCanvas(snapshot, tabInfo.getView(), tabInfo.getCanvas());
     }
 
     private Alert getAlert(AlertType alertType, String text) {

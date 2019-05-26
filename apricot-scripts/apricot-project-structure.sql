@@ -4,6 +4,7 @@
 -- 04/01/2019 v.1.1, the apricot_project was added
 -- 24/02/2019 v.1.2 added table apricot_app_parameters
 -- 07/04/2019 v.1.3 added unique constraints for all major tables
+-- 24/05/2019 v.1.4 added field erd_notation into the apricot_project table
 --
 -- PROJECT
 --
@@ -14,6 +15,7 @@ create table apricot_project (
    target_database varchar(50) not null,
    is_current boolean not null,
    project_created datetime not null,
+   erd_notation varchar(20) not null,
    unique key project_name_unique_key (project_name)
 );
 
@@ -59,6 +61,8 @@ create table apricot_view (
    view_updated datetime,
    is_general boolean not null,
    ordinal_position int not null,
+   is_current boolean not null,
+   detail_level varchar(10) not null,
    unique key view_unique_key (project_id, view_name)
 );
 
@@ -168,12 +172,13 @@ create table apricot_app_parameter (
    unique key app_parameter_unique_key (app_parameter_name)
 );
 
-insert into apricot_app_parameter (app_parameter_name, app_parameter_value) values ('database_version', '1.3');
+insert into apricot_app_parameter (app_parameter_name, app_parameter_value) values ('database_version', '1.4');
 insert into apricot_app_parameter (app_parameter_name, app_parameter_value) values ('MSSQLServer.datatypes', 'bigint;int;smallint;tinyint;bit;decimal;float;numeric;varchar;char;nvarchar;text;varbinary;date;datetime;datetime2'); 
 insert into apricot_app_parameter (app_parameter_name, app_parameter_value) values ('Oracle.datatypes', 'CHAR;VARCHAR2;NCHAR;NVARCHAR2;CLOB;NCLOB;LONG;NUMBER;DATE;BLOB;BFILE;RAW;LONG;ROWID;MLSLABEL');
 insert into apricot_app_parameter (app_parameter_name, app_parameter_value) values ('MySQL.datatypes', 'CHAR;VARCHAR;BINARY;VARBINARY;BLOB;TEXT;ENUM;SET;INTEGER;SMALLINT;DECIMAL;NUMERIC;FLOAT;REAL;DOUBLE;DATE;TIME;DATETIME;TIMESTAMP;YEAR');
 insert into apricot_app_parameter (app_parameter_name, app_parameter_value) values ('PostrgeSQL.datatypes', 'CHAR;VARCHAR;TEXT;SMALLINT;INT;FLOAT;REAL;NUMERIC;DATE;TIME;TIMESTAMP;TIMESTAMPZ;INTERVAL');
 insert into apricot_app_parameter (app_parameter_name, app_parameter_value) values ('H2.datatypes', 'VARCHAR;CHAR;BLOB;CLOB;INT;BOOLEAN;TINYINT;SMALLINT;BIGINT;DECIMAL;DOUBLE;REAL;TIME;DATE;TIMESTAMP');
+insert into apricot_app_parameter (app_parameter_name, app_parameter_value) values ('DB2.datatypes', 'BIGINT;SMALLINT;INTEGER;DOUBLE;NUMERIC;DATE;REAL;TIME;TIMESTAMP;CHAR;VARCHAR;LONG VARCHAR;CLOB;BLOB');
 
 -- views
 create view vw_column as

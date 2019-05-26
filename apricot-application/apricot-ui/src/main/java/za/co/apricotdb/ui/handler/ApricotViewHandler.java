@@ -32,10 +32,12 @@ import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.persistence.entity.LayoutObjectType;
+import za.co.apricotdb.persistence.entity.ViewDetailLevel;
 import za.co.apricotdb.ui.ViewFormController;
 import za.co.apricotdb.ui.model.EditViewModelBuilder;
 import za.co.apricotdb.ui.model.NewViewModelBuilder;
 import za.co.apricotdb.ui.model.ViewFormModel;
+import za.co.apricotdb.ui.undo.ApricotUndoManager;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.CanvasBuilder;
 
@@ -78,6 +80,9 @@ public class ApricotViewHandler {
     @Autowired
     TabViewHandler tabViewHandler;
 
+    @Autowired
+    ApricotUndoManager undoManager;
+
     public List<ApricotView> getAllViews(ApricotProject project) {
         checkGeneralView(project);
 
@@ -105,20 +110,13 @@ public class ApricotViewHandler {
         return ret;
     }
 
-    private ApricotView createGeneralView(ApricotProject project) {
-        ApricotView generalView = new ApricotView(ApricotView.MAIN_VIEW,
-                "The main (general) view of the project " + project.getName(), new java.util.Date(), null, true, 0,
-                project, null);
-        return viewManager.saveView(generalView);
-    }
-
     private void checkGeneralView(ApricotProject project) {
         try {
             viewManager.getGeneralView(project);
         } catch (Exception e) {
             // if exception of any type takes place, try to re-create the General View
             viewManager.removeGeneralView(project);
-            createGeneralView(project);
+            viewManager.createGeneralView(project);
         }
     }
 
@@ -188,7 +186,8 @@ public class ApricotViewHandler {
 
     @Transactional
     public Tab createViewTab(ApricotSnapshot snapshot, ApricotView view, TabPane tabPane) {
-        ApricotCanvas canvas = canvasBuilder.buildCanvas();
+        ApricotCanvas canvas = canvasBuilder.buildCanvas(view.getDetailLevel().toString(),
+                snapshot.getProject().getErdNotation().toString());
         Tab tab = tabViewHandler.buildTab(snapshot, view, canvas);
         tabPane.getTabs().add(tab);
 
@@ -213,8 +212,8 @@ public class ApricotViewHandler {
     }
 
     public void createDefaultView(ApricotProject project) {
-        ApricotView v = new ApricotView(ApricotView.MAIN_VIEW, "The main view of the project", new java.util.Date(), null, true,
-                0, project, new ArrayList<ApricotObjectLayout>());
+        ApricotView v = new ApricotView(ApricotView.MAIN_VIEW, "The main view of the project", new java.util.Date(),
+                null, true, 0, project, new ArrayList<ApricotObjectLayout>(), true, ViewDetailLevel.DEFAULT);
         project.getViews().add(v);
     }
 }

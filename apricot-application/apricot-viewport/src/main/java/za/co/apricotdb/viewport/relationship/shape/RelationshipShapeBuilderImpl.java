@@ -2,7 +2,6 @@ package za.co.apricotdb.viewport.relationship.shape;
 
 import javafx.geometry.Point2D;
 import javafx.geometry.Side;
-import javafx.scene.shape.Shape;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
 import za.co.apricotdb.viewport.modifiers.ElementVisualModifier;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
@@ -17,12 +16,12 @@ import za.co.apricotdb.viewport.relationship.RelationshipType;
  */
 public abstract class RelationshipShapeBuilderImpl implements RelationshipShapeBuilder {
 
-    protected RelationshipPrimitivesBuilder primitivesBuilder = null;
+    protected PrimitivesBuilder primitivesBuilder = null;
     protected RelationshipTopology relationshipTopology = null;
     protected ElementVisualModifier[] shapeModifiers = null;
 
-    public RelationshipShapeBuilderImpl(RelationshipPrimitivesBuilder primitivesBuilder,
-            RelationshipTopology relationshipTopology, ElementVisualModifier[] shapeModifiers) {
+    public RelationshipShapeBuilderImpl(PrimitivesBuilder primitivesBuilder, RelationshipTopology relationshipTopology,
+            ElementVisualModifier[] shapeModifiers) {
         this.primitivesBuilder = primitivesBuilder;
         this.relationshipTopology = relationshipTopology;
         this.shapeModifiers = shapeModifiers;
@@ -32,13 +31,11 @@ public abstract class RelationshipShapeBuilderImpl implements RelationshipShapeB
         Point2D ret = null;
 
         // check the relationship in the stack
-        ApricotEntityShape entityShape = relationship.getParent().getEntityShape();
-        ret = entityShape.getStackRelationshipStart(relationship);
+        ApricotEntityShape parentEntityShape = relationship.getParent().getEntityShape();
+        ret = parentEntityShape.getStackRelationshipStart(relationship);
         if (ret != null) {
             return ret;
         }
-
-        ApricotEntityShape parentEntityShape = relationship.getParent().getEntityShape();
 
         switch (parentSide) {
         case LEFT:
@@ -63,6 +60,10 @@ public abstract class RelationshipShapeBuilderImpl implements RelationshipShapeB
         Point2D ret = null;
 
         ApricotEntityShape entityShape = relationship.getChild().getEntityShape();
+        ret = entityShape.getStackRelationshipEnd(relationship);
+        if (ret != null) {
+            return ret;
+        }
 
         switch (childSide) {
         case LEFT:
@@ -85,47 +86,12 @@ public abstract class RelationshipShapeBuilderImpl implements RelationshipShapeB
 
     protected void addStartElement(RelationshipType type, Point2D parentStart, Side parentSide,
             ApricotRelationshipShape shape) {
-        if (type == RelationshipType.OPTIONAL_NON_IDENTIFYING) {
-            Shape startElement = primitivesBuilder.getOptionalStart();
-
-            switch (parentSide) {
-            case RIGHT:
-                startElement.setLayoutX(parentStart.getX() + 2);
-                break;
-            case LEFT:
-                startElement
-                        .setLayoutX(parentStart.getX() - (RelationshipPrimitivesBuilderImpl.OPTIONAL_START_LENGTH + 2));
-                break;
-            case TOP:
-                break;
-            default:
-                break;
-            }
-            startElement.setLayoutY(parentStart.getY() - RelationshipPrimitivesBuilderImpl.OPTIONAL_START_LENGTH / 2);
-            shape.setStartElement(startElement);
-        }
+        primitivesBuilder.addStartElement(type, parentStart, parentSide, shape);
     }
 
-    protected void addEndElement(Point2D childEnd, Side childSide, ApricotRelationshipShape shape) {
-        Shape endElement = null;
-
-        switch (childSide) {
-        case RIGHT:
-            endElement = primitivesBuilder.getEnd(new Point2D(
-                    childEnd.getX() + RelationshipPrimitivesBuilderImpl.LINK_END_DIAMETER, childEnd.getY()));
-            break;
-        case LEFT:
-            endElement = primitivesBuilder.getEnd(new Point2D(
-                    childEnd.getX() - RelationshipPrimitivesBuilderImpl.LINK_END_DIAMETER, childEnd.getY()));
-            break;
-        case TOP:
-            endElement = primitivesBuilder.getEnd(new Point2D(childEnd.getX(),
-                    childEnd.getY() - RelationshipPrimitivesBuilderImpl.LINK_END_DIAMETER));
-            break;
-        default:
-            break;
-        }
-        shape.setEndElement(endElement);
+    protected void addEndElement(RelationshipType type, Point2D childEnd, Side childSide,
+            ApricotRelationshipShape shape) {
+        primitivesBuilder.addEndElement(type, childEnd, childSide, shape);
     }
 
     protected void applyModifiers(ApricotRelationshipShape shape) {

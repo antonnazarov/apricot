@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -27,10 +28,13 @@ import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ConstraintType;
 import za.co.apricotdb.ui.EditEntityController;
+import za.co.apricotdb.ui.MainAppController;
 import za.co.apricotdb.ui.model.ApricotEntitySerializer;
 import za.co.apricotdb.ui.model.ApricotEntityValidator;
 import za.co.apricotdb.ui.model.EditEntityModel;
 import za.co.apricotdb.ui.model.EditEntityModelBuilder;
+import za.co.apricotdb.ui.undo.ApricotUndoManager;
+import za.co.apricotdb.ui.undo.UndoType;
 
 /**
  * The handled of Apricot Entity (Table).
@@ -67,7 +71,7 @@ public class ApricotEntityHandler {
 
     @Autowired
     SnapshotManager snapshotManager;
-    
+
     @Autowired
     ApricotSnapshotHandler snapshotHandler;
 
@@ -82,12 +86,18 @@ public class ApricotEntityHandler {
 
     @Autowired
     ConstraintManager constraintManager;
-    
+
     @Autowired
     ApricotEntityValidator entityValidator;
-    
+
     @Autowired
     EditEntityKeyHandler keyHandler;
+
+    @Autowired
+    ApricotUndoManager undoManager;
+
+    @Autowired
+    MainAppController appController;
 
     @Transactional
     public void openEntityEditorForm(boolean newEntity, String tableName) throws IOException {
@@ -121,14 +131,17 @@ public class ApricotEntityHandler {
         dialog.show();
     }
 
-    @Transactional    
+    @Transactional
     public boolean saveEntity(EditEntityModel model, String entityName, EditEntityController controller) {
         model.setEntityName(entityName);
-        
+
         if (!entityValidator.validate(model, controller)) {
             return false;
         }
-            
+
+        appController.save(null);
+        undoManager.addSavepoint(UndoType.OBJECT_EDITED);
+
         entitySerializer.serialize(model);
 
         // handle when the entity name was changed
@@ -137,17 +150,22 @@ public class ApricotEntityHandler {
                     model.getEntityName());
             canvasHandler.renameEntityOnCanvas(model.getEntityOriginalName(), model.getEntityName());
         }
-        canvasHandler.updateEntity(model.getTable(), model.isNewEntity());
-        treeViewHandler.populate(projectManager.findCurrentProject(), snapshotManager.getDefaultSnapshot());
+
+        TabInfoObject tabInfo = canvasHandler.getCurrentViewTabInfo();
+        snapshotHandler.syncronizeSnapshot(true);
         treeViewHandler.selectEntity(entityName);
-        
+        if (model.isNewEntity()) {
+            canvasHandler.centerEntityOnView(tabInfo, entityName);
+        }
+        canvasHandler.makeEntitySelected(tabInfo, entityName, true);
+
         return true;
     }
 
     /**
      * Delete the entity.
      */
-    @Transactional
+    @Transactional(value = TxType.REQUIRES_NEW)
     public void deleteEntity(String entityName) {
         ApricotTable table = tableManager.getTableByName(entityName, snapshotManager.getDefaultSnapshot());
         if (table != null) {
@@ -157,7 +175,7 @@ public class ApricotEntityHandler {
             }
 
             for (ApricotConstraint constr : table.getConstraints()) {
-                if (constr.getType() != ConstraintType.FOREIGN_KEY) {
+                if (relationships.isEmpty() || constr.getType() != ConstraintType.FOREIGN_KEY) {
                     constraintManager.deleteConstraint(constr);
                 }
             }

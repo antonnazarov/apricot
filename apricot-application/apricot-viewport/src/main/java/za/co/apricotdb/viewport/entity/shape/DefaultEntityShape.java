@@ -23,7 +23,7 @@ import za.co.apricotdb.viewport.relationship.ApricotRelationship;
  * @author Anton Nazarov
  * @since 27/11/2018
  */
-public abstract class DetailedEntityShape extends ApricotEntityShape {
+public abstract class DefaultEntityShape extends ApricotEntityShape {
     
     public static final double VERTICAL_PRIMARY_ENDPOINT_CORRECTION = 12;
     public static final double VERTICAL_NON_PRIMARY_ENDPOINT_CORRECTION = -3;
@@ -49,7 +49,7 @@ public abstract class DetailedEntityShape extends ApricotEntityShape {
     private final NonIdentifyingStack rightStack = new NonIdentifyingStack(this, Side.RIGHT);
     private final IdentifyingStack topStack = new IdentifyingStack(this);
 
-    public DetailedEntityShape(ApricotEntity entity, Text header, GridPane primaryPanel, GridPane nonPrimaryPanel) {
+    public DefaultEntityShape(ApricotEntity entity, Text header, GridPane primaryPanel, GridPane nonPrimaryPanel) {
         super(entity);
 
         this.header = header;
@@ -62,9 +62,14 @@ public abstract class DetailedEntityShape extends ApricotEntityShape {
 
     @Override
     public Text getFieldByName(String fieldName) {
-        return fieldsMapping.get(fieldName);
+        Text text = fieldsMapping.get(fieldName);
+        if (text == null) {
+            text = fieldsMapping.get("ellipsis");
+        }
+        return text;
     }
     
+    @Override
     public double getFieldLocalY(String name) {
         double localY = 0;
         Text field = getFieldByName(name);
@@ -124,6 +129,20 @@ public abstract class DetailedEntityShape extends ApricotEntityShape {
         }
         if (ret == null) {
             ret = topStack.getRelationshipStart(relationship);
+        }
+        
+        return ret;
+    }
+    
+    @Override
+    public Point2D getStackRelationshipEnd(ApricotRelationship relationship) {
+        Point2D ret = null;
+        ret = leftStack.getRelationshipEnd(relationship);
+        if (ret == null) {
+            ret = rightStack.getRelationshipEnd(relationship);
+        }
+        if (ret == null) {
+            ret = topStack.getRelationshipEnd(relationship);
         }
         
         return ret;
