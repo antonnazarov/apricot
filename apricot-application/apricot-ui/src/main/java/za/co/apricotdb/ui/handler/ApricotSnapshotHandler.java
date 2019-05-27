@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 
 import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +30,11 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
+import za.co.apricotdb.persistence.data.ViewManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
+import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.EditSnapshotController;
 import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.model.EditSnapshotModelBuilder;
@@ -68,6 +71,9 @@ public class ApricotSnapshotHandler {
 
     @Autowired
     ApricotCanvasHandler canvasHandler;
+    
+    @Autowired
+    ViewManager viewManager;
 
     public void createDefaultSnapshot(ApricotProject project) {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
@@ -155,6 +161,7 @@ public class ApricotSnapshotHandler {
      * Re-draw all the views for the current (default) snapshot together with the
      * tree view representation of the data
      */
+    @Transactional
     public void syncronizeSnapshot(boolean synchAllViews) {
         if (synchAllViews) {
             TabPane tp = parentWindow.getProjectTabPane();
@@ -173,6 +180,9 @@ public class ApricotSnapshotHandler {
     }
 
     private void synchronizeViewTab(TabInfoObject tabInfo) {
+        //  re-read the view info
+        ApricotView view = viewManager.findViewById(tabInfo.getView().getId());
+        tabInfo.setView(view);
         ApricotSnapshot snapshot = tabInfo.getSnapshot();
         treeViewHandler.populate(snapshot.getProject(), snapshot);
         canvasHandler.populateCanvas(snapshot, tabInfo.getView(), tabInfo.getCanvas());

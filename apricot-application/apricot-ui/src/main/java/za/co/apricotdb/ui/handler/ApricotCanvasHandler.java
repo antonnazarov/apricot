@@ -11,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javafx.animation.PauseTransition;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
-import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import za.co.apricotdb.persistence.data.RelationshipManager;
 import za.co.apricotdb.persistence.data.TableManager;
@@ -38,7 +36,6 @@ import za.co.apricotdb.viewport.entity.ApricotEntity;
 import za.co.apricotdb.viewport.entity.DefaultEntityBuilder;
 import za.co.apricotdb.viewport.entity.EntityBuilder;
 import za.co.apricotdb.viewport.entity.FieldDetail;
-import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
 import za.co.apricotdb.viewport.relationship.ApricotRelationshipBuilder;
 import za.co.apricotdb.viewport.relationship.RelationshipBuilder;
 import za.co.apricotdb.viewport.relationship.RelationshipType;
@@ -156,41 +153,6 @@ public class ApricotCanvasHandler {
             if (t.getUserData() instanceof TabInfoObject) {
                 TabInfoObject o = (TabInfoObject) t.getUserData();
                 o.getCanvas().renameEntity(oldName, newName);
-            }
-        }
-    }
-
-    /**
-     * Center the Entity in the visible part of the screen.
-     */
-    public void centerEntityOnView(TabInfoObject tabInfo, String tableName) {
-        ApricotCanvas canvas = tabInfo.getCanvas();
-        ApricotEntity entity = canvas.findEntityByName(tableName);
-        if (entity != null) {
-            ApricotEntityShape shape = entity.getEntityShape();
-            if (shape != null) {
-                double canvasWidth = ((Pane) canvas).getWidth();
-                double canvasHeight = ((Pane) canvas).getHeight();
-                ScrollPane scroll = tabInfo.getScroll();
-                double visibleWidth = scroll.getWidth();
-                double visibleHeight = scroll.getHeight();
-                double horizontalBias = scroll.getHvalue();
-                double verticalBias = scroll.getVvalue();
-
-                double layoutX = 0;
-                if (canvasWidth > visibleWidth) {
-                    layoutX = (canvasWidth - visibleWidth) * horizontalBias + visibleWidth / 2;
-                } else {
-                    layoutX = visibleWidth / 2;
-                }
-                double layoutY = 0;
-                if (canvasHeight > visibleHeight) {
-                    layoutY = (canvasHeight - visibleHeight) * verticalBias + visibleHeight / 2;
-                } else {
-                    layoutY = visibleHeight / 2;
-                }
-                shape.setLayoutX(layoutX);
-                shape.setLayoutY(layoutY);
             }
         }
     }

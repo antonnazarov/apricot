@@ -99,6 +99,9 @@ public class ApricotEntityHandler {
     @Autowired
     MainAppController appController;
 
+    @Autowired
+    ObjectAllocationHandler allocationHandler;
+
     @Transactional
     public void openEntityEditorForm(boolean newEntity, String tableName) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-entity-editor.fxml"));
@@ -152,11 +155,11 @@ public class ApricotEntityHandler {
         }
 
         TabInfoObject tabInfo = canvasHandler.getCurrentViewTabInfo();
+        if (model.isNewEntity()) {
+            allocationHandler.centerEntityOnView(tabInfo, entityName);
+        }
         snapshotHandler.syncronizeSnapshot(true);
         treeViewHandler.selectEntity(entityName);
-        if (model.isNewEntity()) {
-            canvasHandler.centerEntityOnView(tabInfo, entityName);
-        }
         canvasHandler.makeEntitySelected(tabInfo, entityName, true);
 
         return true;

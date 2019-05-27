@@ -1,7 +1,5 @@
 package za.co.apricotdb.ui.handler;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -102,8 +100,6 @@ public class TabViewHandler {
             if (layout != null) {
                 layout.setObjectLayout(alloc.getPropertiesAsString());
                 layoutManager.saveObjectLayout(layout);
-                // the view needs to be updated artificially after the layout was saved
-                updateLayoutInView(view, layout);
             } else {
                 // a new layout needs to be added
                 LayoutObjectType objectType = LayoutObjectType.TABLE;
@@ -112,25 +108,11 @@ public class TabViewHandler {
                 }
 
                 layout = new ApricotObjectLayout(objectType, alloc.getName(), alloc.getPropertiesAsString(), view);
-                if (view.getObjectLayouts() != null) {
-                    view.getObjectLayouts().add(layout);
-                } else {
-                    List<ApricotObjectLayout> l = new ArrayList<>();
-                    l.add(layout);
-                    view.setObjectLayouts(l);
-                }
+                view.getObjectLayouts().add(layout);
             }
         }
 
         return viewManager.saveView(view);
-    }
-
-    private void updateLayoutInView(ApricotView view, ApricotObjectLayout layout) {
-        for (ApricotObjectLayout l : view.getObjectLayouts()) {
-            if (l.getId() == layout.getId()) {
-                l.setObjectLayout(layout.getObjectLayout());
-            }
-        }
     }
 
     public CanvasAllocationMap readCanvasAllocationMap(ApricotView view) {
