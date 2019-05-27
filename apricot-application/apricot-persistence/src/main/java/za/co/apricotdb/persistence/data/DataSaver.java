@@ -1,6 +1,7 @@
 package za.co.apricotdb.persistence.data;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Component;
 
@@ -24,6 +25,7 @@ public class DataSaver {
     @Resource
     ApricotRelationshipRepository relationshipRepository;
 
+    @Transactional
     public void saveMetaData(MetaData metaData) {
         for (ApricotTable t : metaData.getTables()) {
             tableRepository.save(t);

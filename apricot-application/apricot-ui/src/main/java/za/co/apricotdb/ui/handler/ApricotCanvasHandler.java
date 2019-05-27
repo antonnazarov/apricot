@@ -192,7 +192,6 @@ public class ApricotCanvasHandler {
                 shape.setLayoutX(layoutX);
                 shape.setLayoutY(layoutY);
             }
-            tabViewHandler.saveCanvasAllocationMap(tabInfo);
         }
     }
 

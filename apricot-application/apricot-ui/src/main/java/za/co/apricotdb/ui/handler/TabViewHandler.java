@@ -86,7 +86,7 @@ public class TabViewHandler {
 
         return tab;
     }
-    
+
     @Transactional
     public void saveCanvasAllocationMap(TabInfoObject tabInfo) {
         CanvasAllocationMap allocationMap = tabInfo.getCanvas().getAllocationMap();
@@ -94,9 +94,8 @@ public class TabViewHandler {
         tabInfo.setView(view);
     }
 
-    @Transactional
-    public ApricotView saveCanvasAllocationMap(CanvasAllocationMap map, ApricotView view) {
-        view = viewHandler.readApricotView(view);
+    public ApricotView saveCanvasAllocationMap(CanvasAllocationMap map, ApricotView v) {
+        ApricotView view = viewManager.findViewById(v.getId());
         for (CanvasAllocationItem alloc : map.getAllocations()) {
             ApricotObjectLayout layout = layoutManager.findLayoutByName(view, alloc.getName());
 

@@ -39,7 +39,7 @@ public abstract class ApricotEntityShape extends VBox implements ApricotShape {
     public abstract void resetAllStacks();
 
     public abstract Point2D getStackRelationshipStart(ApricotRelationship relationship);
-    
+
     public abstract Point2D getStackRelationshipEnd(ApricotRelationship relationship);
 
     public ApricotEntityGroup getEntityGroup() {
@@ -48,13 +48,17 @@ public abstract class ApricotEntityShape extends VBox implements ApricotShape {
 
     @Override
     public CanvasAllocationItem getAllocation() {
+        return getAllocation(entity.getTableName(), this.getLayoutX(), this.getLayoutY(), this.getWidth());
+    }
+
+    public static CanvasAllocationItem getAllocation(String name, double layoutX, double layoutY, double width) {
         CanvasAllocationItem ret = new CanvasAllocationItem();
-        ret.setName(entity.getTableName());
+        ret.setName(name);
         ret.setType(ElementType.ENTITY);
         Properties props = new Properties();
-        props.setProperty("layoutX", String.valueOf(this.getLayoutX()));
-        props.setProperty("layoutY", String.valueOf(this.getLayoutY()));
-        props.setProperty("width", String.valueOf(this.getWidth()));
+        props.setProperty("layoutX", String.valueOf(layoutX));
+        props.setProperty("layoutY", String.valueOf(layoutY));
+        props.setProperty("width", String.valueOf(width));
         ret.setProperties(props);
 
         return ret;

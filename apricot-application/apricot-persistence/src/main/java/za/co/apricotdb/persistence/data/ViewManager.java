@@ -103,14 +103,12 @@ public class ViewManager {
         viewRepository.delete(v);
     }
 
-    @Transactional
     public ApricotView saveView(ApricotView view) {
         return viewRepository.saveAndFlush(view);
     }
 
-    @Transactional
     public ApricotView findViewById(long id) {
-        return viewRepository.getOne(id);
+        return viewRepository.findOne(id);
     }
 
     public List<ApricotView> getViewByName(ApricotProject project, String name) {
