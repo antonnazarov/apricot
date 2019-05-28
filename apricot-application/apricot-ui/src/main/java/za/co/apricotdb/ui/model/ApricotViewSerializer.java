@@ -83,18 +83,25 @@ public class ApricotViewSerializer {
         view.setOrdinalPosition(viewManager.getMaxOrdinalPosition(project) + 1);
         view.setDetailLevel(ViewDetailLevel.DEFAULT);
 
-        ApricotView generalView = viewManager.getGeneralView(project);
-        List<ApricotObjectLayout> layouts = viewHandler.getObjectLayoutsFromPatternView(model.getViewTables(),
-                generalView, model.getSnapshot());
-
-        List<ApricotObjectLayout> targetLayouts = new ArrayList<>();
-        for (ApricotObjectLayout l : layouts) {
-            ApricotObjectLayout layout = new ApricotObjectLayout(l.getObjectType(), l.getObjectName(),
-                    l.getObjectLayout(), view);
-            targetLayouts.add(layout);
+        ApricotView sourceView = null;
+        if (model.getSourceView() != null) {
+            sourceView = viewHandler.getViewByName(project, model.getSourceView());
+        } else {
+            sourceView = viewManager.getGeneralView(project);
         }
 
-        view.setObjectLayouts(targetLayouts);
+        if (sourceView != null) {
+            List<ApricotObjectLayout> layouts = viewHandler.getObjectLayoutsFromPatternView(model.getViewTables(),
+                    sourceView, model.getSnapshot());
+
+            List<ApricotObjectLayout> targetLayouts = new ArrayList<>();
+            for (ApricotObjectLayout l : layouts) {
+                ApricotObjectLayout layout = new ApricotObjectLayout(l.getObjectType(), l.getObjectName(),
+                        l.getObjectLayout(), view);
+                targetLayouts.add(layout);
+            }
+            view.setObjectLayouts(targetLayouts);
+        }
         viewManager.saveView(view);
 
         return viewManager.setCurrentView(view);
@@ -122,21 +129,21 @@ public class ApricotViewSerializer {
 
         return ret;
     }
-    
+
     @Transactional
     public void addEntitiesToView(List<String> entities, TabInfoObject tabInfo) {
         List<String> original = getOriginalViewTables(tabInfo);
-        
+
         List<String> renewed = new ArrayList<>(original);
         for (String ent : entities) {
             if (!original.contains(ent)) {
                 renewed.add(ent);
             }
         }
-        
+
         handleNewTables(original, renewed, tabInfo);
     }
-    
+
     @Transactional
     public void deleteEntitiesFromView(List<String> entities, TabInfoObject tabInfo) {
         List<String> original = getOriginalViewTables(tabInfo);
@@ -146,7 +153,7 @@ public class ApricotViewSerializer {
                 renewed.remove(ent);
             }
         }
-        
+
         handleDeletedTables(original, renewed, tabInfo.getView());
     }
 

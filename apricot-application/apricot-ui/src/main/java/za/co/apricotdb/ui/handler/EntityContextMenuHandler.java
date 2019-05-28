@@ -55,7 +55,7 @@ public class EntityContextMenuHandler {
         if (selected.size() != 0) {
             ContextMenu contextMenu = new ContextMenu();
             MenuItem removeFromView = new MenuItem("Remove from View");
-            MenuItem selectInList = new MenuItem("Select in List");
+            MenuItem selectInList = new MenuItem("Select in Project Explorer");
 
             if (selected.size() == 1) {
                 // one entity was selected

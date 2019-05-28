@@ -26,6 +26,7 @@ public class ViewFormModel {
     private List<String> snapshotTables = new ArrayList<>();
     private ApricotSnapshot snapshot = null;
     private Tab tab = null;
+    private String sourceView;
 
     public String getViewName() {
         return viewName;
@@ -146,5 +147,13 @@ public class ViewFormModel {
         }
         
         return ret;
+    }
+
+    public String getSourceView() {
+        return sourceView;
+    }
+
+    public void setSourceView(String sourceView) {
+        this.sourceView = sourceView;
     }
 }

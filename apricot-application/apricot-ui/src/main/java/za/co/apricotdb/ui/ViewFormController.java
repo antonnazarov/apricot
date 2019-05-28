@@ -256,24 +256,27 @@ public class ViewFormController {
     public void viewSelectedFromList(ActionEvent event) {
         String viewName = fromViewList.getSelectionModel().getSelectedItem();
         ApricotView view = viewHandler.getViewByName(model.getSnapshot().getProject(), viewName);
+        if (view != null) {
+            model.setSourceView(viewName);
 
-        List<ApricotTable> tables = viewHandler.getTablesForView(model.getSnapshot(), view);
-        List<String> tableNames = new ArrayList<>();
-        for (ApricotTable t : tables) {
-            tableNames.add(t.getName());
+            List<ApricotTable> tables = viewHandler.getTablesForView(model.getSnapshot(), view);
+            List<String> tableNames = new ArrayList<>();
+            for (ApricotTable t : tables) {
+                tableNames.add(t.getName());
+            }
+            Collections.sort(tableNames);
+
+            List<String> availableTables = newViewModelBuilder
+                    .getAvailableTablesFromSnapshotAndSelected(model.getSnapshotTables(), tableNames);
+            model.getAvailableTables().clear();
+            model.addAvailableTables(availableTables);
+            model.getViewTables().clear();
+            model.addViewTables(tableNames);
+
+            model.setViewName(this.viewName.getText());
+            model.setComment(this.comment.getText());
+
+            applyModel(model);
         }
-        Collections.sort(tableNames);
-
-        List<String> availableTables = newViewModelBuilder
-                .getAvailableTablesFromSnapshotAndSelected(model.getSnapshotTables(), tableNames);
-        model.getAvailableTables().clear();
-        model.addAvailableTables(availableTables);
-        model.getViewTables().clear();
-        model.addViewTables(tableNames);
-
-        model.setViewName(this.viewName.getText());
-        model.setComment(this.comment.getText());
-
-        applyModel(model);
     }
 }
