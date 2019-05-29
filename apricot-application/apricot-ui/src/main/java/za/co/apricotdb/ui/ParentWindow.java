@@ -17,6 +17,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import za.co.apricotdb.ui.handler.ProjectExplorerItem;
 
 /**
  * The operations related with the parent (main) window of the application.
@@ -36,8 +37,8 @@ public class ParentWindow {
         this.mainAppPane = mainAppPane;
     }
 
-    public TreeView<String> getProjectTreeView() {
-        TreeView<String> ret = null;
+    public TreeView<ProjectExplorerItem> getProjectTreeView() {
+        TreeView<ProjectExplorerItem> ret = null;
 
         List<Node> l = getCenterNode().getItems();
 

@@ -18,6 +18,7 @@ import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.ui.ParentWindow;
+import za.co.apricotdb.ui.handler.ProjectExplorerItem.ItemType;
 
 /**
  * This component serves the TreeView on the left side of the main form.
@@ -39,24 +40,11 @@ public class TreeViewHandler {
 
     public void populate(ApricotProject project, ApricotSnapshot snapshot) {
         List<ApricotTable> tables = tableManager.getTablesForSnapshot(snapshot);
-        TreeItem<String> root = new TreeItem<>(project.getName());
+        TreeItem<ProjectExplorerItem> root = new TreeItem<>(buildItemNode(project.getName(), ItemType.PROJECT, true));
         root.getChildren().addAll(getTables(tables));
         root.setExpanded(true);
-        TreeView<String> tw = parentWindow.getProjectTreeView();
+        TreeView<ProjectExplorerItem> tw = parentWindow.getProjectTreeView();
         tw.setRoot(root);
-        tw.setOnMouseClicked(e -> {
-            if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 2) {
-                TreeItem<String> item = tw.getSelectionModel().getSelectedItem();
-                if (item != tw.getRoot()) {
-                    // the table was selected by double click
-                    try {
-                        entityHandler.openEntityEditorForm(false, item.getValue());
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            }
-        });
         tw.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
@@ -65,37 +53,51 @@ public class TreeViewHandler {
         e.add(entity);
         selectEntities(e);
     }
-    
+
     public void selectEntities(List<String> entities) {
-        TreeView<String> tw = parentWindow.getProjectTreeView();
+        TreeView<ProjectExplorerItem> tw = parentWindow.getProjectTreeView();
         tw.getSelectionModel().clearSelection();
-        TreeItem<String> root = tw.getRoot();
-        Map<String, TreeItem<String>> items = getTreeItemsMap(root.getChildren());
+        TreeItem<ProjectExplorerItem> root = tw.getRoot();
+        Map<String, TreeItem<ProjectExplorerItem>> items = getTreeItemsMap(root.getChildren());
         for (String entity : entities) {
-            TreeItem<String> item = items.get(entity);
+            TreeItem<ProjectExplorerItem> item = items.get(entity);
             if (item != null) {
                 tw.getSelectionModel().select(item);
             }
         }
     }
-    
-    private Map<String, TreeItem<String>> getTreeItemsMap(List<TreeItem<String>> items) {
-        Map<String, TreeItem<String>> ret = new HashMap<>();
 
-        for (TreeItem<String> item : items) {
-            ret.put(item.getValue(), item);
+    private Map<String, TreeItem<ProjectExplorerItem>> getTreeItemsMap(List<TreeItem<ProjectExplorerItem>> items) {
+        Map<String, TreeItem<ProjectExplorerItem>> ret = new HashMap<>();
+
+        for (TreeItem<ProjectExplorerItem> item : items) {
+            ret.put(item.getValue().getItemName(), item);
         }
 
         return ret;
     }
 
-    private List<TreeItem<String>> getTables(List<ApricotTable> tables) {
-        List<TreeItem<String>> ret = new ArrayList<>();
+    private List<TreeItem<ProjectExplorerItem>> getTables(List<ApricotTable> tables) {
+        List<TreeItem<ProjectExplorerItem>> ret = new ArrayList<>();
         for (ApricotTable t : tables) {
-            ret.add(new TreeItem<String>(t.getName()));
+            ProjectExplorerItem pei = buildItemNode(t.getName(), ItemType.ENTITY, false);
+            pei.setOnMouseClicked(e -> {
+                if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 2) {
+                    try {
+                        entityHandler.openEntityEditorForm(false, t.getName());
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            });
+            TreeItem<ProjectExplorerItem> item = new TreeItem<>(pei);
+            ret.add(item);
         }
 
         return ret;
     }
 
+    private ProjectExplorerItem buildItemNode(String itemName, ProjectExplorerItem.ItemType type, boolean included) {
+        return new ProjectExplorerItem(itemName, type, included);
+    }
 }

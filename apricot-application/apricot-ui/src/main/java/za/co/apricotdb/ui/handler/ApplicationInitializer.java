@@ -21,6 +21,7 @@ import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.ParentWindow;
+import za.co.apricotdb.ui.handler.ProjectExplorerItem.ItemType;
 import za.co.apricotdb.ui.undo.ApricotUndoManager;
 import za.co.apricotdb.viewport.canvas.CanvasBuilder;
 
@@ -143,7 +144,8 @@ public class ApplicationInitializer {
      * Do it, when no projects were registered in the system.
      */
     private void initializeEmptyEnvironment() {
-        TreeItem<String> root = new TreeItem<>("<No current Project>");
+        TreeItem<ProjectExplorerItem> root = new TreeItem<>(
+                new ProjectExplorerItem("<No current Project>", ItemType.PROJECT, false));
         parentWindow.getProjectTreeView().setRoot(root);
         ComboBox<String> combo = parentWindow.getSnapshotCombo();
         combo.getItems().clear();
