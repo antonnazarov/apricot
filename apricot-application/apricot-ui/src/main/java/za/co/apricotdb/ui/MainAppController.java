@@ -12,8 +12,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
 import za.co.apricotdb.persistence.data.SnapshotManager;
@@ -27,9 +29,12 @@ import za.co.apricotdb.ui.handler.ApricotSnapshotHandler;
 import za.co.apricotdb.ui.handler.ApricotViewHandler;
 import za.co.apricotdb.ui.handler.ExcelReportHandler;
 import za.co.apricotdb.ui.handler.GenerateScriptHandler;
+import za.co.apricotdb.ui.handler.ProjectExplorerContextMenuHandler;
+import za.co.apricotdb.ui.handler.ProjectExplorerItem;
 import za.co.apricotdb.ui.handler.ReverseEngineHandler;
 import za.co.apricotdb.ui.handler.TabInfoObject;
 import za.co.apricotdb.ui.handler.TabViewHandler;
+import za.co.apricotdb.ui.handler.TreeViewHandler;
 import za.co.apricotdb.ui.undo.ApricotUndoManager;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
@@ -87,6 +92,12 @@ public class MainAppController {
     @Autowired
     AlertMessageDecorator alert;
 
+    @Autowired
+    TreeViewHandler treeViewHandler;
+
+    @Autowired
+    ProjectExplorerContextMenuHandler explorerContextMenu;
+
     @FXML
     AnchorPane mainPane;
 
@@ -102,6 +113,9 @@ public class MainAppController {
     @FXML
     ComboBox<String> snapshotCombo;
 
+    @FXML
+    TreeView<ProjectExplorerItem> projectsTreeView;
+
     public void init() {
         parentWindow.setParentPane(mainPane);
 
@@ -111,6 +125,7 @@ public class MainAppController {
                 if (t1 != null) {
                     TabInfoObject tabInfo = TabInfoObject.getTabInfo(t1);
                     viewManager.setCurrentView(tabInfo.getView());
+                    treeViewHandler.markEntitiesIncludedIntoView(tabInfo.getView());
                 }
 
                 // reset the current undo layout
@@ -118,6 +133,12 @@ public class MainAppController {
                 delay.setOnFinished(e -> undoManager.resetCurrentLayout());
                 delay.play();
             }
+        });
+
+        projectsTreeView.setOnContextMenuRequested(e -> {
+            ContextMenu m = explorerContextMenu.buildContextMenu(projectsTreeView);
+            m.setAutoHide(true);
+            m.show(projectsTreeView, e.getScreenX(), e.getSceneY());
         });
     }
 

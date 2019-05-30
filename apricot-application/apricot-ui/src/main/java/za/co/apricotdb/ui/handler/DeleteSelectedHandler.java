@@ -1,5 +1,6 @@
 package za.co.apricotdb.ui.handler;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,8 +65,18 @@ public class DeleteSelectedHandler {
                 deleteRelationships(relationships);
             }
         } else {
-            deleteEntities(entities);
+            deleteEntities(getNames(entities));
         }
+    }
+
+    List<String> getNames(List<ApricotEntity> entities) {
+        List<String> ret = new ArrayList<>();
+
+        for (ApricotEntity e : entities) {
+            ret.add(e.getTableName());
+        }
+
+        return ret;
     }
 
     private void deleteRelationships(List<ApricotRelationship> relationships) {
@@ -88,18 +99,18 @@ public class DeleteSelectedHandler {
         }
     }
 
-    private void deleteEntities(List<ApricotEntity> entities) {
+    public void deleteEntities(List<String> entities) {
         StringBuilder sb = new StringBuilder();
         sb.append("The following Entity(s) will be deleted:\n");
-        for (ApricotEntity e : entities) {
-            sb.append("*").append(e.getTableName()).append("\n");
+        for (String e : entities) {
+            sb.append("*").append(e).append("\n");
         }
         if (alert.requestYesNoOption("Delete Entity(s)", sb.toString(), "Delete")) {
             appController.save(null);
             undoManager.addSavepoint(UndoType.OBJECT_EDITED);
 
-            for (ApricotEntity e : entities) {
-                entityHandler.deleteEntity(e.getTableName());
+            for (String e : entities) {
+                entityHandler.deleteEntity(e);
             }
 
             snapshotHandler.syncronizeSnapshot(true);

@@ -13,6 +13,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.entity.ApricotView;
+import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.model.ApricotViewSerializer;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
@@ -47,6 +48,12 @@ public class EntityContextMenuHandler {
     @Autowired
     EntityAlignHandler alignHandler;
 
+    @Autowired
+    ApricotRelationshipHandler relationshipHandler;
+
+    @Autowired
+    ParentWindow parentWindow;
+
     public void createEntityContextMenu(ApricotEntity entity, double x, double y) {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
         ApricotView view = canvasHandler.getCurrentView();
@@ -54,126 +61,176 @@ public class EntityContextMenuHandler {
         List<ApricotEntity> selected = canvas.getSelectedEntities();
         if (selected.size() != 0) {
             ContextMenu contextMenu = new ContextMenu();
-            MenuItem removeFromView = new MenuItem("Remove from View");
-            MenuItem selectInList = new MenuItem("Select in Project Explorer");
-
             if (selected.size() == 1) {
                 // one entity was selected
-                MenuItem editEntity = new MenuItem("Edit <Enter>");
-                MenuItem deleteEntity = new MenuItem("Delete <Del>");
                 if (!view.getName().equals(ApricotView.MAIN_VIEW)) {
-                    contextMenu.getItems().addAll(editEntity, deleteEntity, removeFromView, selectInList);
+                    contextMenu.getItems().addAll(buildEditEntityItem(entity.getTableName()), buildDeleteEntityItem(),
+                            buildRemoveFromViewItem(getNames(selected)), buildSelectInListItem(getNames(selected)),
+                            buildRelationshipItem(true));
                 } else {
-                    contextMenu.getItems().addAll(editEntity, deleteEntity, selectInList);
+                    contextMenu.getItems().addAll(buildEditEntityItem(entity.getTableName()), buildDeleteEntityItem(),
+                            buildSelectInListItem(getNames(selected)), buildRelationshipItem(true));
                 }
-
-                initEditEntityEvent(editEntity, entity);
-                initDeleteEntityEvent(deleteEntity);
-
             } else if (selected.size() > 1) {
                 // a group of entities was selected
-                MenuItem deleteSelected = new MenuItem("Delete Selected <Del>");
-                MenuItem sameWidth = new MenuItem("Make Same Width");
-                MenuItem minimizeWidth = new MenuItem("Minimize Width");
-                MenuItem alignLeft = new MenuItem("Align Left <Ctrl+Left>");
-                MenuItem alignRight = new MenuItem("Align Right <Ctrl+Right>");
-                MenuItem alignUp = new MenuItem("Align Up <Ctrl+Up>");
-                MenuItem alignDown = new MenuItem("Align Down <Ctrl+Down>");
                 if (!view.getName().equals(ApricotView.MAIN_VIEW)) {
-                    contextMenu.getItems().addAll(deleteSelected, removeFromView, selectInList, new SeparatorMenuItem(),
-                            sameWidth, minimizeWidth, alignLeft, alignRight, alignUp, alignDown);
+                    contextMenu.getItems().addAll(buildDeleteEntityItem(), buildRemoveFromViewItem(getNames(selected)),
+                            buildSelectInListItem(getNames(selected)), new SeparatorMenuItem(),
+                            buildSameSizeWidthItem(), buildMinimizeWidthItem(), buildAlignLeftItem(),
+                            buildAlignRightItem(), buildAlignUpItem(), buildAlignDownItem(), new SeparatorMenuItem(),
+                            buildRelationshipItem(false));
                 } else {
-                    contextMenu.getItems().addAll(deleteSelected, selectInList, new SeparatorMenuItem(), sameWidth,
-                            minimizeWidth, alignLeft, alignRight, alignUp, alignDown);
+                    contextMenu.getItems().addAll(buildDeleteEntityItem(), buildSelectInListItem(getNames(selected)),
+                            new SeparatorMenuItem(), buildSameSizeWidthItem(), buildMinimizeWidthItem(),
+                            buildAlignLeftItem(), buildAlignRightItem(), buildAlignUpItem(), buildAlignDownItem(),
+                            new SeparatorMenuItem(), buildRelationshipItem(false));
                 }
-
-                initDeleteEntityEvent(deleteSelected);
-                initSameSizeWidth(sameWidth);
-                initMinimizeWidth(minimizeWidth);
-                initAlignLeft(alignLeft);
-                initAlignRight(alignRight);
-                initAlignUp(alignUp);
-                initAlignDown(alignDown);
             }
-            initSelectInListEvent(selectInList, selected);
-            initRemoveFromView(removeFromView, selected);
 
+            contextMenu.setAutoHide(true);
             contextMenu.show(entity.getShape(), x, y);
         }
     }
 
-    private void initEditEntityEvent(MenuItem item, ApricotEntity entity) {
+    public MenuItem buildEditEntityItem(String entity) {
+        MenuItem item = new MenuItem("Edit <Enter>");
         item.setOnAction(e -> {
             try {
-                entityHandler.openEntityEditorForm(false, entity.getTableName());
+                entityHandler.openEntityEditorForm(false, entity);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
         });
+
+        return item;
     }
 
-    private void initDeleteEntityEvent(MenuItem item) {
+    public MenuItem buildDeleteEntityItem() {
+        MenuItem item = new MenuItem("Delete <Del>");
         item.setOnAction(e -> {
             deleteSelectedHandler.deleteSelected();
         });
+
+        return item;
     }
 
-    private void initSelectInListEvent(MenuItem item, List<ApricotEntity> entities) {
+    public MenuItem buildDeleteEntityItem(List<String> entities) {
+        MenuItem item = new MenuItem("Delete <Del>");
         item.setOnAction(e -> {
-            List<String> sEnts = new ArrayList<>();
-            for (ApricotEntity ent : entities) {
-                sEnts.add(ent.getTableName());
-            }
-            treeViewHandler.selectEntities(sEnts);
+            deleteSelectedHandler.deleteEntities(entities);
         });
+
+        return item;
     }
 
-    private void initRemoveFromView(MenuItem item, List<ApricotEntity> entities) {
+    public MenuItem buildSelectInListItem(List<String> entities) {
+        MenuItem item = new MenuItem("Select in Project Explorer");
+        item.setOnAction(e -> {
+            treeViewHandler.selectEntities(entities);
+        });
+
+        return item;
+    }
+
+    private List<String> getNames(List<ApricotEntity> entities) {
+        List<String> ret = new ArrayList<>();
+        for (ApricotEntity ent : entities) {
+            ret.add(ent.getTableName());
+        }
+
+        return ret;
+    }
+
+    public MenuItem buildRemoveFromViewItem(List<String> entities) {
+        MenuItem item = new MenuItem("Remove from View");
         item.setOnAction(e -> {
             TabInfoObject tabInfo = canvasHandler.getCurrentViewTabInfo();
-            List<String> rem = new ArrayList<>();
-            for (ApricotEntity ae : entities) {
-                rem.add(ae.getTableName());
-            }
-            viewSerializer.deleteEntitiesFromView(rem, tabInfo);
+            viewSerializer.deleteEntitiesFromView(entities, tabInfo);
             canvasHandler.populateCanvas(snapshotManager.getDefaultSnapshot(), canvasHandler.getCurrentView(),
                     canvasHandler.getSelectedCanvas());
         });
+
+        return item;
     }
 
-    private void initAlignLeft(MenuItem item) {
+    public MenuItem buildAlignLeftItem() {
+        MenuItem item = new MenuItem("Align Left <Ctrl+Left>");
         item.setOnAction(e -> {
             alignHandler.alignSelectedEntities(Side.LEFT);
         });
+
+        return item;
     }
 
-    private void initAlignRight(MenuItem item) {
+    public MenuItem buildAlignRightItem() {
+        MenuItem item = new MenuItem("Align Right <Ctrl+Right>");
         item.setOnAction(e -> {
             alignHandler.alignSelectedEntities(Side.RIGHT);
         });
+
+        return item;
     }
 
-    private void initAlignUp(MenuItem item) {
+    public MenuItem buildAlignUpItem() {
+        MenuItem item = new MenuItem("Align Up <Ctrl+Up>");
         item.setOnAction(e -> {
             alignHandler.alignSelectedEntities(Side.TOP);
         });
+
+        return item;
     }
 
-    private void initAlignDown(MenuItem item) {
+    public MenuItem buildAlignDownItem() {
+        MenuItem item = new MenuItem("Align Down <Ctrl+Down>");
         item.setOnAction(e -> {
             alignHandler.alignSelectedEntities(Side.BOTTOM);
         });
+
+        return item;
     }
 
-    private void initMinimizeWidth(MenuItem item) {
+    public MenuItem buildMinimizeWidthItem() {
+        MenuItem item = new MenuItem("Minimize Width");
         item.setOnAction(e -> {
             alignHandler.alignEntitySize(true);
         });
+
+        return item;
     }
 
-    private void initSameSizeWidth(MenuItem item) {
+    public MenuItem buildSameSizeWidthItem() {
+        MenuItem item = new MenuItem("Make Same Width");
         item.setOnAction(e -> {
             alignHandler.alignEntitySize(false);
         });
+
+        return item;
+    }
+
+    public MenuItem buildRelationshipItem(boolean autorelationship) {
+        MenuItem item = null;
+        if (autorelationship) {
+            item = new MenuItem("New auto- relationship");
+        } else {
+            item = new MenuItem("New relationship");
+        }
+        item.setOnAction(e -> {
+            try {
+                relationshipHandler.openRelationshipEditorForm(parentWindow.getProjectTabPane());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        return item;
+    }
+    
+    public MenuItem buildSelectOnCanvasItem(List<String> entities) {
+        MenuItem item = new MenuItem("Select on Diagram");
+        item.setOnAction(e -> {
+
+        });
+
+        return item;
     }
 }

@@ -42,7 +42,11 @@ public class ProjectExplorerItem extends HBox {
             label.setPadding(new Insets(0, 0, 0, 5));
         }
         label.setPrefWidth(250);
-        setIncluded(included);
+        if (itemType == ItemType.PROJECT) {
+            label.setStyle("-fx-font-weight: bold;");
+        } else {
+            setIncluded(included);
+        }
 
         getChildren().addAll(img, label);
     }
@@ -57,14 +61,12 @@ public class ProjectExplorerItem extends HBox {
 
     public void setIncluded(boolean included) {
         this.included = included;
-        if (itemType == ItemType.ENTITY) {
-            if (included) {
-                label.setStyle("-fx-font-weight: bold;");
-                img.setImage(new Image(getClass().getResourceAsStream("table-small-black.jpg")));
-            } else {
-                label.setStyle("-fx-font-weight: normal;");
-                img.setImage(new Image(getClass().getResourceAsStream("table-small-gray.jpg")));
-            }
+        if (included) {
+            label.setStyle("-fx-font-weight: bold;");
+            img.setImage(new Image(getClass().getResourceAsStream("table-small-black.jpg")));
+        } else {
+            label.setStyle("-fx-font-weight: normal;");
+            img.setImage(new Image(getClass().getResourceAsStream("table-small-gray.jpg")));
         }
     }
 

@@ -71,7 +71,7 @@ public class ApricotSnapshotHandler {
 
     @Autowired
     ApricotCanvasHandler canvasHandler;
-    
+
     @Autowired
     ViewManager viewManager;
 
@@ -175,12 +175,13 @@ public class ApricotSnapshotHandler {
             TabInfoObject tabInfo = canvasHandler.getCurrentViewTabInfo();
             if (tabInfo != null) {
                 synchronizeViewTab(tabInfo);
+                treeViewHandler.markEntitiesIncludedIntoView(tabInfo.getView());
             }
         }
     }
 
     private void synchronizeViewTab(TabInfoObject tabInfo) {
-        //  re-read the view info
+        // re-read the view info
         ApricotView view = viewManager.findViewById(tabInfo.getView().getId());
         tabInfo.setView(view);
         ApricotSnapshot snapshot = tabInfo.getSnapshot();

@@ -13,10 +13,12 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseButton;
+import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.TableManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
+import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.handler.ProjectExplorerItem.ItemType;
 
@@ -33,17 +35,23 @@ public class TreeViewHandler {
     ParentWindow parentWindow;
 
     @Autowired
+    SnapshotManager snapshotManager;
+
+    @Autowired
     TableManager tableManager;
 
     @Autowired
     ApricotEntityHandler entityHandler;
+
+    @Autowired
+    ApricotViewHandler viewHandler;
 
     public void populate(ApricotProject project, ApricotSnapshot snapshot) {
         List<ApricotTable> tables = tableManager.getTablesForSnapshot(snapshot);
         TreeItem<ProjectExplorerItem> root = new TreeItem<>(buildItemNode(project.getName(), ItemType.PROJECT, true));
         root.getChildren().addAll(getTables(tables));
         root.setExpanded(true);
-        TreeView<ProjectExplorerItem> tw = parentWindow.getProjectTreeView();
+        TreeView<ProjectExplorerItem> tw = getTreeView();
         tw.setRoot(root);
         tw.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
@@ -55,7 +63,7 @@ public class TreeViewHandler {
     }
 
     public void selectEntities(List<String> entities) {
-        TreeView<ProjectExplorerItem> tw = parentWindow.getProjectTreeView();
+        TreeView<ProjectExplorerItem> tw = getTreeView();
         tw.getSelectionModel().clearSelection();
         TreeItem<ProjectExplorerItem> root = tw.getRoot();
         Map<String, TreeItem<ProjectExplorerItem>> items = getTreeItemsMap(root.getChildren());
@@ -64,6 +72,37 @@ public class TreeViewHandler {
             if (item != null) {
                 tw.getSelectionModel().select(item);
             }
+        }
+    }
+
+    /**
+     * Scan the InternetExplorer list and "select" entities included into the
+     * current view.
+     */
+    public void markEntitiesIncludedIntoView(ApricotView view) {
+        deselectProjectExplorerItems();
+        if (view.getName().equals(ApricotView.MAIN_VIEW)) {
+            return;
+        }
+
+        ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
+
+        TreeView<ProjectExplorerItem> tw = getTreeView();
+        TreeItem<ProjectExplorerItem> root = tw.getRoot();
+        Map<String, TreeItem<ProjectExplorerItem>> items = getTreeItemsMap(root.getChildren());
+        for (ApricotTable t : viewHandler.getTablesForView(snapshot, view)) {
+            TreeItem<ProjectExplorerItem> item = items.get(t.getName());
+            if (item != null) {
+                item.getValue().setIncluded(true);
+            }
+        }
+    }
+
+    public void deselectProjectExplorerItems() {
+        TreeView<ProjectExplorerItem> tw = getTreeView();
+        TreeItem<ProjectExplorerItem> root = tw.getRoot();
+        for (TreeItem<ProjectExplorerItem> item : root.getChildren()) {
+            item.getValue().setIncluded(false);
         }
     }
 
@@ -99,5 +138,9 @@ public class TreeViewHandler {
 
     private ProjectExplorerItem buildItemNode(String itemName, ProjectExplorerItem.ItemType type, boolean included) {
         return new ProjectExplorerItem(itemName, type, included);
+    }
+
+    private TreeView<ProjectExplorerItem> getTreeView() {
+        return parentWindow.getProjectTreeView();
     }
 }

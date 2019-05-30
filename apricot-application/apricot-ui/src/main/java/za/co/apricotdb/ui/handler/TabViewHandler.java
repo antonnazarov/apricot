@@ -223,7 +223,8 @@ public class TabViewHandler {
                 }
             }
         });
-
+        
+        contextMenu.setAutoHide(true);
         tab.setContextMenu(contextMenu);
     }
 }

@@ -30,13 +30,13 @@ public class CanvasContextMenuHandler {
 
     @Autowired
     ApricotEntityHandler entityHandler;
-    
+
     @Autowired
     ViewManager viewManager;
-    
+
     @Autowired
     ApricotSnapshotHandler snapshotHandler;
-    
+
     public void createCanvasContextMenu(ApricotCanvas canvas, double x, double y) {
         ApricotView view = canvasHandler.getCurrentView();
 
@@ -80,17 +80,17 @@ public class CanvasContextMenuHandler {
 
         ContextMenu contextMenu = new ContextMenu();
         contextMenu.getItems().addAll(newEntity, new SeparatorMenuItem(), rSimple, rDefault, rExtended);
-
+        contextMenu.setAutoHide(true);
         contextMenu.show((Pane) canvas, x, y);
     }
-    
+
     private void changeViewDetailLevel(ViewDetailLevel detailLevel, ApricotView view) {
         view.setDetailLevel(detailLevel);
         viewManager.saveView(view);
-        
+
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
         canvas.setDetailLevel(view.getDetailLevel().toString());
-        
+
         snapshotHandler.syncronizeSnapshot(false);
     }
 }
