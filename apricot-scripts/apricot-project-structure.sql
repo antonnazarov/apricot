@@ -1,10 +1,11 @@
 --
 -- tables of the metamodel
 --
--- 04/01/2019 v.1.1, the apricot_project was added
--- 24/02/2019 v.1.2 added table apricot_app_parameters
--- 07/04/2019 v.1.3 added unique constraints for all major tables
--- 24/05/2019 v.1.4 added field erd_notation into the apricot_project table
+-- 04/01/2019 v.0.1, the apricot_project was added
+-- 24/02/2019 v.0.2 added table apricot_app_parameters
+-- 07/04/2019 v.0.3 added unique constraints for all major tables
+-- 24/05/2019 v.0.4 added field erd_notation into the apricot_project table
+-- 04/06/2019 v.0.5 the Apricot version was changed to 0.5
 --
 -- PROJECT
 --
@@ -172,7 +173,7 @@ create table apricot_app_parameter (
    unique key app_parameter_unique_key (app_parameter_name)
 );
 
-insert into apricot_app_parameter (app_parameter_name, app_parameter_value) values ('database_version', '1.4');
+insert into apricot_app_parameter (app_parameter_name, app_parameter_value) values ('database_version', '0.5');
 insert into apricot_app_parameter (app_parameter_name, app_parameter_value) values ('MSSQLServer.datatypes', 'bigint;int;smallint;tinyint;bit;decimal;float;numeric;varchar;char;nvarchar;text;varbinary;date;datetime;datetime2'); 
 insert into apricot_app_parameter (app_parameter_name, app_parameter_value) values ('Oracle.datatypes', 'CHAR;VARCHAR2;NCHAR;NVARCHAR2;CLOB;NCLOB;LONG;NUMBER;DATE;BLOB;BFILE;RAW;LONG;ROWID;MLSLABEL');
 insert into apricot_app_parameter (app_parameter_name, app_parameter_value) values ('MySQL.datatypes', 'CHAR;VARCHAR;BINARY;VARBINARY;BLOB;TEXT;ENUM;SET;INTEGER;SMALLINT;DECIMAL;NUMERIC;FLOAT;REAL;DOUBLE;DATE;TIME;DATETIME;TIMESTAMP;YEAR');

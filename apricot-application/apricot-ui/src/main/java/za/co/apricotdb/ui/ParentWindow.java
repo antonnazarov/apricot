@@ -115,6 +115,10 @@ public class ParentWindow {
         return ad.isEmptyEnv();
     }
 
+    public Pane getMainAppPane() {
+        return mainAppPane;
+    }
+
     /**
      * Initialize the menu items and buttons depending on the empty/non empty
      * environment.

@@ -21,7 +21,9 @@ import javafx.util.Duration;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.ViewManager;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
+import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
+import za.co.apricotdb.ui.handler.ApricotCanvasHandler;
 import za.co.apricotdb.ui.handler.ApricotEntityHandler;
 import za.co.apricotdb.ui.handler.ApricotProjectHandler;
 import za.co.apricotdb.ui.handler.ApricotRelationshipHandler;
@@ -98,6 +100,9 @@ public class MainAppController {
     @Autowired
     ProjectExplorerContextMenuHandler explorerContextMenu;
 
+    @Autowired
+    ApricotCanvasHandler canvasHandler;
+
     @FXML
     AnchorPane mainPane;
 
@@ -136,9 +141,15 @@ public class MainAppController {
         });
 
         projectsTreeView.setOnContextMenuRequested(e -> {
-            ContextMenu m = explorerContextMenu.buildContextMenu(projectsTreeView);
-            m.setAutoHide(true);
-            m.show(projectsTreeView, e.getScreenX(), e.getSceneY());
+            ApricotView view = canvasHandler.getCurrentView();
+            if (view != null) {
+                boolean isMainView = view.getName().equals(ApricotView.MAIN_VIEW);
+                ContextMenu m = explorerContextMenu.buildContextMenu(projectsTreeView, isMainView);
+                if (m != null) {
+                    m.setAutoHide(true);
+                    m.show(projectsTreeView, e.getScreenX(), e.getSceneY());
+                }
+            }
         });
     }
 

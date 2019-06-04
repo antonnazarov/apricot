@@ -224,11 +224,11 @@ public class EntityContextMenuHandler {
 
         return item;
     }
-    
+
     public MenuItem buildSelectOnCanvasItem(List<String> entities) {
         MenuItem item = new MenuItem("Select on Diagram");
         item.setOnAction(e -> {
-
+            canvasHandler.makeEntitiesSelected(entities, true);
         });
 
         return item;

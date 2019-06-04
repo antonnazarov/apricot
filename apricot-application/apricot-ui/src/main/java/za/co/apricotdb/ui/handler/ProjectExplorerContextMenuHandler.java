@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import za.co.apricotdb.ui.ParentWindow;
 
 /**
  * The handler of the context menu of the Project Explorer tree.
@@ -22,7 +24,16 @@ public class ProjectExplorerContextMenuHandler {
     @Autowired
     EntityContextMenuHandler entityMenuHandler;
 
-    public ContextMenu buildContextMenu(TreeView<ProjectExplorerItem> projectsTreeView) {
+    @Autowired
+    ApricotProjectHandler projectHandler;
+
+    @Autowired
+    ParentWindow parentWindow;
+
+    @Autowired
+    ApplicationInitializer applicationInitializer;
+
+    public ContextMenu buildContextMenu(TreeView<ProjectExplorerItem> projectsTreeView, boolean isMainView) {
         ContextMenu menu = new ContextMenu();
 
         TreeItem<ProjectExplorerItem> root = projectsTreeView.getRoot();
@@ -32,29 +43,31 @@ public class ProjectExplorerContextMenuHandler {
             return buildProjectContextMenu(selectedItems.get(0).getValue());
         } else {
             List<ProjectExplorerItem> itm = getNonRootItems(selectedItems, root);
-            boolean isInView = isInView(itm);
+            boolean isInView = isInView(itm, isMainView);
             List<String> items = getTables(itm);
-            if (items.size() == 1) {
-                String name = items.get(0);
-                if (isInView) {
+            if (isInView) {
+                if (items.size() == 1) {
+                    String name = items.get(0);
                     menu.getItems().addAll(entityMenuHandler.buildEditEntityItem(name),
                             entityMenuHandler.buildDeleteEntityItem(items),
                             entityMenuHandler.buildRemoveFromViewItem(items),
                             entityMenuHandler.buildSelectOnCanvasItem(items));
                 } else {
-                    menu.getItems().addAll(entityMenuHandler.buildEditEntityItem(name),
-                            entityMenuHandler.buildDeleteEntityItem(items),
+                    menu.getItems().addAll(entityMenuHandler.buildDeleteEntityItem(items),
+                            entityMenuHandler.buildRemoveFromViewItem(items),
                             entityMenuHandler.buildSelectOnCanvasItem(items));
                 }
-            } else {
-
             }
         }
 
         return menu;
     }
 
-    private boolean isInView(List<ProjectExplorerItem> items) {
+    private boolean isInView(List<ProjectExplorerItem> items, boolean isMainView) {
+        if (isMainView) {
+            return true;
+        }
+
         for (ProjectExplorerItem t : items) {
             if (t.isIncluded()) {
                 return true;
@@ -65,7 +78,10 @@ public class ProjectExplorerContextMenuHandler {
     }
 
     private ContextMenu buildProjectContextMenu(ProjectExplorerItem projectItem) {
-        return null;
+        ContextMenu menu = new ContextMenu();
+        menu.getItems().addAll(buildEditProjectItem(), buildDeleteProjectItem());
+
+        return menu;
     }
 
     private List<ProjectExplorerItem> getNonRootItems(List<TreeItem<ProjectExplorerItem>> selectedItems,
@@ -88,5 +104,29 @@ public class ProjectExplorerContextMenuHandler {
         }
 
         return ret;
+    }
+
+    public MenuItem buildEditProjectItem() {
+        MenuItem item = new MenuItem("Edit Project");
+        item.setOnAction(e -> {
+            try {
+                projectHandler.createEditProjectForm(false, parentWindow.getMainAppPane());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        return item;
+    }
+
+    public MenuItem buildDeleteProjectItem() {
+        MenuItem item = new MenuItem("Delete Project");
+        item.setOnAction(e -> {
+            if (projectHandler.deleteCurrentProject()) {
+                applicationInitializer.initializeDefault();
+            }
+        });
+
+        return item;
     }
 }
