@@ -48,14 +48,25 @@ public class ProjectExplorerContextMenuHandler {
             if (isInView) {
                 if (items.size() == 1) {
                     String name = items.get(0);
-                    menu.getItems().addAll(entityMenuHandler.buildEditEntityItem(name),
-                            entityMenuHandler.buildDeleteEntityItem(items),
-                            entityMenuHandler.buildRemoveFromViewItem(items),
-                            entityMenuHandler.buildSelectOnCanvasItem(items));
+                    if (isMainView) {
+                        menu.getItems().addAll(entityMenuHandler.buildEditEntityItem(name),
+                                entityMenuHandler.buildDeleteEntityItem(items),
+                                entityMenuHandler.buildSelectOnCanvasItem(items));
+                    } else {
+                        menu.getItems().addAll(entityMenuHandler.buildEditEntityItem(name),
+                                entityMenuHandler.buildDeleteEntityItem(items),
+                                entityMenuHandler.buildRemoveFromViewItem(items),
+                                entityMenuHandler.buildSelectOnCanvasItem(items));
+                    }
                 } else {
-                    menu.getItems().addAll(entityMenuHandler.buildDeleteEntityItem(items),
-                            entityMenuHandler.buildRemoveFromViewItem(items),
-                            entityMenuHandler.buildSelectOnCanvasItem(items));
+                    if (isMainView) {
+                        menu.getItems().addAll(entityMenuHandler.buildDeleteEntityItem(items),
+                                entityMenuHandler.buildSelectOnCanvasItem(items));
+                    } else {
+                        menu.getItems().addAll(entityMenuHandler.buildDeleteEntityItem(items),
+                                entityMenuHandler.buildRemoveFromViewItem(items),
+                                entityMenuHandler.buildSelectOnCanvasItem(items));
+                    }
                 }
             }
         }

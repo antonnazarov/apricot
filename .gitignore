@@ -1,7 +1,7 @@
 **/target
 **/.settings
-.classpath
-.project
+**/.classpath
+**/.project
 apricot-db/apricot-project.trace.db
 apricot-reports/ApricotReport.xlsx
 
