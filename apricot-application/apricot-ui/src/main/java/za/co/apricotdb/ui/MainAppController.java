@@ -17,6 +17,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.ViewManager;
@@ -150,6 +151,12 @@ public class MainAppController {
                     m.show(projectsTreeView, e.getScreenX(), e.getSceneY());
                 }
             }
+        });
+
+        projectsTreeView.setOnKeyPressed(e -> {
+            Pane canvas = (Pane) canvasHandler.getSelectedCanvas();
+            canvas.fireEvent(e);
+            canvas.requestFocus();
         });
     }
 
