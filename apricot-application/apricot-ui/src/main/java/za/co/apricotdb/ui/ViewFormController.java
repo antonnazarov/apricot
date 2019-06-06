@@ -24,6 +24,7 @@ import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.handler.ApricotCanvasHandler;
 import za.co.apricotdb.ui.handler.ApricotViewHandler;
+import za.co.apricotdb.ui.handler.TreeViewHandler;
 import za.co.apricotdb.ui.model.ApricotViewSerializer;
 import za.co.apricotdb.ui.model.NewViewModelBuilder;
 import za.co.apricotdb.ui.model.ViewFormModel;
@@ -50,6 +51,9 @@ public class ViewFormController {
 
     @Autowired
     ApricotCanvasHandler canvasHandler;
+
+    @Autowired
+    TreeViewHandler treeViewHandler;
 
     @FXML
     TextField viewName;
@@ -150,6 +154,7 @@ public class ViewFormController {
             if (model.getTabInfo() != null) {
                 model.getTabInfo().setView(view);
                 canvasHandler.populateCanvas(model.getSnapshot(), view, model.getTabInfo().getCanvas());
+                treeViewHandler.markEntitiesIncludedIntoView(view);
             }
         }
 

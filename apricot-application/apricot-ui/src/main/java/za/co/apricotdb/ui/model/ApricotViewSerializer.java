@@ -115,16 +115,17 @@ public class ApricotViewSerializer {
 
         if (model.getTabInfo() != null) {
             TabInfoObject tabInfo = model.getTabInfo();
-            ApricotView view = tabInfo.getView();
+            ApricotView view = viewHandler.readApricotView(tabInfo.getView());
             view.setName(model.getViewName());
             view.setComment(model.getComment());
             view.setUpdated(new java.util.Date());
+            tabInfo.setView(viewManager.saveView(view));
 
             List<String> original = getOriginalViewTables(tabInfo);
-            handleDeletedTables(original, model.getViewTables(), tabInfo.getView());
+            handleDeletedTables(original, model.getViewTables(), tabInfo);
             handleNewTables(original, model.getViewTables(), tabInfo);
-
-            ret = viewManager.saveView(view);
+            
+            ret = tabInfo.getView();
         }
 
         return ret;
@@ -154,7 +155,7 @@ public class ApricotViewSerializer {
             }
         }
 
-        handleDeletedTables(original, renewed, tabInfo.getView());
+        handleDeletedTables(original, renewed, tabInfo);
     }
 
     private List<String> getOriginalViewTables(TabInfoObject tabInfo) {
@@ -171,41 +172,56 @@ public class ApricotViewSerializer {
     /**
      * Handle those tables, which were removed from the right side- list.
      */
-    private void handleDeletedTables(List<String> origTables, List<String> renewedTables, ApricotView view) {
-        List<ApricotObjectLayout> targetLayouts = new ArrayList<>(view.getObjectLayouts());
+    private void handleDeletedTables(List<String> origTables, List<String> renewedTables, TabInfoObject tabInfo) {
+        ApricotView v = viewHandler.readApricotView(tabInfo.getView());
+        boolean save = false;
         for (String orig : origTables) {
             if (!renewedTables.contains(orig)) {
                 // delete all layout artifacts, related to the original table
-                for (ApricotObjectLayout layout : view.getObjectLayouts()) {
+                for (ApricotObjectLayout layout : v.getObjectLayouts()) {
                     if (layout.getObjectName().equals(orig)) {
-                        targetLayouts.remove(layout);
+                        v.getObjectLayouts().remove(layout);
                         layoutManager.deleteObjectLayout(layout);
+                        save = true;
+                        break;
                     }
                 }
             }
         }
 
-        view.setObjectLayouts(targetLayouts);
+        if (save) {
+            viewManager.saveView(v);
+            tabInfo.setView(v);
+        }
     }
 
     /**
      * Handle tables and relationships, which were added in the editing session.
      */
     private void handleNewTables(List<String> origTables, List<String> renewedTables, TabInfoObject tabInfo) {
+        ApricotView v = viewHandler.readApricotView(tabInfo.getView());
+
         ApricotView generalView = viewManager.getGeneralView(tabInfo.getSnapshot().getProject());
         List<ApricotObjectLayout> layouts = viewHandler.getObjectLayoutsFromPatternView(renewedTables, generalView,
                 tabInfo.getSnapshot());
 
+        boolean save = false;
         for (String nt : renewedTables) {
             if (!origTables.contains(nt)) {
                 for (ApricotObjectLayout l : layouts) {
                     if (l.getObjectType() == LayoutObjectType.TABLE && l.getObjectName().equals(nt)) {
                         ApricotObjectLayout layout = new ApricotObjectLayout(l.getObjectType(), l.getObjectName(),
-                                l.getObjectLayout(), tabInfo.getView());
-                        tabInfo.getView().getObjectLayouts().add(layout);
+                                l.getObjectLayout(), v);
+                        v.getObjectLayouts().add(layout);
+                        save = true;
                     }
                 }
             }
+        }
+
+        if (save) {
+            viewManager.saveView(v);
+            tabInfo.setView(v);
         }
     }
 

@@ -68,6 +68,8 @@ public class ProjectExplorerContextMenuHandler {
                                 entityMenuHandler.buildSelectOnCanvasItem(items));
                     }
                 }
+            } else {
+                menu.getItems().addAll(entityMenuHandler.buildAddToViewItem(items));
             }
         }
 

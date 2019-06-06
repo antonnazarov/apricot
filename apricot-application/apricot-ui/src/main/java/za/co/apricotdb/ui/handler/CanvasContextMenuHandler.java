@@ -9,11 +9,13 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
 import za.co.apricotdb.persistence.data.ViewManager;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.persistence.entity.ViewDetailLevel;
+import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 
 /**
@@ -37,8 +39,25 @@ public class CanvasContextMenuHandler {
     @Autowired
     ApricotSnapshotHandler snapshotHandler;
 
+    @Autowired
+    ApricotViewHandler viewHandler;
+
+    @Autowired
+    ParentWindow parentWindow;
+
     public void createCanvasContextMenu(ApricotCanvas canvas, double x, double y) {
         ApricotView view = canvasHandler.getCurrentView();
+
+        TabPane tabPane = parentWindow.getProjectTabPane();
+
+        MenuItem editViewEntity = new MenuItem("Edit View");
+        editViewEntity.setOnAction(e -> {
+            try {
+                viewHandler.createViewEditor(tabPane, view, tabPane.getSelectionModel().getSelectedItem());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
 
         MenuItem newEntity = new MenuItem("New Entity");
         newEntity.setOnAction(e -> {
@@ -79,7 +98,8 @@ public class CanvasContextMenuHandler {
         }
 
         ContextMenu contextMenu = new ContextMenu();
-        contextMenu.getItems().addAll(newEntity, new SeparatorMenuItem(), rSimple, rDefault, rExtended);
+        contextMenu.getItems().addAll(editViewEntity, new SeparatorMenuItem(), newEntity, new SeparatorMenuItem(),
+                rSimple, rDefault, rExtended);
         contextMenu.setAutoHide(true);
         contextMenu.show((Pane) canvas, x, y);
     }
