@@ -9,13 +9,14 @@ import za.co.apricotdb.persistence.entity.ERDNotation;
 public class NewProjectModelBuilder {
 
     public ProjectFormModel buildModel() {
-        
+
         ProjectFormModel model = new ProjectFormModel();
         model.setProjectName("<New Project>");
         //  MS SQL Server by default
         model.setProjectDatabase(ApricotTargetDatabase.MSSQLServer.toString());
-        model.setErdNotation(ERDNotation.IDEF1x);
-        
+        //  set the Crow's Foot by default
+        model.setErdNotation(ERDNotation.CROWS_FOOT);
+
         return model;
     }
 }
