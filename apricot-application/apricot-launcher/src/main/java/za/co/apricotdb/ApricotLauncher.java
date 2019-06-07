@@ -36,7 +36,7 @@ public class ApricotLauncher {
         String referenceVersion = null;
         try {
             referenceVersion = launcher.getDatabaseVersion("./data/apricot-project");
-            System.out.println("Version of the reference database=[" + referenceVersion + "]");
+            System.out.println("INFO: version of the reference database=[" + referenceVersion + "]");
         } catch (Exception e) {
             System.out.println("ERROR: unable to retrieve version of the reference database");
             e.printStackTrace();
@@ -65,14 +65,14 @@ public class ApricotLauncher {
                 String targetVersion = null;
                 try {
                     targetVersion = launcher.getDatabaseVersion(System.getProperty("user.home") + "/.apricotdb/apricot-project");
-                    System.out.println("Version of the target database=[" + targetVersion + "]");
+                    System.out.println("INFO: version of the target database=[" + targetVersion + "]");
                     
                     if (!targetVersion.equals(referenceVersion)) {
-                        System.out.println("Versions of the reference and target databases are different. Substituting the [" + targetVersion + "] with [" + referenceVersion + "]");
+                        System.out.println("WARNING: the versions of the reference- and target-databases are different. Replacing the [" + targetVersion + "] with [" + referenceVersion + "]");
                         launcher.createBackup();
                         launcher.copyReferenceToTarget();
                     } else {
-                        System.out.println("ERROR: the version of the target DB is correct");
+                        System.out.println("SUCCESS: the version of the target DB is up-to-date");
                     }
                 } catch (Exception e) {
                     System.out.println("ERROR: unable to retrieve version of the target database");
@@ -82,7 +82,7 @@ public class ApricotLauncher {
             }
         }
 
-        System.out.println("Successfully launched");
+        System.out.println("SUCCESS: Apricot DB was successfully launched");
     }
 
     private boolean checkIfDatabaseFileExists(String dbFile) {

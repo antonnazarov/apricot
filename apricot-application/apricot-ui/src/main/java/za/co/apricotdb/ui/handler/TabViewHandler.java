@@ -92,6 +92,7 @@ public class TabViewHandler {
         tabInfo.setView(view);
     }
 
+    @Transactional
     public ApricotView saveCanvasAllocationMap(CanvasAllocationMap map, ApricotView v) {
         ApricotView view = viewManager.findViewById(v.getId());
         for (CanvasAllocationItem alloc : map.getAllocations()) {
@@ -223,7 +224,7 @@ public class TabViewHandler {
                 }
             }
         });
-        
+
         contextMenu.setAutoHide(true);
         tab.setContextMenu(contextMenu);
     }
