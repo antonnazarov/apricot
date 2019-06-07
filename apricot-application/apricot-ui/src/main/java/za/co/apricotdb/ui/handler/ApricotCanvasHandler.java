@@ -70,23 +70,24 @@ public class ApricotCanvasHandler {
      */
     @Transactional
     public void populateCanvas(ApricotSnapshot snapshot, ApricotView view, ApricotCanvas canvas) {
+        ApricotView v = viewHandler.readApricotView(view);
         // clean the canvas first
         canvas.cleanCanvas();
 
         List<ApricotTable> tables = null;
-        if (view.isGeneral()) {
+        if (v.isGeneral()) {
             tables = tableManager.getTablesForSnapshot(snapshot);
         } else {
-            tables = viewHandler.getTablesForView(snapshot, view);
+            tables = viewHandler.getTablesForView(snapshot, v);
         }
-        populateCanvas(canvas, tables, view.getDetailLevel());
+        populateCanvas(canvas, tables, v.getDetailLevel());
 
         // if view does not contain layout definitions, do default alignment
-        if ((view.getObjectLayouts() == null || view.getObjectLayouts().size() == 0) && view.isGeneral()) {
-            runAlignerAfterDelay(canvas, view, 0.1).play();
+        if ((v.getObjectLayouts() == null || v.getObjectLayouts().size() == 0) && v.isGeneral()) {
+            runAlignerAfterDelay(canvas, v, 0.1).play();
         } else {
-            runAllocationAfterDelay(canvas, view, 0, ElementType.ENTITY).play();
-            runAllocationAfterDelay(canvas, view, 0.8, ElementType.RELATIONSHIP).play();
+            runAllocationAfterDelay(canvas, v, 0, ElementType.ENTITY).play();
+            runAllocationAfterDelay(canvas, v, 0.8, ElementType.RELATIONSHIP).play();
         }
     }
 

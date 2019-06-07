@@ -54,6 +54,9 @@ public class EntityContextMenuHandler {
     @Autowired
     ParentWindow parentWindow;
 
+    @Autowired
+    ApricotSnapshotHandler snapshotHandler;
+
     public void createEntityContextMenu(ApricotEntity entity, double x, double y) {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
         ApricotView view = canvasHandler.getCurrentView();
@@ -146,8 +149,18 @@ public class EntityContextMenuHandler {
         item.setOnAction(e -> {
             TabInfoObject tabInfo = canvasHandler.getCurrentViewTabInfo();
             viewSerializer.deleteEntitiesFromView(entities, tabInfo);
-            canvasHandler.populateCanvas(snapshotManager.getDefaultSnapshot(), canvasHandler.getCurrentView(),
-                    canvasHandler.getSelectedCanvas());
+            snapshotHandler.syncronizeSnapshot(false);
+        });
+
+        return item;
+    }
+    
+    public MenuItem buildAddToViewItem(List<String> entities) {
+        MenuItem item = new MenuItem("Add to View");
+        item.setOnAction(e -> {
+            TabInfoObject tabInfo = canvasHandler.getCurrentViewTabInfo();
+            viewSerializer.addEntitiesToView(entities, tabInfo);
+            snapshotHandler.syncronizeSnapshot(false);
         });
 
         return item;
