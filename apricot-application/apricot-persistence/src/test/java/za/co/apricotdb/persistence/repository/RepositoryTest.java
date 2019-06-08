@@ -28,11 +28,11 @@ import za.co.apricotdb.persistence.entity.ApricotTable;
  * @author Anton Nazarov
  * @since 23/09/2018
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {JpaDefaultConfig.class, TestingConfiguration.class},
-        loader = AnnotationConfigContextLoader.class)
-@Transactional
-@ActiveProfiles("test")
+// @RunWith(SpringJUnit4ClassRunner.class)
+// @ContextConfiguration(classes = {JpaDefaultConfig.class, TestingConfiguration.class},
+//        loader = AnnotationConfigContextLoader.class)
+// @Transactional
+// @ActiveProfiles("test")
 public class RepositoryTest {
 
     @Resource
@@ -41,12 +41,12 @@ public class RepositoryTest {
     @Autowired
     TestDataBuilder testDataBuilder;
 
-    @Before
+//    @Before
     public void setUp() throws Exception {
         testDataBuilder.createTestData();
     }
 
-    @Test
+//    @Test
     public void testFindTable() {
         List<ApricotTable> tables = tableRepository.findAll();
 
@@ -56,7 +56,7 @@ public class RepositoryTest {
         assertEquals(4, tables.size());
     }
 
-    @Test
+//    @Test
     public void testFindByName() {
         ApricotTable table = tableRepository.findByName("Person");
         System.out.println(table);
