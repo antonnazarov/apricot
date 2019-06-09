@@ -14,10 +14,10 @@ import com.sun.javafx.application.PlatformImpl;
  *
  * <pre>
  * <code>
- * &#64;RunWith( JfxTestRunner.class )
+ * @RunWith( JfxTestRunner.class )
  * public class MyUnitTest
  * {
- *   &#64;Test
+ *   @Test
  *   public void testMyMethod()
  *   {
  *    //...
