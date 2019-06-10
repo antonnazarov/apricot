@@ -1,6 +1,8 @@
 package za.co.apricotdb.viewport.relationship.shape;
 
 import javafx.geometry.Side;
+import za.co.apricotdb.viewport.align.AlignCommand;
+import za.co.apricotdb.viewport.align.CanvasSizeAjustor;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
 import za.co.apricotdb.viewport.modifiers.ShapeModifierFactory;
@@ -21,13 +23,17 @@ public class RelationshipTopologyImpl implements RelationshipTopology {
     }
 
     private void init(ApricotCanvas canvas) {
+        AlignCommand aligner = new CanvasSizeAjustor(canvas);
+
         PrimitivesBuilder primitivesBuilder = PrimitivesBuilder.instantiateBuilder(canvas);
         ShapeModifierFactory factory = ShapeModifierFactory.instantiateFactory(canvas);
 
-        directBuilder = new DirectShapeBuilder(primitivesBuilder, this, factory.getDirectShapeModifiers(canvas));
-        hatBuilder = new HatShapeBuilder(primitivesBuilder, this, factory.getHatShapeModifiers(canvas));
-        dadsHandBuilder = new DadsHandShapeBuilder(primitivesBuilder, this, factory.getDadsHandShapeModifiers(canvas));
-        roofHandBuilder = new RoofShapeBuilder(primitivesBuilder, this, factory.getRoofShapeModifiers(canvas));
+        directBuilder = new DirectShapeBuilder(primitivesBuilder, this,
+                factory.getDirectShapeModifiers(canvas, aligner));
+        hatBuilder = new HatShapeBuilder(primitivesBuilder, this, factory.getHatShapeModifiers(canvas, aligner));
+        dadsHandBuilder = new DadsHandShapeBuilder(primitivesBuilder, this,
+                factory.getDadsHandShapeModifiers(canvas, aligner));
+        roofHandBuilder = new RoofShapeBuilder(primitivesBuilder, this, factory.getRoofShapeModifiers(canvas, aligner));
     }
 
     @Override

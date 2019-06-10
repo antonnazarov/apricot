@@ -2,6 +2,7 @@ package za.co.apricotdb.viewport.modifiers;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
+import za.co.apricotdb.viewport.align.AlignCommand;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ApricotShape;
 import za.co.apricotdb.viewport.event.RelationshipOnMouseDraggedVerticalRulerEventHandler;
@@ -19,7 +20,7 @@ public class RoofRelationshipEventModifier implements ElementVisualModifier {
     private EventHandler<MouseEvent> mouseRulerDraggedHandler = null;
     private EventHandler<MouseEvent> mousePressedHandler = null;
 
-    public RoofRelationshipEventModifier(ApricotCanvas canvas) {
+    public RoofRelationshipEventModifier(ApricotCanvas canvas, AlignCommand aligner) {
         mouseRulerEnteredHandler = new RelationshipOnMouseEnteredVerticalRulerEventHandler(canvas);
         mouseRulerExitedHandler = new RelationshipOnMouseExitedRulerEventHandler(canvas);
         mouseRulerPressedHandler = new RelationshipOnMousePressedRulerEventHandler("RulerY");

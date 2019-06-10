@@ -3,6 +3,7 @@ package za.co.apricotdb.viewport.event;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Shape;
+import za.co.apricotdb.viewport.align.AlignCommand;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.notification.AddLayoutSavepointEvent;
 
@@ -15,9 +16,11 @@ import za.co.apricotdb.viewport.notification.AddLayoutSavepointEvent;
 public class RelationshipOnMouseReleasedEventHandler implements EventHandler<MouseEvent> {
 
     private ApricotCanvas canvas = null;
+    private AlignCommand aligner = null;
 
-    public RelationshipOnMouseReleasedEventHandler(ApricotCanvas canvas) {
+    public RelationshipOnMouseReleasedEventHandler(ApricotCanvas canvas, AlignCommand aligner) {
         this.canvas = canvas;
+        this.aligner = aligner;
     }
 
     @Override
@@ -34,8 +37,8 @@ public class RelationshipOnMouseReleasedEventHandler implements EventHandler<Mou
             if (newTranslateX != 0 || newTranslateY != 0) {
                 AddLayoutSavepointEvent e = new AddLayoutSavepointEvent(event);
                 canvas.publishEvent(e);
+                aligner.align();
             }
-
         }
 
         event.consume();

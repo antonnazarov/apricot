@@ -2,6 +2,7 @@ package za.co.apricotdb.persistence.data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
@@ -10,6 +11,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Component;
 
+import za.co.apricotdb.persistence.entity.ApricotObjectLayout;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.persistence.entity.LayoutObjectType;
@@ -90,7 +92,9 @@ public class ViewManager {
         List<ApricotView> res = query.getResultList();
         if (res != null && res.size() > 0) {
             for (ApricotView v : res) {
-                objectLayoutRepository.delete(v.getObjectLayouts());
+                for (ApricotObjectLayout l : v.getObjectLayouts()) {
+                    objectLayoutRepository.delete(l);
+                }
                 viewRepository.delete(v);
             }
         }
@@ -99,7 +103,10 @@ public class ViewManager {
     @Transactional
     public void removeView(ApricotView view) {
         ApricotView v = viewRepository.getOne(view.getId());
-        objectLayoutRepository.delete(v.getObjectLayouts());
+        for (ApricotObjectLayout l : v.getObjectLayouts()) {
+            objectLayoutRepository.delete(l);
+        }
+        
         viewRepository.delete(v);
     }
 
@@ -108,7 +115,9 @@ public class ViewManager {
     }
 
     public ApricotView findViewById(long id) {
-        return viewRepository.findOne(id);
+        Optional<ApricotView> o = viewRepository.findById(id);
+        
+        return o.get();
     }
 
     public List<ApricotView> getViewByName(ApricotProject project, String name) {

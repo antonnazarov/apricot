@@ -2,6 +2,7 @@ package za.co.apricotdb.viewport.modifiers;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
+import za.co.apricotdb.viewport.align.AlignCommand;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ApricotShape;
 import za.co.apricotdb.viewport.event.RelationshipOnMouseDraggedHorizontalRulerEventHandler;
@@ -21,13 +22,13 @@ public class DadsHandRelationshipEventModifier implements ElementVisualModifier 
     private EventHandler<MouseEvent> mousePressedHandler = null;
     private EventHandler<MouseEvent> mouseRulerReleasedHandler = null;
 
-    public DadsHandRelationshipEventModifier(ApricotCanvas canvas) {
+    public DadsHandRelationshipEventModifier(ApricotCanvas canvas, AlignCommand aligner) {
         mouseRulerEnteredHandler = new RelationshipOnMouseEnteredHorizontalRulerEventHandler(canvas);
         mouseRulerExitedHandler = new RelationshipOnMouseExitedRulerEventHandler(canvas);
         mouseRulerPressedHandler = new RelationshipOnMousePressedRulerEventHandler("RulerX");
         mouseRulerDraggedHandler = new RelationshipOnMouseDraggedHorizontalRulerEventHandler("RulerX", canvas);
         mousePressedHandler = new RelationshipOnMousePressedEventHandler();
-        mouseRulerReleasedHandler = new RelationshipOnMouseReleasedEventHandler(canvas);
+        mouseRulerReleasedHandler = new RelationshipOnMouseReleasedEventHandler(canvas, aligner);
     }
 
     @Override

@@ -2,6 +2,7 @@ package za.co.apricotdb.persistence.data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
@@ -50,7 +51,9 @@ public class RelationshipManager {
     }
 
     public ApricotRelationship findRelationshipById(long id) {
-        return relationshipRepository.findOne(id);
+        Optional<ApricotRelationship> o = relationshipRepository.findById(id);
+        
+        return o.get();
     }
 
     public void deleteRelationship(ApricotRelationship relationship) {

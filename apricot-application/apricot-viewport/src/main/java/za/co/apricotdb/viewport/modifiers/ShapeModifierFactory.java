@@ -1,5 +1,6 @@
 package za.co.apricotdb.viewport.modifiers;
 
+import za.co.apricotdb.viewport.align.AlignCommand;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 
 /**
@@ -11,13 +12,13 @@ import za.co.apricotdb.viewport.canvas.ApricotCanvas;
  */
 public interface ShapeModifierFactory {
 
-    ElementVisualModifier[] getDirectShapeModifiers(ApricotCanvas canvas);
+    ElementVisualModifier[] getDirectShapeModifiers(ApricotCanvas canvas, AlignCommand aligner);
 
-    ElementVisualModifier[] getHatShapeModifiers(ApricotCanvas canvas);
+    ElementVisualModifier[] getHatShapeModifiers(ApricotCanvas canvas, AlignCommand aligner);
 
-    ElementVisualModifier[] getDadsHandShapeModifiers(ApricotCanvas canvas);
+    ElementVisualModifier[] getDadsHandShapeModifiers(ApricotCanvas canvas, AlignCommand aligner);
 
-    ElementVisualModifier[] getRoofShapeModifiers(ApricotCanvas canvas);
+    ElementVisualModifier[] getRoofShapeModifiers(ApricotCanvas canvas, AlignCommand aligner);
 
     public static ShapeModifierFactory instantiateFactory(ApricotCanvas canvas) {
         ShapeModifierFactory factory = null;

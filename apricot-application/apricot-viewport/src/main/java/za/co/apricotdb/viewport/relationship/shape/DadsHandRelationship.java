@@ -93,7 +93,7 @@ public class DadsHandRelationship extends ApricotRelationshipShape {
                 return;
             }
         }
-        
+
         ApricotRelationship r = (ApricotRelationship) getElement();
         if (item.getName().equals(r.getRelationshipName()) && item.getType() == ElementType.RELATIONSHIP) {
             double rulerX = Double.parseDouble(item.getProperties().getProperty("rulerX"));

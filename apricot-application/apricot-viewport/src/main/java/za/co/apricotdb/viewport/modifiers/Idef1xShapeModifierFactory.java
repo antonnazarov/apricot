@@ -1,5 +1,6 @@
 package za.co.apricotdb.viewport.modifiers;
 
+import za.co.apricotdb.viewport.align.AlignCommand;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 
 /**
@@ -11,25 +12,25 @@ import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 public class Idef1xShapeModifierFactory implements ShapeModifierFactory {
 
     @Override
-    public ElementVisualModifier[] getDirectShapeModifiers(ApricotCanvas canvas) {
+    public ElementVisualModifier[] getDirectShapeModifiers(ApricotCanvas canvas, AlignCommand aligner) {
         return new ElementVisualModifier[] { new NonIdentifyingRelationshipShapeModifier(),
-                new DirectRelationshipEventModifier(canvas) };
+                new DirectRelationshipEventModifier(canvas, aligner) };
     }
 
     @Override
-    public ElementVisualModifier[] getHatShapeModifiers(ApricotCanvas canvas) {
+    public ElementVisualModifier[] getHatShapeModifiers(ApricotCanvas canvas, AlignCommand aligner) {
         return new ElementVisualModifier[] { new NonIdentifyingRelationshipShapeModifier(),
-                new HatRelationshipEventModifier(canvas) };
+                new HatRelationshipEventModifier(canvas, aligner) };
     }
 
     @Override
-    public ElementVisualModifier[] getDadsHandShapeModifiers(ApricotCanvas canvas) {
+    public ElementVisualModifier[] getDadsHandShapeModifiers(ApricotCanvas canvas, AlignCommand aligner) {
         return new ElementVisualModifier[] { new NonIdentifyingRelationshipShapeModifier(),
-                new DadsHandRelationshipEventModifier(canvas) };
+                new DadsHandRelationshipEventModifier(canvas, aligner) };
     }
 
     @Override
-    public ElementVisualModifier[] getRoofShapeModifiers(ApricotCanvas canvas) {
-        return new ElementVisualModifier[] { new RoofRelationshipEventModifier(canvas) };
+    public ElementVisualModifier[] getRoofShapeModifiers(ApricotCanvas canvas, AlignCommand aligner) {
+        return new ElementVisualModifier[] { new RoofRelationshipEventModifier(canvas, aligner) };
     }
 }

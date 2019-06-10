@@ -1,6 +1,7 @@
 package za.co.apricotdb.persistence.data;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
@@ -104,7 +105,9 @@ public class ProjectManager {
     }
     
     public ApricotProject getProject(long projectId) {
-        return projectRepository.findOne(projectId);
+        Optional<ApricotProject> o = projectRepository.findById(projectId);
+        
+        return o.get();
     }
     
     /**
