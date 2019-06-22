@@ -4,18 +4,19 @@ apricotdb-x.xx-jre-win64-bin.zip        * the windows package includes JRE 8
 	data				* the reference version of the Apricot Database (file apricot-project.mv.db) 
 	jre1.8.0_181			* Copy of JRE of Java 8
 	apricot-launcher-x.xx.jar	* the standalone launcher
-	apricot-ui-0.1.jar		* the ApricotDB application
+	apricot-ui-x.xx.jar		* the ApricotDB application
 	apricotdb.bat			* the runner bat
-	h2-1.4.197.jar			* h2 database JDBC driver
+	h2-1.4.199.jar			* h2 database JDBC driver
 
 --------------------------------------------------------------------------------------------------------------------
-apricotdb-x.xx-all-bin.zip              * all platform package (no JRE, the JVM has to be installed)
+apricotdb-x.xx-jre-linux64-bin.zip      * Lunix version, includes JDK 8
 --------------------------------------------------------------------------------------------------------------------
 	data				* the reference version of the Apricot Database (file apricot-project.mv.db) 
+        jre1.8.0_211                    * Copy of JRE of Java 8
 	apricot-launcher-x.xx.jar	* the standalone launcher
-	apricot-ui-0.1.jar		* the ApricotDB application
+	apricot-ui-x.xx.jar		* the ApricotDB application
 	apricotdb.bat			* the runner bat
-	h2-1.4.197.jar			* h2 database JDBC driver
+	h2-1.4.199.jar			* h2 database JDBC driver
 
 --------------------------------------------------------------------------------------------------------------------
 apricotdb-x.xx-src.zip
