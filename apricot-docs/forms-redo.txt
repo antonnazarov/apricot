@@ -1,0 +1,16 @@
+apricot-main.fxml --> done
+apricot-project-editor.fxml --> done
+apricot-blacklist-editor.fxml --> done
+apricot-constraint-editor.fxml --> done
+apricot-entity-editor.fxml --> done
+apricot-generate-script.fxml --> skip
+apricot-project-open.fxml --> done
+apricot-re-h2.fxml --> done
+apricot-re-mysql.fxml --> skip
+apricot-re-oracle.fxml --> skip
+apricot-re-sqlserver.fxml --> skip
+apricot-re-tables-list.fxml --> done
+apricot-relationship-editor.fxml --> skip
+apricot-snapshot-editor.fxml --> done
+apricot-syntax-editor.fxml --> skip
+apricot-view-editor.fxml --> done

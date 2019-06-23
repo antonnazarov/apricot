@@ -6,44 +6,43 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-
-<Pane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="342.0" prefWidth="804.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.OpenProjectController">
+<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="357.0" prefWidth="818.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.OpenProjectController">
    <children>
-      <VBox prefHeight="348.0" prefWidth="804.0">
+      <VBox layoutX="10.0" layoutY="10.0" prefHeight="348.0" prefWidth="804.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <HBox prefHeight="366.0" prefWidth="804.0">
+            <HBox prefHeight="366.0" prefWidth="804.0" VBox.vgrow="ALWAYS">
                <children>
-                  <VBox prefHeight="309.0" prefWidth="404.0">
+                  <VBox prefHeight="309.0" prefWidth="404.0" HBox.hgrow="ALWAYS">
                      <children>
                         <Label prefHeight="17.0" prefWidth="85.0" text="Select from:">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" top="5.0" />
                            </VBox.margin>
                         </Label>
-                        <TableView fx:id="projectsList" prefHeight="282.0" prefWidth="384.0">
-                          <columns>
-                            <TableColumn fx:id="projectNameColumn" editable="false" prefWidth="247.0" text="Project Name" />
-                            <TableColumn fx:id="dbTypeColumn" editable="false" prefWidth="79.0" text="DB Type" />
+                        <TableView fx:id="projectsList" prefHeight="282.0" prefWidth="384.0" VBox.vgrow="ALWAYS">
+                           <columns>
+                              <TableColumn fx:id="projectNameColumn" editable="false" prefWidth="247.0" text="Project Name" />
+                              <TableColumn fx:id="dbTypeColumn" editable="false" prefWidth="79.0" text="DB Type" />
                               <TableColumn fx:id="createdColumn" editable="false" prefWidth="75.0" text="Created" />
-                          </columns>
+                           </columns>
                         </TableView>
                      </children>
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
                   </VBox>
-                  <VBox prefHeight="243.0" prefWidth="382.0">
+                  <VBox HBox.hgrow="ALWAYS">
                      <children>
                         <Label prefHeight="17.0" prefWidth="85.0" text="Description:">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" top="5.0" />
                            </VBox.margin>
                         </Label>
-                        <TextArea fx:id="projectDescription" editable="false" prefHeight="270.0" prefWidth="381.0" wrapText="true" />
+                        <TextArea fx:id="projectDescription" editable="false" prefHeight="282.0" prefWidth="382.0" wrapText="true" VBox.vgrow="ALWAYS" />
                      </children>
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -51,16 +50,16 @@
                   </VBox>
                </children>
             </HBox>
-            <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+            <HBox alignment="TOP_RIGHT" prefHeight="45.0" prefWidth="818.0" spacing="10.0" VBox.vgrow="NEVER">
                <children>
                   <Button mnemonicParsing="false" onAction="#cancel" prefWidth="90.0" text="Cancel" />
                   <Button mnemonicParsing="false" onAction="#openProject" prefWidth="90.0" text="Open" />
                </children>
                <padding>
-                  <Insets bottom="5.0" left="5.0" right="10.0" top="5.0" />
+                  <Insets bottom="10.0" right="5.0" top="10.0" />
                </padding>
             </HBox>
          </children>
       </VBox>
    </children>
-</Pane>
+</AnchorPane>
