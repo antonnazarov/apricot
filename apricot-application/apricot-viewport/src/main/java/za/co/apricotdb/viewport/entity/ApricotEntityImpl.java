@@ -69,15 +69,15 @@ public final class ApricotEntityImpl implements ApricotEntity {
             entityShape.setDefault();
         }
     }
-    
+
     private void makePrimaryRelationshipsDefault() {
         if (entityShape instanceof DefaultEntityShape) {
             ((DefaultEntityShape) entityShape).getLeftStack().setDefault();
             ((DefaultEntityShape) entityShape).getRightStack().setDefault();
             ((DefaultEntityShape) entityShape).getTopStack().setDefault();
-        }        
+        }
     }
-    
+
     private void makePrimaryRelationshipsSelected() {
         for (ApricotRelationship r : primaryLinks) {
             r.setElementStatus(ElementStatus.SELECTED);
@@ -146,5 +146,35 @@ public final class ApricotEntityImpl implements ApricotEntity {
     @Override
     public void setTableName(String name) {
         this.tableName = name;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((tableName == null) ? 0 : tableName.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ApricotEntityImpl other = (ApricotEntityImpl) obj;
+        if (tableName == null) {
+            if (other.tableName != null)
+                return false;
+        } else if (!tableName.equals(other.tableName))
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "[" + tableName + "]";
     }
 }
