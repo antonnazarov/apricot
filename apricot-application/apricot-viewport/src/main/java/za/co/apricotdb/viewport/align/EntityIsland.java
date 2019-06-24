@@ -13,7 +13,7 @@ import za.co.apricotdb.viewport.relationship.ApricotRelationship;
  * @since 24/06/2019
  */
 public class EntityIsland {
-    
+
     private ApricotEntity core;
     private List<ApricotEntity> parents;
     private List<ApricotEntity> children;
@@ -22,15 +22,19 @@ public class EntityIsland {
         this.core = core;
         parents = new ArrayList<>();
         children = new ArrayList<>();
-        
+
         for (ApricotRelationship r : core.getForeignLinks()) {
-            parents.add(r.getParent());
+            if (!r.getParent().equals(core)) {
+                parents.add(r.getParent());
+            }
         }
         for (ApricotRelationship r : core.getPrimaryLinks()) {
-            children.add(r.getParent());
+            if (!r.getChild().equals(core)) {
+                children.add(r.getChild());
+            }
         }
     }
-    
+
     public int getIslandRange() {
         return parents.size() + children.size();
     }
@@ -46,7 +50,7 @@ public class EntityIsland {
     public List<ApricotEntity> getChildren() {
         return children;
     }
-    
+
     public void removeEntity(ApricotEntity entity) {
         if (parents.contains(entity)) {
             parents.remove(entity);
@@ -55,15 +59,13 @@ public class EntityIsland {
             children.remove(entity);
         }
     }
-    
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        
-        sb.append("Island: ").append(core)
-        .append(", parents=").append(parents)
-        .append(", children=").append(children);
-        
+
+        sb.append("Island: ").append(core).append(", parents=").append(parents).append(", children=").append(children);
+
         return sb.toString();
     }
 }
