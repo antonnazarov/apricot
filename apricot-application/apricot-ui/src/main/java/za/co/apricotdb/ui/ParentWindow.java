@@ -17,6 +17,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Window;
 import za.co.apricotdb.ui.handler.ProjectExplorerItem;
 
 /**
@@ -117,6 +118,10 @@ public class ParentWindow {
 
     public Pane getMainAppPane() {
         return mainAppPane;
+    }
+    
+    public Window getWindow() {
+        return mainAppPane.getScene().getWindow();
     }
 
     /**

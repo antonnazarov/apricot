@@ -148,7 +148,7 @@ public class MainAppController {
                 ContextMenu m = explorerContextMenu.buildContextMenu(projectsTreeView, isMainView);
                 if (m != null) {
                     m.setAutoHide(true);
-                    m.show(projectsTreeView, e.getScreenX(), e.getSceneY());
+                    m.show(parentWindow.getWindow(), e.getScreenX(), e.getSceneY());
                 }
             }
         });

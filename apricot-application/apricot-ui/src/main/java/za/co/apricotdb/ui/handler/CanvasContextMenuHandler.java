@@ -11,7 +11,6 @@ import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.Pane;
 import za.co.apricotdb.persistence.data.ViewManager;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.persistence.entity.ViewDetailLevel;
@@ -44,6 +43,9 @@ public class CanvasContextMenuHandler {
 
     @Autowired
     ParentWindow parentWindow;
+
+    @Autowired
+    CanvasAlignHandler aligner;
 
     public void createCanvasContextMenu(ApricotCanvas canvas, double x, double y) {
         ApricotView view = canvasHandler.getCurrentView();
@@ -97,11 +99,16 @@ public class CanvasContextMenuHandler {
             break;
         }
 
+        MenuItem alignEntities = new MenuItem("Align Entities");
+        alignEntities.setOnAction(e -> {
+            aligner.alignCanvasIslands();
+        });
+
         ContextMenu contextMenu = new ContextMenu();
         contextMenu.getItems().addAll(editViewEntity, new SeparatorMenuItem(), newEntity, new SeparatorMenuItem(),
-                rSimple, rDefault, rExtended);
+                rSimple, rDefault, rExtended, new SeparatorMenuItem(), alignEntities);
         contextMenu.setAutoHide(true);
-        contextMenu.show((Pane) canvas, x, y);
+        contextMenu.show(parentWindow.getWindow(), x, y);
     }
 
     private void changeViewDetailLevel(ViewDetailLevel detailLevel, ApricotView view) {

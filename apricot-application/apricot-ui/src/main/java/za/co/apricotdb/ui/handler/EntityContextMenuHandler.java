@@ -91,7 +91,7 @@ public class EntityContextMenuHandler {
             }
 
             contextMenu.setAutoHide(true);
-            contextMenu.show(entity.getShape(), x, y);
+            contextMenu.show(parentWindow.getWindow(), x, y);
         }
     }
 
