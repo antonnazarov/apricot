@@ -12,7 +12,7 @@ import za.co.apricotdb.viewport.relationship.ApricotRelationship;
  * @author Anton Nazarov
  * @since 24/06/2019
  */
-public class EntityIsland {
+public class EntityIsland implements Comparable<EntityIsland> {
 
     private ApricotEntity core;
     private List<ApricotEntity> parents;
@@ -60,12 +60,57 @@ public class EntityIsland {
         }
     }
 
+    public List<ApricotEntity> getRelatedEntities() {
+        List<ApricotEntity> ret = new ArrayList<>(children);
+        ret.addAll(parents);
+
+        return ret;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Island: ").append(core).append(", parents=").append(parents).append(", children=").append(children);
+        sb.append("Island: ").append(core).append(", parents=").append(parents).append(", children=").append(children).append("\n");
 
         return sb.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((core == null) ? 0 : core.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        EntityIsland other = (EntityIsland) obj;
+        if (core == null) {
+            if (other.core != null) {
+                return false;
+            }
+        } else if (!core.equals(other.core)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int compareTo(EntityIsland other) {
+        if (this.getIslandRange() == other.getIslandRange()) {
+            return other.children.size() - this.children.size();
+        }
+        return (other.getIslandRange() - this.getIslandRange());
     }
 }
