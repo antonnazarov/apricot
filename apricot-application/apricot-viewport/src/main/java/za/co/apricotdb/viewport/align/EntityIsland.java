@@ -1,7 +1,9 @@
 package za.co.apricotdb.viewport.align;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
@@ -18,6 +20,8 @@ public class EntityIsland implements Comparable<EntityIsland> {
     private List<ApricotEntity> parents;
     private List<ApricotEntity> children;
     private List<EntityIsland> merged; // merged islands
+    private EntityIsland master;
+    private boolean parent;
 
     public EntityIsland(ApricotEntity core) {
         this.core = core;
@@ -38,8 +42,27 @@ public class EntityIsland implements Comparable<EntityIsland> {
         }
     }
 
-    public void merge(EntityIsland island) {
+    public EntityIsland getMaster() {
+        return master;
+    }
+
+    public void setMaster(EntityIsland master) {
+        this.master = master;
+    }
+
+    public boolean isParent() {
+        return parent;
+    }
+
+    public void setParent(boolean parent) {
+        this.parent = parent;
+    }
+
+    public void merge(EntityIsland island, boolean isParent) {
+        island.setParent(isParent);
+        island.setMaster(this);
         island.removeEntity(core);
+        removeEntity(island.getCore());
         merged.add(island);
     }
 
@@ -48,7 +71,11 @@ public class EntityIsland implements Comparable<EntityIsland> {
     }
 
     public int getIslandRank() {
-        return parents.size() + children.size();
+        int mergedRank = 0;
+        for (EntityIsland isl : merged) {
+            mergedRank += isl.getIslandRank();
+        }
+        return parents.size() + children.size() + mergedRank + 1;
     }
 
     public ApricotEntity getCore() {
@@ -80,24 +107,50 @@ public class EntityIsland implements Comparable<EntityIsland> {
     }
 
     public boolean isLinkedTo(ApricotEntity entity) {
-        for (ApricotEntity relEntity : getRelatedEntities()) {
-            if (relEntity.equals(entity)) {
-                return true;
+        return getRelatedEntities().contains(entity);
+    }
+
+    /**
+     * Collect and return all entities in the island.
+     */
+    public List<ApricotEntity> getAllEntities() {
+        List<ApricotEntity> ret = new ArrayList<>();
+        ret.add(core);
+        ret.addAll(getRelatedEntities());
+        merged.forEach(isl -> ret.addAll(isl.getAllEntities()));
+
+        return ret;
+    }
+
+    public Set<ApricotEntity> findDuplicates() {
+        List<ApricotEntity> all = getAllEntities();
+        Set<ApricotEntity> ret = new HashSet<>();
+        Set<ApricotEntity> cp = new HashSet<>();
+
+        for (ApricotEntity ent : all) {
+            if (!cp.add(ent)) {
+                ret.add(ent);
             }
         }
-
-        return false;
+        return ret;
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Island: ").append(core).append("; parents=").append(parents).append("; children=").append(children)
-                .append("; rank=").append(getIslandRank());
+        sb.append("Island: ").append(core).append("; parents=").append(parents).append("; children=").append(children);
         if (merged.size() > 0) {
-            sb.append("; merged: ").append(merged);
+            sb.append("; merged: ");
+            merged.forEach(mrg -> sb.append(mrg.getCore()));
         }
+        Set<ApricotEntity> dups = findDuplicates();
+        if (!dups.isEmpty()) {
+            sb.append("; dups: ").append(dups);
+        } else {
+            sb.append(" [NO DUPS]");
+        }
+        sb.append("; rank=").append(getIslandRank());
         sb.append("\n");
 
         return sb.toString();

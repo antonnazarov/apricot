@@ -1,6 +1,7 @@
 package za.co.apricotdb.viewport.align;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -34,54 +35,78 @@ public class EntityIslandBundle {
     }
 
     public void initialize() {
-        List<EntityIsland> tmpIslands = new ArrayList<>();
+
+        initIslands(islands, canvas);
+
+        System.out.println("----------------------------------------");
+        System.out.println("                 ORIGINAL");
+        System.out.println("----------------------------------------");
+        System.out.println(islands);
+
+        handleStandAlone(islands, standAlone);
+
+        System.out.println("----------------------------------------");
+        System.out.println("                 NO STAND ALONES");
+        System.out.println("----------------------------------------");
+        System.out.println(islands);
+
+        removeDuplicates(islands);
+
+        System.out.println("----------------------------------------");
+        System.out.println("                 REMOVED DUPLICATES");
+        System.out.println("----------------------------------------");
+        System.out.println(islands);
+
+        islands.removeAll(getUnlinkedIslands(islands));
+
+        System.out.println("----------------------------------------");
+        System.out.println("                 REMOVED UNLINKED");
+        System.out.println("----------------------------------------");
+        System.out.println(islands);
+
+        mergeRelatedIslands(islands);
+
+        System.out.println("----------------------------------------");
+        System.out.println("                 MERGED RELATED");
+        System.out.println("----------------------------------------");
+        System.out.println(islands);
+
+    }
+
+    private void initIslands(List<EntityIsland> islands, ApricotCanvas canvas) {
+        islands.clear();
         for (ApricotElement elm : canvas.getElements()) {
             if (elm.getElementType() == ElementType.ENTITY) {
                 EntityIsland island = new EntityIsland((ApricotEntity) elm);
-                tmpIslands.add(island);
+                islands.add(island);
             }
         }
-        sortIslands(tmpIslands);
+        sortIslands(islands);
+    }
 
-        // scan islands and remove duplicate relationships
+    /**
+     * Scan islands and remove duplicate relationships.
+     */
+    private void removeDuplicates(List<EntityIsland> islands) {
+        List<EntityIsland> tmpIslands = new ArrayList<>(islands);
+        islands.clear();
         while (tmpIslands.size() > 0) {
             EntityIsland current = tmpIslands.get(0);
             islands.add(current);
             tmpIslands.remove(current);
             for (EntityIsland island : tmpIslands) {
-                if (island != current) {
-                    List<ApricotEntity> related = current.getRelatedEntities();
-                    for (ApricotEntity ent : related) {
-                        island.removeEntity(ent);
-                    }
+                for (ApricotEntity ent : current.getRelatedEntities()) {
+                    island.removeEntity(ent);
                 }
             }
             sortIslands(tmpIslands);
-        }
-
-        removeDuplicates(islands);
-        handleStandAlone(islands, standAlone);
-        mergeIslands(islands);
-
-        System.out.println(islands);
-    }
-
-    private void removeDuplicates(List<EntityIsland> islands) {
-        List<EntityIsland> tmpIslands = new ArrayList<>(islands);
-        List<EntityIsland> notLinkedIslands = getUnlinkedIslands(islands);
-        for (EntityIsland lnIsland : notLinkedIslands) {
-            for (EntityIsland island : tmpIslands) {
-                if (island.getIslandRank() > 0 && island.isLinkedTo(lnIsland.getCore())) {
-                    islands.remove(lnIsland);
-                }
-            }
         }
     }
 
     private List<EntityIsland> getUnlinkedIslands(List<EntityIsland> islands) {
         List<EntityIsland> ret = new ArrayList<>();
         for (EntityIsland island : islands) {
-            if (island.getIslandRank() == 0) {
+            if (island.getIslandRank() == 1) {
                 ret.add(island);
             }
         }
@@ -91,38 +116,41 @@ public class EntityIslandBundle {
 
     private void handleStandAlone(List<EntityIsland> islands, List<EntityIsland> standAlone) {
         standAlone.clear();
-        standAlone.addAll(getUnlinkedIslands(islands));
-        for (EntityIsland island : standAlone) {
-            islands.remove(island);
-        }
+        List<EntityIsland> unlinked = getUnlinkedIslands(islands);
+        standAlone.addAll(unlinked);
+        islands.removeAll(unlinked);
     }
 
-    private void mergeIslands(List<EntityIsland> islands) {
-        List<EntityIsland> delIslands = new ArrayList<>();
-        for (EntityIsland cIsl : islands) {
-            for (EntityIsland isl : islands) {
-                if (!isl.equals(cIsl) && !delIslands.contains(cIsl) && !delIslands.contains(isl)
-                        && isl.isLinkedTo(cIsl.getCore())) {
-                    cIsl.merge(isl);
-                    delIslands.add(isl);
-                }
-            }
-        }
+    private void mergeRelatedIslands(List<EntityIsland> islands) {
+        sortIslands(islands);
+        Collections.reverse(islands);
+        List<EntityIsland> tIslands = new ArrayList<>(islands);
 
-        islands.removeAll(delIslands);
-        List<ApricotEntity> cores = new ArrayList<>();
-        for (EntityIsland isl : islands) {
-            cores.add(isl.getCore());
-        }
-        for (EntityIsland isl : islands) {
-            for (EntityIsland mIsl : isl.getMergedIslands()) {
-                for (ApricotEntity ent : mIsl.getRelatedEntities()) {
-                    if (cores.contains(ent)) {
-                        mIsl.removeEntity(ent);
+        List<EntityIsland> removals = new ArrayList<>();
+        for (EntityIsland slave : islands) {
+            if (tIslands.remove(slave)) {
+                for (EntityIsland master : tIslands) {
+                    if (slave.getAllEntities().contains(master.getCore())
+                            || master.getAllEntities().contains(slave.getCore())) {
+                        if (slave.getChildren().contains(master.getCore())) {
+                            if (slave.getIslandRank() > 2) {
+                                master.merge(slave, true);
+                            }
+                        } else {
+                            if (slave.getIslandRank() > 2) {
+                                master.merge(slave, false);
+                            }
+                        }
+
+                        removals.add(slave);
+                        break;
                     }
                 }
             }
         }
+
+        islands.removeAll(removals);
+        sortIslands(islands);
     }
 
     private void sortIslands(List<EntityIsland> islands) {
