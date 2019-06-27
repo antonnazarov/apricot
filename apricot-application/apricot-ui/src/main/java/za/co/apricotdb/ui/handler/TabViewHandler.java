@@ -72,6 +72,7 @@ public class TabViewHandler {
         ScrollPane scroll = buildScrollPane();
         scroll.setContent((Pane) canvas);
         tab.setContent(scroll);
+        canvas.setScrollPane(scroll);
 
         TabInfoObject o = new TabInfoObject();
         o.setCanvas(canvas);

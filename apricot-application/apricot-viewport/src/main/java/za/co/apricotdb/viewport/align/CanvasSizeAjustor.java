@@ -2,6 +2,7 @@ package za.co.apricotdb.viewport.align;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
+import javafx.scene.control.ScrollPane;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ApricotCanvasImpl;
 import za.co.apricotdb.viewport.canvas.ApricotElement;
@@ -37,6 +38,7 @@ public class CanvasSizeAjustor implements AlignCommand {
         biasAllElements(canvasBounds);
         canvasBounds = getCanvasBounds();
         alignCanvasSize(canvasBounds);
+        alignWithVisibleFieldSize();
     }
 
     /**
@@ -154,5 +156,22 @@ public class CanvasSizeAjustor implements AlignCommand {
         ApricotCanvasImpl boxCanvas = (ApricotCanvasImpl) canvas;
         boxCanvas.setPrefWidth(canvasBounds.getRight() + DIAGRAM_PANEL_OFFSET);
         boxCanvas.setPrefHeight(canvasBounds.getBottom() + DIAGRAM_PANEL_OFFSET);
+    }
+
+    private void alignWithVisibleFieldSize() {
+        ApricotCanvasImpl boxCanvas = (ApricotCanvasImpl) canvas;
+
+        ScrollPane scroll = canvas.getScrollPane();
+        if (scroll != null) {
+            double width = boxCanvas.getPrefWidth();
+            double height = boxCanvas.getPrefHeight();
+
+            if (width < scroll.getWidth()) {
+                boxCanvas.setPrefWidth(scroll.getWidth());
+            }
+            if (height < scroll.getHeight()) {
+                boxCanvas.setPrefHeight(scroll.getHeight());
+            }
+        }
     }
 }

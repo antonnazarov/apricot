@@ -11,6 +11,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import javafx.geometry.Bounds;
 import javafx.geometry.Side;
 import javafx.scene.Node;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
 import za.co.apricotdb.viewport.align.OrderManager;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
@@ -36,8 +37,8 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
     private final ApplicationEventPublisher applicationEventPublisher;
     private String detailLevel;
     private String erdNotation;
-
     private boolean canvasChanged;
+    private ScrollPane scroll;
 
     public ApricotCanvasImpl(ApplicationEventPublisher applicationEventPublisher, String detailLevel,
             String erdNotation) {
@@ -366,5 +367,16 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
     @Override
     public void setErdNotation(String erdNotation) {
         this.erdNotation = erdNotation;
+    }
+
+    @Override
+    public void setScrollPane(ScrollPane scroll) {
+        this.scroll = scroll;
+
+    }
+
+    @Override
+    public ScrollPane getScrollPane() {
+        return scroll;
     }
 }

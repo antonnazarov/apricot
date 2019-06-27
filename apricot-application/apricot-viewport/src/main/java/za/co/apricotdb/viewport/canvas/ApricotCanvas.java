@@ -7,6 +7,7 @@ import org.springframework.context.ApplicationEvent;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
+import javafx.scene.control.ScrollPane;
 import za.co.apricotdb.viewport.align.OrderManager;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
@@ -66,4 +67,8 @@ public interface ApricotCanvas {
     String getErdNotation();
 
     void setErdNotation(String erdNotation);
+    
+    void setScrollPane(ScrollPane scroll);
+    
+    ScrollPane getScrollPane();
 }

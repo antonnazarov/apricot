@@ -56,6 +56,9 @@ public class EntityContextMenuHandler {
 
     @Autowired
     ApricotSnapshotHandler snapshotHandler;
+    
+    @Autowired
+    ObjectAllocationHandler allocationHandler;
 
     public void createEntityContextMenu(ApricotEntity entity, double x, double y) {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
@@ -242,6 +245,7 @@ public class EntityContextMenuHandler {
         MenuItem item = new MenuItem("Select on Diagram");
         item.setOnAction(e -> {
             canvasHandler.makeEntitiesSelected(entities, true);
+            allocationHandler.scrollToSelected(canvasHandler.getCurrentViewTabInfo());
         });
 
         return item;
