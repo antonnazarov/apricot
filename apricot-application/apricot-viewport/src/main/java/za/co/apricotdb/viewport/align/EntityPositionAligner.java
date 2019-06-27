@@ -56,7 +56,7 @@ public class EntityPositionAligner {
         return true;
     }
 
-    private void alignEntitiesLeft(List<ApricotEntity> entities) {
+    public void alignEntitiesLeft(List<ApricotEntity> entities) {
         double leftMostX = 10000;
         for (ApricotEntity e : entities) {
             double layoutX = e.getEntityShape().getLayoutX();
@@ -70,7 +70,7 @@ public class EntityPositionAligner {
         }
     }
 
-    private void alignEntitiesRight(List<ApricotEntity> entities) {
+    public void alignEntitiesRight(List<ApricotEntity> entities) {
         double rightMostX = 0;
         for (ApricotEntity e : entities) {
             double layoutX = e.getEntityShape().getLayoutX() + e.getEntityShape().getWidth();
@@ -84,7 +84,7 @@ public class EntityPositionAligner {
         }
     }
 
-    private void alignEntitiesTop(List<ApricotEntity> entities) {
+    public void alignEntitiesTop(List<ApricotEntity> entities) {
         double topMostY = 10000;
         for (ApricotEntity e : entities) {
             double layoutY = e.getEntityShape().getLayoutY();
@@ -98,7 +98,7 @@ public class EntityPositionAligner {
         }
     }
 
-    private void alignEntitiesBottom(List<ApricotEntity> entities) {
+    public void alignEntitiesBottom(List<ApricotEntity> entities) {
         double bottomMostY = 0;
         for (ApricotEntity e : entities) {
             double layoutY = e.getEntityShape().getLayoutY() + e.getEntityShape().getHeight();

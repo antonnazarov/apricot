@@ -141,14 +141,22 @@ public class EntityIsland implements Comparable<EntityIsland> {
 
         sb.append("Island: ").append(core).append("; parents=").append(parents).append("; children=").append(children);
         if (merged.size() > 0) {
-            sb.append("; merged: ");
-            merged.forEach(mrg -> sb.append(mrg.getCore()));
+            sb.append("; merged:");
+            merged.forEach(mrg -> {
+                sb.append(" *").append(mrg.getCore()).append(" (");
+                if (parent) {
+                    sb.append("prnt, ");
+                } else {
+                    sb.append("chld, ");
+                }
+                sb.append(parents.size()).append("/").append(children.size()).append(")");
+            });
         }
         Set<ApricotEntity> dups = findDuplicates();
         if (!dups.isEmpty()) {
             sb.append("; dups: ").append(dups);
         } else {
-            sb.append(" [NO DUPS]");
+            sb.append("; [NO DUPS]");
         }
         sb.append("; rank=").append(getIslandRank());
         sb.append("\n");

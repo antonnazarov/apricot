@@ -178,7 +178,7 @@ public class GenerateScriptHandler {
         return formHeader;
     }
 
-    private String generateCreateScript(ScriptSource source, String schema) {
+    public String generateCreateScript(ScriptSource source, String schema) {
         StringBuilder sb = new StringBuilder();
 
         List<ApricotTable> tables = getScriptTables(source);

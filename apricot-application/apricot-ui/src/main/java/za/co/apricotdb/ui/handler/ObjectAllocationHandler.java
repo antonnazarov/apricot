@@ -24,7 +24,7 @@ public class ObjectAllocationHandler {
     TabViewHandler tabViewHandler;
 
     /**
-     * Centre the Entity in the visible part of the screen.
+     * Center the Entity in the visible part of the screen.
      */
     public void centerEntityOnView(TabInfoObject tabInfo, String tableName) {
         ApricotCanvas canvas = tabInfo.getCanvas();

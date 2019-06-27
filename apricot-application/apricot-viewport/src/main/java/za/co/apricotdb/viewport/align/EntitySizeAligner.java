@@ -19,15 +19,20 @@ import za.co.apricotdb.viewport.entity.ApricotEntity;
 public class EntitySizeAligner {
 
     public void minimizeSelectedEntitiesWidth(ApricotCanvas canvas) {
-        List<ApricotEntity> entities = getSelectedEntities(canvas);
+        minimizeSelectedEntitiesWidth(getSelectedEntities(canvas));
+    }
 
+    public void minimizeSelectedEntitiesWidth(List<ApricotEntity> entities) {
         for (ApricotEntity entity : entities) {
             entity.getEntityShape().setPrefWidth(10);
         }
     }
 
     public boolean alignEntitiesSameWidth(ApricotCanvas canvas) {
-        List<ApricotEntity> entities = getSelectedEntities(canvas);
+        return alignEntitiesSameWidth(getSelectedEntities(canvas));
+    }
+
+    public boolean alignEntitiesSameWidth(List<ApricotEntity> entities) {
         double maxWidth = 0;
         if (entities != null && entities.size() > 1) {
             for (ApricotEntity entity : entities) {

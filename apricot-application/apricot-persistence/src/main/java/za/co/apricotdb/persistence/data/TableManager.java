@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
@@ -18,9 +19,12 @@ public class TableManager {
 
     @Resource
     EntityManager em;
-    
+
     @Resource
     ApricotTableRepository tableRep;
+
+    @Autowired
+    SnapshotManager snapshotManager;
 
     public List<ApricotTable> getTablesForSnapshot(ApricotSnapshot snapshot) {
         List<ApricotTable> ret = new ArrayList<>();
@@ -38,14 +42,14 @@ public class TableManager {
         query.setParameter("snapshot", snapshot);
         return query.getResultList();
     }
-    
+
     public ApricotTable saveTable(ApricotTable table) {
         return tableRep.save(table);
     }
-    
+
     public ApricotTable getTableByName(String name, ApricotSnapshot snapshot) {
         ApricotTable ret = null;
-        
+
         TypedQuery<ApricotTable> query = em.createNamedQuery("ApricotTable.getTableByName", ApricotTable.class);
         query.setParameter("name", name);
         query.setParameter("snapshot", snapshot);
@@ -53,10 +57,16 @@ public class TableManager {
         if (res != null && res.size() > 0) {
             ret = res.get(0);
         }
-        
+
         return ret;
     }
-    
+
+    public ApricotTable getTableByName(String name) {
+        ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
+
+        return getTableByName(name, snapshot);
+    }
+
     public void deleteTable(ApricotTable table) {
         tableRep.delete(table);
     }

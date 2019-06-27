@@ -21,19 +21,19 @@ public class SnapshotCloneManager {
 
     @Resource
     ApricotSnapshotRepository snapshotRepository;
-    
+
     @Resource
     ApricotRelationshipRepository relationshipRepository;
-    
+
     @Autowired
     TableCloneManager tableCloneManager;
 
     @Autowired
     RelationshipManager relationshipManager;
-    
+
     @Autowired
     RelationshipCloneManager relationshipCloneManager;
-    
+
     @Transactional
     public ApricotSnapshot cloneSnapshot(String name, String comment, ApricotProject project,
             ApricotSnapshot snapshot) {
@@ -43,11 +43,11 @@ public class SnapshotCloneManager {
 
         // scan and clone the tables of the original snapshot
         for (ApricotTable table : snapshot.getTables()) {
-            clonedTables.add(tableCloneManager.cloneTable(clonedSnapshot, table));
+            clonedTables.add(tableCloneManager.cloneTable(clonedSnapshot, table, true, false));
         }
-        
+
         snapshotRepository.save(clonedSnapshot);
-        
+
         List<ApricotRelationship> relationships = relationshipManager.getRelationshipsForTables(snapshot.getTables());
         for (ApricotRelationship r : relationships) {
             ApricotRelationship clonedRelationship = relationshipCloneManager.cloneRelationship(r, clonedSnapshot);

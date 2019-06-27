@@ -45,6 +45,9 @@ public class OnKeyPressedEventHandler implements EventHandler<KeyEvent> {
     
     @Autowired
     ApricotSnapshotHandler snapshotHandler;
+    
+    @Autowired
+    ApricotClipboardHandler clipboardHandler;
 
     @Override
     public void handle(KeyEvent event) {
@@ -102,6 +105,23 @@ public class OnKeyPressedEventHandler implements EventHandler<KeyEvent> {
             break;
         case F5:
             snapshotHandler.syncronizeSnapshot(false);
+            break;
+        case C:
+            if (event.isControlDown()) {
+                clipboardHandler.copySelectedToClipboard();
+            }
+            break;
+        case INSERT:
+            if (event.isControlDown()) {
+                clipboardHandler.copySelectedToClipboard();
+            } else if (event.isShiftDown()) {
+                clipboardHandler.pasteSelectedFromClipboard();
+            }
+            break;
+        case V:
+            if (event.isControlDown()) {
+                clipboardHandler.pasteSelectedFromClipboard();
+            }
             break;
         default:
             break;
