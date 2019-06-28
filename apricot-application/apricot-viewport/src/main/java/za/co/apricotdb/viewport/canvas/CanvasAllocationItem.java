@@ -15,39 +15,39 @@ import java.util.Properties;
  * @since 17/01/2019
  */
 public class CanvasAllocationItem implements Serializable {
-    
+
     private static final long serialVersionUID = 7200256775287613665L;
-    
+
     private String name;
     private ElementType type;
     private Properties properties = new Properties();
-    
+
     public String getName() {
         return name;
     }
-    
+
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public ElementType getType() {
         return type;
     }
-    
+
     public void setType(ElementType type) {
         this.type = type;
     }
-    
+
     public Properties getProperties() {
         return properties;
     }
-    
+
     public void setProperties(Properties properties) {
         this.properties = properties;
     }
-    
+
     /**
-     * Save the allocation properties into a String  
+     * Save the allocation properties into a String
      */
     public String getPropertiesAsString() {
         String ret = null;
@@ -61,7 +61,7 @@ public class CanvasAllocationItem implements Serializable {
 
         return ret;
     }
-    
+
     public void setPropertiesFromString(String props) {
         if (!props.startsWith("error:")) {
             Reader r = new StringReader(props);
@@ -71,31 +71,31 @@ public class CanvasAllocationItem implements Serializable {
                 e.printStackTrace();
             }
         }
-    }   
-    
+    }
+
     @Override
     public int hashCode() {
         return name.hashCode();
     }
-    
+
     @Override
     public boolean equals(Object o) {
         if (o instanceof CanvasAllocationItem) {
-            return this.name.equals(((CanvasAllocationItem)o).getName());
+            return this.name.equals(((CanvasAllocationItem) o).getName());
         }
-        
+
         return false;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        
+
         sb.append("CanvasAllocationItem: ");
         sb.append("name=[").append(name).append("], ");
         sb.append("type=[").append(type).append("], ");
         sb.append("properties=[").append(properties).append("]");
-        
+
         return sb.toString();
     }
 }

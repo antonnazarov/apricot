@@ -181,6 +181,10 @@ public class ApricotCanvasHandler {
 
     public void makeEntitiesSelected(List<String> tables, boolean deselectOthers) {
         ApricotCanvas canvas = getSelectedCanvas();
+        makeEntitiesSelected(canvas, tables, deselectOthers);
+    }
+
+    public void makeEntitiesSelected(ApricotCanvas canvas, List<String> tables, boolean deselectOthers) {
         if (canvas != null && tables.size() > 0 && deselectOthers) {
             canvas.changeAllElementsStatus(ElementStatus.DEFAULT);
         }

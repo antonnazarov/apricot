@@ -11,13 +11,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.persistence.data.ConstraintManager;
+import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.RelationshipManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.TableCloneManager;
 import za.co.apricotdb.persistence.data.TableManager;
+import za.co.apricotdb.persistence.data.ViewManager;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
+import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotTable;
+import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.persistence.entity.ConstraintType;
 
 /**
@@ -44,24 +48,61 @@ public class DuplicateHandler {
     @Autowired
     RelationshipManager relationshipManager;
 
+    @Autowired
+    ApricotCanvasHandler canvasHandler;
+
+    @Autowired
+    ViewManager viewManager;
+
+    @Autowired
+    ProjectManager projectManager;
+
+    @Autowired
+    ApricotObjectLayoutHandler layoutHandler;
+
     @Transactional
-    public void duplicate(List<String> sTables) {
+    public List<String> duplicate(List<String> sTables, String sourceViewName) {
+        List<String> ret = new ArrayList<>();
         Map<ApricotTable, ApricotTable> clonedTables = new HashMap<>();
         Map<ApricotConstraint, ApricotConstraint> clonedConstraints = new HashMap<>();
 
         List<ApricotTable> tables = getTables(sTables);
         List<ApricotRelationship> relationships = relationshipManager.getRelationshipsForTables(tables);
+        ApricotView currentView = canvasHandler.getCurrentView();
+        ApricotView sourceView = getSourceView(sourceViewName, currentView);
 
         for (ApricotTable table : tables) {
             ApricotTable clonedTable = tableCloneManager.cloneTable(snapshotManager.getDefaultSnapshot(), table, false,
                     true);
             tableManager.saveTable(clonedTable);
+            ret.add(clonedTable.getName());
             cloneNonFKConstraints(table, clonedTable, clonedConstraints);
             clonedTables.put(table, clonedTable);
 
+            layoutHandler.cloneTableLayout(sourceView, currentView, table.getName(), clonedTable.getName());
         }
 
         cloneRelationships(relationships, clonedTables, clonedConstraints);
+
+        return ret;
+    }
+
+    private ApricotView getSourceView(String sourceViewName, ApricotView currentView) {
+        ApricotView sourceView = null;
+        if (!currentView.getName().equals(sourceViewName)) {
+            ApricotProject project = projectManager.findCurrentProject();
+            List<ApricotView> vws = viewManager.getViewByName(project, sourceViewName);
+            if (vws != null && vws.size() > 0) {
+                sourceView = vws.get(0);
+            } else {
+                List<ApricotView> gvws = viewManager.getViewByName(project, ApricotView.MAIN_VIEW);
+                if (gvws != null && gvws.size() > 0) {
+                    sourceView = gvws.get(0);
+                }
+            }
+        }
+
+        return sourceView;
     }
 
     private void cloneNonFKConstraints(ApricotTable table, ApricotTable clonedTable,

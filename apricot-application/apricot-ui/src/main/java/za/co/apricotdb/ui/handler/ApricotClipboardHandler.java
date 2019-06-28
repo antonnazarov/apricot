@@ -28,7 +28,7 @@ public class ApricotClipboardHandler {
 
     public static final String CLIPBOARD_HEADER = "CLIPBOARD_HEADER";
     public static final String CLIPBOARD_BODY = "CLIPBOARD_BODY";
-    public static final String CLIPBOARD_MARKER = "-- ApricotClipboardBuffer:";
+    public static final String CLIPBOARD_MARKER = "ApricotClipboard, view=";
 
     @Autowired
     ApricotCanvasHandler canvasHandler;
@@ -44,6 +44,9 @@ public class ApricotClipboardHandler {
 
     @Autowired
     ApricotSnapshotHandler snapshotHandler;
+
+    @Autowired
+    TreeViewHandler treeViewHandler;
 
     @Transactional
     public void copySelectedToClipboard() {
@@ -63,9 +66,12 @@ public class ApricotClipboardHandler {
         if (containsInfoToPaste(clipboard)) {
             String header = (String) clipboard.getContent(DataFormat.URL);
             List<String> sEntities = getEntitesToPaste(header);
-            duplicateHandler.duplicate(sEntities);
+            String sourceViewName = getViewName(header); // the name of the original view
+            List<String> sDuplicated = duplicateHandler.duplicate(sEntities, sourceViewName);
 
             snapshotHandler.syncronizeSnapshot(true);
+            canvasHandler.makeEntitiesSelected(sDuplicated, true);
+            treeViewHandler.selectEntities(sDuplicated);
         }
     }
 
@@ -79,7 +85,7 @@ public class ApricotClipboardHandler {
     }
 
     private List<String> getEntitesToPaste(String header) {
-        String l = header.substring(CLIPBOARD_MARKER.length());
+        String l = header.substring(header.indexOf("|") + 1);
         String[] ents = l.split(";");
         List<String> ret = new ArrayList<>();
         for (String s : ents) {
@@ -88,8 +94,20 @@ public class ApricotClipboardHandler {
         return ret;
     }
 
+    private String getViewName(String header) {
+        String p = header.substring(0, header.indexOf("|"));
+        String[] arr = p.split("=");
+        if (arr.length == 2) {
+            return arr[1];
+        }
+
+        return null;
+    }
+
     private boolean createClipboardContent(Properties props) {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
+        String viewName = canvasHandler.getCurrentViewTabInfo().getView().getName();
+
         List<ApricotEntity> entities = canvas.getSelectedEntities();
         if (entities.isEmpty()) {
             return false;
@@ -97,6 +115,7 @@ public class ApricotClipboardHandler {
 
         boolean first = true;
         StringBuilder sb = new StringBuilder(CLIPBOARD_MARKER);
+        sb.append(viewName).append("|");
         for (ApricotEntity ent : entities) {
             if (first) {
                 first = false;
