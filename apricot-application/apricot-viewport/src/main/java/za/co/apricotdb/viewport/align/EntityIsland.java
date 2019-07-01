@@ -16,28 +16,28 @@ import za.co.apricotdb.viewport.relationship.ApricotRelationship;
  */
 public class EntityIsland implements Comparable<EntityIsland> {
 
-    private ApricotEntity core;
-    private List<ApricotEntity> parents;
-    private List<ApricotEntity> children;
+    private EntityAllocation core;
+    private List<EntityAllocation> parents;
+    private List<EntityAllocation> children;
     private List<EntityIsland> merged; // merged islands
     private EntityIsland master;
     private boolean parent;
 
     public EntityIsland(ApricotEntity core) {
-        this.core = core;
+        this.core = new EntityAllocationImpl(core);
         parents = new ArrayList<>();
         children = new ArrayList<>();
         merged = new ArrayList<>();
 
         for (ApricotRelationship r : core.getForeignLinks()) {
-            if (!r.getParent().equals(core) && !parents.contains(r.getParent())) {
-                parents.add(r.getParent());
+            if (!r.getParent().equals(core) && !parents.contains(new EntityAllocationImpl(r.getParent()))) {
+                parents.add(new EntityAllocationImpl(r.getParent()));
             }
         }
 
         for (ApricotRelationship r : core.getPrimaryLinks()) {
-            if (!r.getChild().equals(core) && !children.contains(r.getChild())) {
-                children.add(r.getChild());
+            if (!r.getChild().equals(core) && !children.contains(new EntityAllocationImpl(r.getChild()))) {
+                children.add(new EntityAllocationImpl(r.getChild()));
             }
         }
     }
@@ -78,19 +78,19 @@ public class EntityIsland implements Comparable<EntityIsland> {
         return parents.size() + children.size() + mergedRank + 1;
     }
 
-    public ApricotEntity getCore() {
+    public EntityAllocation getCore() {
         return core;
     }
 
-    public List<ApricotEntity> getParents() {
+    public List<EntityAllocation> getParents() {
         return parents;
     }
 
-    public List<ApricotEntity> getChildren() {
+    public List<EntityAllocation> getChildren() {
         return children;
     }
 
-    public void removeEntity(ApricotEntity entity) {
+    public void removeEntity(EntityAllocation entity) {
         if (parents.contains(entity)) {
             parents.remove(entity);
         }
@@ -99,22 +99,22 @@ public class EntityIsland implements Comparable<EntityIsland> {
         }
     }
 
-    public List<ApricotEntity> getRelatedEntities() {
-        List<ApricotEntity> ret = new ArrayList<>(children);
+    public List<EntityAllocation> getRelatedEntities() {
+        List<EntityAllocation> ret = new ArrayList<>(children);
         ret.addAll(parents);
 
         return ret;
     }
 
-    public boolean isLinkedTo(ApricotEntity entity) {
+    public boolean isLinkedTo(EntityAllocation entity) {
         return getRelatedEntities().contains(entity);
     }
 
     /**
      * Collect and return all entities in the island.
      */
-    public List<ApricotEntity> getAllEntities() {
-        List<ApricotEntity> ret = new ArrayList<>();
+    public List<EntityAllocation> getAllEntities() {
+        List<EntityAllocation> ret = new ArrayList<>();
         ret.add(core);
         ret.addAll(getRelatedEntities());
         merged.forEach(isl -> ret.addAll(isl.getAllEntities()));
@@ -122,12 +122,12 @@ public class EntityIsland implements Comparable<EntityIsland> {
         return ret;
     }
 
-    public Set<ApricotEntity> findDuplicates() {
-        List<ApricotEntity> all = getAllEntities();
-        Set<ApricotEntity> ret = new HashSet<>();
-        Set<ApricotEntity> cp = new HashSet<>();
+    public Set<EntityAllocation> findDuplicates() {
+        List<EntityAllocation> all = getAllEntities();
+        Set<EntityAllocation> ret = new HashSet<>();
+        Set<EntityAllocation> cp = new HashSet<>();
 
-        for (ApricotEntity ent : all) {
+        for (EntityAllocation ent : all) {
             if (!cp.add(ent)) {
                 ret.add(ent);
             }
@@ -152,7 +152,7 @@ public class EntityIsland implements Comparable<EntityIsland> {
                 sb.append(parents.size()).append("/").append(children.size()).append(")");
             });
         }
-        Set<ApricotEntity> dups = findDuplicates();
+        Set<EntityAllocation> dups = findDuplicates();
         if (!dups.isEmpty()) {
             sb.append("; dups: ").append(dups);
         } else {

@@ -95,7 +95,7 @@ public class EntityIslandBundle {
             islands.add(current);
             tmpIslands.remove(current);
             for (EntityIsland island : tmpIslands) {
-                for (ApricotEntity ent : current.getRelatedEntities()) {
+                for (EntityAllocation ent : current.getRelatedEntities()) {
                     island.removeEntity(ent);
                 }
             }
