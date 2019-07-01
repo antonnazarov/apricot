@@ -66,9 +66,10 @@
                               <MenuItem disable="true" mnemonicParsing="false" text="Print Diagram" />
                            </items>
                         </Menu>
-                      <Menu disable="true" mnemonicParsing="false" text="Help">
+                      <Menu mnemonicParsing="false" text="Help">
                         <items>
-                          <MenuItem mnemonicParsing="false" text="About" />
+                          <MenuItem mnemonicParsing="false" onAction="#about" text="About Apricot DB" />
+                              <MenuItem mnemonicParsing="false" onAction="#usersGuide" text="User's Guide" />
                         </items>
                       </Menu>
                       <Menu id="menuSnapshot" mnemonicParsing="false" text="Snapshot:">

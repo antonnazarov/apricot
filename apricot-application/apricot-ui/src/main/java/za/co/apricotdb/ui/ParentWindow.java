@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ComboBox;
@@ -33,6 +34,7 @@ public class ParentWindow {
             "menuOperations", "menuSnapshot", "buttonSave", "buttonSnapshot", "buttonView" };
 
     private Pane mainAppPane;
+    private Application application;
 
     public void setParentPane(Pane mainAppPane) {
         this.mainAppPane = mainAppPane;
@@ -122,6 +124,14 @@ public class ParentWindow {
     
     public Window getWindow() {
         return mainAppPane.getScene().getWindow();
+    }
+    
+    public Application getApplication() {
+        return application;
+    }
+
+    public void setApplication(Application application) {
+        this.application = application;
     }
 
     /**

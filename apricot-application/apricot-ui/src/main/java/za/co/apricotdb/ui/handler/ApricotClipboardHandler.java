@@ -12,7 +12,11 @@ import org.springframework.stereotype.Component;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
+import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.TableManager;
+import za.co.apricotdb.persistence.data.ViewManager;
+import za.co.apricotdb.persistence.entity.ApricotProject;
+import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.ScriptGenerateController.ScriptSource;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
@@ -48,6 +52,12 @@ public class ApricotClipboardHandler {
     @Autowired
     TreeViewHandler treeViewHandler;
 
+    @Autowired
+    ViewManager viewManager;
+
+    @Autowired
+    ProjectManager projectManager;
+
     @Transactional
     public void copySelectedToClipboard() {
         Clipboard clipboard = Clipboard.getSystemClipboard();
@@ -71,6 +81,7 @@ public class ApricotClipboardHandler {
 
             snapshotHandler.syncronizeSnapshot(true);
             canvasHandler.makeEntitiesSelected(sDuplicated, true);
+            selectInMainView(sDuplicated);
             treeViewHandler.selectEntities(sDuplicated);
         }
     }
@@ -82,6 +93,10 @@ public class ApricotClipboardHandler {
         }
 
         return false;
+    }
+
+    public boolean containsInfoToPaste() {
+        return containsInfoToPaste(Clipboard.getSystemClipboard());
     }
 
     private List<String> getEntitesToPaste(String header) {
@@ -130,5 +145,17 @@ public class ApricotClipboardHandler {
         props.put(CLIPBOARD_BODY, script);
 
         return true;
+    }
+
+    private void selectInMainView(List<String> sDuplicated) {
+        ApricotProject project = projectManager.findCurrentProject();
+        ApricotView view = viewManager.getCurrentView(project);
+        if (!view.getName().equals(ApricotView.MAIN_VIEW)) {
+            ApricotView mainView = viewManager.getViewByName(project, ApricotView.MAIN_VIEW).get(0);
+            TabInfoObject info = canvasHandler.getTabInfoOnView(mainView);
+            if (info != null) {
+                canvasHandler.makeEntitiesSelected(info.getCanvas(), sDuplicated, true);
+            }
+        }
     }
 }

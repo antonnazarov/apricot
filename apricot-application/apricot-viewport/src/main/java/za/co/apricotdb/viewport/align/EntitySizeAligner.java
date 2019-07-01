@@ -31,8 +31,8 @@ public class EntitySizeAligner {
     public boolean alignEntitiesSameWidth(ApricotCanvas canvas) {
         return alignEntitiesSameWidth(getSelectedEntities(canvas));
     }
-
-    public boolean alignEntitiesSameWidth(List<ApricotEntity> entities) {
+    
+    public double getEntitiesMaxWidth(List<ApricotEntity> entities) {
         double maxWidth = 0;
         if (entities != null && entities.size() > 1) {
             for (ApricotEntity entity : entities) {
@@ -41,7 +41,14 @@ public class EntitySizeAligner {
                     maxWidth = width;
                 }
             }
+        }
+        
+        return maxWidth;
+    }
 
+    public boolean alignEntitiesSameWidth(List<ApricotEntity> entities) {
+        double maxWidth = getEntitiesMaxWidth(entities);
+        if (entities != null && entities.size() > 1) {
             for (ApricotEntity entity : entities) {
                 entity.getEntityShape().setPrefWidth(maxWidth);
             }

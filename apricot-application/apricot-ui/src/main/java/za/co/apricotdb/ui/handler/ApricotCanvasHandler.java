@@ -169,6 +169,17 @@ public class ApricotCanvasHandler {
         return null;
     }
 
+    public TabInfoObject getTabInfoOnView(ApricotView view) {
+        for (Tab t : parentWindow.getProjectTabPane().getTabs()) {
+            TabInfoObject o = (TabInfoObject) t.getUserData();
+            if (o.getView().equals(view)) {
+                return o;
+            }
+        }
+
+        return null;
+    }
+
     public void makeEntitySelected(TabInfoObject tabInfo, String tableName, boolean deselectOthers) {
         ApricotEntity entity = tabInfo.getCanvas().findEntityByName(tableName);
         if (entity != null) {

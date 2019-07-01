@@ -33,7 +33,7 @@ public class ApricotMainApp extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("apricot-main.fxml"));
         loader.setControllerFactory(context::getBean);
         rootNode = loader.load();
-        
+
         MainAppController controller = loader.<MainAppController>getController();
         controller.init();
         System.out.println("ApricotMainApp: the main app controller was instantiated: " + controller.toString());
@@ -43,6 +43,7 @@ public class ApricotMainApp extends Application {
     public void start(Stage primaryStage) throws Exception {
         ParentWindow pw = context.getBean(ParentWindow.class);
         pw.setParentPane(rootNode);
+        pw.setApplication(this);
         primaryStage.setOnShown(event -> {
             initializer.initializeDefault();
         });
@@ -52,8 +53,8 @@ public class ApricotMainApp extends Application {
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("favicon-32x32.png")));
         primaryStage.setMaximized(true);
         primaryStage.show();
-        
-        //  handling key pressed in the main scene
+
+        // handling key pressed in the main scene
         primaryStage.getScene().setOnKeyPressed(context.getBean(OnKeyPressedEventHandler.class));
     }
 

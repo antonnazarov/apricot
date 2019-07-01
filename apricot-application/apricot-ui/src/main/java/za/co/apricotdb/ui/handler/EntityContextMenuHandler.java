@@ -56,9 +56,12 @@ public class EntityContextMenuHandler {
 
     @Autowired
     ApricotSnapshotHandler snapshotHandler;
-    
+
     @Autowired
     ObjectAllocationHandler allocationHandler;
+    
+    @Autowired
+    ApricotClipboardHandler clipboardHandler;
 
     public void createEntityContextMenu(ApricotEntity entity, double x, double y) {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
@@ -70,23 +73,24 @@ public class EntityContextMenuHandler {
             if (selected.size() == 1) {
                 // one entity was selected
                 if (!view.getName().equals(ApricotView.MAIN_VIEW)) {
-                    contextMenu.getItems().addAll(buildEditEntityItem(entity.getTableName()), buildDeleteEntityItem(),
+                    contextMenu.getItems().addAll(buildEditEntityItem(entity.getTableName()), buildCopyItem(), buildDeleteEntityItem(),
                             buildRemoveFromViewItem(getNames(selected)), buildSelectInListItem(getNames(selected)),
-                            buildRelationshipItem(true));
+                            new SeparatorMenuItem(), buildRelationshipItem(true));
                 } else {
-                    contextMenu.getItems().addAll(buildEditEntityItem(entity.getTableName()), buildDeleteEntityItem(),
-                            buildSelectInListItem(getNames(selected)), buildRelationshipItem(true));
+                    contextMenu.getItems().addAll(buildEditEntityItem(entity.getTableName()), buildCopyItem(), buildDeleteEntityItem(),
+                            buildSelectInListItem(getNames(selected)), new SeparatorMenuItem(),
+                            buildRelationshipItem(true));
                 }
             } else if (selected.size() > 1) {
                 // a group of entities was selected
                 if (!view.getName().equals(ApricotView.MAIN_VIEW)) {
-                    contextMenu.getItems().addAll(buildDeleteEntityItem(), buildRemoveFromViewItem(getNames(selected)),
+                    contextMenu.getItems().addAll(buildCopyItem(), buildDeleteEntityItem(), buildRemoveFromViewItem(getNames(selected)),
                             buildSelectInListItem(getNames(selected)), new SeparatorMenuItem(),
                             buildSameSizeWidthItem(), buildMinimizeWidthItem(), buildAlignLeftItem(),
                             buildAlignRightItem(), buildAlignUpItem(), buildAlignDownItem(), new SeparatorMenuItem(),
                             buildRelationshipItem(false));
                 } else {
-                    contextMenu.getItems().addAll(buildDeleteEntityItem(), buildSelectInListItem(getNames(selected)),
+                    contextMenu.getItems().addAll(buildCopyItem(), buildDeleteEntityItem(), buildSelectInListItem(getNames(selected)),
                             new SeparatorMenuItem(), buildSameSizeWidthItem(), buildMinimizeWidthItem(),
                             buildAlignLeftItem(), buildAlignRightItem(), buildAlignUpItem(), buildAlignDownItem(),
                             new SeparatorMenuItem(), buildRelationshipItem(false));
@@ -157,7 +161,7 @@ public class EntityContextMenuHandler {
 
         return item;
     }
-    
+
     public MenuItem buildAddToViewItem(List<String> entities) {
         MenuItem item = new MenuItem("Add to View");
         item.setOnAction(e -> {
@@ -246,6 +250,15 @@ public class EntityContextMenuHandler {
         item.setOnAction(e -> {
             canvasHandler.makeEntitiesSelected(entities, true);
             allocationHandler.scrollToSelected(canvasHandler.getCurrentViewTabInfo());
+        });
+
+        return item;
+    }
+    
+    public MenuItem buildCopyItem() {
+        MenuItem item = new MenuItem("Copy <Ctrl+C>");
+        item.setOnAction(e -> {
+            clipboardHandler.copySelectedToClipboard();
         });
 
         return item;

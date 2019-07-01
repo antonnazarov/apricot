@@ -47,6 +47,9 @@ public class CanvasContextMenuHandler {
     @Autowired
     CanvasAlignHandler aligner;
 
+    @Autowired
+    ApricotClipboardHandler clipboardHandler;
+
     public void createCanvasContextMenu(ApricotCanvas canvas, double x, double y) {
         ApricotView view = canvasHandler.getCurrentView();
 
@@ -68,6 +71,16 @@ public class CanvasContextMenuHandler {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
+        });
+
+        MenuItem refreshCanvas = new MenuItem("Refresh <F5>");
+        refreshCanvas.setOnAction(e -> {
+            snapshotHandler.syncronizeSnapshot(false);
+        });
+
+        MenuItem paste = new MenuItem("Paste <Ctrl+V>");
+        paste.setOnAction(e -> {
+            clipboardHandler.pasteSelectedFromClipboard();
         });
 
         RadioMenuItem rSimple = new RadioMenuItem("Simple View");
@@ -105,8 +118,13 @@ public class CanvasContextMenuHandler {
         });
 
         ContextMenu contextMenu = new ContextMenu();
-        contextMenu.getItems().addAll(editViewEntity, new SeparatorMenuItem(), newEntity, new SeparatorMenuItem(),
-                rSimple, rDefault, rExtended, new SeparatorMenuItem(), alignEntities);
+        if (clipboardHandler.containsInfoToPaste()) {
+            contextMenu.getItems().addAll(paste, refreshCanvas, editViewEntity, new SeparatorMenuItem(), newEntity,
+                    new SeparatorMenuItem(), rSimple, rDefault, rExtended, new SeparatorMenuItem(), alignEntities);
+        } else {
+            contextMenu.getItems().addAll(refreshCanvas, editViewEntity, new SeparatorMenuItem(), newEntity,
+                    new SeparatorMenuItem(), rSimple, rDefault, rExtended, new SeparatorMenuItem(), alignEntities);
+        }
         contextMenu.setAutoHide(true);
         contextMenu.show(parentWindow.getWindow(), x, y);
     }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javafx.animation.PauseTransition;
+import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -24,6 +25,7 @@ import za.co.apricotdb.persistence.data.ViewManager;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
+import za.co.apricotdb.ui.handler.ApricotAboutHandler;
 import za.co.apricotdb.ui.handler.ApricotCanvasHandler;
 import za.co.apricotdb.ui.handler.ApricotEntityHandler;
 import za.co.apricotdb.ui.handler.ApricotProjectHandler;
@@ -103,6 +105,9 @@ public class MainAppController {
 
     @Autowired
     ApricotCanvasHandler canvasHandler;
+
+    @Autowired
+    ApricotAboutHandler aboutHandler;
 
     @FXML
     AnchorPane mainPane;
@@ -355,6 +360,21 @@ public class MainAppController {
     @FXML
     public void undo(ActionEvent event) {
         undoManager.undo();
+    }
+
+    @FXML
+    public void about(ActionEvent event) {
+        try {
+            aboutHandler.showAboutForm();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void usersGuide(ActionEvent event) {
+        Application app = parentWindow.getApplication();
+        app.getHostServices().showDocument("https://www.apricotdb.co.za/joomla/index.php/user-guide");
     }
 
     public TabPane getViewsTabPane() {
