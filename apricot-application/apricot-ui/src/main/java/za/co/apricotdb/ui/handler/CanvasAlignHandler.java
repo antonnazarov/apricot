@@ -3,7 +3,9 @@ package za.co.apricotdb.ui.handler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import za.co.apricotdb.viewport.align.EntityIsland;
 import za.co.apricotdb.viewport.align.EntityIslandBundle;
+import za.co.apricotdb.viewport.align.IslandAllocationHandler;
 
 /**
  * This handler calls the align operation on the current Canvas.
@@ -17,8 +19,15 @@ public class CanvasAlignHandler {
     @Autowired
     ApricotCanvasHandler canvasHandler;
 
+    @Autowired
+    IslandAllocationHandler allocationHandler;
+
     public void alignCanvasIslands() {
         EntityIslandBundle islandBundle = new EntityIslandBundle(canvasHandler.getSelectedCanvas());
         islandBundle.initialize();
+
+        for (EntityIsland island : islandBundle.getIslands()) {
+            allocationHandler.allocateIsland(island);
+        }
     }
 }

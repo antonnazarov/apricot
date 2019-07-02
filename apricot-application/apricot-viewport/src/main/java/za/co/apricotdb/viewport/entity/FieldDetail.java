@@ -34,4 +34,15 @@ public class FieldDetail {
     public String getConstraints() {
         return constraints;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(name).append(", mandatory=[").append(mandatory).append("], type=[").append(type)
+                .append("], primaryKey=[").append(primaryKey).append("], constraints=[").append(constraints)
+                .append("]");
+
+        return sb.toString();
+    }
 }

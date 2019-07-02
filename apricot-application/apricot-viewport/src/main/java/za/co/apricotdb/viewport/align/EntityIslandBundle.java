@@ -3,7 +3,9 @@ package za.co.apricotdb.viewport.align;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ApricotElement;
@@ -63,7 +65,14 @@ public class EntityIslandBundle {
         System.out.println("                 REMOVED UNLINKED");
         System.out.println("----------------------------------------");
         System.out.println(islands);
+        
+        removeFullyIncluded(islands);
 
+        System.out.println("----------------------------------------");
+        System.out.println("                 REMOVED FULLY INCLUDED");
+        System.out.println("----------------------------------------");
+        System.out.println(islands);
+        
         mergeRelatedIslands(islands);
 
         System.out.println("----------------------------------------");
@@ -119,6 +128,24 @@ public class EntityIslandBundle {
         List<EntityIsland> unlinked = getUnlinkedIslands(islands);
         standAlone.addAll(unlinked);
         islands.removeAll(unlinked);
+    }
+    
+    /**
+     * Remove the islands which entities have been fully included into the high rank islands. 
+     */
+    private void removeFullyIncluded(List<EntityIsland> islands) {
+        List<EntityIsland> delete = new ArrayList<>();
+        Set<EntityAllocation> allocs = new HashSet<>();
+        
+        for (EntityIsland isl : islands) {
+            if (allocs.containsAll(isl.getAllEntities())) {
+                delete.add(isl);
+            } else {
+                allocs.addAll(isl.getAllEntities());
+            }
+        }
+        
+        islands.removeAll(delete);
     }
 
     private void mergeRelatedIslands(List<EntityIsland> islands) {

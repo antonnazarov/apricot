@@ -1,6 +1,13 @@
 package za.co.apricotdb.viewport.align;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Component;
+
+import javafx.geometry.Point2D;
+import za.co.apricotdb.viewport.entity.FieldDetail;
+import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 
 /**
  * The business logic of allocation of the objects included into one island.
@@ -10,9 +17,113 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class IslandAllocationHandler {
-    
+
+    private final static double VERTICAL_DISTANCE = 20;
+    private final static double HORIZONTAL_BIAS = 20;
+
     public void allocateIsland(EntityIsland island) {
-        
+        sortParents(island);
+        alignEntityWidth(island);
     }
 
+    /**
+     * The parents included into the island have to be ordered according to the
+     * sequence of the fields in the core entity.
+     */
+    private void sortParents(EntityIsland island) {
+        List<EntityAllocation> sortedParents = new ArrayList<>();
+        List<EntityAllocation> parents = island.getParents();
+
+        EntityAllocation core = island.getCore();
+        List<ApricotRelationship> links = core.getForeignLinks();
+
+        List<FieldDetail> details = core.getDetails();
+        for (FieldDetail det : details) {
+            if (det.getConstraints() != null && det.getConstraints().contains("FK")) {
+                for (ApricotRelationship r : links) {
+                    if (r.getForeignKeyName().equals(det.getName())) {
+                        EntityAllocation alloc = parents.stream()
+                                .filter(a -> r.getParent().getTableName().equals(a.getTableName())).findAny()
+                                .orElse(null);
+                        if (alloc != null) {
+                            sortedParents.add(alloc);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (sortedParents.size() != parents.size()) {
+            throw new RuntimeException("The oroginal and sorted parents lists have different sizes");
+        }
+
+        parents.clear();
+        parents.addAll(sortedParents);
+    }
+
+    private void alignEntityWidth(EntityIsland island) {
+        if (island.getParents().size() > 0) {
+            double maxParentWidth = getEntitiesMaxWidth(island.getParents());
+            for (EntityAllocation alloc : island.getParents()) {
+                alloc.setWidth(maxParentWidth);
+            }
+        }
+        if (island.getChildren().size() > 0) {
+            double maxChildWidth = getEntitiesMaxWidth(island.getChildren());
+            for (EntityAllocation alloc : island.getChildren()) {
+                alloc.setWidth(maxChildWidth);
+            }
+        }
+    }
+
+    private double getEntitiesMaxWidth(List<EntityAllocation> entities) {
+        double maxWidth = 0;
+        if (entities != null && entities.size() > 1) {
+            for (EntityAllocation entity : entities) {
+                double width = entity.getEntityShape().getWidth();
+                if (width > maxWidth) {
+                    maxWidth = width;
+                }
+            }
+        }
+
+        return maxWidth;
+    }
+
+    /**
+     * Do all vertical alignments.
+     */
+    private void alignVertically(EntityIsland island) {
+        alignVertically(island.getParents());
+        alignVertically(island.getChildren());
+    }
+
+    private void alignVertically(List<EntityAllocation> allocs) {
+        if (allocs.size() > 0) {
+            double layoutY = allocs.get(0).getLayout().getY();
+            for (EntityAllocation alloc : allocs) {
+                Point2D l = alloc.getLayout();
+                alloc.setLayout(l.getX(), layoutY);
+
+                layoutY += alloc.getHeight() + VERTICAL_DISTANCE;
+            }
+        }
+    }
+
+    private double getOverallHeight(List<EntityAllocation> entities) {
+        double ret = 0;
+        if (entities.size() > 0) {
+            if (entities.size() == 1) {
+                ret = entities.get(0).getWidth();
+            } else {
+
+                double top = entities.get(0).getLayout().getY();
+                EntityAllocation alloc = entities.get(entities.size() - 1);
+                double bottom = alloc.getLayout().getY() + alloc.getHeight();
+                ret = bottom - top;
+            }
+        }
+
+        return ret;
+    }
 }
