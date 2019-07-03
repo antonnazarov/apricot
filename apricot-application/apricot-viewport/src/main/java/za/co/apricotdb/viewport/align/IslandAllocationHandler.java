@@ -21,9 +21,47 @@ public class IslandAllocationHandler {
     private final static double VERTICAL_DISTANCE = 20;
     private final static double HORIZONTAL_BIAS = 20;
 
+    /**
+     * Perform the relative (0,0 based) allocation of the island.
+     */
     public void allocateIsland(EntityIsland island) {
         sortParents(island);
         alignEntityWidth(island);
+        alignVertically(island);
+        alignHorizontally(island);
+
+        // allocate all merged islands
+        for (EntityIsland isl : island.getMergedIslands()) {
+            allocateIsland(isl);
+        }
+    }
+
+    public double getOverallHeight(List<EntityAllocation> entities) {
+        double ret = 0;
+        if (entities.size() > 0) {
+            if (entities.size() == 1) {
+                ret = entities.get(0).getWidth();
+            } else {
+
+                double top = entities.get(0).getLayout().getY();
+                EntityAllocation alloc = entities.get(entities.size() - 1);
+                double bottom = alloc.getLayout().getY() + alloc.getHeight();
+                ret = bottom - top;
+            }
+        }
+
+        return ret;
+    }
+
+    public void bias(List<EntityAllocation> allocs, double biasX, double biasY) {
+        for (EntityAllocation alloc : allocs) {
+            bias(alloc, biasX, biasY);
+        }
+    }
+
+    public void bias(EntityAllocation alloc, double biasX, double biasY) {
+        Point2D layout = alloc.getLayout();
+        alloc.setLayout(layout.getX() + biasX, layout.getY() + biasY);
     }
 
     /**
@@ -96,6 +134,36 @@ public class IslandAllocationHandler {
     private void alignVertically(EntityIsland island) {
         alignVertically(island.getParents());
         alignVertically(island.getChildren());
+
+        double parentHeight = getOverallHeight(island.getParents());
+        double childHeight = getOverallHeight(island.getChildren());
+        double coreHeight = island.getCore().getHeight();
+
+        double max = Math.max(parentHeight, childHeight);
+        max = Math.max(max, coreHeight);
+
+        if (parentHeight < max) {
+            bias(island.getParents(), 0, max / 2 - parentHeight / 2);
+        }
+        if (childHeight < max) {
+            bias(island.getChildren(), 0, max / 2 - childHeight / 2);
+        }
+        if (coreHeight < max) {
+            bias(island.getCore(), 0, max / 2 - coreHeight / 2);
+        }
+    }
+
+    private void alignHorizontally(EntityIsland island) {
+        double biasX = 0;
+        if (island.getParents().size() > 0) {
+            double dist = (island.getParents().size() + 2) * HORIZONTAL_BIAS;
+            biasX = island.getParents().get(0).getWidth() + dist;
+
+            bias(island.getCore(), biasX, 0);
+
+            biasX += island.getCore().getWidth() + (island.getChildren().size() + 2) * HORIZONTAL_BIAS;
+            bias(island.getChildren(), biasX, 0);
+        }
     }
 
     private void alignVertically(List<EntityAllocation> allocs) {
@@ -108,22 +176,5 @@ public class IslandAllocationHandler {
                 layoutY += alloc.getHeight() + VERTICAL_DISTANCE;
             }
         }
-    }
-
-    private double getOverallHeight(List<EntityAllocation> entities) {
-        double ret = 0;
-        if (entities.size() > 0) {
-            if (entities.size() == 1) {
-                ret = entities.get(0).getWidth();
-            } else {
-
-                double top = entities.get(0).getLayout().getY();
-                EntityAllocation alloc = entities.get(entities.size() - 1);
-                double bottom = alloc.getLayout().getY() + alloc.getHeight();
-                ret = bottom - top;
-            }
-        }
-
-        return ret;
     }
 }
