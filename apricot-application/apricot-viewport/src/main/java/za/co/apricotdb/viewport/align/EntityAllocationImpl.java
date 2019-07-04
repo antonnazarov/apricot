@@ -17,8 +17,8 @@ import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 public class EntityAllocationImpl implements EntityAllocation {
 
     private ApricotEntity entity;
-    private Point2D layout;
-    private double width;
+    private Point2D layout = new Point2D(0, 0);
+    private double width = 0;
 
     public EntityAllocationImpl(ApricotEntity entity) {
         this.entity = entity;
@@ -78,7 +78,7 @@ public class EntityAllocationImpl implements EntityAllocation {
         if (entity.getEntityShape() != null) {
             return entity.getEntityShape().getHeight();
         }
-        
+
         return 0;
     }
 

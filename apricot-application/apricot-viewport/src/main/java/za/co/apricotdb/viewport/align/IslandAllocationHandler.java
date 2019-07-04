@@ -112,6 +112,7 @@ public class IslandAllocationHandler {
                 alloc.setWidth(maxChildWidth);
             }
         }
+        island.getCore().setWidth(island.getCore().getEntityShape().getWidth());
     }
 
     private double getEntitiesMaxWidth(List<EntityAllocation> entities) {
@@ -158,12 +159,12 @@ public class IslandAllocationHandler {
         if (island.getParents().size() > 0) {
             double dist = (island.getParents().size() + 2) * HORIZONTAL_BIAS;
             biasX = island.getParents().get(0).getWidth() + dist;
-
-            bias(island.getCore(), biasX, 0);
-
-            biasX += island.getCore().getWidth() + (island.getChildren().size() + 2) * HORIZONTAL_BIAS;
-            bias(island.getChildren(), biasX, 0);
         }
+
+        bias(island.getCore(), biasX, 0);
+
+        biasX += island.getCore().getWidth() + (island.getChildren().size() + 2) * HORIZONTAL_BIAS;
+        bias(island.getChildren(), biasX, 0);
     }
 
     private void alignVertically(List<EntityAllocation> allocs) {
