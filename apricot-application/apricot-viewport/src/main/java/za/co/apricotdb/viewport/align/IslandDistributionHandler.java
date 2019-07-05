@@ -60,6 +60,12 @@ public class IslandDistributionHandler {
             }
         }
 
+        // apply stand alone's
+        for (EntityIsland isl : bundle.getStandAlone()) {
+            EntityAllocation alloc = isl.getCore();
+            alloc.getEntityShape().setLayoutX(alloc.getLayout().getX());
+            alloc.getEntityShape().setLayoutY(alloc.getLayout().getY());
+        }
     }
 
     /**
@@ -83,8 +89,8 @@ public class IslandDistributionHandler {
 
             bias(isl, biasX, biasY);
 
-            biasX += getIslandWidth(isl) + HORIZONTAL_ISLANDS_DISTANCE / 2;
-            double islandHeight = getIslandHeight(isl);
+            biasX += isl.getCore().getEntityShape().getWidth() + HORIZONTAL_ISLANDS_DISTANCE / 2;
+            double islandHeight = isl.getCore().getHeight();
             if (islandHeight > maxHeight) {
                 maxHeight = islandHeight;
             }
@@ -98,18 +104,17 @@ public class IslandDistributionHandler {
         double maxX = 0;
         double maxY = 0;
 
-        // the "horizontal" cycle
         for (List<EntityIsland> column : allocMap) {
             double colHeight = getColumnHeight(column);
             if (colHeight > maxY) {
                 maxY = colHeight;
             }
-
-            double colWidth = getColumnWidth(column);
-            if (colWidth > maxX) {
-                maxX = colWidth;
-            }
         }
+
+        List<EntityIsland> lastCol = allocMap.get(allocMap.size() - 1);
+        double colWidth = getColumnWidth(lastCol);
+        Point2D coords = getIslandCoords(lastCol.get(0));
+        maxX = coords.getX() + colWidth;
 
         return new Point2D(maxX, maxY);
     }
@@ -128,25 +133,11 @@ public class IslandDistributionHandler {
     }
 
     private double getColumnHeight(List<EntityIsland> column) {
-        double ret = 0;
+        EntityIsland isl = column.get(column.size() - 1); // the last island in the column
+        Point2D coord = getIslandCoords(isl);
+        double height = getIslandHeight(isl);
 
-        EntityIsland isl = column.get(column.size() - 1);
-        ret = isl.getCore().getLayout().getY();
-        if (isl.getParents().size() > 0) {
-            double parentY = isl.getParents().get(0).getLayout().getY();
-            if (parentY < ret) {
-                ret = parentY;
-            }
-        }
-
-        if (isl.getChildren().size() > 0) {
-            double childY = isl.getChildren().get(0).getLayout().getY();
-            if (childY < ret) {
-                ret = childY;
-            }
-        }
-
-        return ret;
+        return coord.getY() + height;
     }
 
     private List<List<EntityIsland>> initAllocationMap(EntityIslandBundle bundle) {
@@ -242,5 +233,31 @@ public class IslandDistributionHandler {
     private void printAlloc(EntityAllocation alloc, StringBuilder sb) {
         sb.append(alloc.getTableName()).append(", ").append(alloc.getLayout()).append(", ").append(alloc.getWidth())
                 .append(" ");
+    }
+
+    private Point2D getIslandCoords(EntityIsland island) {
+        double x = 0;
+        double y = 0;
+
+        if (island.getParents().size() > 0) {
+            x = island.getParents().get(0).getLayout().getX();
+            y = island.getParents().get(0).getLayout().getY();
+        } else {
+            x = island.getCore().getLayout().getX();
+        }
+
+        double coreY = island.getCore().getLayout().getY();
+        if (coreY < y) {
+            y = coreY;
+        }
+
+        if (island.getChildren().size() > 0) {
+            double childY = island.getChildren().get(0).getLayout().getY();
+            if (childY < y) {
+                y = childY;
+            }
+        }
+
+        return new Point2D(x, y);
     }
 }
