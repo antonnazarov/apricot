@@ -187,14 +187,21 @@ public class IslandDistributionHandler {
     }
 
     private double getIslandWidth(EntityIsland island) {
-        EntityAllocation alloc = null;
-        if (island.getChildren().size() > 0) {
-            alloc = island.getChildren().get(0);
+        double startX = 0;
+        double endX = 0;
+        if (island.getParents().size() > 0) {
+            startX = island.getParents().get(0).getLayout().getX();
         } else {
-            alloc = island.getCore();
+            startX = island.getCore().getLayout().getX();
         }
 
-        return alloc.getLayout().getX() + alloc.getWidth();
+        if (island.getChildren().size() > 0) {
+            endX = island.getChildren().get(0).getLayout().getX() + island.getChildren().get(0).getWidth();
+        } else {
+            endX = island.getCore().getLayout().getX() + island.getCore().getWidth();
+        }
+
+        return endX - startX;
     }
 
     private String getAllocMapPrintContent(List<List<EntityIsland>> allocMap, EntityIslandBundle bundle) {

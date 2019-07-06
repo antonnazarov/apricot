@@ -40,9 +40,8 @@ public class IslandAllocationHandler {
         double ret = 0;
         if (entities.size() > 0) {
             if (entities.size() == 1) {
-                ret = entities.get(0).getWidth();
+                ret = entities.get(0).getHeight();
             } else {
-
                 double top = entities.get(0).getLayout().getY();
                 EntityAllocation alloc = entities.get(entities.size() - 1);
                 double bottom = alloc.getLayout().getY() + alloc.getHeight();
@@ -117,7 +116,7 @@ public class IslandAllocationHandler {
 
     private double getEntitiesMaxWidth(List<EntityAllocation> entities) {
         double maxWidth = 0;
-        if (entities != null && entities.size() > 1) {
+        if (entities != null && entities.size() > 0) {
             for (EntityAllocation entity : entities) {
                 double width = entity.getEntityShape().getWidth();
                 if (width > maxWidth) {
