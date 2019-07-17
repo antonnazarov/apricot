@@ -107,6 +107,7 @@ public class EntityIslandBundle {
                 for (EntityAllocation ent : current.getRelatedEntities()) {
                     island.removeEntity(ent);
                 }
+                island.removeEntity(current.getCore());
             }
             sortIslands(tmpIslands);
         }
