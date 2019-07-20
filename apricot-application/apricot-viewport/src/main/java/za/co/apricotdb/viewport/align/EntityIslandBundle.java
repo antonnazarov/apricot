@@ -65,14 +65,14 @@ public class EntityIslandBundle {
         System.out.println("                 REMOVED UNLINKED");
         System.out.println("----------------------------------------");
         System.out.println(islands);
-        
+
         removeFullyIncluded(islands);
 
         System.out.println("----------------------------------------");
         System.out.println("                 REMOVED FULLY INCLUDED");
         System.out.println("----------------------------------------");
         System.out.println(islands);
-        
+
         mergeRelatedIslands(islands);
 
         System.out.println("----------------------------------------");
@@ -130,14 +130,15 @@ public class EntityIslandBundle {
         standAlone.addAll(unlinked);
         islands.removeAll(unlinked);
     }
-    
+
     /**
-     * Remove the islands which entities have been fully included into the high rank islands. 
+     * Remove the islands which entities have been fully included into the high rank
+     * islands.
      */
     private void removeFullyIncluded(List<EntityIsland> islands) {
         List<EntityIsland> delete = new ArrayList<>();
         Set<EntityAllocation> allocs = new HashSet<>();
-        
+
         for (EntityIsland isl : islands) {
             if (allocs.containsAll(isl.getAllEntities())) {
                 delete.add(isl);
@@ -145,7 +146,7 @@ public class EntityIslandBundle {
                 allocs.addAll(isl.getAllEntities());
             }
         }
-        
+
         islands.removeAll(delete);
     }
 
@@ -158,18 +159,18 @@ public class EntityIslandBundle {
         for (EntityIsland slave : islands) {
             if (tIslands.remove(slave)) {
                 for (EntityIsland master : tIslands) {
-                    if (slave.getAllEntities().contains(master.getCore())
-                            || master.getAllEntities().contains(slave.getCore())) {
-                        if (slave.getChildren().contains(master.getCore())) {
-                            if (slave.getIslandRank() > 2) {
-                                master.merge(slave, true);
-                            }
-                        } else {
-                            if (slave.getIslandRank() > 2) {
-                                master.merge(slave, false);
-                            }
-                        }
+                    boolean remove = false;
+                    if (slave.getAllEntities().contains(master.getCore())) {
+                        slave.removeEntity(master.getCore());
+                        master.merge(slave, true);
+                        remove = true;
+                    } else if (master.getAllEntities().contains(slave.getCore())) {
+                        master.removeEntity(slave.getCore());
+                        master.merge(slave, false);
+                        remove = true;
+                    }
 
+                    if (remove) {
                         removals.add(slave);
                         break;
                     }

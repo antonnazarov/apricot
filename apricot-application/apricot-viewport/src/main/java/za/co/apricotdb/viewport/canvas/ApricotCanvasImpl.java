@@ -18,6 +18,7 @@ import za.co.apricotdb.viewport.entity.ApricotEntity;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
 import za.co.apricotdb.viewport.entity.shape.DefaultEntityShape;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
+import za.co.apricotdb.viewport.relationship.RelationshipType;
 import za.co.apricotdb.viewport.relationship.shape.ApricotRelationshipShape;
 import za.co.apricotdb.viewport.relationship.shape.RelationshipTopology;
 import za.co.apricotdb.viewport.relationship.shape.RelationshipTopologyImpl;
@@ -202,6 +203,31 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
                                     break;
                                 default:
                                     break;
+                                }
+                            }
+                        } else {
+                            // check if the normal and extended views have the primary and foreign key
+                            // in the same time
+                            for (ApricotRelationship r : entity.getForeignLinks()) {
+                                if (r.getRelationshipType() == RelationshipType.IDENTIFYING) {
+                                    Side side = topology.getRelationshipSide(r, false);
+                                    switch (side) {
+                                    case LEFT:
+                                        if (entityShape.getLeftStack().getPrimaryLinkSize() > 0) {
+                                            entityShape.getLeftStack().addChildRelationship(r);
+                                        }
+                                        break;
+                                    case RIGHT:
+                                        if (entityShape.getRightStack().getPrimaryLinkSize() > 0) {
+                                            entityShape.getRightStack().addChildRelationship(r);
+                                        }
+                                        break;
+                                    case TOP:
+                                        break;
+
+                                    default:
+                                        break;
+                                    }
                                 }
                             }
                         }

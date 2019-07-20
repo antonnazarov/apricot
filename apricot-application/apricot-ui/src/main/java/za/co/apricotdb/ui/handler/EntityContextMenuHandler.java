@@ -59,7 +59,7 @@ public class EntityContextMenuHandler {
 
     @Autowired
     ObjectAllocationHandler allocationHandler;
-    
+
     @Autowired
     ApricotClipboardHandler clipboardHandler;
 
@@ -73,27 +73,31 @@ public class EntityContextMenuHandler {
             if (selected.size() == 1) {
                 // one entity was selected
                 if (!view.getName().equals(ApricotView.MAIN_VIEW)) {
-                    contextMenu.getItems().addAll(buildEditEntityItem(entity.getTableName()), buildCopyItem(), buildDeleteEntityItem(),
-                            buildRemoveFromViewItem(getNames(selected)), buildSelectInListItem(getNames(selected)),
-                            new SeparatorMenuItem(), buildRelationshipItem(true));
+                    contextMenu.getItems().addAll(buildEditEntityItem(entity.getTableName()), buildCopyItem(),
+                            buildDeleteEntityItem(), buildRemoveFromViewItem(getNames(selected)),
+                            buildSelectInListItem(getNames(selected)),
+                            buildSelectRelatedEntitiesItem(entity.getTableName()), new SeparatorMenuItem(),
+                            buildRelationshipItem(true));
                 } else {
-                    contextMenu.getItems().addAll(buildEditEntityItem(entity.getTableName()), buildCopyItem(), buildDeleteEntityItem(),
-                            buildSelectInListItem(getNames(selected)), new SeparatorMenuItem(),
+                    contextMenu.getItems().addAll(buildEditEntityItem(entity.getTableName()), buildCopyItem(),
+                            buildDeleteEntityItem(), buildSelectInListItem(getNames(selected)),
+                            buildSelectRelatedEntitiesItem(entity.getTableName()), new SeparatorMenuItem(),
                             buildRelationshipItem(true));
                 }
             } else if (selected.size() > 1) {
                 // a group of entities was selected
                 if (!view.getName().equals(ApricotView.MAIN_VIEW)) {
-                    contextMenu.getItems().addAll(buildCopyItem(), buildDeleteEntityItem(), buildRemoveFromViewItem(getNames(selected)),
+                    contextMenu.getItems().addAll(buildCopyItem(), buildDeleteEntityItem(),
+                            buildRemoveFromViewItem(getNames(selected)), buildSelectInListItem(getNames(selected)),
+                            new SeparatorMenuItem(), buildSameSizeWidthItem(), buildMinimizeWidthItem(),
+                            buildAlignLeftItem(), buildAlignRightItem(), buildAlignUpItem(), buildAlignDownItem(),
+                            new SeparatorMenuItem(), buildRelationshipItem(false));
+                } else {
+                    contextMenu.getItems().addAll(buildCopyItem(), buildDeleteEntityItem(),
                             buildSelectInListItem(getNames(selected)), new SeparatorMenuItem(),
                             buildSameSizeWidthItem(), buildMinimizeWidthItem(), buildAlignLeftItem(),
                             buildAlignRightItem(), buildAlignUpItem(), buildAlignDownItem(), new SeparatorMenuItem(),
                             buildRelationshipItem(false));
-                } else {
-                    contextMenu.getItems().addAll(buildCopyItem(), buildDeleteEntityItem(), buildSelectInListItem(getNames(selected)),
-                            new SeparatorMenuItem(), buildSameSizeWidthItem(), buildMinimizeWidthItem(),
-                            buildAlignLeftItem(), buildAlignRightItem(), buildAlignUpItem(), buildAlignDownItem(),
-                            new SeparatorMenuItem(), buildRelationshipItem(false));
                 }
             }
 
@@ -254,11 +258,20 @@ public class EntityContextMenuHandler {
 
         return item;
     }
-    
+
     public MenuItem buildCopyItem() {
         MenuItem item = new MenuItem("Copy <Ctrl+C>");
         item.setOnAction(e -> {
             clipboardHandler.copySelectedToClipboard();
+        });
+
+        return item;
+    }
+
+    public MenuItem buildSelectRelatedEntitiesItem(String entity) {
+        MenuItem item = new MenuItem("Select related Entities");
+        item.setOnAction(e -> {
+            canvasHandler.makeRelatedEntitiesSelected(entity);
         });
 
         return item;

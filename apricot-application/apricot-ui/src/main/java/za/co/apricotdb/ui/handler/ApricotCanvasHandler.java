@@ -209,6 +209,20 @@ public class ApricotCanvasHandler {
         }
     }
 
+    public void makeRelatedEntitiesSelected(String tableName) {
+        List<String> tables = new ArrayList<>();
+        tables.add(tableName);
+        ApricotCanvas canvas = getSelectedCanvas();
+        ApricotEntity entity = canvas.findEntityByName(tableName);
+        for (za.co.apricotdb.viewport.relationship.ApricotRelationship r : entity.getForeignLinks()) {
+            tables.add(r.getParent().getTableName());
+        }
+        for (za.co.apricotdb.viewport.relationship.ApricotRelationship r : entity.getPrimaryLinks()) {
+            tables.add(r.getChild().getTableName());
+        }
+        makeEntitiesSelected(canvas, tables, false);
+    }
+
     private za.co.apricotdb.viewport.relationship.ApricotRelationship convertRelationship(ApricotRelationship r,
             Map<String, List<FieldDetail>> fieldDetails, RelationshipBuilder rBuilder) {
         String parentTable = r.getParent().getTable().getName();

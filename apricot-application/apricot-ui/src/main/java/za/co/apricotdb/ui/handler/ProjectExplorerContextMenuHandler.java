@@ -51,12 +51,14 @@ public class ProjectExplorerContextMenuHandler {
                     if (isMainView) {
                         menu.getItems().addAll(entityMenuHandler.buildEditEntityItem(name),
                                 entityMenuHandler.buildDeleteEntityItem(items),
-                                entityMenuHandler.buildSelectOnCanvasItem(items));
+                                entityMenuHandler.buildSelectOnCanvasItem(items),
+                                entityMenuHandler.buildSelectRelatedEntitiesItem(name));
                     } else {
                         menu.getItems().addAll(entityMenuHandler.buildEditEntityItem(name),
                                 entityMenuHandler.buildDeleteEntityItem(items),
                                 entityMenuHandler.buildRemoveFromViewItem(items),
-                                entityMenuHandler.buildSelectOnCanvasItem(items));
+                                entityMenuHandler.buildSelectOnCanvasItem(items),
+                                entityMenuHandler.buildSelectRelatedEntitiesItem(name));
                     }
                 } else {
                     if (isMainView) {

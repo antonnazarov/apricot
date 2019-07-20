@@ -84,6 +84,10 @@ public class NonIdentifyingStack extends PrimaryKeyStack {
         return ret;
     }
 
+    public int getPrimaryLinkSize() {
+        return relationships.size();
+    }
+
     private Point2D getStackStartingPoint() {
         double X = 0;
         if (side == Side.LEFT) {
@@ -127,8 +131,8 @@ public class NonIdentifyingStack extends PrimaryKeyStack {
             this.getElements().add(new HLineTo(start.getX() + STACK_ENTITY_DISTANCE));
         }
 
-        this.getElements().add(
-                new VLineTo(start.getY() + (relationships.size() + childRelationships.size()) * STACK_PARTICLE_LENGTH + 5));
+        this.getElements().add(new VLineTo(
+                start.getY() + (relationships.size() + childRelationships.size()) * STACK_PARTICLE_LENGTH + 5));
 
         sortRelationships();
     }

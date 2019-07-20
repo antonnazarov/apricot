@@ -91,7 +91,7 @@ public class IslandAllocationHandler {
         }
 
         if (sortedParents.size() != parents.size()) {
-            throw new RuntimeException("The oroginal and sorted parents lists have different sizes");
+            throw new RuntimeException("The original and sorted parents lists have different sizes");
         }
 
         parents.clear();
