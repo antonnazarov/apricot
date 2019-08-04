@@ -30,7 +30,7 @@ public class RelationshipOnMouseDraggedHorizontalRulerEventHandler implements Ev
         if (ruler.getUserData() != null && ruler.getUserData() instanceof DragInitPosition) {
             DragInitPosition pos = (DragInitPosition) ruler.getUserData();
             double offsetX = event.getSceneX() - pos.getOrgSceneX();
-            double newTranslateX = pos.getOrgTranslateX() + offsetX;
+            double newTranslateX = (pos.getOrgTranslateX() + offsetX) / canvas.getScale();
             if (ruler.getParent() instanceof ApricotRelationshipShape) {
                 ApricotRelationshipShape shape = (ApricotRelationshipShape) ruler.getParent();
                 switch (shape.getShapeType()) {
@@ -56,10 +56,10 @@ public class RelationshipOnMouseDraggedHorizontalRulerEventHandler implements Ev
 
                 ApricotElement element = shape.getElement();
                 element.buildShape();
-                
+
                 Pane pane = (Pane) canvas;
                 pane.getScene().setCursor(Cursor.E_RESIZE);
-                
+
                 canvas.publishEvent(new CanvasChangedEvent(canvas));
 
                 event.consume();

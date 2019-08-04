@@ -29,7 +29,8 @@ public class EntityOnMouseDraggedEventHandler implements EventHandler<MouseEvent
     private ApricotCanvas canvas = null;
     private GroupOperationHandler groupHandler = null;
 
-    public EntityOnMouseDraggedEventHandler(String tableName, ApricotCanvas canvas, GroupOperationHandler groupHandler) {
+    public EntityOnMouseDraggedEventHandler(String tableName, ApricotCanvas canvas,
+            GroupOperationHandler groupHandler) {
         this.tableName = tableName;
         this.canvas = canvas;
         this.groupHandler = groupHandler;
@@ -44,8 +45,8 @@ public class EntityOnMouseDraggedEventHandler implements EventHandler<MouseEvent
                 if (entityShape.getUserData() != null && entityShape.getUserData() instanceof DragInitPosition) {
                     DragInitPosition pos = (DragInitPosition) entityShape.getUserData();
 
-                    double offsetX = event.getSceneX() - pos.getOrgSceneX();
-                    double offsetY = event.getSceneY() - pos.getOrgSceneY();
+                    double offsetX = (event.getSceneX() - pos.getOrgSceneX()) / canvas.getScale();
+                    double offsetY = (event.getSceneY() - pos.getOrgSceneY()) / canvas.getScale();
                     double newTranslateX = pos.getOrgTranslateX() + offsetX;
                     double newTranslateY = pos.getOrgTranslateY() + offsetY;
 
@@ -70,7 +71,7 @@ public class EntityOnMouseDraggedEventHandler implements EventHandler<MouseEvent
                     }
 
                     canvas.publishEvent(new CanvasChangedEvent(canvas));
-                    
+
                     event.consume();
                 }
             }

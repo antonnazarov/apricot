@@ -32,6 +32,7 @@ import za.co.apricotdb.ui.handler.ApricotProjectHandler;
 import za.co.apricotdb.ui.handler.ApricotRelationshipHandler;
 import za.co.apricotdb.ui.handler.ApricotSnapshotHandler;
 import za.co.apricotdb.ui.handler.ApricotViewHandler;
+import za.co.apricotdb.ui.handler.CanvasScaleHandler;
 import za.co.apricotdb.ui.handler.ExcelReportHandler;
 import za.co.apricotdb.ui.handler.GenerateScriptHandler;
 import za.co.apricotdb.ui.handler.ProjectExplorerContextMenuHandler;
@@ -109,6 +110,9 @@ public class MainAppController {
     @Autowired
     ApricotAboutHandler aboutHandler;
 
+    @Autowired
+    CanvasScaleHandler scaleHandler;
+
     @FXML
     AnchorPane mainPane;
 
@@ -126,6 +130,9 @@ public class MainAppController {
 
     @FXML
     TreeView<ProjectExplorerItem> projectsTreeView;
+
+    @FXML
+    ComboBox<String> scale;
 
     public void init() {
         parentWindow.setParentPane(mainPane);
@@ -163,6 +170,14 @@ public class MainAppController {
             canvas.fireEvent(e);
             canvas.requestFocus();
         });
+
+        scale.getItems().clear();
+        scale.getItems().add("100%");
+        scale.getItems().add("80%");
+        scale.getItems().add("50%");
+        scale.getItems().add("20%");
+        scale.getItems().add("10%");
+        scale.getSelectionModel().select("100%");
     }
 
     @FXML
@@ -375,6 +390,11 @@ public class MainAppController {
     public void usersGuide(ActionEvent event) {
         Application app = parentWindow.getApplication();
         app.getHostServices().showDocument("https://www.apricotdb.co.za/joomla/index.php/user-guide");
+    }
+
+    @FXML
+    public void setScale(ActionEvent event) {
+        scaleHandler.setScale(scale.getSelectionModel().getSelectedItem());
     }
 
     public TabPane getViewsTabPane() {

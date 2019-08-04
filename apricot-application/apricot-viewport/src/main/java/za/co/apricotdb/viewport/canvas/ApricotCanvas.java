@@ -71,4 +71,8 @@ public interface ApricotCanvas {
     void setScrollPane(ScrollPane scroll);
     
     ScrollPane getScrollPane();
+    
+    void setScale(double scale);
+    
+    double getScale();
 }

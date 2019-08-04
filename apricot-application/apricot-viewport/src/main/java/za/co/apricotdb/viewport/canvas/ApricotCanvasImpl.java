@@ -40,6 +40,7 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
     private String erdNotation;
     private boolean canvasChanged;
     private ScrollPane scroll;
+    private double scale = 1;
 
     public ApricotCanvasImpl(ApplicationEventPublisher applicationEventPublisher, String detailLevel,
             String erdNotation) {
@@ -404,5 +405,15 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
     @Override
     public ScrollPane getScrollPane() {
         return scroll;
+    }
+
+    @Override
+    public void setScale(double scale) {
+        this.scale = scale;
+    }
+
+    @Override
+    public double getScale() {
+        return scale;
     }
 }

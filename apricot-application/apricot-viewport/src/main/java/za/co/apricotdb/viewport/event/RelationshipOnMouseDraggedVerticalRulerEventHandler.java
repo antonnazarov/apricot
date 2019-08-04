@@ -28,7 +28,7 @@ public class RelationshipOnMouseDraggedVerticalRulerEventHandler implements Even
 
         if (ruler.getUserData() != null && ruler.getUserData() instanceof DragInitPosition) {
             DragInitPosition pos = (DragInitPosition) ruler.getUserData();
-            double offsetY = event.getSceneY() - pos.getOrgSceneY();
+            double offsetY = (event.getSceneY() - pos.getOrgSceneY()) / canvas.getScale();
             double newTranslateY = pos.getOrgTranslateY() + offsetY;
             if (ruler.getParent() instanceof ApricotRelationshipShape) {
                 ApricotRelationshipShape shape = (ApricotRelationshipShape) ruler.getParent();
@@ -54,7 +54,7 @@ public class RelationshipOnMouseDraggedVerticalRulerEventHandler implements Even
                 pane.getScene().setCursor(Cursor.N_RESIZE);
 
                 canvas.publishEvent(new CanvasChangedEvent(canvas));
-                
+
                 event.consume();
             }
         }

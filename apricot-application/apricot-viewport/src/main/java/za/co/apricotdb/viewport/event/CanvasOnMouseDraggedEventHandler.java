@@ -30,15 +30,15 @@ public class CanvasOnMouseDraggedEventHandler implements EventHandler<MouseEvent
             Rectangle lasso = CanvasOnMousePressedEventHandler.getLasso(pane);
             if (lasso != null && lasso.getUserData() instanceof Point2D) {
                 Point2D pos = (Point2D) lasso.getUserData();
-                lasso.setWidth(Math.abs(event.getSceneX() - pos.getX()));
-                lasso.setHeight(Math.abs(event.getSceneY() - pos.getY()));
-                
-                //  support of the negative "lasso" movements
+                lasso.setWidth(Math.abs(event.getSceneX() - pos.getX()) / canvas.getScale());
+                lasso.setHeight(Math.abs(event.getSceneY() - pos.getY()) / canvas.getScale());
+
+                // support of the negative "lasso" movements
                 if (pos.getX() > event.getSceneX()) {
-                    lasso.setLayoutX(event.getSceneX() - pos.getX());
+                    lasso.setLayoutX((event.getSceneX() - pos.getX()) / canvas.getScale());
                 }
                 if (pos.getY() > event.getSceneY()) {
-                    lasso.setLayoutY(event.getSceneY() - pos.getY());
+                    lasso.setLayoutY((event.getSceneY() - pos.getY()) / canvas.getScale());
                 }
 
                 Bounds lassoBounds = lasso.getBoundsInParent();

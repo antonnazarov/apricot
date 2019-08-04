@@ -90,14 +90,15 @@ public class EntityContextMenuHandler {
                     contextMenu.getItems().addAll(buildCopyItem(), buildDeleteEntityItem(),
                             buildRemoveFromViewItem(getNames(selected)), buildSelectInListItem(getNames(selected)),
                             new SeparatorMenuItem(), buildSameSizeWidthItem(), buildMinimizeWidthItem(),
-                            buildAlignLeftItem(), buildAlignRightItem(), buildAlignUpItem(), buildAlignDownItem(),
-                            new SeparatorMenuItem(), buildRelationshipItem(false));
+                            buildAlignLeftItem(), buildAlignRightItem(), buildAlignUpItem(), buildAlignDownItem());
                 } else {
                     contextMenu.getItems().addAll(buildCopyItem(), buildDeleteEntityItem(),
                             buildSelectInListItem(getNames(selected)), new SeparatorMenuItem(),
                             buildSameSizeWidthItem(), buildMinimizeWidthItem(), buildAlignLeftItem(),
-                            buildAlignRightItem(), buildAlignUpItem(), buildAlignDownItem(), new SeparatorMenuItem(),
-                            buildRelationshipItem(false));
+                            buildAlignRightItem(), buildAlignUpItem(), buildAlignDownItem());
+                }
+                if (selected.size() == 2) {
+                    contextMenu.getItems().addAll(new SeparatorMenuItem(), buildRelationshipItem(false));
                 }
             }
 
