@@ -19,8 +19,8 @@ import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
 @Component
 public class IslandDistributionHandler {
 
-    private final static double VERTICAL_ISLANDS_DISTANCE = 100;
-    private final static double HORIZONTAL_ISLANDS_DISTANCE = 100;
+    private final static double VERTICAL_ISLANDS_DISTANCE = 400;
+    private final static double HORIZONTAL_ISLANDS_DISTANCE = 400;
 
     @Autowired
     IslandAllocationHandler allocationHandler;

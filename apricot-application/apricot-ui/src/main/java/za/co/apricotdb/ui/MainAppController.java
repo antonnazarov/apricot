@@ -144,6 +144,7 @@ public class MainAppController {
                     TabInfoObject tabInfo = TabInfoObject.getTabInfo(t1);
                     viewManager.setCurrentView(tabInfo.getView());
                     treeViewHandler.markEntitiesIncludedIntoView(tabInfo.getView());
+                    scaleHandler.resetScaleIndicator(scale);
                 }
 
                 // reset the current undo layout

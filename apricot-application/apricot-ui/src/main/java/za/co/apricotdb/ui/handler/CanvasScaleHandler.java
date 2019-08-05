@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javafx.scene.Group;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
@@ -41,5 +42,14 @@ public class CanvasScaleHandler {
         sp.setContent(g);
         
         allocationHandler.scrollToSelected(canvasHandler.getCurrentViewTabInfo());
+    }
+    
+    public void resetScaleIndicator(ComboBox<String> scale) {
+        ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
+        double dScale = canvas.getScale();
+        String sScale = String.valueOf((int)(dScale * 100)) + "%";
+        if (!scale.getSelectionModel().getSelectedItem().equals(sScale)) {
+            scale.getSelectionModel().select(sScale);            
+        }
     }
 }
