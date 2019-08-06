@@ -19,8 +19,9 @@ import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
 @Component
 public class IslandDistributionHandler {
 
-    private final static double VERTICAL_ISLANDS_DISTANCE = 400;
-    private final static double HORIZONTAL_ISLANDS_DISTANCE = 400;
+    private final static double VERTICAL_ISLANDS_DISTANCE = 200;
+    private final static double HORIZONTAL_ISLANDS_DISTANCE = 200;
+    private final static double STANDALONE_DISTANCE = 20;
 
     @Autowired
     IslandAllocationHandler allocationHandler;
@@ -44,7 +45,6 @@ public class IslandDistributionHandler {
 
         allocateStandAlones(bundle, allocMap);
 
-        System.out.println(getAllocMapPrintContent(allocMap, bundle));
         apply(allocMap, bundle);
     }
 
@@ -75,13 +75,13 @@ public class IslandDistributionHandler {
         Point2D islandField = getIslandFieldCoordinates(allocMap);
 
         double biasX = 0;
-        double biasY = islandField.getY() + VERTICAL_ISLANDS_DISTANCE;
+        double biasY = islandField.getY() + STANDALONE_DISTANCE * 2;
         double maxHeight = 0;
         for (EntityIsland isl : bundle.getStandAlone()) {
             if (biasX > islandField.getX()) {
                 // start the next row
                 biasX = 0;
-                biasY += maxHeight + VERTICAL_ISLANDS_DISTANCE;
+                biasY += maxHeight + STANDALONE_DISTANCE;
                 maxHeight = 0;
             } else {
                 // continue the current row
@@ -89,7 +89,7 @@ public class IslandDistributionHandler {
 
             bias(isl, biasX, biasY);
 
-            biasX += isl.getCore().getEntityShape().getWidth() + HORIZONTAL_ISLANDS_DISTANCE / 2;
+            biasX += isl.getCore().getEntityShape().getWidth() + STANDALONE_DISTANCE;
             double islandHeight = isl.getCore().getHeight();
             if (islandHeight > maxHeight) {
                 maxHeight = islandHeight;

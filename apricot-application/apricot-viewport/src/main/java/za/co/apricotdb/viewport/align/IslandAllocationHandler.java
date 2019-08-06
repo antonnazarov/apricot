@@ -1,7 +1,9 @@
 package za.co.apricotdb.viewport.align;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
@@ -68,7 +70,7 @@ public class IslandAllocationHandler {
      * sequence of the fields in the core entity.
      */
     private void sortParents(EntityIsland island) {
-        List<EntityAllocation> sortedParents = new ArrayList<>();
+        Set<EntityAllocation> sortedParents = new HashSet<>();
         List<EntityAllocation> parents = island.getParents();
 
         EntityAllocation core = island.getCore();
@@ -91,7 +93,8 @@ public class IslandAllocationHandler {
         }
 
         if (sortedParents.size() != parents.size()) {
-            throw new RuntimeException("The original and sorted parents lists have different sizes");
+            throw new RuntimeException("The original and sorted parents lists have different sizes for the Island=["
+                    + island.getCore().getTableName() + "]");
         }
 
         parents.clear();

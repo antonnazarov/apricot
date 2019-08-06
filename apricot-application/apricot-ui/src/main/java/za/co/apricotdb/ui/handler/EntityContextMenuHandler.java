@@ -62,6 +62,7 @@ public class EntityContextMenuHandler {
 
     @Autowired
     ApricotClipboardHandler clipboardHandler;
+    
 
     public void createEntityContextMenu(ApricotEntity entity, double x, double y) {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
@@ -273,6 +274,7 @@ public class EntityContextMenuHandler {
         MenuItem item = new MenuItem("Select related Entities");
         item.setOnAction(e -> {
             canvasHandler.makeRelatedEntitiesSelected(entity);
+            allocationHandler.scrollToSelected(canvasHandler.getCurrentViewTabInfo());
         });
 
         return item;
