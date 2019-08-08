@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javafx.geometry.Point2D;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 
@@ -22,6 +23,8 @@ public class EntityIsland implements Comparable<EntityIsland> {
     private List<EntityIsland> merged; // merged islands
     private EntityIsland master;
     private boolean parent;
+    private Point2D islandPosition;
+    
 
     public EntityIsland(ApricotEntity core) {
         this.core = new EntityAllocationImpl(core);
@@ -133,6 +136,14 @@ public class EntityIsland implements Comparable<EntityIsland> {
             }
         }
         return ret;
+    }
+
+    public Point2D getIslandPosition() {
+        return islandPosition;
+    }
+
+    public void setIslandPosition(Point2D islandPosition) {
+        this.islandPosition = islandPosition;
     }
 
     @Override

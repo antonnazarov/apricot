@@ -27,20 +27,22 @@ public class IslandDistributionHandler {
     IslandAllocationHandler allocationHandler;
 
     public void distributeIslands(EntityIslandBundle bundle) {
-        List<List<EntityIsland>> allocMap = initAllocationMap(bundle);
+        List<AllocMapColumn> allocMap = initAllocationMap(bundle);
+        allocateColumns(allocMap);
 
-        double biasX = 0;
         double biasY = 0;
         // the "horizontal" cycle
-        for (List<EntityIsland> column : allocMap) {
-            biasY = 0;
+        for (AllocMapColumn column : allocMap) {
+            biasY = column.getColumnAlloc().getY();
             // the "vertical" cycle
-            for (EntityIsland isl : column) {
-                bias(isl, biasX, biasY);
-                biasY += getIslandHeight(isl) + VERTICAL_ISLANDS_DISTANCE;
+            for (EntityIsland isl : column.getIslands()) {
+                bias(isl, column.getColumnAlloc().getX(), biasY);
+                if (column.isMerged()) {
+                    biasY += getIslandHeight(isl) + VERTICAL_ISLANDS_DISTANCE / 2;
+                } else {
+                    biasY += getIslandHeight(isl) + VERTICAL_ISLANDS_DISTANCE;
+                }
             }
-
-            biasX += getColumnWidth(column) + HORIZONTAL_ISLANDS_DISTANCE;
         }
 
         allocateStandAlones(bundle, allocMap);
@@ -48,9 +50,9 @@ public class IslandDistributionHandler {
         apply(allocMap, bundle);
     }
 
-    private void apply(List<List<EntityIsland>> allocMap, EntityIslandBundle bundle) {
-        for (List<EntityIsland> column : allocMap) {
-            for (EntityIsland isl : column) {
+    private void apply(List<AllocMapColumn> allocMap, EntityIslandBundle bundle) {
+        for (AllocMapColumn column : allocMap) {
+            for (EntityIsland isl : column.getIslands()) {
                 for (EntityAllocation alloc : isl.getAllEntities()) {
                     ApricotEntityShape shape = alloc.getEntityShape();
                     shape.setLayoutX(alloc.getLayout().getX());
@@ -71,7 +73,7 @@ public class IslandDistributionHandler {
     /**
      * Allocate the stand alone islands/entities.
      */
-    private void allocateStandAlones(EntityIslandBundle bundle, List<List<EntityIsland>> allocMap) {
+    private void allocateStandAlones(EntityIslandBundle bundle, List<AllocMapColumn> allocMap) {
         Point2D islandField = getIslandFieldCoordinates(allocMap);
 
         double biasX = 0;
@@ -100,20 +102,20 @@ public class IslandDistributionHandler {
     /**
      * Calculate the right/bottom point of the islands set in the island bundle.
      */
-    private Point2D getIslandFieldCoordinates(List<List<EntityIsland>> allocMap) {
+    private Point2D getIslandFieldCoordinates(List<AllocMapColumn> allocMap) {
         double maxX = 0;
         double maxY = 0;
 
-        for (List<EntityIsland> column : allocMap) {
-            double colHeight = getColumnHeight(column);
+        for (AllocMapColumn column : allocMap) {
+            double colHeight = getColumnHeight(column.getIslands());
             if (colHeight > maxY) {
                 maxY = colHeight;
             }
         }
 
-        List<EntityIsland> lastCol = allocMap.get(allocMap.size() - 1);
+        List<EntityIsland> lastCol = allocMap.get(allocMap.size() - 1).getIslands();
         double colWidth = getColumnWidth(lastCol);
-        Point2D coords = getIslandCoords(lastCol.get(0));
+        Point2D coords = lastCol.get(0).getIslandPosition();
         maxX = coords.getX() + colWidth;
 
         return new Point2D(maxX, maxY);
@@ -134,14 +136,12 @@ public class IslandDistributionHandler {
 
     private double getColumnHeight(List<EntityIsland> column) {
         EntityIsland isl = column.get(column.size() - 1); // the last island in the column
-        Point2D coord = getIslandCoords(isl);
-        double height = getIslandHeight(isl);
 
-        return coord.getY() + height;
+        return isl.getIslandPosition().getY() + getIslandHeight(isl);
     }
 
-    private List<List<EntityIsland>> initAllocationMap(EntityIslandBundle bundle) {
-        List<List<EntityIsland>> allocMap = new ArrayList<>();
+    private List<AllocMapColumn> initAllocationMap(EntityIslandBundle bundle) {
+        List<AllocMapColumn> allocMap = new ArrayList<>();
 
         for (EntityIsland isl : bundle.getIslands()) {
             allocateIsland(isl, allocMap, null);
@@ -150,18 +150,18 @@ public class IslandDistributionHandler {
         return allocMap;
     }
 
-    private void allocateIsland(EntityIsland island, List<List<EntityIsland>> allocMap, List<EntityIsland> column) {
-        List<EntityIsland> col = null;
+    private void allocateIsland(EntityIsland island, List<AllocMapColumn> allocMap, AllocMapColumn column) {
+        AllocMapColumn col = null;
         if (column == null) {
-            col = new ArrayList<>();
+            col = new AllocMapColumn(false);
             allocMap.add(col);
         } else {
             col = column;
         }
-        col.add(island);
+        col.getIslands().add(island);
 
         if (island.getMergedIslands().size() > 0) {
-            col = new ArrayList<>();
+            col = new AllocMapColumn(true);
             allocMap.add(col);
             for (EntityIsland mIsl : island.getMergedIslands()) {
                 allocateIsland(mIsl, allocMap, col);
@@ -169,7 +169,29 @@ public class IslandDistributionHandler {
         }
     }
 
+    /**
+     * Allocate columns in the current allocation map.
+     */
+    private void allocateColumns(List<AllocMapColumn> allocMap) {
+        double x = 0;
+        double colWidth = 0; // the previous column width
+        for (AllocMapColumn column : allocMap) {
+            double y = 0;
+            if (colWidth > 0) {
+                if (column.isMerged()) {
+                    x += colWidth + HORIZONTAL_ISLANDS_DISTANCE / 2;
+                    y = VERTICAL_ISLANDS_DISTANCE;
+                } else {
+                    x += colWidth + HORIZONTAL_ISLANDS_DISTANCE;
+                }
+            }
+            column.setColumnAlloc(x, y);
+            colWidth = getColumnWidth(column.getIslands());
+        }
+    }
+
     private void bias(EntityIsland island, double biasX, double biasY) {
+        island.setIslandPosition(new Point2D(biasX, biasY));
         allocationHandler.bias(island.getParents(), biasX, biasY);
         allocationHandler.bias(island.getChildren(), biasX, biasY);
         allocationHandler.bias(island.getCore(), biasX, biasY);
@@ -204,7 +226,7 @@ public class IslandDistributionHandler {
         return endX - startX;
     }
 
-    private String getAllocMapPrintContent(List<List<EntityIsland>> allocMap, EntityIslandBundle bundle) {
+    public String getAllocMapPrintContent(List<List<EntityIsland>> allocMap, EntityIslandBundle bundle) {
         StringBuilder sb = new StringBuilder();
 
         int i = 1;
@@ -240,31 +262,5 @@ public class IslandDistributionHandler {
     private void printAlloc(EntityAllocation alloc, StringBuilder sb) {
         sb.append(alloc.getTableName()).append(", ").append(alloc.getLayout()).append(", ").append(alloc.getWidth())
                 .append(" ");
-    }
-
-    private Point2D getIslandCoords(EntityIsland island) {
-        double x = 0;
-        double y = 0;
-
-        if (island.getParents().size() > 0) {
-            x = island.getParents().get(0).getLayout().getX();
-            y = island.getParents().get(0).getLayout().getY();
-        } else {
-            x = island.getCore().getLayout().getX();
-        }
-
-        double coreY = island.getCore().getLayout().getY();
-        if (coreY < y) {
-            y = coreY;
-        }
-
-        if (island.getChildren().size() > 0) {
-            double childY = island.getChildren().get(0).getLayout().getY();
-            if (childY < y) {
-                y = childY;
-            }
-        }
-
-        return new Point2D(x, y);
     }
 }

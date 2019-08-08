@@ -79,7 +79,10 @@ public class EntityIslandBundle {
         System.out.println("                 MERGED RELATED");
         System.out.println("----------------------------------------");
         System.out.println(islands);
-
+        
+        System.out.println("                 MERGED ISLANDS");
+        System.out.println("----------------------------------------");
+        System.out.println(getMergedIslandsAsString(islands));
     }
 
     private void initIslands(List<EntityIsland> islands, ApricotCanvas canvas) {
@@ -193,5 +196,20 @@ public class EntityIslandBundle {
                 return i2.getIslandRank() - i1.getIslandRank();
             }
         });
+    }
+    
+    private String getMergedIslandsAsString(List<EntityIsland> islands) {
+        StringBuilder sb = new StringBuilder();
+        
+        for (EntityIsland isl : islands) {
+            if (isl.getMergedIslands().size() > 0) {
+                sb.append("The master Island: ").append(isl.getCore().getTableName()).append("\n");
+                for (EntityIsland misl : isl.getMergedIslands()) {
+                    sb.append("---->").append(misl);
+                }
+            }
+        }
+        
+        return sb.toString();
     }
 }
