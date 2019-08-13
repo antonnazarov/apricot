@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +26,8 @@ import za.co.apricotdb.persistence.entity.ConstraintType;
  */
 @Component
 public class OracleScanner extends MetaDataScannerBase {
+    
+    Logger logger = LoggerFactory.getLogger(OracleScanner.class);
 
     @Override
     public Map<String, ApricotTable> getTables(JdbcOperations jdbc, ApricotSnapshot snapshot, String schema) {
@@ -36,6 +40,8 @@ public class OracleScanner extends MetaDataScannerBase {
                     return t;
                 });
 
+        logger.info("The following tables have been eligible for the scanning: " + tables);
+        
         Map<String, ApricotTable> ret = new HashMap<>();
         for (ApricotTable t : tables) {
             ret.put(t.getName(), t);
@@ -108,6 +114,8 @@ public class OracleScanner extends MetaDataScannerBase {
                         table.getConstraints().add(c);
                         
                         cns.add(c);
+                    } else {
+                        logger.info("getConstraints: the table [" + rs.getString("table_name") + "] was not found");
                     }
                     
                     return null;

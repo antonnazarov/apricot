@@ -105,9 +105,7 @@ public class ApricotTable implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("ApricotTable (").append(id).append("): [").append(name).append("]");
-
-        return sb.toString();
+        return name;
     }
 
     /**
