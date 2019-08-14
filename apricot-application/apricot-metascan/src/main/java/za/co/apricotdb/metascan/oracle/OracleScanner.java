@@ -26,7 +26,7 @@ import za.co.apricotdb.persistence.entity.ConstraintType;
  */
 @Component
 public class OracleScanner extends MetaDataScannerBase {
-    
+
     Logger logger = LoggerFactory.getLogger(OracleScanner.class);
 
     @Override
@@ -41,7 +41,7 @@ public class OracleScanner extends MetaDataScannerBase {
                 });
 
         logger.info("The following tables have been eligible for the scanning: " + tables);
-        
+
         Map<String, ApricotTable> ret = new HashMap<>();
         for (ApricotTable t : tables) {
             ret.put(t.getName(), t);
@@ -112,12 +112,12 @@ public class OracleScanner extends MetaDataScannerBase {
 
                         ApricotConstraint c = new ApricotConstraint(constraintName, constraintType, table);
                         table.getConstraints().add(c);
-                        
+
                         cns.add(c);
                     } else {
                         logger.info("getConstraints: the table [" + rs.getString("table_name") + "] was not found");
                     }
-                    
+
                     return null;
                 });
 
@@ -182,27 +182,49 @@ public class OracleScanner extends MetaDataScannerBase {
     @Override
     public List<ApricotRelationship> getRelationships(JdbcOperations jdbc, Map<String, ApricotConstraint> constraints,
             String schema) {
-        List<ApricotRelationship> ret = jdbc.query(
+
+        logger.info("Scanning the relationships, the following constraints were identified: "
+                + getConstraintsAsString(constraints));
+        List<ApricotRelationship> ret = new ArrayList<>();
+        jdbc.query(
                 "select constraint_name, constraint_type, table_name, r_constraint_name from user_constraints where constraint_type <> 'C' and r_constraint_name is not null order by table_name, constraint_type",
                 (rs, rowNum) -> {
                     String sParent = rs.getString("r_constraint_name");
                     String sChild = rs.getString("constraint_name");
                     ApricotConstraint parent = constraints.get(sParent);
                     if (parent == null) {
-                        throw new IllegalArgumentException(
-                                "Unable to find the parent constraint with the name=[" + sParent + "]");
+                        logger.info("The Relationship won't be created: [" + sParent + "->" + sChild
+                                + "], the parent constraint was not found");
+                        return null;
                     }
                     ApricotConstraint child = constraints.get(sChild);
                     if (child == null) {
-                        throw new IllegalArgumentException(
-                                "Unable to find the child constraint with the name=[" + sChild + "]");
+                        logger.info("The Relationship won't be created: [" + sParent + "->" + sChild
+                                + "], the child constraint was not found");
+                        return null;
                     }
 
                     ApricotRelationship r = new ApricotRelationship(parent, child);
+                    ret.add(r);
 
-                    return r;
+                    return null;
                 });
 
         return ret;
+    }
+
+    private String getConstraintsAsString(Map<String, ApricotConstraint> constraints) {
+        StringBuilder sb = new StringBuilder();
+        boolean first = true;
+        for (String c : constraints.keySet()) {
+            if (!first) {
+                sb.append(", ");
+            } else {
+                first = false;
+            }
+            sb.append(c);
+        }
+
+        return sb.toString();
     }
 }
