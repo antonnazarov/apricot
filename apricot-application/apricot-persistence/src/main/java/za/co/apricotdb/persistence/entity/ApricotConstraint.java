@@ -18,6 +18,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Entity for apricot_constraint table.
@@ -32,6 +36,9 @@ import javax.persistence.Table;
 public class ApricotConstraint implements Serializable {
 
     private static final long serialVersionUID = 3862015345366091286L;
+
+    @Transient
+    Logger logger = LoggerFactory.getLogger(ApricotConstraint.class);
 
     public ApricotConstraint() {
     }
@@ -166,9 +173,14 @@ public class ApricotConstraint implements Serializable {
         }
 
         ApricotColumn c = table.getColumnByName(column);
-        ApricotColumnConstraint acc = new ApricotColumnConstraint(this, c);
-        acc.setOrdinalPosition(columns.size() + 1);
-        columns.add(acc);
+        if (c != null) {
+            ApricotColumnConstraint acc = new ApricotColumnConstraint(this, c);
+            acc.setOrdinalPosition(columns.size() + 1);
+            columns.add(acc);
+        } else {
+            logger.info("The column [" + column + "] was not found in the table [" + table.getName()
+                    + "]. This table contains the following columns: " + table.getColumns());
+        }
     }
 
     private ApricotColumnConstraint findConstraintColumn(String column) {

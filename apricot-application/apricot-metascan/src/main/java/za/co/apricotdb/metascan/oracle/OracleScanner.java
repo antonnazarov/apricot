@@ -1,9 +1,12 @@
 package za.co.apricotdb.metascan.oracle;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +26,8 @@ import za.co.apricotdb.persistence.entity.ConstraintType;
  */
 @Component
 public class OracleScanner extends MetaDataScannerBase {
+    
+    Logger logger = LoggerFactory.getLogger(OracleScanner.class);
 
     @Override
     public Map<String, ApricotTable> getTables(JdbcOperations jdbc, ApricotSnapshot snapshot, String schema) {
@@ -35,6 +40,8 @@ public class OracleScanner extends MetaDataScannerBase {
                     return t;
                 });
 
+        logger.info("The following tables have been eligible for the scanning: " + tables);
+        
         Map<String, ApricotTable> ret = new HashMap<>();
         for (ApricotTable t : tables) {
             ret.put(t.getName(), t);
@@ -83,28 +90,35 @@ public class OracleScanner extends MetaDataScannerBase {
     @Override
     public Map<String, ApricotConstraint> getConstraints(JdbcOperations jdbc, Map<String, ApricotTable> tables,
             String schema) {
-        List<ApricotConstraint> cns = jdbc.query(
+        List<ApricotConstraint> cns = new ArrayList<>();
+        jdbc.query(
                 "select constraint_name, constraint_type, table_name, r_constraint_name from user_constraints where constraint_type <> 'C' order by table_name, constraint_type",
                 (rs, rowNum) -> {
                     ApricotTable table = tables.get(rs.getString("table_name"));
-                    String constraintName = rs.getString("constraint_name");
-                    ConstraintType constraintType = null;
-                    switch (rs.getString("constraint_type")) {
-                    case "P":
-                        constraintType = ConstraintType.PRIMARY_KEY;
-                        break;
-                    case "R":
-                        constraintType = ConstraintType.FOREIGN_KEY;
-                        break;
-                    case "U":
-                        constraintType = ConstraintType.UNIQUE;
-                        break;
+                    if (table != null) {
+                        String constraintName = rs.getString("constraint_name");
+                        ConstraintType constraintType = null;
+                        switch (rs.getString("constraint_type")) {
+                        case "P":
+                            constraintType = ConstraintType.PRIMARY_KEY;
+                            break;
+                        case "R":
+                            constraintType = ConstraintType.FOREIGN_KEY;
+                            break;
+                        case "U":
+                            constraintType = ConstraintType.UNIQUE;
+                            break;
+                        }
+
+                        ApricotConstraint c = new ApricotConstraint(constraintName, constraintType, table);
+                        table.getConstraints().add(c);
+                        
+                        cns.add(c);
+                    } else {
+                        logger.info("getConstraints: the table [" + rs.getString("table_name") + "] was not found");
                     }
-
-                    ApricotConstraint c = new ApricotConstraint(constraintName, constraintType, table);
-                    table.getConstraints().add(c);
-
-                    return c;
+                    
+                    return null;
                 });
 
         Map<String, ApricotConstraint> constraints = new HashMap<>();
