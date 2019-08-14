@@ -63,7 +63,11 @@ public class OracleScanner extends MetaDataScannerBase {
                     } else {
                         c.setNullable(false);
                     }
-                    c.setDataType(rs.getString("data_type"));
+
+                    //  data type might be longer than 25 symbols
+                    String dataType = getDataType(rs.getString("data_type"));
+                    
+                    c.setDataType(dataType);
                     if (c.getDataType().equals("VARCHAR2")) {
                         c.setValueLength(rs.getString("data_length"));
                     } else if (c.getDataType().equals("NUMBER")) {
