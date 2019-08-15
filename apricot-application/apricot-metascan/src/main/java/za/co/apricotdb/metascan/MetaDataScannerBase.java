@@ -17,6 +17,8 @@ import za.co.apricotdb.persistence.entity.ApricotTable;
 
 public abstract class MetaDataScannerBase implements MetaDataScanner {
     
+    public static final int DATA_TYPE_LENGTH = 25;
+    
     @Autowired
     MetaDataScannerFactory scannerFactory;
 
@@ -44,6 +46,22 @@ public abstract class MetaDataScannerBase implements MetaDataScanner {
         ret.setTables(new ArrayList<ApricotTable>(tables.values()));
         ret.setRelationships(relationships);
 
+        return ret;
+    }
+    
+    protected String getDataType(String dataType) {
+        String ret = dataType;
+        if (dataType.length() > DATA_TYPE_LENGTH) {
+            String[] split = dataType.split(" ");
+            if (split != null && split.length > 0) {
+                if (split[0].length() < DATA_TYPE_LENGTH) {
+                    ret = split[0];
+                } else {
+                    ret = dataType.substring(0, DATA_TYPE_LENGTH);
+                }
+            }
+        }
+        
         return ret;
     }
 }
