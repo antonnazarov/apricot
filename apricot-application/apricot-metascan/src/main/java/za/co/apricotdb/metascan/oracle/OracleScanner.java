@@ -23,6 +23,7 @@ import za.co.apricotdb.persistence.entity.ConstraintType;
  * 
  * @author Anton Nazarov
  * @since 04/10/2018, 05/04/2019
+ * @version
  */
 @Component
 public class OracleScanner extends MetaDataScannerBase {
@@ -64,9 +65,9 @@ public class OracleScanner extends MetaDataScannerBase {
                         c.setNullable(false);
                     }
 
-                    //  data type might be longer than 25 symbols
+                    // data type might be longer than 25 symbols
                     String dataType = getDataType(rs.getString("data_type"));
-                    
+
                     c.setDataType(dataType);
                     if (c.getDataType().equals("VARCHAR2")) {
                         c.setValueLength(rs.getString("data_length"));
@@ -130,21 +131,26 @@ public class OracleScanner extends MetaDataScannerBase {
             constraints.put(c.getName(), c);
         }
 
-        // populate the newly created constraints with the related fields
-        jdbc.query(
-                "select table_name, constraint_name, column_name, position from user_cons_columns where position is not null order by table_name, constraint_name, position",
-                (rs, rowNum) -> {
-                    ApricotConstraint c = constraints.get(rs.getString("constraint_name"));
-                    if (c != null) {
-                        String columnName = rs.getString("column_name");
-                        c.addColumn(columnName);
-                    }
+        // populate the newly created constraints with the related fields (filtered by
+        // the current schema)
+        String sql = String.format(
+                "select table_name, constraint_name, column_name, position, owner from user_cons_columns where position is not null and UPPER(owner)=UPPER('%s') order by table_name, constraint_name, position",
+                schema);
+        jdbc.query(sql, (rs, rowNum) -> {
+            ApricotConstraint c = constraints.get(rs.getString("constraint_name"));
+            if (c != null) {
+                String columnName = rs.getString("column_name");
+                c.addColumn(columnName);
+            }
 
-                    return null;
-                });
+            return null;
+        });
 
-        // populate indexes
-        jdbc.query("select index_name, table_name, uniqueness from user_indexes order by table_name", (rs, rowNum) -> {
+        // populate indexes (filtered by the current schema)
+        String sqlIdx = String.format(
+                "select index_name, table_name, uniqueness, table_owner from user_indexes where UPPER(table_owner)=UPPER('%s') order by table_name",
+                schema);
+        jdbc.query(sqlIdx, (rs, rowNum) -> {
             ApricotConstraint c = constraints.get(rs.getString("index_name"));
             if (c == null) {
                 ApricotTable table = tables.get(rs.getString("table_name"));
@@ -190,29 +196,30 @@ public class OracleScanner extends MetaDataScannerBase {
         logger.info("Scanning the relationships, the following constraints were identified: "
                 + getConstraintsAsString(constraints));
         List<ApricotRelationship> ret = new ArrayList<>();
-        jdbc.query(
-                "select constraint_name, constraint_type, table_name, r_constraint_name from user_constraints where constraint_type <> 'C' and r_constraint_name is not null order by table_name, constraint_type",
-                (rs, rowNum) -> {
-                    String sParent = rs.getString("r_constraint_name");
-                    String sChild = rs.getString("constraint_name");
-                    ApricotConstraint parent = constraints.get(sParent);
-                    if (parent == null) {
-                        logger.info("The Relationship won't be created: [" + sParent + "->" + sChild
-                                + "], the parent constraint was not found");
-                        return null;
-                    }
-                    ApricotConstraint child = constraints.get(sChild);
-                    if (child == null) {
-                        logger.info("The Relationship won't be created: [" + sParent + "->" + sChild
-                                + "], the child constraint was not found");
-                        return null;
-                    }
+        String sql = String.format(
+                "select constraint_name, constraint_type, table_name, r_constraint_name, r_owner from user_constraints where constraint_type <> 'C' and r_constraint_name is not null and r_owner is not null and UPPER(r_owner)=UPPER('%s') order by table_name, constraint_type",
+                schema);
+        jdbc.query(sql, (rs, rowNum) -> {
+            String sParent = rs.getString("r_constraint_name");
+            String sChild = rs.getString("constraint_name");
+            ApricotConstraint parent = constraints.get(sParent);
+            if (parent == null) {
+                logger.info("The Relationship won't be created: [" + sParent + "->" + sChild
+                        + "], the parent constraint was not found");
+                return null;
+            }
+            ApricotConstraint child = constraints.get(sChild);
+            if (child == null) {
+                logger.info("The Relationship won't be created: [" + sParent + "->" + sChild
+                        + "], the child constraint was not found");
+                return null;
+            }
 
-                    ApricotRelationship r = new ApricotRelationship(parent, child);
-                    ret.add(r);
+            ApricotRelationship r = new ApricotRelationship(parent, child);
+            ret.add(r);
 
-                    return null;
-                });
+            return null;
+        });
 
         return ret;
     }

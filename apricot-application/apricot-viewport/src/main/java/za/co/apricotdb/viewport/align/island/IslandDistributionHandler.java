@@ -1,4 +1,4 @@
-package za.co.apricotdb.viewport.align;
+package za.co.apricotdb.viewport.align.island;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javafx.geometry.Point2D;
+import za.co.apricotdb.viewport.align.AllocMapColumn;
+import za.co.apricotdb.viewport.align.EntityAllocation;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
 
 /**
@@ -63,7 +65,7 @@ public class IslandDistributionHandler {
         }
 
         // apply stand alone's
-        for (EntityIsland isl : bundle.getStandAlone()) {
+        for (EntityIsland isl : bundle.getStandAloneEntities()) {
             EntityAllocation alloc = isl.getCore();
             alloc.getEntityShape().setLayoutX(alloc.getLayout().getX());
             alloc.getEntityShape().setLayoutY(alloc.getLayout().getY());
@@ -79,7 +81,7 @@ public class IslandDistributionHandler {
         double biasX = 0;
         double biasY = islandField.getY() + STANDALONE_DISTANCE * 2;
         double maxHeight = 0;
-        for (EntityIsland isl : bundle.getStandAlone()) {
+        for (EntityIsland isl : bundle.getStandAloneEntities()) {
             if (biasX > islandField.getX()) {
                 // start the next row
                 biasX = 0;
@@ -147,6 +149,10 @@ public class IslandDistributionHandler {
             allocateIsland(isl, allocMap, null);
         }
 
+        for (EntityIsland isl : bundle.getStandAloneIslands()) {
+            allocateIsland(isl, allocMap, null);
+        }
+        
         return allocMap;
     }
 
@@ -252,7 +258,7 @@ public class IslandDistributionHandler {
         }
 
         sb.append("Stanalone: ");
-        for (EntityIsland isl : bundle.getStandAlone()) {
+        for (EntityIsland isl : bundle.getStandAloneEntities()) {
             printAlloc(isl.getCore(), sb);
         }
 

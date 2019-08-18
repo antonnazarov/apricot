@@ -1,4 +1,4 @@
-package za.co.apricotdb.viewport.align;
+package za.co.apricotdb.viewport.align.island;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Set;
 
 import javafx.geometry.Point2D;
+import za.co.apricotdb.viewport.align.EntityAllocation;
+import za.co.apricotdb.viewport.align.EntityAllocationImpl;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 

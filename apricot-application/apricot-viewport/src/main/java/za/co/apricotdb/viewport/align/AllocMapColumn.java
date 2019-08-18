@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.geometry.Point2D;
+import za.co.apricotdb.viewport.align.island.EntityIsland;
 
 /**
  * A representation of the column of the islands either main, or the merged one.

@@ -110,6 +110,8 @@ public class ConnectionSqlServerController {
         if (model.getTargetDb() == ApricotTargetDatabase.Oracle) {
             serviceLabel.setText("SID:");
             schema.setDisable(true);
+            //  the schema and user name are the same for the Oracle database
+            schema.valueProperty().bind(user.valueProperty());
         }
     }
 

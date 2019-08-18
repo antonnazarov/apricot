@@ -4,10 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
-import za.co.apricotdb.viewport.align.EntityIsland;
-import za.co.apricotdb.viewport.align.EntityIslandBundle;
-import za.co.apricotdb.viewport.align.IslandAllocationHandler;
-import za.co.apricotdb.viewport.align.IslandDistributionHandler;
+import za.co.apricotdb.viewport.align.island.EntityIsland;
+import za.co.apricotdb.viewport.align.island.EntityIslandBundle;
+import za.co.apricotdb.viewport.align.island.IslandAllocationHandler;
+import za.co.apricotdb.viewport.align.island.IslandBundleHandler;
+import za.co.apricotdb.viewport.align.island.IslandDistributionHandler;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.notification.AddLayoutSavepointEvent;
 import za.co.apricotdb.viewport.notification.CanvasChangedEvent;
@@ -36,16 +37,21 @@ public class CanvasAlignHandler {
     @Autowired
     ApplicationEventPublisher eventPublisher;
 
+    @Autowired
+    IslandBundleHandler islandBundleHandler;
+
     public void alignCanvasIslands() {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
 
         AddLayoutSavepointEvent addSavepointEvent = new AddLayoutSavepointEvent(canvas);
         eventPublisher.publishEvent(addSavepointEvent);
 
-        EntityIslandBundle islandBundle = new EntityIslandBundle(canvas);
-        islandBundle.initialize();
+        EntityIslandBundle islandBundle = islandBundleHandler.createIslandBundle(canvas);
 
         for (EntityIsland island : islandBundle.getIslands()) {
+            allocationHandler.allocateIsland(island);
+        }
+        for (EntityIsland island : islandBundle.getStandAloneIslands()) {
             allocationHandler.allocateIsland(island);
         }
 

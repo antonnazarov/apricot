@@ -1,4 +1,4 @@
-package za.co.apricotdb.viewport.align;
+package za.co.apricotdb.viewport.align.island;
 
 import java.util.HashSet;
 import java.util.List;
@@ -7,6 +7,7 @@ import java.util.Set;
 import org.springframework.stereotype.Component;
 
 import javafx.geometry.Point2D;
+import za.co.apricotdb.viewport.align.EntityAllocation;
 import za.co.apricotdb.viewport.entity.FieldDetail;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 
