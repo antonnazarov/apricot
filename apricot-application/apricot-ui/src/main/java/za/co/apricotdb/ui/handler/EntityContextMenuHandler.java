@@ -13,6 +13,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.entity.ApricotView;
+import za.co.apricotdb.ui.MainAppController;
 import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.model.ApricotViewSerializer;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
@@ -63,7 +64,9 @@ public class EntityContextMenuHandler {
     @Autowired
     ApricotClipboardHandler clipboardHandler;
     
-
+    @Autowired
+    MainAppController appController;
+    
     public void createEntityContextMenu(ApricotEntity entity, double x, double y) {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
         ApricotView view = canvasHandler.getCurrentView();
@@ -160,6 +163,7 @@ public class EntityContextMenuHandler {
     public MenuItem buildRemoveFromViewItem(List<String> entities) {
         MenuItem item = new MenuItem("Remove from View");
         item.setOnAction(e -> {
+            appController.save(null);  //  save the current layout
             TabInfoObject tabInfo = canvasHandler.getCurrentViewTabInfo();
             viewSerializer.deleteEntitiesFromView(entities, tabInfo);
             snapshotHandler.syncronizeSnapshot(false);
@@ -171,6 +175,7 @@ public class EntityContextMenuHandler {
     public MenuItem buildAddToViewItem(List<String> entities) {
         MenuItem item = new MenuItem("Add to View");
         item.setOnAction(e -> {
+            appController.save(null);  //  save the current layout
             TabInfoObject tabInfo = canvasHandler.getCurrentViewTabInfo();
             viewSerializer.addEntitiesToView(entities, tabInfo);
             snapshotHandler.syncronizeSnapshot(false);

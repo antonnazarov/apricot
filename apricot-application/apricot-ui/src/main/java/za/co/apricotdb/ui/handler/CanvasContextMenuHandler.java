@@ -14,6 +14,7 @@ import javafx.scene.control.ToggleGroup;
 import za.co.apricotdb.persistence.data.ViewManager;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.persistence.entity.ViewDetailLevel;
+import za.co.apricotdb.ui.MainAppController;
 import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 
@@ -49,6 +50,9 @@ public class CanvasContextMenuHandler {
 
     @Autowired
     ApricotClipboardHandler clipboardHandler;
+    
+    @Autowired
+    MainAppController appController;
 
     public void createCanvasContextMenu(ApricotCanvas canvas, double x, double y) {
         ApricotView view = canvasHandler.getCurrentView();
@@ -135,7 +139,8 @@ public class CanvasContextMenuHandler {
 
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
         canvas.setDetailLevel(view.getDetailLevel().toString());
-
+        
+        appController.save(null);
         snapshotHandler.syncronizeSnapshot(false);
     }
 }

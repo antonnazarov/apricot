@@ -32,6 +32,7 @@ import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.ui.EditRelationshipController;
+import za.co.apricotdb.ui.MainAppController;
 import za.co.apricotdb.ui.model.ApricotRelationshipSerializer;
 import za.co.apricotdb.ui.model.ApricotRelationshipValidator;
 import za.co.apricotdb.ui.model.EditRelationshipModel;
@@ -82,6 +83,9 @@ public class ApricotRelationshipHandler {
     @Autowired
     ApricotSnapshotHandler snapshotHandler;
 
+    @Autowired
+    MainAppController appController;
+    
     @Transactional
     public void openRelationshipEditorForm(TabPane viewsTabPane) throws IOException {
 
@@ -147,6 +151,7 @@ public class ApricotRelationshipHandler {
         if (!relationshipValidator.validateRelationshipModel(model)) {
             return false;
         }
+        appController.save(null);  //  save the current layout
         relationshipSerializer.serializeRelationship(model);
         snapshotHandler.syncronizeSnapshot(true);
 
