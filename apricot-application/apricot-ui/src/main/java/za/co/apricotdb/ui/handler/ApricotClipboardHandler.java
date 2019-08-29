@@ -17,6 +17,7 @@ import za.co.apricotdb.persistence.data.TableManager;
 import za.co.apricotdb.persistence.data.ViewManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotView;
+import za.co.apricotdb.ui.MainAppController;
 import za.co.apricotdb.ui.ScriptGenerateController.ScriptSource;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
@@ -57,6 +58,9 @@ public class ApricotClipboardHandler {
 
     @Autowired
     ProjectManager projectManager;
+    
+    @Autowired
+    MainAppController appController;
 
     @Transactional
     public void copySelectedToClipboard() {
@@ -79,6 +83,7 @@ public class ApricotClipboardHandler {
             String sourceViewName = getViewName(header); // the name of the original view
             List<String> sDuplicated = duplicateHandler.duplicate(sEntities, sourceViewName);
 
+            appController.save(null);
             snapshotHandler.syncronizeSnapshot(true);
             canvasHandler.makeEntitiesSelected(sDuplicated, true);
             selectInMainView(sDuplicated);

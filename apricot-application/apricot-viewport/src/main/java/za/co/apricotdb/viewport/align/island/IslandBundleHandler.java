@@ -56,13 +56,15 @@ public class IslandBundleHandler {
         sortIslands(bundle);
         printIslands(bundle.getIslands(), "REMOVED DUPLICATES");
 
-        bundle.getIslands().removeAll(standAloneEntitiesHandler.getUnlinkedEntities(bundle));
+        List<EntityIsland> unlinked = standAloneEntitiesHandler.getUnlinkedEntities(bundle);
+        standAloneEntitiesHandler.reattachLinkedStandAlones(unlinked, bundle);
+        bundle.getIslands().removeAll(unlinked);
         sortIslands(bundle);
         printIslands(bundle.getIslands(), "REMOVED UNLINKED");
 
         mergeRelatedHandler.mergeRelatedIslands(bundle);
         sortIslands(bundle);
-        printIslands(bundle.getIslands(), "REMOVED UNLINKED");
+        printIslands(bundle.getIslands(), "MERGE RELATED");
 
         fullyIncludedRemoval.removeFullyIncluded(bundle);
         sortIslands(bundle);
