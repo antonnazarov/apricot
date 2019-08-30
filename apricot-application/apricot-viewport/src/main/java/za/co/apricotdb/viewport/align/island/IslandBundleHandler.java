@@ -40,6 +40,9 @@ public class IslandBundleHandler {
     
     @Autowired
     IslandBundleStandAloneIslandsHandler standAloneIslandsHandler;
+    
+    @Autowired
+    IslandBundleMergeLowRangeHandler mergeLowRangeHandler;
 
     public EntityIslandBundle createIslandBundle(ApricotCanvas canvas) {
         EntityIslandBundle bundle = new EntityIslandBundle();
@@ -78,6 +81,10 @@ public class IslandBundleHandler {
         sortIslands(bundle);
         printIslands(bundle.getIslands(), "ONLY RELATED ISLANDS");
         printIslands(bundle.getStandAloneIslands(), "STAND ANLONE ISLANDS");
+        
+        mergeLowRangeHandler.mergeLowRankIslands(bundle);
+        sortIslands(bundle);
+        printIslands(bundle.getIslands(), "MERGED RELATED ISLANDS");
 
         logger.info("........................................");
         logger.info("                 MERGED ISLANDS");
