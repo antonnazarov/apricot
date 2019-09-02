@@ -115,10 +115,15 @@ public class IslandDistributionHandler {
             }
         }
 
-        List<EntityIsland> lastCol = allocMap.get(allocMap.size() - 1).getIslands();
-        double colWidth = getColumnWidth(lastCol);
-        Point2D coords = lastCol.get(0).getIslandPosition();
-        maxX = coords.getX() + colWidth;
+        if (!allocMap.isEmpty()) {
+            List<EntityIsland> lastCol = allocMap.get(allocMap.size() - 1).getIslands();
+            double colWidth = getColumnWidth(lastCol);
+            Point2D coords = lastCol.get(0).getIslandPosition();
+            maxX = coords.getX() + colWidth;
+        } else {
+            maxX = HORIZONTAL_ISLANDS_DISTANCE * 1000;  //  very wide
+            maxY = STANDALONE_DISTANCE;
+        }
 
         return new Point2D(maxX, maxY);
     }
@@ -152,7 +157,7 @@ public class IslandDistributionHandler {
         for (EntityIsland isl : bundle.getStandAloneIslands()) {
             allocateIsland(isl, allocMap, null);
         }
-        
+
         return allocMap;
     }
 
