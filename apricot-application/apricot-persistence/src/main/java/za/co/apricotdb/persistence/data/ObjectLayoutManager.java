@@ -5,7 +5,9 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.persistence.entity.ApricotObjectLayout;
@@ -29,6 +31,9 @@ public class ObjectLayoutManager {
 
     @Resource
     ApricotObjectLayoutRepository layoutRepository;
+
+    @Autowired
+    ViewManager viewManager;
 
     public List<ApricotObjectLayout> getObjectLayoutsByType(ApricotView view, LayoutObjectType type) {
         TypedQuery<ApricotObjectLayout> query = em.createNamedQuery("ApricotObjectLayout.getLayoutsByType",
@@ -93,5 +98,15 @@ public class ObjectLayoutManager {
         query.setParameter("view", view);
 
         return query.getResultList();
+    }
+
+    /**
+     * Delete all Object Layouts in the given view.
+     */
+    @Transactional
+    public void deleteViewObjectLayouts(ApricotView view) {
+        ApricotView managedView = viewManager.getViewById(view.getId());
+        managedView.getObjectLayouts().clear();
+        viewManager.saveView(managedView);
     }
 }

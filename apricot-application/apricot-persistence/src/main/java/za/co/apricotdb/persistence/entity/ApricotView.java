@@ -31,6 +31,7 @@ import javax.persistence.TemporalType;
 @NamedQuery(name = "ApricotView.getGeneralView", query = "SELECT vw FROM ApricotView vw WHERE vw.project = :project AND vw.general = true")
 @NamedQuery(name = "ApricotView.getAllViewsOrdered", query = "SELECT vw FROM ApricotView vw WHERE vw.project = :project ORDER by vw.ordinalPosition")
 @NamedQuery(name = "ApricotView.getViewByName", query = "SELECT vw FROM ApricotView vw WHERE vw.project = :project AND vw.name = :name")
+@NamedQuery(name = "ApricotView.getViewById", query = "SELECT vw FROM ApricotView vw WHERE vw.id = :viewId")
 @NamedQuery(name = "ApricotView.getViewMaxOrdinalPosition", query = "SELECT MAX(vw.ordinalPosition) FROM ApricotView vw WHERE vw.project = :project")
 @NamedQuery(name = "ApricotView.getViewsByObjectName", query = "SELECT vw FROM ApricotView vw JOIN vw.objectLayouts l WHERE vw.project = :project AND l.objectType = :objectType AND l.objectName = :objectName")
 @NamedQuery(name = "ApricotView.getCurrentView", query = "SELECT vw FROM ApricotView vw WHERE vw.project = :project AND vw.current = :current")

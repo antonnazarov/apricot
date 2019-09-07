@@ -160,13 +160,13 @@ public class ApricotViewHandler {
      * included into view and the pattern view, which ApricotObjectLayout's will be
      * re-used.
      */
-    public List<ApricotObjectLayout> getObjectLayoutsFromPatternView(List<String> viewTables, ApricotView patternView,
+    public List<ApricotObjectLayout> getObjectLayoutsFromReferenceView(List<String> viewTables, ApricotView referenceView,
             ApricotSnapshot snapshot) {
         List<ApricotObjectLayout> ret = new ArrayList<>();
 
         // scan through the view tables
         for (String t : viewTables) {
-            ApricotObjectLayout layout = objectLayoutManager.findLayoutByName(patternView, t);
+            ApricotObjectLayout layout = objectLayoutManager.findLayoutByName(referenceView, t);
             if (layout != null) {
                 ret.add(layout);
             }
@@ -175,7 +175,7 @@ public class ApricotViewHandler {
         List<ApricotTable> tables = tableManager.getTablesByNames(viewTables, snapshot);
         List<ApricotRelationship> relationships = relationshipManager.getRelationshipsForTables(tables);
         for (ApricotRelationship r : relationships) {
-            ApricotObjectLayout layout = objectLayoutManager.findLayoutByName(patternView, r.getName());
+            ApricotObjectLayout layout = objectLayoutManager.findLayoutByName(referenceView, r.getName());
             if (layout != null) {
                 ret.add(layout);
             }

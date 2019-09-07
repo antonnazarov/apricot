@@ -3,36 +3,39 @@ package za.co.apricotdb.viewport.align.island;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import za.co.apricotdb.viewport.canvas.ApricotCanvas;
-
 /**
- * Collect the low range (<=4) islands and merge them into the linked high rank
- * ones.
+ * This handler selects the low range related islands and merge them into the
+ * higher rank islands.
  * 
  * @author Anton Nazarov
- * @since 18/08/2019
+ * @since 30/08/2019
  */
 @Component
 public class IslandBundleMergeLowRankHandler {
 
-    public void mergeLowRank(EntityIslandBundle bundle, ApricotCanvas canvas) {
+    @Autowired
+    IslandRelationshipHandler relationshipHandler;
 
-    }
-
-    /**
-     * Get all low rank islands.
-     */
-    private List<EntityIsland> getLowRankIslands(EntityIslandBundle bundle) {
-        List<EntityIsland> ret = new ArrayList<>();
+    public void mergeLowRankIslands(EntityIslandBundle bundle) {
+        List<EntityIsland> lowRankIslands = new ArrayList<>();
 
         for (EntityIsland isl : bundle.getIslands()) {
-            if (isl.getIslandRank() <= 4) {
-                ret.add(isl);
+            if (isl.getIslandRank() <= 3) {
+                lowRankIslands.add(isl);
             }
         }
 
-        return ret;
+        for (EntityIsland isl : lowRankIslands) {
+            if (isl.getIslandRank() <= 3) {
+                List<IslandRelationship> rls = relationshipHandler.getIslandRelationships(isl, bundle);
+                IslandRelationship defRel = IslandRelationship.getTopRelationship(rls);
+                EntityIsland relIsl = defRel.getRelatedIsland();
+                relIsl.merge(isl, false);
+                bundle.getIslands().remove(isl);
+            }
+        }
     }
 }

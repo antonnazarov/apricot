@@ -177,4 +177,9 @@ public final class ApricotEntityImpl implements ApricotEntity {
     public String toString() {
         return "[" + tableName + "]";
     }
+
+    @Override
+    public void resetShape() {
+        entityShape = null;
+    }
 }

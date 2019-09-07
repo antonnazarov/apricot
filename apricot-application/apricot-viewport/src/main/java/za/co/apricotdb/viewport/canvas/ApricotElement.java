@@ -19,4 +19,6 @@ public interface ApricotElement {
     Node getShape();
 
     ElementType getElementType();
+    
+    void resetShape();
 }

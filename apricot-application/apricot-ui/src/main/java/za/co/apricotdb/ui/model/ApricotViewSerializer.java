@@ -91,7 +91,7 @@ public class ApricotViewSerializer {
         }
 
         if (sourceView != null) {
-            List<ApricotObjectLayout> layouts = viewHandler.getObjectLayoutsFromPatternView(model.getViewTables(),
+            List<ApricotObjectLayout> layouts = viewHandler.getObjectLayoutsFromReferenceView(model.getViewTables(),
                     sourceView, model.getSnapshot());
 
             List<ApricotObjectLayout> targetLayouts = new ArrayList<>();
@@ -202,7 +202,7 @@ public class ApricotViewSerializer {
         ApricotView v = viewHandler.readApricotView(tabInfo.getView());
 
         ApricotView generalView = viewManager.getGeneralView(tabInfo.getSnapshot().getProject());
-        List<ApricotObjectLayout> layouts = viewHandler.getObjectLayoutsFromPatternView(renewedTables, generalView,
+        List<ApricotObjectLayout> layouts = viewHandler.getObjectLayoutsFromReferenceView(renewedTables, generalView,
                 tabInfo.getSnapshot());
 
         boolean save = false;

@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
+import za.co.apricotdb.persistence.data.ObjectLayoutManager;
+import za.co.apricotdb.ui.MainAppController;
 import za.co.apricotdb.viewport.align.island.EntityIsland;
 import za.co.apricotdb.viewport.align.island.EntityIslandBundle;
 import za.co.apricotdb.viewport.align.island.IslandAllocationHandler;
@@ -12,6 +14,7 @@ import za.co.apricotdb.viewport.align.island.IslandDistributionHandler;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.notification.AddLayoutSavepointEvent;
 import za.co.apricotdb.viewport.notification.CanvasChangedEvent;
+import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 
 /**
  * This handler calls the align operation on the current Canvas.
@@ -39,12 +42,24 @@ public class CanvasAlignHandler {
 
     @Autowired
     IslandBundleHandler islandBundleHandler;
+    
+    @Autowired
+    ObjectLayoutManager layoutManager;
+    
+    @Autowired
+    MainAppController appController;
+    
+    @Autowired
+    ApricotSnapshotHandler snapshotHandler;
 
     public void alignCanvasIslands() {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
 
+        //  prepare for undo
         AddLayoutSavepointEvent addSavepointEvent = new AddLayoutSavepointEvent(canvas);
         eventPublisher.publishEvent(addSavepointEvent);
+        
+        resetCurrentLayout(canvas);
 
         EntityIslandBundle islandBundle = islandBundleHandler.createIslandBundle(canvas);
 
@@ -61,5 +76,19 @@ public class CanvasAlignHandler {
         eventPublisher.publishEvent(canvasChangedEvent);
 
         canvas.buildRelationships();
+        
+        saveAlignment();
+    }
+    
+    private void resetCurrentLayout(ApricotCanvas canvas) {
+        layoutManager.deleteViewObjectLayouts(canvasHandler.getCurrentView());
+        for ( ApricotRelationship r : canvas.getRelationships()) {
+            r.resetShape();
+        }
+    }
+    
+    private void saveAlignment() {
+        appController.save(null);
+        snapshotHandler.syncronizeSnapshot(false);
     }
 }

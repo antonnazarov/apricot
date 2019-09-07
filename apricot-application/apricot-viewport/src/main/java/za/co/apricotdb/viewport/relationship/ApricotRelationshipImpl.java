@@ -163,4 +163,9 @@ public class ApricotRelationshipImpl implements ApricotRelationship {
 
         return sb.toString();
     }
+
+    @Override
+    public void resetShape() {
+        relationshipShape = null;
+    }
 }

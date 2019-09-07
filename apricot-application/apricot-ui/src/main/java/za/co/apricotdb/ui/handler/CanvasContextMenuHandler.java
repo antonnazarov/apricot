@@ -50,7 +50,7 @@ public class CanvasContextMenuHandler {
 
     @Autowired
     ApricotClipboardHandler clipboardHandler;
-    
+
     @Autowired
     MainAppController appController;
 
@@ -139,7 +139,7 @@ public class CanvasContextMenuHandler {
 
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
         canvas.setDetailLevel(view.getDetailLevel().toString());
-        
+
         appController.save(null);
         snapshotHandler.syncronizeSnapshot(false);
     }

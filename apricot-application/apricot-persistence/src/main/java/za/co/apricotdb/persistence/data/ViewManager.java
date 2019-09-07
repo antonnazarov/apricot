@@ -106,7 +106,7 @@ public class ViewManager {
         for (ApricotObjectLayout l : v.getObjectLayouts()) {
             objectLayoutRepository.delete(l);
         }
-        
+
         viewRepository.delete(v);
     }
 
@@ -116,8 +116,20 @@ public class ViewManager {
 
     public ApricotView findViewById(long id) {
         Optional<ApricotView> o = viewRepository.findById(id);
-        
+
         return o.get();
+    }
+
+    public ApricotView getViewById(long id) {
+        ApricotView ret = null;
+        TypedQuery<ApricotView> query = em.createNamedQuery("ApricotView.getViewById", ApricotView.class);
+        query.setParameter("viewId", id);
+        List<ApricotView> res = query.getResultList();
+        if (res != null && res.size() == 1) {
+            ret = res.get(0);
+        }
+
+        return ret;
     }
 
     public List<ApricotView> getViewByName(ApricotProject project, String name) {
