@@ -23,7 +23,6 @@ public class EntityIsland implements Comparable<EntityIsland> {
     private List<EntityAllocation> parents;
     private List<EntityAllocation> children;
     private List<EntityIsland> merged; // merged islands
-    private EntityIsland master;
     private boolean parent;
     private Point2D islandPosition;
     
@@ -47,14 +46,6 @@ public class EntityIsland implements Comparable<EntityIsland> {
         }
     }
 
-    public EntityIsland getMaster() {
-        return master;
-    }
-
-    public void setMaster(EntityIsland master) {
-        this.master = master;
-    }
-
     public boolean isParent() {
         return parent;
     }
@@ -65,7 +56,6 @@ public class EntityIsland implements Comparable<EntityIsland> {
 
     public void merge(EntityIsland island, boolean isParent) {
         island.setParent(isParent);
-        island.setMaster(this);
         island.removeEntity(core);
         removeEntity(island.getCore());
         merged.add(island);

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.persistence.data.ObjectLayoutManager;
 import za.co.apricotdb.ui.MainAppController;
+import za.co.apricotdb.viewport.align.island.CoreRelationshipsAllocator;
 import za.co.apricotdb.viewport.align.island.EntityIsland;
 import za.co.apricotdb.viewport.align.island.EntityIslandBundle;
 import za.co.apricotdb.viewport.align.island.IslandAllocationHandler;
@@ -51,10 +52,13 @@ public class CanvasAlignHandler {
     
     @Autowired
     ApricotSnapshotHandler snapshotHandler;
+    
+    @Autowired
+    CoreRelationshipsAllocator relationshipsAllocator;
 
     public void alignCanvasIslands() {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
-
+        
         //  prepare for undo
         AddLayoutSavepointEvent addSavepointEvent = new AddLayoutSavepointEvent(canvas);
         eventPublisher.publishEvent(addSavepointEvent);
@@ -71,12 +75,14 @@ public class CanvasAlignHandler {
         }
 
         distributionHandler.distributeIslands(islandBundle);
-
         CanvasChangedEvent canvasChangedEvent = new CanvasChangedEvent(canvas);
         eventPublisher.publishEvent(canvasChangedEvent);
-
         canvas.buildRelationships();
-        
+        saveAlignment();
+
+        relationshipsAllocator.allocateCoreRelationships(islandBundle);
+        eventPublisher.publishEvent(canvasChangedEvent);
+        canvas.buildRelationships();
         saveAlignment();
     }
     

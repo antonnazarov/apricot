@@ -20,8 +20,8 @@ import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 @Component
 public class IslandAllocationHandler {
 
-    private final static double VERTICAL_DISTANCE = 20;
-    private final static double HORIZONTAL_BIAS = 20;
+    public final static double VERTICAL_DISTANCE = 20;
+    public final static double HORIZONTAL_BIAS = 20;
 
     /**
      * Perform the relative (0,0 based) allocation of the island.

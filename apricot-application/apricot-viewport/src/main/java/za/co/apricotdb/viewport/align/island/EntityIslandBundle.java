@@ -29,6 +29,19 @@ public class EntityIslandBundle {
         return standAloneIslands;
     }
 
+    /**
+     * Return all islands related and standalone.
+     */
+    public List<EntityIsland> getAllIslands() {
+        List<EntityIsland> ret = new ArrayList<>();
+
+        ret.addAll(islands);
+        ret.addAll(standAloneIslands);
+
+        return ret;
+
+    }
+
     public String getMergedIslandsAsString() {
         StringBuilder sb = new StringBuilder();
 
