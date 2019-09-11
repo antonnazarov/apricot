@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.viewport.align.EntityAllocation;
+import za.co.apricotdb.viewport.entity.ApricotEntity;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 import za.co.apricotdb.viewport.relationship.shape.DirectRelationship;
@@ -24,25 +25,13 @@ import za.co.apricotdb.viewport.relationship.shape.TopologyHelper;
  */
 @Component
 public class CoreRelationshipsAllocator {
-    
+
     Logger logger = LoggerFactory.getLogger(CoreRelationshipsAllocator.class);
 
     public void allocateCoreRelationships(EntityIslandBundle bundle) {
-        for (EntityIsland island : bundle.getAllIslands()) {
+        for (EntityIsland island : bundle.getEntityIslandsFlat()) {
             allocateIslandRelationships(island);
-            for (EntityIsland isl : getMergedIslands(island)) {
-                allocateIslandRelationships(isl);
-            }
         }
-    }
-
-    private List<EntityIsland> getMergedIslands(EntityIsland island) {
-        List<EntityIsland> merged = new ArrayList<>(island.getMergedIslands());
-        for (EntityIsland isl : island.getMergedIslands()) {
-            merged.addAll(getMergedIslands(isl));
-        }
-
-        return merged;
     }
 
     private void allocateIslandRelationships(EntityIsland island) {
@@ -86,7 +75,7 @@ public class CoreRelationshipsAllocator {
                 }
             }
         }
-        
+
         Collections.sort(childRelsTop);
         allocateRelationshipRulers(childRelsTop);
         Collections.sort(childRelsBottom);
@@ -97,13 +86,16 @@ public class CoreRelationshipsAllocator {
 
     private void allocateRelationshipRulers(List<Relationship> relationships) {
         if (!relationships.isEmpty()) {
-            ApricotEntityShape eshape = (ApricotEntityShape) relationships.get(0).relationship.getParent().getEntityShape();
+            ApricotEntity entity = relationships.get(0).relationship.getParent();
+            ApricotEntityShape eshape = (ApricotEntityShape) entity.getEntityShape();
+            logger.info("Entity: [" + entity.getTableName() + "], layoutX=[" + eshape.getLayoutX() + "], layoutY=["
+                    + eshape.getLayoutY() + "]");
             double rulerX = eshape.getLayoutX() + eshape.getWidth() + IslandAllocationHandler.HORIZONTAL_BIAS * 2;
             for (Relationship r : relationships) {
                 DirectRelationship dr = (DirectRelationship) r.relationship.getShape();
                 logger.info("Relationship=[" + r.relationship.getRelationshipName() + "], rulerX=[" + rulerX + "]");
                 dr.setRulerX(rulerX);
-                
+
                 rulerX += IslandAllocationHandler.HORIZONTAL_BIAS;
             }
         }

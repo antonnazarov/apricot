@@ -54,6 +54,9 @@ public class CanvasContextMenuHandler {
     @Autowired
     MainAppController appController;
 
+    @Autowired
+    ResetViewHandler resetViewHandler;
+
     public void createCanvasContextMenu(ApricotCanvas canvas, double x, double y) {
         ApricotView view = canvasHandler.getCurrentView();
 
@@ -116,18 +119,25 @@ public class CanvasContextMenuHandler {
             break;
         }
 
-        MenuItem alignEntities = new MenuItem("Align Entities");
-        alignEntities.setOnAction(e -> {
+        MenuItem alignView = new MenuItem("Align View");
+        alignView.setOnAction(e -> {
             aligner.alignCanvasIslands();
+        });
+
+        MenuItem resetView = new MenuItem("Reset View <Ctrl+R>");
+        resetView.setOnAction(e -> {
+            resetViewHandler.resetView();
         });
 
         ContextMenu contextMenu = new ContextMenu();
         if (clipboardHandler.containsInfoToPaste()) {
             contextMenu.getItems().addAll(paste, refreshCanvas, editViewEntity, new SeparatorMenuItem(), newEntity,
-                    new SeparatorMenuItem(), rSimple, rDefault, rExtended, new SeparatorMenuItem(), alignEntities);
+                    new SeparatorMenuItem(), rSimple, rDefault, rExtended, new SeparatorMenuItem(), alignView,
+                    resetView);
         } else {
             contextMenu.getItems().addAll(refreshCanvas, editViewEntity, new SeparatorMenuItem(), newEntity,
-                    new SeparatorMenuItem(), rSimple, rDefault, rExtended, new SeparatorMenuItem(), alignEntities);
+                    new SeparatorMenuItem(), rSimple, rDefault, rExtended, new SeparatorMenuItem(), alignView,
+                    resetView);
         }
         contextMenu.setAutoHide(true);
         contextMenu.show(parentWindow.getWindow(), x, y);

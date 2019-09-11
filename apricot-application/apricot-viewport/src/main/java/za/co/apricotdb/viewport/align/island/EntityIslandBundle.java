@@ -42,6 +42,30 @@ public class EntityIslandBundle {
 
     }
 
+    /**
+     * Retrieve all entities in the bundle (core and merged) as a flat list.
+     */
+    public List<EntityIsland> getEntityIslandsFlat() {
+        List<EntityIsland> ret = new ArrayList<>();
+
+        List<EntityIsland> all = getAllIslands();
+        for (EntityIsland isl : all) {
+            ret.addAll(getMergedIslands(isl));
+        }
+
+        return ret;
+    }
+
+    private List<EntityIsland> getMergedIslands(EntityIsland island) {
+        List<EntityIsland> ret = new ArrayList<>();
+        for (EntityIsland isl : island.getMergedIslands()) {
+            ret.addAll(getMergedIslands(isl));
+        }
+        ret.add(island);
+
+        return ret;
+    }
+
     public String getMergedIslandsAsString() {
         StringBuilder sb = new StringBuilder();
 
