@@ -42,12 +42,15 @@ public class OnKeyPressedEventHandler implements EventHandler<KeyEvent> {
 
     @Autowired
     ApricotUndoManager undoManager;
-    
+
     @Autowired
     ApricotSnapshotHandler snapshotHandler;
-    
+
     @Autowired
     ApricotClipboardHandler clipboardHandler;
+
+    @Autowired
+    ResetViewHandler resetViewHandler;
 
     @Override
     public void handle(KeyEvent event) {
@@ -121,6 +124,11 @@ public class OnKeyPressedEventHandler implements EventHandler<KeyEvent> {
         case V:
             if (event.isControlDown()) {
                 clipboardHandler.pasteSelectedFromClipboard();
+            }
+            break;
+        case R:
+            if (event.isControlDown()) {
+                resetViewHandler.resetView();
             }
             break;
         default:
