@@ -77,9 +77,9 @@ public class CoreRelationshipsAllocator {
         }
 
         Collections.sort(childRelsTop);
+        Collections.reverse(childRelsTop);
         allocateRelationshipRulers(childRelsTop);
         Collections.sort(childRelsBottom);
-        Collections.reverse(childRelsBottom);
         allocateRelationshipRulers(childRelsBottom);
 
     }

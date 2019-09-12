@@ -4,9 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
-import javafx.animation.PauseTransition;
-import javafx.util.Duration;
-import za.co.apricotdb.persistence.data.ObjectLayoutManager;
 import za.co.apricotdb.ui.MainAppController;
 import za.co.apricotdb.viewport.align.island.CoreRelationshipsAllocator;
 import za.co.apricotdb.viewport.align.island.EntityIsland;
@@ -36,16 +33,10 @@ public class CanvasAlignHandler {
     IslandDistributionHandler distributionHandler;
 
     @Autowired
-    TabViewHandler tabViewHandler;
-
-    @Autowired
     ApplicationEventPublisher eventPublisher;
 
     @Autowired
     IslandBundleHandler islandBundleHandler;
-
-    @Autowired
-    ObjectLayoutManager layoutManager;
 
     @Autowired
     MainAppController appController;
@@ -61,14 +52,8 @@ public class CanvasAlignHandler {
 
     public void alignCanvasIslands() {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
-        resetViewHandler.resetView();
-
-        PauseTransition delay = new PauseTransition(Duration.seconds(0.5));
-        delay.setOnFinished(e -> {
-            alignIslands(canvas);
-        });
-        delay.play();
-
+        resetViewHandler.resetView(false);
+        alignIslands(canvas);
     }
 
     private void alignIslands(ApricotCanvas canvas) {
@@ -78,15 +63,9 @@ public class CanvasAlignHandler {
         }
         distributionHandler.distributeIslands(islandBundle);
         canvas.buildRelationships();
+        relationshipsAllocator.allocateCoreRelationships(islandBundle);
+        canvas.buildRelationships();
         saveAlignment(canvas);
-
-        PauseTransition delay = new PauseTransition(Duration.seconds(0.5));
-        delay.setOnFinished(e -> {
-            relationshipsAllocator.allocateCoreRelationships(islandBundle);
-            canvas.buildRelationships();
-            saveAlignment(canvas);
-        });
-        delay.play();
     }
 
     private void saveAlignment(ApricotCanvas canvas) {

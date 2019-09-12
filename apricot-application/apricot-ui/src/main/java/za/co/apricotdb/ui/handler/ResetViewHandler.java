@@ -41,17 +41,16 @@ public class ResetViewHandler {
     @Autowired
     ApricotSnapshotHandler snapshotHandler;
 
-    public void resetView() {
+    public void resetView(boolean synchronize) {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
-        TabInfoObject infoObj = canvasHandler.getCurrentViewTabInfo();
-        ApricotView view = infoObj.getView();
+        ApricotView view = canvasHandler.getCurrentView();
 
         // prepare for undo
         AddLayoutSavepointEvent addSavepointEvent = new AddLayoutSavepointEvent(canvas);
         eventPublisher.publishEvent(addSavepointEvent);
 
         if (view.isGeneral()) {
-            layoutManager.deleteViewObjectLayouts(canvasHandler.getCurrentView());
+            layoutManager.deleteViewObjectLayouts(view);
         }
 
         for (ApricotRelationship r : canvas.getRelationships()) {
@@ -64,7 +63,7 @@ public class ResetViewHandler {
                 entity.getEntityShape().setPrefWidth(10);
             }
         }
-        
+
         if (!view.isGeneral()) {
             AlignCommand aligner = new SimpleGridEntityAllocator(canvas);
             aligner.align();
@@ -72,7 +71,9 @@ public class ResetViewHandler {
             eventPublisher.publishEvent(canvasChangedEvent);
             appController.save(null);
         }
-        
-        snapshotHandler.syncronizeSnapshot(false);
+
+        if (synchronize) {
+            snapshotHandler.syncronizeSnapshot(false);
+        }
     }
 }

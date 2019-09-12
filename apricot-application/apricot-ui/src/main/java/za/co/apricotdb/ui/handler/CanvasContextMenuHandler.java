@@ -126,7 +126,7 @@ public class CanvasContextMenuHandler {
 
         MenuItem resetView = new MenuItem("Reset View <Ctrl+R>");
         resetView.setOnAction(e -> {
-            resetViewHandler.resetView();
+            resetViewHandler.resetView(true);
         });
 
         ContextMenu contextMenu = new ContextMenu();

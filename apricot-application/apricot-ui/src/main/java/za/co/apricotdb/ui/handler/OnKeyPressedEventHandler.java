@@ -128,7 +128,7 @@ public class OnKeyPressedEventHandler implements EventHandler<KeyEvent> {
             break;
         case R:
             if (event.isControlDown()) {
-                resetViewHandler.resetView();
+                resetViewHandler.resetView(true);
             }
             break;
         default:
