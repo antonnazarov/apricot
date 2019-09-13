@@ -41,6 +41,9 @@ public class ResetViewHandler {
     @Autowired
     ApricotSnapshotHandler snapshotHandler;
 
+    @Autowired
+    CanvasScaleHandler scaleHandler;
+
     public void resetView(boolean synchronize) {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
         ApricotView view = canvasHandler.getCurrentView();
@@ -74,6 +77,7 @@ public class ResetViewHandler {
 
         if (synchronize) {
             snapshotHandler.syncronizeSnapshot(false);
+            scaleHandler.fitCanvasScale();
         }
     }
 }

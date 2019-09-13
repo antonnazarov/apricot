@@ -120,7 +120,7 @@ public class OracleScanner extends MetaDataScannerBase {
 
                         cns.add(c);
                     } else {
-                        logger.info("getConstraints: the table [" + rs.getString("table_name") + "] was not found");
+                        logger.debug("getConstraints: the table [" + rs.getString("table_name") + "] was not found");
                     }
 
                     return null;
@@ -193,7 +193,7 @@ public class OracleScanner extends MetaDataScannerBase {
     public List<ApricotRelationship> getRelationships(JdbcOperations jdbc, Map<String, ApricotConstraint> constraints,
             String schema) {
 
-        logger.info("Scanning the relationships, the following constraints were identified: "
+        logger.debug("Scanning the relationships, the following constraints were identified: "
                 + getConstraintsAsString(constraints));
         List<ApricotRelationship> ret = new ArrayList<>();
         String sql = String.format(
@@ -204,13 +204,13 @@ public class OracleScanner extends MetaDataScannerBase {
             String sChild = rs.getString("constraint_name");
             ApricotConstraint parent = constraints.get(sParent);
             if (parent == null) {
-                logger.info("The Relationship won't be created: [" + sParent + "->" + sChild
+                logger.debug("The Relationship won't be created: [" + sParent + "->" + sChild
                         + "], the parent constraint was not found");
                 return null;
             }
             ApricotConstraint child = constraints.get(sChild);
             if (child == null) {
-                logger.info("The Relationship won't be created: [" + sParent + "->" + sChild
+                logger.debug("The Relationship won't be created: [" + sParent + "->" + sChild
                         + "], the child constraint was not found");
                 return null;
             }

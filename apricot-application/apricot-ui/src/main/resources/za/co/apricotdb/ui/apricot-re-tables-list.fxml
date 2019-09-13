@@ -19,9 +19,15 @@
                   <TableColumn fx:id="includedColumn" minWidth="0.0" prefWidth="79.0" text="Include" />
                </columns>
             </TableView>
-            <HBox alignment="CENTER_RIGHT" prefHeight="81.0" prefWidth="360.0" spacing="10.0">
+            <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
                   <Label fx:id="summaryInfo" prefHeight="25.0" prefWidth="377.0" text="Label" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_RIGHT" prefHeight="81.0" prefWidth="360.0" spacing="10.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#selectAll" prefWidth="90.0" text="Select All" />
+                  <Button mnemonicParsing="false" onAction="#unselectAll" prefWidth="90.0" text="Unselect All" />
                   <Button mnemonicParsing="false" onAction="#cancel" prefWidth="90.0" text="Cancel" />
                   <Button mnemonicParsing="false" onAction="#finish" prefWidth="90.0" text="Finish" />
                </children>

@@ -35,7 +35,7 @@ public class CoreRelationshipsAllocator {
     }
 
     private void allocateIslandRelationships(EntityIsland island) {
-        logger.info("Allocating core relationships of the island: " + island.getCore());
+        logger.debug("Allocating core relationships of the island: " + island.getCore());
         allocateParentRelationships(island);
         allocateChildRelationships(island);
     }
@@ -88,12 +88,12 @@ public class CoreRelationshipsAllocator {
         if (!relationships.isEmpty()) {
             ApricotEntity entity = relationships.get(0).relationship.getParent();
             ApricotEntityShape eshape = (ApricotEntityShape) entity.getEntityShape();
-            logger.info("Entity: [" + entity.getTableName() + "], layoutX=[" + eshape.getLayoutX() + "], layoutY=["
+            logger.debug("Entity: [" + entity.getTableName() + "], layoutX=[" + eshape.getLayoutX() + "], layoutY=["
                     + eshape.getLayoutY() + "]");
             double rulerX = eshape.getLayoutX() + eshape.getWidth() + IslandAllocationHandler.HORIZONTAL_BIAS * 2;
             for (Relationship r : relationships) {
                 DirectRelationship dr = (DirectRelationship) r.relationship.getShape();
-                logger.info("Relationship=[" + r.relationship.getRelationshipName() + "], rulerX=[" + rulerX + "]");
+                logger.debug("Relationship=[" + r.relationship.getRelationshipName() + "], rulerX=[" + rulerX + "]");
                 dr.setRulerX(rulerX);
 
                 rulerX += IslandAllocationHandler.HORIZONTAL_BIAS;

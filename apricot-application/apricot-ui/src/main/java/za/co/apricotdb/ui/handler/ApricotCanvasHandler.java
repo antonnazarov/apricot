@@ -265,7 +265,6 @@ public class ApricotCanvasHandler {
 
             CanvasAllocationMap allocationMap = canvas.getAllocationMap();
             tabViewHandler.saveCanvasAllocationMap(allocationMap, view);
-
         });
 
         return transition;

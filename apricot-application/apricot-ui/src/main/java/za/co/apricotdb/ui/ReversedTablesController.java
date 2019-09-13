@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
@@ -17,9 +18,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.util.Duration;
 import za.co.apricotdb.persistence.data.MetaData;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
+import za.co.apricotdb.ui.handler.CanvasAlignHandler;
 import za.co.apricotdb.ui.handler.ReverseEngineHandler;
 
 /**
@@ -36,6 +39,9 @@ public class ReversedTablesController {
 
     @Autowired
     ApplicationInitializer applicationInitializer;
+
+    @Autowired
+    CanvasAlignHandler alignHandler;
 
     @FXML
     TableView<ReversedTableRow> reversedTablesList;
@@ -109,11 +115,38 @@ public class ReversedTablesController {
                 reverseEngineeringParameters)) {
             // refresh the snapshot view
             applicationInitializer.initializeDefault();
+            alignAfterDelay(0.5).play();
             getStage().close();
         }
     }
 
+    @FXML
+    public void selectAll() {
+        setSelectedFlag(true);
+    }
+
+    @FXML
+    public void unselectAll() {
+        setSelectedFlag(false);
+    }
+    
+    private void setSelectedFlag(boolean flag) {
+        for (ReversedTableRow r : reversedTablesList.getItems()) {
+            r.setIncluded(flag);
+        }
+        reversedTablesList.refresh();
+    }
+
     private Stage getStage() {
         return (Stage) mainPane.getScene().getWindow();
+    }
+
+    private PauseTransition alignAfterDelay(double delay) {
+        PauseTransition transition = new PauseTransition(Duration.seconds(delay));
+        transition.setOnFinished(e -> {
+            alignHandler.alignCanvasIslands();
+        });
+
+        return transition;
     }
 }

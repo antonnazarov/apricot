@@ -86,10 +86,10 @@ public class IslandBundleHandler {
         sortIslands(bundle);
         printIslands(bundle.getIslands(), "MERGED LOW RANK ISLANDS");
 
-        logger.info("........................................");
-        logger.info("                 MERGED ISLANDS");
-        logger.info("........................................");
-        logger.info(bundle.getMergedIslandsAsString());
+        logger.debug("........................................");
+        logger.debug("                 MERGED ISLANDS");
+        logger.debug("........................................");
+        logger.debug(bundle.getMergedIslandsAsString());
 
         return bundle;
     }
@@ -115,9 +115,9 @@ public class IslandBundleHandler {
     }
 
     private void printIslands(List<EntityIsland> islands, String stepName) {
-        logger.info("----------------------------------------");
-        logger.info("                 " + stepName);
-        logger.info("----------------------------------------");
-        logger.info(islands.toString());
+        logger.debug("----------------------------------------");
+        logger.debug("                 " + stepName);
+        logger.debug("----------------------------------------");
+        logger.debug(islands.toString());
     }
 }

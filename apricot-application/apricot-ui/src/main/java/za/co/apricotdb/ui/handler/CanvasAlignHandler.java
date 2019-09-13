@@ -50,10 +50,14 @@ public class CanvasAlignHandler {
     @Autowired
     ResetViewHandler resetViewHandler;
 
+    @Autowired
+    CanvasScaleHandler scaleHandler;
+
     public void alignCanvasIslands() {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
         resetViewHandler.resetView(false);
         alignIslands(canvas);
+        scaleHandler.fitCanvasScale();
     }
 
     private void alignIslands(ApricotCanvas canvas) {

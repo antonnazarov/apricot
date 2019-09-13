@@ -409,4 +409,8 @@ public class MainAppController {
     public Button getUndoButton() {
         return undoButton;
     }
+
+    public ComboBox<String> getScale() {
+        return scale;
+    }
 }

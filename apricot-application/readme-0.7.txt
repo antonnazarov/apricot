@@ -2,6 +2,8 @@
 Apricot DB, Release 0.7, date: to be defined
 ----------------------------
 This is a feature release.
+The procedure of the automatic alignment of entities was enhanced;
+The "Reset View" function was added.
 
 For more details please refer to the user documentation: "Apricot DB User Guide v0.7.pdf" (to be created).
 This version of "Apricot DB" provides the Reverse Engineering of the following databases:

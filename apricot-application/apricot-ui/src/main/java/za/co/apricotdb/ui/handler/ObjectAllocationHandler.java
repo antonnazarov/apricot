@@ -73,7 +73,7 @@ public class ObjectAllocationHandler {
         double deltaY = canvasBox.getHeight() - scroll.getHeight();
         List<ApricotEntity> selected = canvas.getSelectedEntities();
         if (!selected.isEmpty()) {
-            Point2D corner = findTopLeftMost(selected);
+            Point2D corner = findMostTopLeft(selected);
             if (deltaX > 0) {
                 double hvalue = (corner.getX() - scroll.getWidth() * BIAS_RATIO) / deltaX;
                 hvalue = fixScrollValue(hvalue);
@@ -98,7 +98,7 @@ public class ObjectAllocationHandler {
         return ret;
     }
 
-    private Point2D findTopLeftMost(List<ApricotEntity> entities) {
+    private Point2D findMostTopLeft(List<ApricotEntity> entities) {
         double minX = Double.MAX_VALUE;
         double minY = Double.MAX_VALUE;
 
