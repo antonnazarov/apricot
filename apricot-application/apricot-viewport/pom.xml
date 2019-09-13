@@ -7,7 +7,7 @@
     <parent>
         <groupId>za.co.apricot</groupId>
         <artifactId>apricotdb</artifactId>
-        <version>0.7</version>
+        <version>0.8</version>
     </parent>
 
     <artifactId>apricot-viewport</artifactId>

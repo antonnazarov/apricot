@@ -7,7 +7,7 @@
 
     <groupId>za.co.apricot</groupId>
     <artifactId>apricotdb</artifactId>
-    <version>0.7</version>
+    <version>0.8</version>
     <packaging>pom</packaging>
     <name>The Apricot - database tool</name>
 
@@ -15,7 +15,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <revision>0.7</revision>
+        <revision>0.8</revision>
         <start-class>za.co.apricotdb.ui.ApricotMainApp</start-class>
     </properties>
 
