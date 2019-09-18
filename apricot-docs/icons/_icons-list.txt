@@ -1,0 +1,41 @@
+1. New project
+2. Open project
+3. edit project
+
+4. Save
+5. Undo
+6. Refresh
+
+7. New snapshot
+8. Edit snapshot
+9. Compare snapshots
+
+10. New view
+11. Edit view
+
+12. New entity
+13. Edit entity
+14. New relationship
+15. Search
+
+16. Align entities
+17. Reset alignment
+
+18. Excel report
+19. Insert script
+20. Delete script
+21. Drop script
+
+
+21
+
+https://thenounproject.com/search/?q=compare
+
+
+
+edit menu:
+
+Find <Ctrl+F>
+Edit Project
+Edit Snapshot
+Edit View

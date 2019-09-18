@@ -79,7 +79,7 @@ public class ParentWindow {
     }
 
     public SplitPane getCenterNode() {
-        return (SplitPane) getMainVBox().getChildren().get(1);
+        return (SplitPane) getMainVBox().getChildren().get(2);
     }
 
     public VBox getMainVBox() {

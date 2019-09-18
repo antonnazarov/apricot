@@ -1,0 +1,24 @@
+New project
+Open project
+edit project
+Save
+Undo
+New snapshot
+Edit snapshot
+New view
+Edit view
+New entity
+Edit entity
+New relationship
+Align entities
+Reset alignment
+Excel report
+Compare snapshots
+Insert script
+Delete script
+Drop script
+
+
+19
+
+https://thenounproject.com/search/?q=compare
