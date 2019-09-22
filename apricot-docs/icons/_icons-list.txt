@@ -18,16 +18,22 @@
 14. New relationship
 15. Search
 
-16. Align entities
-17. Reset alignment
+16. Align left
+17. Align right
+18. Align top
+19. Align bottom
+20. Make entities same size
+21. Minimize entity width
+22. Allocate all entities
+23. Reset allocation
 
-18. Excel report
-19. Insert script
-20. Delete script
-21. Drop script
+24. Excel report
+25. Insert script
+26. Delete script
+27. Drop script
 
 
-21
+27
 
 https://thenounproject.com/search/?q=compare
 

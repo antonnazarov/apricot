@@ -41,6 +41,7 @@ import za.co.apricotdb.ui.handler.ReverseEngineHandler;
 import za.co.apricotdb.ui.handler.TabInfoObject;
 import za.co.apricotdb.ui.handler.TabViewHandler;
 import za.co.apricotdb.ui.handler.TreeViewHandler;
+import za.co.apricotdb.ui.toolbar.ToolbarHolder;
 import za.co.apricotdb.ui.undo.ApricotUndoManager;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
@@ -113,6 +114,9 @@ public class MainAppController {
     @Autowired
     CanvasScaleHandler scaleHandler;
 
+    @Autowired
+    ToolbarHolder tbHolder;
+
     @FXML
     AnchorPane mainPane;
 
@@ -133,6 +137,64 @@ public class MainAppController {
 
     @FXML
     ComboBox<String> scale;
+
+    // tool bar
+    @FXML
+    Button tbNewProject;
+    @FXML
+    Button tbOpenProject;
+    @FXML
+    Button tbEditProject;
+    @FXML
+    Button tbSave;
+    @FXML
+    Button tbUndo;
+    @FXML
+    Button tbRefresh;
+    @FXML
+    Button tbNewSnapshot;
+    @FXML
+    Button tbEditSnapshot;
+    @FXML
+    Button tbCompareSnapshot;
+    @FXML
+    Button tbNewView;
+    @FXML
+    Button tbEditView;
+    @FXML
+    Button tbNewEntity;
+    @FXML
+    Button tbEditEntity;
+    @FXML
+    Button tbNewRelationship;
+    @FXML
+    Button tbSearch;
+    @FXML
+    Button tbAlignLeft;
+    @FXML
+    Button tbAlignRight;
+    @FXML
+    Button tbAlignTop;
+    @FXML
+    Button tbAlignBottom;
+    @FXML
+    Button tbSameWidth;
+    @FXML
+    Button tbMinimizeWidth;
+    @FXML
+    Button tbAllocateEntities;
+    @FXML
+    Button tbResetAllocation;
+    @FXML
+    Button tbExcelReport;
+    @FXML
+    Button tbInsertScript;
+    @FXML
+    Button tbDeleteScript;
+    @FXML
+    Button tbDropScript;
+    @FXML
+    Button tbReverseEngineering;
 
     public void init() {
         parentWindow.setParentPane(mainPane);
@@ -179,6 +241,12 @@ public class MainAppController {
         scale.getItems().add("20%");
         scale.getItems().add("10%");
         scale.getSelectionModel().select("100%");
+
+        // initialize toolbar
+        tbHolder.init(tbNewProject, tbOpenProject, tbEditProject, tbSave, tbUndo, tbRefresh, tbNewSnapshot,
+                tbEditSnapshot, tbCompareSnapshot, tbNewView, tbEditView, tbNewEntity, tbEditEntity, tbNewRelationship,
+                tbSearch, tbAlignLeft, tbAlignRight, tbAlignTop, tbAlignBottom, tbSameWidth, tbMinimizeWidth,
+                tbAllocateEntities, tbResetAllocation, tbExcelReport, tbInsertScript, tbDeleteScript, tbDropScript, tbReverseEngineering);
     }
 
     @FXML

@@ -125,33 +125,40 @@
                <children>
                   <ToolBar prefHeight="56.0">
                     <items>
-                      <Button mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="1" />
-                        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="2" />
-                        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="3" />
+                      <Button fx:id="tbNewProject" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="1" />
+                        <Button fx:id="tbOpenProject" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="2" />
+                        <Button fx:id="tbEditProject" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="3" />
                         <Separator orientation="VERTICAL" prefHeight="0.0" prefWidth="9.0" />
-                        <Button layoutX="60.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="4" />
-                        <Button layoutX="110.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="5" />
-                        <Button layoutX="860.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="6" />
+                        <Button fx:id="tbSave" layoutX="60.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="4" />
+                        <Button fx:id="tbUndo" layoutX="110.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="5" />
+                        <Button fx:id="tbRefresh" layoutX="860.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="6" />
                         <Separator layoutX="130.0" layoutY="10.0" orientation="VERTICAL" prefHeight="0.0" prefWidth="9.0" />
-                        <Button layoutX="120.0" layoutY="20.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="7" />
-                        <Button layoutX="260.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="8" />
-                        <Button layoutX="310.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="9" />
+                        <Button fx:id="tbNewSnapshot" layoutX="120.0" layoutY="20.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="7" />
+                        <Button fx:id="tbReverseEngineering" layoutX="1128.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="28" />
+                        <Button fx:id="tbEditSnapshot" layoutX="260.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="8" />
+                        <Button fx:id="tbCompareSnapshot" layoutX="310.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="9" />
                         <Separator layoutX="223.0" layoutY="10.0" orientation="VERTICAL" prefHeight="0.0" prefWidth="9.0" />
-                        <Button layoutX="360.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="10" />
-                        <Button layoutX="410.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="11" />
+                        <Button fx:id="tbNewView" layoutX="360.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="10" />
+                        <Button fx:id="tbEditView" layoutX="410.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="11" />
                         <Separator layoutX="356.0" layoutY="10.0" orientation="VERTICAL" prefHeight="0.0" prefWidth="9.0" />
-                        <Button layoutX="460.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="12" />
-                        <Button layoutX="510.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="13" />
-                        <Button layoutX="560.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="14" />
-                        <Button layoutX="848.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="15" />
+                        <Button fx:id="tbNewEntity" layoutX="460.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="12" />
+                        <Button fx:id="tbEditEntity" layoutX="510.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="13" />
+                        <Button fx:id="tbNewRelationship" layoutX="560.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="14" />
+                        <Button fx:id="tbSearch" layoutX="848.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="15" />
                         <Separator layoutX="449.0" layoutY="10.0" orientation="VERTICAL" prefHeight="0.0" prefWidth="9.0" />
-                        <Button layoutX="610.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="16" />
-                        <Button layoutX="660.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="17" />
+                        <Button fx:id="tbAlignLeft" layoutX="610.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="16" />
+                        <Button fx:id="tbAlignRight" layoutX="660.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="17" />
+                        <Button fx:id="tbAlignTop" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="18" />
+                        <Button fx:id="tbAlignBottom" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="19" />
+                        <Button fx:id="tbSameWidth" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="20" />
+                        <Button fx:id="tbMinimizeWidth" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="21" />
+                        <Button fx:id="tbAllocateEntities" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="22" />
+                        <Button fx:id="tbResetAllocation" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="23" />
                         <Separator layoutX="582.0" layoutY="10.0" orientation="VERTICAL" prefHeight="0.0" prefWidth="9.0" />
-                        <Button layoutX="710.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="18" />
-                        <Button layoutX="760.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="19" />
-                        <Button layoutX="810.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="20" />
-                        <Button layoutX="183.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="21" />
+                        <Button fx:id="tbExcelReport" layoutX="710.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="24" />
+                        <Button fx:id="tbInsertScript" layoutX="760.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="25" />
+                        <Button fx:id="tbDeleteScript" layoutX="810.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="26" />
+                        <Button fx:id="tbDropScript" layoutX="183.0" layoutY="10.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="27" />
                     </items>
                   </ToolBar>
                </children>
