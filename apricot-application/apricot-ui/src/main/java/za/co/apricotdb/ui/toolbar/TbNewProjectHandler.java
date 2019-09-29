@@ -1,34 +1,42 @@
 package za.co.apricotdb.ui.toolbar;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import za.co.apricotdb.ui.ParentWindow;
+import za.co.apricotdb.ui.handler.ApricotProjectHandler;
 
 /**
  * The tool bar button: New Project.
- *  
+ * 
  * @author Anton Nazarov
  * @since 21/09/2019
  */
 @Component
-public class TbNewProjectHandler implements TbButtonHandler {
+public class TbNewProjectHandler extends TbButtonHandlerState {
 
-    private Button button;
+    @Autowired
+    ApricotProjectHandler projectHandler;
+
+    @Autowired
+    ParentWindow pw;
 
     @Override
     public void initButton(Button btn) {
-        button = btn;
         init(btn);
 
         btn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (btn.isDisabled()) {
-                    enable();
-                } else {
-                    disable();
+                if (isEnabled()) {
+                    try {
+                        projectHandler.createEditProjectForm(true, pw.getMainAppPane());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -44,11 +52,6 @@ public class TbNewProjectHandler implements TbButtonHandler {
         return "tbNewProjectDisabled.png";
     }
 
-    @Override
-    public Button getButton() {
-        return button;
-    }
-    
     @Override
     public String getToolpitText() {
         return "New Project";

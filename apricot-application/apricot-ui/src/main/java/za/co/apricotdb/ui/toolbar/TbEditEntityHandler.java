@@ -8,18 +8,15 @@ import javafx.scene.control.Button;
 
 /**
  * The tool bar button: Edit Entity.
- *  
+ * 
  * @author Anton Nazarov
  * @since 21/09/2019
  */
 @Component
-public class TbEditEntityHandler implements TbButtonHandler {
-
-    private Button button;
+public class TbEditEntityHandler extends TbButtonHandlerState {
 
     @Override
     public void initButton(Button btn) {
-        button = btn;
         init(btn);
 
         btn.setOnAction(new EventHandler<ActionEvent>() {
@@ -45,12 +42,7 @@ public class TbEditEntityHandler implements TbButtonHandler {
     }
 
     @Override
-    public Button getButton() {
-        return button;
-    }
-    
-    @Override
     public String getToolpitText() {
-        return "Edit current Entity";
+        return "Edit selected Entity";
     }
 }

@@ -8,18 +8,15 @@ import javafx.scene.control.Button;
 
 /**
  * The tool bar button: New Snapshot.
- *  
+ * 
  * @author Anton Nazarov
  * @since 21/09/2019
  */
 @Component
-public class TbNewSnapshotHandler implements TbButtonHandler {
-
-    private Button button;
+public class TbNewSnapshotHandler extends TbButtonHandlerState {
 
     @Override
     public void initButton(Button btn) {
-        button = btn;
         init(btn);
 
         btn.setOnAction(new EventHandler<ActionEvent>() {
@@ -45,12 +42,7 @@ public class TbNewSnapshotHandler implements TbButtonHandler {
     }
 
     @Override
-    public Button getButton() {
-        return button;
-    }
-    
-    @Override
     public String getToolpitText() {
-        return "Create a new Snapshot";
+        return "New Snapshot";
     }
 }

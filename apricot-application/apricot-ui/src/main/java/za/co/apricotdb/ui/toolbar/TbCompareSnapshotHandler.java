@@ -8,18 +8,15 @@ import javafx.scene.control.Button;
 
 /**
  * The tool bar button: Compare Snapshots.
- *  
+ * 
  * @author Anton Nazarov
  * @since 21/09/2019
  */
 @Component
-public class TbCompareSnapshotHandler implements TbButtonHandler {
-
-    private Button button;
+public class TbCompareSnapshotHandler extends TbButtonHandlerState {
 
     @Override
     public void initButton(Button btn) {
-        button = btn;
         init(btn);
 
         btn.setOnAction(new EventHandler<ActionEvent>() {
@@ -44,11 +41,6 @@ public class TbCompareSnapshotHandler implements TbButtonHandler {
         return "tbCompareSnapshotDisabled.png";
     }
 
-    @Override
-    public Button getButton() {
-        return button;
-    }
-    
     @Override
     public String getToolpitText() {
         return "Compare Snapshots";

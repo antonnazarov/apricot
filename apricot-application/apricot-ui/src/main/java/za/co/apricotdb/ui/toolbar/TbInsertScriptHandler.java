@@ -8,18 +8,15 @@ import javafx.scene.control.Button;
 
 /**
  * The tool bar button: Insert Script.
- *  
+ * 
  * @author Anton Nazarov
  * @since 21/09/2019
  */
 @Component
-public class TbInsertScriptHandler implements TbButtonHandler {
-
-    private Button button;
+public class TbInsertScriptHandler extends TbButtonHandlerState {
 
     @Override
     public void initButton(Button btn) {
-        button = btn;
         init(btn);
 
         btn.setOnAction(new EventHandler<ActionEvent>() {
@@ -44,11 +41,6 @@ public class TbInsertScriptHandler implements TbButtonHandler {
         return "tbInsertScriptDisabled.png";
     }
 
-    @Override
-    public Button getButton() {
-        return button;
-    }
-    
     @Override
     public String getToolpitText() {
         return "Generate the \"INSERT\" script";

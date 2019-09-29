@@ -8,18 +8,15 @@ import javafx.scene.control.Button;
 
 /**
  * The tool bar button: Edit Project.
- *  
+ * 
  * @author Anton Nazarov
  * @since 21/09/2019
  */
 @Component
-public class TbEditProjectHandler implements TbButtonHandler {
-
-    private Button button;
+public class TbEditProjectHandler extends TbButtonHandlerState {
 
     @Override
     public void initButton(Button btn) {
-        button = btn;
         init(btn);
 
         btn.setOnAction(new EventHandler<ActionEvent>() {
@@ -45,12 +42,7 @@ public class TbEditProjectHandler implements TbButtonHandler {
     }
 
     @Override
-    public Button getButton() {
-        return button;
-    }
-    
-    @Override
     public String getToolpitText() {
-        return "Edit Project";
+        return "Edit current Project info";
     }
 }

@@ -13,13 +13,10 @@ import javafx.scene.control.Button;
  * @since 21/09/2019
  */
 @Component
-public class TbExcelReportHandler implements TbButtonHandler {
-
-    private Button button;
+public class TbExcelReportHandler extends TbButtonHandlerState {
 
     @Override
     public void initButton(Button btn) {
-        button = btn;
         init(btn);
 
         btn.setOnAction(new EventHandler<ActionEvent>() {
@@ -45,12 +42,7 @@ public class TbExcelReportHandler implements TbButtonHandler {
     }
 
     @Override
-    public Button getButton() {
-        return button;
-    }
-    
-    @Override
     public String getToolpitText() {
-        return "Generate the Excel Report for the current Snapshot";
+        return "Generate Excel Report for the current Snapshot";
     }
 }

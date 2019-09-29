@@ -13,13 +13,10 @@ import javafx.scene.control.Button;
  * @since 21/09/2019
  */
 @Component
-public class TbAlignBottomHandler implements TbButtonHandler {
-
-    private Button button;
+public class TbAlignBottomHandler extends TbButtonHandlerState {
 
     @Override
     public void initButton(Button btn) {
-        button = btn;
         init(btn);
 
         btn.setOnAction(new EventHandler<ActionEvent>() {
@@ -44,11 +41,6 @@ public class TbAlignBottomHandler implements TbButtonHandler {
         return "tbAlignBottomDisabled.png";
     }
 
-    @Override
-    public Button getButton() {
-        return button;
-    }
-    
     @Override
     public String getToolpitText() {
         return "Align selected Entities to the bottom <Ctrl+Down Arrow>";

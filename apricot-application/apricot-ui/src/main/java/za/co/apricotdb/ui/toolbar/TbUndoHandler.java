@@ -8,18 +8,15 @@ import javafx.scene.control.Button;
 
 /**
  * The tool bar button: Undo.
- *  
+ * 
  * @author Anton Nazarov
  * @since 21/09/2019
  */
 @Component
-public class TbUndoHandler implements TbButtonHandler {
-
-    private Button button;
+public class TbUndoHandler extends TbButtonHandlerState {
 
     @Override
     public void initButton(Button btn) {
-        button = btn;
         init(btn);
 
         btn.setOnAction(new EventHandler<ActionEvent>() {
@@ -44,11 +41,6 @@ public class TbUndoHandler implements TbButtonHandler {
         return "tbUndoDisabled.png";
     }
 
-    @Override
-    public Button getButton() {
-        return button;
-    }
-    
     @Override
     public String getToolpitText() {
         return "Undo <Ctrl+Z>";

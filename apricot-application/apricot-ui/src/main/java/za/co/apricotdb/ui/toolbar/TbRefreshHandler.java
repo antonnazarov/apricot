@@ -13,13 +13,10 @@ import javafx.scene.control.Button;
  * @since 21/09/2019
  */
 @Component
-public class TbRefreshHandler implements TbButtonHandler {
-
-    private Button button;
+public class TbRefreshHandler extends TbButtonHandlerState {
 
     @Override
     public void initButton(Button btn) {
-        button = btn;
         init(btn);
 
         btn.setOnAction(new EventHandler<ActionEvent>() {
@@ -44,11 +41,6 @@ public class TbRefreshHandler implements TbButtonHandler {
         return "tbRefreshDisabled.png";
     }
 
-    @Override
-    public Button getButton() {
-        return button;
-    }
-    
     @Override
     public String getToolpitText() {
         return "Refresh <F5>";

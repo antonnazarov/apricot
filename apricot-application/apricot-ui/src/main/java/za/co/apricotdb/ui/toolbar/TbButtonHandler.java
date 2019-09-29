@@ -1,7 +1,6 @@
 package za.co.apricotdb.ui.toolbar;
 
 import javafx.scene.control.Button;
-import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -22,31 +21,17 @@ public interface TbButtonHandler {
     Button getButton();
 
     String getToolpitText();
+    
+    void enable();
+    
+    void disable();
+    
+    boolean isEnabled();
 
-    default void enable() {
-        Button btn = getButton();
-        btn.setDisable(false);
-        setImage(btn, getEnabledImageName());
-    }
-
-    default void disable() {
-        Button btn = getButton();
-        // btn.setDisable(true);
-        setImage(btn, getDisabledImageName());
-    }
-
+    void init(Button btn);
+    
     default void setImage(Button btn, String imgName) {
         Image image = new Image(getClass().getResourceAsStream(imgName));
         btn.setGraphic(new ImageView(image));
-    }
-
-    default void init(Button btn) {
-        btn.setText(null);
-        enable();
-
-        Tooltip tt = new Tooltip();
-        tt.setText(getToolpitText());
-        tt.setStyle("-fx-font: normal bold 12 Langdon; " + "-fx-base: #AE3522; " + "-fx-text-fill: orange;");
-        btn.setTooltip(tt);
     }
 }

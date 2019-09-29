@@ -8,18 +8,15 @@ import javafx.scene.control.Button;
 
 /**
  * The tool bar button: Reverse Engineering.
- *  
+ * 
  * @author Anton Nazarov
  * @since 22/09/2019
  */
 @Component
-public class TbReverseEngineeringHandler implements TbButtonHandler {
-
-    private Button button;
+public class TbReverseEngineeringHandler extends TbButtonHandlerState {
 
     @Override
     public void initButton(Button btn) {
-        button = btn;
         init(btn);
 
         btn.setOnAction(new EventHandler<ActionEvent>() {
@@ -44,11 +41,6 @@ public class TbReverseEngineeringHandler implements TbButtonHandler {
         return "tbReverseEngineeringDisabled.png";
     }
 
-    @Override
-    public Button getButton() {
-        return button;
-    }
-    
     @Override
     public String getToolpitText() {
         return "Start the Reverse Engineering process";
