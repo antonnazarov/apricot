@@ -8,10 +8,9 @@ import javax.transaction.Transactional.TxType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javafx.scene.control.Button;
 import za.co.apricotdb.persistence.data.UndoSnapshotManager;
-import za.co.apricotdb.ui.MainAppController;
 import za.co.apricotdb.ui.ParentWindow;
+import za.co.apricotdb.ui.toolbar.TbUndoHandler;
 
 /**
  * The essential UNDO logic is represented by this component.
@@ -33,10 +32,10 @@ public class ApricotUndoManager {
     ObjectUndoManager objectUndoManager;
 
     @Autowired
-    MainAppController appController;
-
-    @Autowired
     UndoSnapshotManager undoSnapshotManager;
+    
+    @Autowired
+    TbUndoHandler undoHandler;
 
     public static final int UNDO_STACK_SIZE = 10;
 
@@ -108,17 +107,10 @@ public class ApricotUndoManager {
     }
 
     private void enableUndoButton(boolean enable, int steps) {
-        Button undoBttn = appController.getUndoButton();
         if (enable) {
-            undoBttn.setDisable(false);
-            undoBttn.setStyle("-fx-font-weight: bold;");
-            if (steps > 0) {
-                undoBttn.setText("Undo (" + steps + ")");
-            }
+            undoHandler.enable();
         } else {
-            undoBttn.setDisable(true);
-            undoBttn.setStyle("-fx-font-weight: normal;");
-            undoBttn.setText("Undo");
+            undoHandler.disable();
         }
     }
 }

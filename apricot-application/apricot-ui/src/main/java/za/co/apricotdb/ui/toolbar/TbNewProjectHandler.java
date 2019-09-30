@@ -6,8 +6,7 @@ import org.springframework.stereotype.Component;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
-import za.co.apricotdb.ui.ParentWindow;
-import za.co.apricotdb.ui.handler.ApricotProjectHandler;
+import za.co.apricotdb.ui.MainAppController;
 
 /**
  * The tool bar button: New Project.
@@ -19,10 +18,7 @@ import za.co.apricotdb.ui.handler.ApricotProjectHandler;
 public class TbNewProjectHandler extends TbButtonHandlerState {
 
     @Autowired
-    ApricotProjectHandler projectHandler;
-
-    @Autowired
-    ParentWindow pw;
+    MainAppController appController;
 
     @Override
     public void initButton(Button btn) {
@@ -32,11 +28,7 @@ public class TbNewProjectHandler extends TbButtonHandlerState {
             @Override
             public void handle(ActionEvent event) {
                 if (isEnabled()) {
-                    try {
-                        projectHandler.createEditProjectForm(true, pw.getMainAppPane());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    appController.newProject(null);
                 }
             }
         });

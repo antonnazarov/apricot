@@ -72,7 +72,7 @@ public class ToolbarHolder {
     @Autowired
     TbSearchHandler tbSearchHandler;
     @Autowired
-    TbUndoHandler tbUndoHandler;  
+    TbUndoHandler tbUndoHandler;
     @Autowired
     TbReverseEngineeringHandler tbReverseEngineeringHandler;
 
@@ -108,7 +108,7 @@ public class ToolbarHolder {
 
         tbAllocateEntitiesHandler.initButton(tbAllocateEntities);
         buttons.put(TbButton.tbAllocateEntities, tbAllocateEntitiesHandler);
-        
+
         tbAlignTopHandler.initButton(tbAlignTop);
         buttons.put(TbButton.tbAlignTop, tbAlignTopHandler);
 
@@ -168,7 +168,7 @@ public class ToolbarHolder {
 
         tbUndoHandler.initButton(tbUndo);
         buttons.put(TbButton.tbUndo, tbUndoHandler);
-        
+
         tbReverseEngineeringHandler.initButton(tbReverseEngineering);
         buttons.put(TbButton.tbReverseEngineering, tbReverseEngineeringHandler);
     }
@@ -187,19 +187,27 @@ public class ToolbarHolder {
 
     public void enable(List<TbButton> btns) {
         for (TbButton b : btns) {
-            TbButtonHandler h = buttons.get(b);
-            if (h != null) {
-                h.enable();
-            }
+            enable(b);
         }
     }
 
     public void disable(List<TbButton> btns) {
         for (TbButton b : btns) {
-            TbButtonHandler h = buttons.get(b);
-            if (h != null) {
-                h.disable();
-            }
+            disable(b);
+        }
+    }
+
+    public void enable(TbButton btn) {
+        TbButtonHandler h = buttons.get(btn);
+        if (h != null) {
+            h.enable();
+        }
+    }
+
+    public void disable(TbButton btn) {
+        TbButtonHandler h = buttons.get(btn);
+        if (h != null) {
+            h.disable();
         }
     }
 }

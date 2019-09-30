@@ -1,19 +1,24 @@
 package za.co.apricotdb.ui.toolbar;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import za.co.apricotdb.ui.MainAppController;
 
 /**
  * The tool bar button: Open Project.
- *  
+ * 
  * @author Anton Nazarov
  * @since 21/09/2019
  */
 @Component
 public class TbOpenProjectHandler extends TbButtonHandlerState {
+
+    @Autowired
+    MainAppController appController;
 
     @Override
     public void initButton(Button btn) {
@@ -22,10 +27,8 @@ public class TbOpenProjectHandler extends TbButtonHandlerState {
         btn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (btn.isDisabled()) {
-                    enable();
-                } else {
-                    disable();
+                if (isEnabled()) {
+                    appController.openProject(null);
                 }
             }
         });

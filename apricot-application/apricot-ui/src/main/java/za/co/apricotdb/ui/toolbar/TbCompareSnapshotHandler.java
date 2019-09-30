@@ -18,14 +18,13 @@ public class TbCompareSnapshotHandler extends TbButtonHandlerState {
     @Override
     public void initButton(Button btn) {
         init(btn);
+        disable();
 
         btn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (btn.isDisabled()) {
-                    enable();
-                } else {
-                    disable();
+                if (isEnabled()) {
+                    // @TODO implement
                 }
             }
         });

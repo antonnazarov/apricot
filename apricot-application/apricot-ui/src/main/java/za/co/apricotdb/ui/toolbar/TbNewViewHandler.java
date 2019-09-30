@@ -1,10 +1,12 @@
 package za.co.apricotdb.ui.toolbar;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import za.co.apricotdb.ui.MainAppController;
 
 /**
  * The tool bar button: New View.
@@ -14,6 +16,9 @@ import javafx.scene.control.Button;
  */
 @Component
 public class TbNewViewHandler extends TbButtonHandlerState {
+    
+    @Autowired
+    MainAppController appController;
 
     @Override
     public void initButton(Button btn) {
@@ -22,10 +27,8 @@ public class TbNewViewHandler extends TbButtonHandlerState {
         btn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (btn.isDisabled()) {
-                    enable();
-                } else {
-                    disable();
+                if (isEnabled()) {
+                    appController.newView(null);
                 }
             }
         });

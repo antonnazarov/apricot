@@ -41,6 +41,7 @@ import za.co.apricotdb.ui.handler.ReverseEngineHandler;
 import za.co.apricotdb.ui.handler.TabInfoObject;
 import za.co.apricotdb.ui.handler.TabViewHandler;
 import za.co.apricotdb.ui.handler.TreeViewHandler;
+import za.co.apricotdb.ui.toolbar.TbButton;
 import za.co.apricotdb.ui.toolbar.ToolbarHolder;
 import za.co.apricotdb.ui.undo.ApricotUndoManager;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
@@ -122,12 +123,6 @@ public class MainAppController {
 
     @FXML
     TabPane viewsTabPane;
-
-    @FXML
-    Button saveButton;
-
-    @FXML
-    Button undoButton;
 
     @FXML
     ComboBox<String> snapshotCombo;
@@ -246,10 +241,10 @@ public class MainAppController {
         tbHolder.init(tbNewProject, tbOpenProject, tbEditProject, tbSave, tbUndo, tbRefresh, tbNewSnapshot,
                 tbEditSnapshot, tbCompareSnapshot, tbNewView, tbEditView, tbNewEntity, tbEditEntity, tbNewRelationship,
                 tbSearch, tbAlignLeft, tbAlignRight, tbAlignTop, tbAlignBottom, tbSameWidth, tbMinimizeWidth,
-                tbAllocateEntities, tbResetAllocation, tbExcelReport, tbInsertScript, tbDeleteScript, tbDropScript, tbReverseEngineering);
+                tbAllocateEntities, tbResetAllocation, tbExcelReport, tbInsertScript, tbDeleteScript, tbDropScript,
+                tbReverseEngineering);
     }
 
-    @FXML
     public void save(ActionEvent event) {
         for (Tab t : viewsTabPane.getTabs()) {
             if (t.getUserData() instanceof TabInfoObject) {
@@ -262,19 +257,24 @@ public class MainAppController {
                 }
             }
         }
-        saveButton.setStyle("-fx-font-weight: normal;");
-
+        tbHolder.disable(TbButton.tbSave);
         parentWindow.getApplicationData().setLayoutEdited(false);
     }
 
-    @FXML
-    public void newView(ActionEvent event) throws Exception {
-        viewHandler.createViewEditor(viewsTabPane, null, null);
+    public void newView(ActionEvent event) {
+        try {
+            viewHandler.createViewEditor(viewsTabPane, null, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    @FXML
-    public void newRelationship(ActionEvent event) throws Exception {
-        relationshipHandler.openRelationshipEditorForm(viewsTabPane);
+    public void newRelationship(ActionEvent event) {
+        try {
+            relationshipHandler.openRelationshipEditorForm(viewsTabPane);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -316,7 +316,6 @@ public class MainAppController {
     /**
      * Create a new snapshot.
      */
-    @FXML
     public void newSnapshot(ActionEvent event) {
         try {
             snapshotHandler.createEditSnapshotForm(true, mainPane);
@@ -336,7 +335,7 @@ public class MainAppController {
                     "There are not saved changed made on the current diagram. Do you want to save them", "Save")) {
                 save(event);
             } else {
-                saveButton.setStyle("-fx-font-weight: normal;");
+                tbHolder.disable(TbButton.tbSave);
                 parentWindow.getApplicationData().setLayoutEdited(false);
             }
         }
@@ -400,7 +399,6 @@ public class MainAppController {
     /**
      * Start a process of creation of the new entity.
      */
-    @FXML
     public void newEntity(ActionEvent event) {
         try {
             entityHandler.openEntityEditorForm(true, null);
@@ -441,7 +439,6 @@ public class MainAppController {
         }
     }
 
-    @FXML
     public void undo(ActionEvent event) {
         undoManager.undo();
     }
@@ -468,14 +465,6 @@ public class MainAppController {
 
     public TabPane getViewsTabPane() {
         return viewsTabPane;
-    }
-
-    public Button getSaveButton() {
-        return saveButton;
-    }
-
-    public Button getUndoButton() {
-        return undoButton;
     }
 
     public ComboBox<String> getScale() {

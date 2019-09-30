@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import javafx.application.Application;
 import javafx.scene.Node;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -40,6 +39,7 @@ public class ParentWindow {
         this.mainAppPane = mainAppPane;
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public TreeView<ProjectExplorerItem> getProjectTreeView() {
         TreeView<ProjectExplorerItem> ret = null;
 
@@ -64,6 +64,7 @@ public class ParentWindow {
         return ret;
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public ComboBox<String> getSnapshotCombo() {
         ComboBox<String> ret = null;
 
@@ -141,9 +142,6 @@ public class ParentWindow {
     private void initEnvironmentElements(boolean empty) {
         MenuBar mainMenu = getMenuBar("mainMenu");
         setMenuDisable(mainMenu.getMenus(), empty);
-        ButtonBar mainButtons = getButtonBar("mainButtons");
-        List<Node> buttons = mainButtons.getButtons();
-        setButtonDisable(buttons, empty);
 
         ComboBox<String> combo = getSnapshotCombo();
         combo.setUserData(null);
@@ -160,17 +158,6 @@ public class ParentWindow {
         return null;
     }
 
-    private ButtonBar getButtonBar(String buttonBarId) {
-        HBox b = getTopNode();
-        for (Node n : b.getChildren()) {
-            if (n.getId() != null && n.getId().equals(buttonBarId) && n instanceof ButtonBar) {
-                return (ButtonBar) n;
-            }
-        }
-
-        return null;
-    }
-
     private void setMenuDisable(List<Menu> menus, boolean disable) {
         for (Menu m : menus) {
             if (m.getId() != null && Arrays.stream(EMPTY_RELATED_OBJECTS).anyMatch(m.getId()::equals)) {
@@ -180,14 +167,6 @@ public class ParentWindow {
                 if (mi.getId() != null && Arrays.stream(EMPTY_RELATED_OBJECTS).anyMatch(mi.getId()::equals)) {
                     mi.setDisable(disable);
                 }
-            }
-        }
-    }
-
-    private void setButtonDisable(List<Node> buttons, boolean disable) {
-        for (Node btn : buttons) {
-            if (btn.getId() != null && Arrays.stream(EMPTY_RELATED_OBJECTS).anyMatch(btn.getId()::equals)) {
-                btn.setDisable(disable);
             }
         }
     }
