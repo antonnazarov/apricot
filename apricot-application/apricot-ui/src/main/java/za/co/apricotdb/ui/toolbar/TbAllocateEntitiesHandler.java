@@ -43,6 +43,6 @@ public class TbAllocateEntitiesHandler extends TbButtonHandlerState {
 
     @Override
     public String getToolpitText() {
-        return "Allocate Entities in the current View";
+        return "Layout the Diagram nicely";
     }
 }

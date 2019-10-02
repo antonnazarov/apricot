@@ -43,6 +43,6 @@ public class TbResetAllocationHandler extends TbButtonHandlerState {
 
     @Override
     public String getToolpitText() {
-        return "Reset Entities allocation";
+        return "Reset the Diagram layout";
     }
 }

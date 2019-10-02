@@ -10,6 +10,7 @@ import za.co.apricotdb.viewport.canvas.ElementType;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
 import za.co.apricotdb.viewport.entity.shape.DefaultEntityShape;
 import za.co.apricotdb.viewport.entity.shape.EntityShapeBuilder;
+import za.co.apricotdb.viewport.notification.EntityStatusChangedEvent;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 
 /**
@@ -64,10 +65,9 @@ public final class ApricotEntityImpl implements ApricotEntity {
         default:
             break;
         }
-
-        if (status == ElementStatus.DEFAULT) {
-            entityShape.setDefault();
-        }
+        
+        //  notify the UI- side about the status was just changed 
+        canvas.publishEvent(new EntityStatusChangedEvent(canvas));
     }
 
     private void makePrimaryRelationshipsDefault() {

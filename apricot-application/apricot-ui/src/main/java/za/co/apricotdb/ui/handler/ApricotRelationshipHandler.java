@@ -93,7 +93,7 @@ public class ApricotRelationshipHandler {
         ApricotTable[] selectedTables = getRelatedTables(viewsTabPane);
         if (selectedTables == null) {
             Alert alert = alertDecorator.getErrorAlert("New Relationship",
-                    "Please select one or two Entites you want to build a new Relationship in between");
+                    "Please select one or two Entites which you want to build a new Relationship between");
             alert.showAndWait();
 
             return;
