@@ -116,7 +116,7 @@ public class CoreRelationshipsAllocator {
 
         @Override
         public int compareTo(Relationship r) {
-            return new Double(y - r.y).intValue();
+            return Double.valueOf(y - r.y).intValue();
         }
     }
 }
