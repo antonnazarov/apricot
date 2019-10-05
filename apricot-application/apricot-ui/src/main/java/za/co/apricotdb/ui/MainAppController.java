@@ -5,10 +5,7 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javafx.animation.PauseTransition;
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -19,9 +16,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.util.Duration;
 import za.co.apricotdb.persistence.data.SnapshotManager;
-import za.co.apricotdb.persistence.data.ViewManager;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
@@ -38,9 +33,9 @@ import za.co.apricotdb.ui.handler.GenerateScriptHandler;
 import za.co.apricotdb.ui.handler.ProjectExplorerContextMenuHandler;
 import za.co.apricotdb.ui.handler.ProjectExplorerItem;
 import za.co.apricotdb.ui.handler.ReverseEngineHandler;
+import za.co.apricotdb.ui.handler.SelectViewTabHandler;
 import za.co.apricotdb.ui.handler.TabInfoObject;
 import za.co.apricotdb.ui.handler.TabViewHandler;
-import za.co.apricotdb.ui.handler.TreeViewHandler;
 import za.co.apricotdb.ui.toolbar.TbButton;
 import za.co.apricotdb.ui.toolbar.ToolbarHolder;
 import za.co.apricotdb.ui.undo.ApricotUndoManager;
@@ -60,9 +55,6 @@ public class MainAppController {
 
     @Autowired
     ApricotViewHandler viewHandler;
-
-    @Autowired
-    ViewManager viewManager;
 
     @Autowired
     ApricotProjectHandler projectHandler;
@@ -101,9 +93,6 @@ public class MainAppController {
     AlertMessageDecorator alert;
 
     @Autowired
-    TreeViewHandler treeViewHandler;
-
-    @Autowired
     ProjectExplorerContextMenuHandler explorerContextMenu;
 
     @Autowired
@@ -117,6 +106,9 @@ public class MainAppController {
 
     @Autowired
     ToolbarHolder tbHolder;
+
+    @Autowired
+    SelectViewTabHandler selTabHandler;
 
     @FXML
     AnchorPane mainPane;
@@ -194,22 +186,7 @@ public class MainAppController {
     public void init() {
         parentWindow.setParentPane(mainPane);
 
-        viewsTabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
-            @Override
-            public void changed(ObservableValue<? extends Tab> ov, Tab t, Tab t1) {
-                if (t1 != null) {
-                    TabInfoObject tabInfo = TabInfoObject.getTabInfo(t1);
-                    viewManager.setCurrentView(tabInfo.getView());
-                    treeViewHandler.markEntitiesIncludedIntoView(tabInfo.getView());
-                    scaleHandler.resetScaleIndicator(scale);
-                }
-
-                // reset the current undo layout
-                PauseTransition delay = new PauseTransition(Duration.seconds(0.5));
-                delay.setOnFinished(e -> undoManager.resetCurrentLayout());
-                delay.play();
-            }
-        });
+        selTabHandler.initTabPane(viewsTabPane, scale);
 
         projectsTreeView.setOnContextMenuRequested(e -> {
             ApricotView view = canvasHandler.getCurrentView();

@@ -52,7 +52,7 @@ public class ToolbarHolder {
     @Autowired
     TbExcelReportHandler tbExcelReportHandler;
     @Autowired
-    TbInsertScriptHandler tbInsertScriptHandler;
+    TbCreateHandler tbInsertScriptHandler;
     @Autowired
     TbMinimizeWidthHandler tbMinimizeWidthHandler;
     @Autowired

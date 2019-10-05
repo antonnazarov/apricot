@@ -9,6 +9,7 @@ import za.co.apricotdb.ui.toolbar.TbAlignLeftHandler;
 import za.co.apricotdb.ui.toolbar.TbAlignRightHandler;
 import za.co.apricotdb.ui.toolbar.TbAlignTopHandler;
 import za.co.apricotdb.ui.toolbar.TbEditEntityHandler;
+import za.co.apricotdb.ui.toolbar.TbMinimizeWidthHandler;
 import za.co.apricotdb.ui.toolbar.TbSameWidthHandler;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.notification.EntityStatusChangedEvent;
@@ -34,6 +35,8 @@ public class EntityStatusChangedEventListener implements ApplicationListener<Ent
     TbAlignRightHandler alignRightHandler;
     @Autowired
     TbSameWidthHandler sameWidthHandler;
+    @Autowired
+    TbMinimizeWidthHandler minWidthHandler;
 
     @Override
     public void onApplicationEvent(EntityStatusChangedEvent event) {
@@ -59,16 +62,19 @@ public class EntityStatusChangedEventListener implements ApplicationListener<Ent
     private void handleOne() {
         editEntityHandler.enable();
         setAligners(false);
+        minWidthHandler.enable();
     }
 
     private void handleNone() {
         editEntityHandler.disable();
         setAligners(false);
+        minWidthHandler.disable();
     }
 
     private void handleMany() {
         editEntityHandler.disable();
         setAligners(true);
+        minWidthHandler.enable();
     }
 
     private void setAligners(boolean enabled) {
