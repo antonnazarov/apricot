@@ -27,8 +27,8 @@ public class ApricotColumn implements Serializable {
     public ApricotColumn() {
     }
 
-    public ApricotColumn(String name, int ordinalPosition, boolean nullable, String dataType,
-            String valueLength, ApricotTable table) {
+    public ApricotColumn(String name, int ordinalPosition, boolean nullable, String dataType, String valueLength,
+            ApricotTable table) {
         this.name = name;
         this.ordinalPosition = ordinalPosition;
         this.nullable = nullable;
@@ -128,7 +128,8 @@ public class ApricotColumn implements Serializable {
         }
 
         ApricotColumn column = (ApricotColumn) o;
-        return Objects.equals(name, column.name);
+
+        return name.equalsIgnoreCase(column.name);
     }
 
     @Override

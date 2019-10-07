@@ -2,19 +2,23 @@ package za.co.apricotdb.persistence.comparator;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 
 /**
- * The comparator of the snapshots.
+ * The comparator of the Apricot Snapshots.
  * 
  * @author Anton Nazarov
  * @since 06/10/2019
  */
 @Component
 public class SnapshotComparator implements ApricotObjectComparator<ApricotSnapshot, SnapshotDifference> {
+
+    @Autowired
+    TableComparator tableComparator;
 
     @Override
     public SnapshotDifference compare(ApricotSnapshot source, ApricotSnapshot target) {
@@ -31,7 +35,12 @@ public class SnapshotComparator implements ApricotObjectComparator<ApricotSnapsh
         for (ApricotTable srcTable : sourceTables) {
             ApricotTable trgtTable = targetTables.stream().filter(trgt -> trgt.equals(srcTable)).findFirst()
                     .orElse(null);
-            TableDifference td = new TableDifference(srcTable, trgtTable);
+            TableDifference td = null;
+            if (trgtTable == null) {
+                td = new TableDifference(srcTable, trgtTable);
+            } else {
+                td = tableComparator.compare(srcTable, trgtTable);
+            }
             diff.getTableDiffs().add(td);
         }
 

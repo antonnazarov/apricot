@@ -5,6 +5,12 @@ import java.util.List;
 
 import za.co.apricotdb.persistence.entity.ApricotTable;
 
+/**
+ * The difference between two Apricot Tables.
+ * 
+ * @author Anton Nazarov
+ * @since 07/10/2019
+ */
 public class TableDifference implements ApricotObjectDifference<ApricotTable> {
 
     private ApricotTable source;
@@ -39,6 +45,26 @@ public class TableDifference implements ApricotObjectDifference<ApricotTable> {
 
     @Override
     public boolean isDifferent() {
-        return source != null && target != null && columnDiffs.isEmpty() && constraintDiffs.isEmpty();
+        return source == null || target == null || isColumnsDiff() || isConstraintsDiff();
+    }
+
+    private boolean isColumnsDiff() {
+        for (ColumnDifference cd : columnDiffs) {
+            if (cd.isDifferent()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean isConstraintsDiff() {
+        for (ConstraintDifference cd : constraintDiffs) {
+            if (cd.isDifferent()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

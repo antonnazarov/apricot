@@ -2,24 +2,50 @@ package za.co.apricotdb.persistence.comparator;
 
 import za.co.apricotdb.persistence.entity.ApricotColumn;
 
+/**
+ * The difference between Apricot Columns.
+ * 
+ * @author Anton Nazarov
+ * @since 07/10/2019
+ */
 public class ColumnDifference implements ApricotObjectDifference<ApricotColumn> {
+
+    private ApricotColumn source = null;
+    private ApricotColumn target = null;
+
+    public ColumnDifference(ApricotColumn source, ApricotColumn target) {
+        this.source = source;
+        this.target = target;
+    }
 
     @Override
     public ApricotColumn getSourceObject() {
-        // TODO Auto-generated method stub
-        return null;
+        return source;
     }
 
     @Override
     public ApricotColumn getTargetObject() {
-        // TODO Auto-generated method stub
-        return null;
+        return target;
     }
 
     @Override
     public boolean isDifferent() {
-        // TODO Auto-generated method stub
+        if (source != null && target != null) {
+            if (source.isNullable() != target.isNullable()) {
+                return true;
+            }
+
+            if (!source.getDataType().equalsIgnoreCase(target.getDataType())) {
+                return true;
+            }
+
+            if (!source.getValueLength().equalsIgnoreCase(target.getValueLength())) {
+                return true;
+            }
+        } else {
+            return true;
+        }
+
         return false;
     }
-
 }

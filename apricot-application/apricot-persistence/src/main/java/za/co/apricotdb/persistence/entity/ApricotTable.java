@@ -181,7 +181,7 @@ public class ApricotTable implements Serializable {
     public boolean equals(Object o) {
         if (o instanceof ApricotTable) {
             ApricotTable t = (ApricotTable) o;
-            return this.name.equals(t.name);
+            return this.name.equalsIgnoreCase(t.name);
         }
 
         return false;

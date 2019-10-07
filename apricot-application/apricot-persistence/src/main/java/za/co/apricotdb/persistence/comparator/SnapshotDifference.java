@@ -6,7 +6,7 @@ import java.util.List;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 
 /**
- * The class - holder of the differences found for two snapshots.
+ * The class - holder of the differences found between two Apricot Snapshots.
  * 
  * @author Anton Nazarov
  * @since 06/10/2019
@@ -50,9 +50,29 @@ public class SnapshotDifference implements ApricotObjectDifference<ApricotSnapsh
 
         return sb.toString();
     }
-    
+
     @Override
     public boolean isDifferent() {
-        return source != null && target != null;
+        return source == null || target == null || isTablesDif() || isRelationshipsDif();
+    }
+
+    private boolean isTablesDif() {
+        for (TableDifference td : tableDiffs) {
+            if (td.isDifferent()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean isRelationshipsDif() {
+        for (RelationshipDifference rd : relationshipDiffs) {
+            if (rd.isDifferent()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
