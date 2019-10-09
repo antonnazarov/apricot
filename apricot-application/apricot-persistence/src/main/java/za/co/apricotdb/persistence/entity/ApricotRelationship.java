@@ -25,6 +25,7 @@ import javax.persistence.Table;
 @NamedQuery(name = "ApricotRelationship.getRelationshipsForTable", query = "SELECT DISTINCT rl FROM ApricotRelationship rl WHERE rl.child.table = :table OR rl.parent.table = :table")
 @NamedQuery(name = "ApricotRelationship.findRelationshipsByParentConstraint", query = "SELECT rl FROM ApricotRelationship rl WHERE rl.parent = :parentConstraint")
 @NamedQuery(name = "ApricotRelationship.findRelationshipsByConstraint", query = "SELECT rl FROM ApricotRelationship rl WHERE rl.parent = :constraint OR rl.child = :constraint")
+@NamedQuery(name = "ApricotRelationship.findRelationshipsBySnapshot", query = "SELECT rl FROM ApricotRelationship rl WHERE rl.parent.table.snapshot = :snapshot")
 public class ApricotRelationship implements Serializable {
 
     private static final long serialVersionUID = 2135283859031176938L;

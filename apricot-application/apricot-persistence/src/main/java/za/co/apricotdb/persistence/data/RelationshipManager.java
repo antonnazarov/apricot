@@ -12,9 +12,16 @@ import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
+import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.repository.ApricotRelationshipRepository;
 
+/**
+ * The manager of the DB- related operations on ApricotRelationshiop.
+ * 
+ * @author Anton Nazarov
+ * @since 08/10/2019 (the comment was edited)
+ */
 @Component
 public class RelationshipManager {
 
@@ -52,7 +59,7 @@ public class RelationshipManager {
 
     public ApricotRelationship findRelationshipById(long id) {
         Optional<ApricotRelationship> o = relationshipRepository.findById(id);
-        
+
         return o.get();
     }
 
@@ -95,5 +102,16 @@ public class RelationshipManager {
         }
 
         return ret;
+    }
+
+    /**
+     * Find all relationships which belong to the given snapshot.
+     */
+    public List<ApricotRelationship> findRelationshipsBySnapshot(ApricotSnapshot snapshot) {
+        TypedQuery<ApricotRelationship> query = em.createNamedQuery("ApricotRelationship.findRelationshipsBySnapshot",
+                ApricotRelationship.class);
+        query.setParameter("snapshot", snapshot);
+
+        return query.getResultList();
     }
 }

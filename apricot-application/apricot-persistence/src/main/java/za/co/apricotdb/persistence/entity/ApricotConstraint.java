@@ -125,7 +125,8 @@ public class ApricotConstraint implements Serializable {
             return false;
         }
         ApricotConstraint constraint = (ApricotConstraint) o;
-        return Objects.equals(name, constraint.name);
+
+        return name.equalsIgnoreCase(constraint.name);
     }
 
     @Override

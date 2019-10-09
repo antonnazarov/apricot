@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.persistence.entity.ApricotColumn;
+import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 
 /**
@@ -20,6 +21,7 @@ public class TableComparator implements ApricotObjectComparator<ApricotTable, Ta
     public TableDifference compare(ApricotTable source, ApricotTable target) {
         TableDifference diff = new TableDifference(source, target);
         compareFields(diff);
+        compareConstraints(diff);
 
         return diff;
     }
@@ -39,6 +41,26 @@ public class TableComparator implements ApricotObjectComparator<ApricotTable, Ta
             if (srcCol == null) {
                 ColumnDifference cd = new ColumnDifference(srcCol, trgtCol);
                 diff.getColumnDiffs().add(cd);
+            }
+        }
+    }
+
+    private void compareConstraints(TableDifference diff) {
+        List<ApricotConstraint> scrConstrs = diff.getSourceObject().getConstraints();
+        List<ApricotConstraint> trgConstrs = diff.getTargetObject().getConstraints();
+
+        for (ApricotConstraint srcCnt : scrConstrs) {
+            ApricotConstraint trgtCnt = trgConstrs.stream().filter(trgt -> trgt.equals(srcCnt)).findFirst()
+                    .orElse(null);
+            ConstraintDifference cd = new ConstraintDifference(srcCnt, trgtCnt);
+            diff.getConstraintDiffs().add(cd);
+        }
+
+        for (ApricotConstraint trgtCnt : trgConstrs) {
+            ApricotConstraint srcCnt = scrConstrs.stream().filter(src -> src.equals(trgtCnt)).findFirst().orElse(null);
+            if (srcCnt == null) {
+                ConstraintDifference cd = new ConstraintDifference(srcCnt, trgtCnt);
+                diff.getConstraintDiffs().add(cd);
             }
         }
     }

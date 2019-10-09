@@ -1,5 +1,9 @@
 package za.co.apricotdb.persistence.comparator;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import za.co.apricotdb.persistence.entity.ApricotColumnConstraint;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
 
 /**
@@ -10,22 +14,58 @@ import za.co.apricotdb.persistence.entity.ApricotConstraint;
  */
 public class ConstraintDifference implements ApricotObjectDifference<ApricotConstraint> {
 
+    private ApricotConstraint source;
+    private ApricotConstraint target;
+
+    public ConstraintDifference(ApricotConstraint source, ApricotConstraint target) {
+        this.source = source;
+        this.target = target;
+    }
+
     @Override
     public ApricotConstraint getSourceObject() {
-        // TODO Auto-generated method stub
-        return null;
+        return source;
     }
 
     @Override
     public ApricotConstraint getTargetObject() {
-        // TODO Auto-generated method stub
-        return null;
+        return target;
     }
 
     @Override
     public boolean isDifferent() {
-        // TODO Auto-generated method stub
-        return false;
+        return source == null || target == null
+                || isDifferent(getColumns(source.getColumns()), getColumns(target.getColumns()))
+                || (source.getType() != target.getType());
     }
 
+    private List<String> getColumns(List<ApricotColumnConstraint> cols) {
+        List<String> ret = new ArrayList<>();
+
+        for (ApricotColumnConstraint acc : cols) {
+            ret.add(acc.getColumn().getName());
+        }
+
+        return ret;
+    }
+
+    private boolean isDifferent(List<String> l1, List<String> l2) {
+        if (l1.size() != l2.size()) {
+            return true;
+        }
+
+        for (String s : l1) {
+            if (!l2.contains(s)) {
+                return true;
+            }
+        }
+
+        for (String s : l2) {
+            if (!l1.contains(s)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

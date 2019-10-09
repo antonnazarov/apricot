@@ -9,17 +9,23 @@ import za.co.apricotdb.persistence.entity.ApricotRelationship;
  * @since 07/10/2019
  */
 public class RelationshipDifference implements ApricotObjectDifference<ApricotRelationship> {
+    
+    private ApricotRelationship source;
+    private ApricotRelationship target;
+    
+    public RelationshipDifference(ApricotRelationship source, ApricotRelationship target) {
+        this.source = source;
+        this.target = target;
+    }
 
     @Override
     public ApricotRelationship getSourceObject() {
-        // TODO Auto-generated method stub
-        return null;
+        return source;
     }
 
     @Override
     public ApricotRelationship getTargetObject() {
-        // TODO Auto-generated method stub
-        return null;
+        return target;
     }
 
     @Override
