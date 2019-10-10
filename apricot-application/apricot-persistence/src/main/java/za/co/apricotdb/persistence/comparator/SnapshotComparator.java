@@ -19,12 +19,16 @@ public class SnapshotComparator implements ApricotObjectComparator<ApricotSnapsh
 
     @Autowired
     TableComparator tableComparator;
+    
+    @Autowired
+    RelationshipComparator relationshipComparator;
 
     @Override
     public SnapshotDifference compare(ApricotSnapshot source, ApricotSnapshot target) {
         SnapshotDifference diff = new SnapshotDifference(source, target);
         compareTables(diff);
-
+        diff.getRelationshipDiffs().addAll(relationshipComparator.compare(source, target, diff.getTableDiffs()));
+        
         return diff;
     }
 

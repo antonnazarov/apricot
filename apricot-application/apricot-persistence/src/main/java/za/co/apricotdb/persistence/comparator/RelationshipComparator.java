@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.persistence.data.RelationshipManager;
+import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 
@@ -61,11 +62,14 @@ public class RelationshipComparator implements ApricotObjectComparator<ApricotRe
     public RelationshipDifference compare(ApricotRelationship source, ApricotRelationship target,
             List<ConstraintDifference> constraintDiffs) {
 
-        for (ConstraintDifference cd : constraintDiffs) {
-            ///  !!! if (cd.getSourceObject().equals(source.getParent()))
-        }
+        ConstraintDifference pkDiff = findConstraintDifference(source.getParent(), constraintDiffs, true);
+        ConstraintDifference fkDiff = findConstraintDifference(source.getChild(), constraintDiffs, true);
 
-        return null;
+        RelationshipDifference ret = new RelationshipDifference(source, target);
+        ret.setPkDiff(pkDiff);
+        ret.setFkDiff(fkDiff);
+
+        return ret;
     }
 
     private List<ConstraintDifference> getConstraintDiffs(List<TableDifference> tableDiff) {
@@ -83,4 +87,24 @@ public class RelationshipComparator implements ApricotObjectComparator<ApricotRe
         return null;
     }
 
+    private ConstraintDifference findConstraintDifference(ApricotConstraint constraint,
+            List<ConstraintDifference> constraintDiffs, boolean source) {
+        ConstraintDifference ret = null;
+
+        for (ConstraintDifference cd : constraintDiffs) {
+            if (source) {
+                if (cd.getSourceObject().equals(constraint)) {
+                    ret = cd;
+                    break;
+                }
+            } else {
+                if (cd.getTargetObject().equals(constraint)) {
+                    ret = cd;
+                    break;
+                }
+            }
+        }
+
+        return ret;
+    }
 }
