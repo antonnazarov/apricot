@@ -68,4 +68,14 @@ public class ConstraintDifference implements ApricotObjectDifference<ApricotCons
 
         return false;
     }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Constraint: ").append(source != null ? source.getName() : EMPTY).append("->")
+                .append(target != null ? target.getName() : EMPTY);
+        getDiffFlag(sb);
+        
+        return sb.toString();
+    }
 }

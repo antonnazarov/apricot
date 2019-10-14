@@ -19,7 +19,7 @@ public class SnapshotComparator implements ApricotObjectComparator<ApricotSnapsh
 
     @Autowired
     TableComparator tableComparator;
-    
+
     @Autowired
     RelationshipComparator relationshipComparator;
 
@@ -28,7 +28,7 @@ public class SnapshotComparator implements ApricotObjectComparator<ApricotSnapsh
         SnapshotDifference diff = new SnapshotDifference(source, target);
         compareTables(diff);
         diff.getRelationshipDiffs().addAll(relationshipComparator.compare(source, target, diff.getTableDiffs()));
-        
+
         return diff;
     }
 
@@ -45,7 +45,9 @@ public class SnapshotComparator implements ApricotObjectComparator<ApricotSnapsh
             } else {
                 td = tableComparator.compare(srcTable, trgtTable);
             }
-            diff.getTableDiffs().add(td);
+            if (td != null) {
+                diff.getTableDiffs().add(td);
+            }
         }
 
         for (ApricotTable trgtTable : targetTables) {

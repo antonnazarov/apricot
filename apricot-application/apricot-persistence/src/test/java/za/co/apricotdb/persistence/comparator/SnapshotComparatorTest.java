@@ -1,9 +1,11 @@
 package za.co.apricotdb.persistence.comparator;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Before;
@@ -45,11 +47,20 @@ public class SnapshotComparatorTest {
 
         when(tableComparator.compare(tbl.get(TestTable.ACCOUNT), tbl.get(TestTable.ACCOUNT)))
                 .thenReturn(new TableDifference(tbl.get(TestTable.ACCOUNT), tbl.get(TestTable.ACCOUNT)));
+        
+        List<TableDifference> ltd = new ArrayList<>();
+        ltd.add(new TableDifference(tbl.get(TestTable.ACCOUNT), tbl.get(TestTable.ACCOUNT)));
+        List<RelationshipDifference> rds = new ArrayList<>();
+        rds.add(new RelationshipDifference(null, null));
+        when(relationshipComparator.compare(snapSource, snapTarget, ltd)).thenReturn(rds);
     }
 
     @Test
     public void testCompare() {
         SnapshotDifference snapDiff = snapComp.compare(snapSource, snapTarget);
         assertNotNull(snapDiff);
+        assertTrue(!snapDiff.getTableDiffs().isEmpty());
+        
+        System.out.println(snapDiff);
     }
 }

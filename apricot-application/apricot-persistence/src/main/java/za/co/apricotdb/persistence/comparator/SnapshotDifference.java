@@ -45,8 +45,18 @@ public class SnapshotDifference implements ApricotObjectDifference<ApricotSnapsh
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("SnapshotDifference: ");
-        sb.append(source.getName()).append("->").append(target.getName());
+        StringBuilder sb = new StringBuilder();
+        sb.append("Snapshot: ").append(source != null ? source.getName() : EMPTY).append("->")
+                .append(target != null ? target.getName() : EMPTY);
+        getDiffFlag(sb);
+
+        for (TableDifference td : tableDiffs) {
+            sb.append(td.toString());
+        }
+
+        for (RelationshipDifference rd : relationshipDiffs) {
+            sb.append(rd.toString());
+        }
 
         return sb.toString();
     }

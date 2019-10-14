@@ -67,4 +67,22 @@ public class TableDifference implements ApricotObjectDifference<ApricotTable> {
 
         return false;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Table: ").append(source != null ? source.getName() : EMPTY).append("->")
+                .append(target != null ? target.getName() : EMPTY);
+        getDiffFlag(sb);
+
+        for (ColumnDifference cd : columnDiffs) {
+            sb.append(cd.toString());
+        }
+
+        for (ConstraintDifference cnstrd : constraintDiffs) {
+            sb.append(cnstrd.toString());
+        }
+
+        return sb.toString();
+    }
 }
