@@ -28,6 +28,7 @@ import za.co.apricotdb.ui.handler.ApricotRelationshipHandler;
 import za.co.apricotdb.ui.handler.ApricotSnapshotHandler;
 import za.co.apricotdb.ui.handler.ApricotViewHandler;
 import za.co.apricotdb.ui.handler.CanvasScaleHandler;
+import za.co.apricotdb.ui.handler.CompareSnapshotsHandler;
 import za.co.apricotdb.ui.handler.ExcelReportHandler;
 import za.co.apricotdb.ui.handler.GenerateScriptHandler;
 import za.co.apricotdb.ui.handler.ProjectExplorerContextMenuHandler;
@@ -109,6 +110,9 @@ public class MainAppController {
 
     @Autowired
     SelectViewTabHandler selTabHandler;
+
+    @Autowired
+    CompareSnapshotsHandler compareSnapshotsHandler;
 
     @FXML
     AnchorPane mainPane;
@@ -361,6 +365,15 @@ public class MainAppController {
     @FXML
     public void reverseEngineer(ActionEvent event) {
         reverseEngineHandler.startReverseEngineering();
+    }
+
+    @FXML
+    public void compareSnapshots(ActionEvent event) {
+        try {
+            compareSnapshotsHandler.openCompareSnapshotsForm();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
