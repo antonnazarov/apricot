@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -20,6 +21,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import za.co.apricotdb.persistence.comparator.SnapshotComparator;
+import za.co.apricotdb.persistence.comparator.SnapshotDifference;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
@@ -47,6 +50,9 @@ public class CompareSnapshotsHandler {
 
     @Autowired
     ProjectManager projectManager;
+    
+    @Autowired
+    SnapshotComparator snapshotComparator;
 
     public void openCompareSnapshotsForm() throws IOException {
         if (!validate()) {
@@ -80,7 +86,17 @@ public class CompareSnapshotsHandler {
 
         dialog.show();
     }
-
+    
+    @Transactional
+    public SnapshotDifference compare(String sourceSnapshot, String targetSnapshot) {
+        ApricotProject project = projectManager.findCurrentProject();
+        ApricotSnapshot source = snapshotManager.getSnapshotByName(project, sourceSnapshot);
+        ApricotSnapshot target = snapshotManager.getSnapshotByName(project, targetSnapshot);
+        
+        
+        return snapshotComparator.compare(source, target);
+    }
+    
     private boolean validate() {
         ApricotProject project = projectManager.findCurrentProject();
         List<ApricotSnapshot> snaps = new ArrayList<>();

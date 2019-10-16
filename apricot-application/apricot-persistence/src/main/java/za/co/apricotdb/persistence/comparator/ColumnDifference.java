@@ -39,7 +39,11 @@ public class ColumnDifference implements ApricotObjectDifference<ApricotColumn> 
                 return true;
             }
 
-            if (!source.getValueLength().equalsIgnoreCase(target.getValueLength())) {
+            if (source.getValueLength() != null && target.getValueLength() != null
+                    && !source.getValueLength().equalsIgnoreCase(target.getValueLength())) {
+                return true;
+            } else if (source.getValueLength() == null && target.getValueLength() != null
+                    || source.getValueLength() != null && target.getValueLength() == null) {
                 return true;
             }
         } else {
@@ -48,14 +52,14 @@ public class ColumnDifference implements ApricotObjectDifference<ApricotColumn> 
 
         return false;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Column: ").append(source != null ? source.getName() : EMPTY).append("->")
                 .append(target != null ? target.getName() : EMPTY);
         getDiffFlag(sb);
-        
+
         return sb.toString();
     }
 }
