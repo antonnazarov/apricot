@@ -50,4 +50,27 @@ public class RelationshipDifference implements ApricotObjectDifference<ApricotRe
     public void setFkDiff(ConstraintDifference fkDiff) {
         this.fkDiff = fkDiff;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("* ");
+        if (source != null) {
+            sb.append(source.toString());
+        } else if (target != null) {
+            sb.append(target.toString());
+        }
+        getDiffFlag(sb);
+
+        if (isDifferent()) {
+            if (source == null && target != null) {
+                sb.append(EMPTY).append("->Relationship\n");
+            } else if (source != null && target == null) {
+                sb.append("Relationship->").append(EMPTY).append("\n");
+            }
+        }
+        sb.append("primary key->").append(pkDiff.toString());
+        sb.append("foreign key->").append(fkDiff.toString());
+
+        return sb.toString();
+    }
 }

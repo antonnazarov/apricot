@@ -77,7 +77,7 @@ public class ApricotRelationship implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("\nApricotRelationship: ");
+        StringBuilder sb = new StringBuilder("ApricotRelationship: ");
         sb.append("parent table=[").append(parent.getTable().getName()).append("], ");
         sb.append("child table=[").append(child.getTable().getName()).append("]");
 
