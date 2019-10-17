@@ -3,6 +3,8 @@ package za.co.apricotdb.persistence.comparator;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +25,7 @@ public class RelationshipComparator implements ApricotObjectComparator<ApricotRe
     @Autowired
     RelationshipManager relationshipManager;
 
+    @Transactional
     public List<RelationshipDifference> compare(ApricotSnapshot source, ApricotSnapshot target,
             List<TableDifference> tableDiff) {
         List<RelationshipDifference> ret = new ArrayList<>();

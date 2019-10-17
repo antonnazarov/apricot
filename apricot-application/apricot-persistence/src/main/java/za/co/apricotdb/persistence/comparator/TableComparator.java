@@ -2,6 +2,8 @@ package za.co.apricotdb.persistence.comparator;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.persistence.entity.ApricotColumn;
@@ -18,6 +20,7 @@ import za.co.apricotdb.persistence.entity.ApricotTable;
 public class TableComparator implements ApricotObjectComparator<ApricotTable, TableDifference> {
 
     @Override
+    @Transactional
     public TableDifference compare(ApricotTable source, ApricotTable target) {
         TableDifference diff = new TableDifference(source, target);
         compareFields(diff);

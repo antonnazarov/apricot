@@ -2,9 +2,12 @@ package za.co.apricotdb.persistence.comparator;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import za.co.apricotdb.persistence.data.TableCloneManager;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 
@@ -23,7 +26,11 @@ public class SnapshotComparator implements ApricotObjectComparator<ApricotSnapsh
     @Autowired
     RelationshipComparator relationshipComparator;
 
+    @Autowired
+    TableCloneManager tableCloneManager;
+
     @Override
+    @Transactional
     public SnapshotDifference compare(ApricotSnapshot source, ApricotSnapshot target) {
         SnapshotDifference diff = new SnapshotDifference(source, target);
         compareTables(diff);
@@ -41,9 +48,9 @@ public class SnapshotComparator implements ApricotObjectComparator<ApricotSnapsh
                     .orElse(null);
             TableDifference td = null;
             if (trgtTable == null) {
-                td = new TableDifference(srcTable, trgtTable);
+                td = new TableDifference(clone(srcTable), null);
             } else {
-                td = tableComparator.compare(srcTable, trgtTable);
+                td = tableComparator.compare(clone(srcTable), clone(trgtTable));
             }
             if (td != null) {
                 diff.getTableDiffs().add(td);
@@ -51,12 +58,16 @@ public class SnapshotComparator implements ApricotObjectComparator<ApricotSnapsh
         }
 
         for (ApricotTable trgtTable : targetTables) {
-            ApricotTable srcTable = targetTables.stream().filter(trgt -> trgt.equals(trgtTable)).findFirst()
+            ApricotTable srcTable = sourceTables.stream().filter(src -> src.equals(trgtTable)).findFirst()
                     .orElse(null);
             if (srcTable == null) {
-                TableDifference td = new TableDifference(srcTable, trgtTable);
+                TableDifference td = new TableDifference(null, clone(trgtTable));
                 diff.getTableDiffs().add(td);
             }
         }
+    }
+
+    private ApricotTable clone(ApricotTable table) {
+        return tableCloneManager.cloneTable(null, table, true, false);
     }
 }
