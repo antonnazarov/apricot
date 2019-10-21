@@ -85,6 +85,9 @@ public class RelationshipComparator implements ApricotObjectComparator<ApricotRe
         return ret;
     }
 
+    /**
+     * Do not implement this method.
+     */
     @Override
     public RelationshipDifference compare(ApricotRelationship source, ApricotRelationship target) {
         return null;
@@ -96,12 +99,12 @@ public class RelationshipComparator implements ApricotObjectComparator<ApricotRe
 
         for (ConstraintDifference cd : constraintDiffs) {
             if (source) {
-                if (cd.getSourceObject().equals(constraint)) {
+                if (cd.getSourceObject() != null && cd.getSourceObject().equals(constraint)) {
                     ret = cd;
                     break;
                 }
             } else {
-                if (cd.getTargetObject().equals(constraint)) {
+                if (cd.getTargetObject() != null && cd.getTargetObject().equals(constraint)) {
                     ret = cd;
                     break;
                 }

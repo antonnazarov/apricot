@@ -61,15 +61,30 @@ public class RelationshipDifference implements ApricotObjectDifference<ApricotRe
         }
         getDiffFlag(sb);
 
+        boolean isOneSide = false;
         if (isDifferent()) {
             if (source == null && target != null) {
                 sb.append(EMPTY).append("->Relationship\n");
+                isOneSide = true;
             } else if (source != null && target == null) {
                 sb.append("Relationship->").append(EMPTY).append("\n");
+                isOneSide = true;
             }
         }
-        sb.append("primary key->").append(pkDiff.toString());
-        sb.append("foreign key->").append(fkDiff.toString());
+
+        if (!isOneSide) {
+            if (pkDiff != null) {
+                sb.append("primary key->").append(pkDiff.toString());
+            } else {
+                sb.append("primary key=NULL");
+            }
+            if (fkDiff != null) {
+                sb.append("foreign key->").append(fkDiff.toString());
+            } else {
+                sb.append("foreign key=NULL");
+            }
+            sb.append("\n");
+        }
 
         return sb.toString();
     }
