@@ -8,13 +8,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.TreeTableColumn.CellDataFeatures;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.util.Callback;
+import za.co.apricotdb.persistence.comparator.ColumnDifference;
 import za.co.apricotdb.persistence.comparator.SnapshotDifference;
+import za.co.apricotdb.persistence.comparator.TableDifference;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
@@ -47,7 +54,16 @@ public class CompareSnapshotsController {
     ChoiceBox<String> targetSnapshot;
 
     @FXML
-    TreeTableView<String> compareTree;
+    TreeTableView<CompareSnapshotRow> compareTree;
+
+    @FXML
+    TreeTableColumn<CompareSnapshotRow, String> sourceColumn;
+
+    @FXML
+    TreeTableColumn<CompareSnapshotRow, Boolean> diffColumn;
+
+    @FXML
+    TreeTableColumn<CompareSnapshotRow, String> targetColumn;
 
     @FXML
     AnchorPane mainPane;
@@ -63,6 +79,23 @@ public class CompareSnapshotsController {
                 targetSnapshot.getSelectionModel().getSelectedItem());
 
         logger.info(diff.toString());
+
+        CompareSnapshotRow snapshots = new CompareSnapshotRow(diff.getSourceObject().getName(), diff.isDifferent(),
+                diff.getTargetObject().getName(), CompareObjectType.SNAPSHOT);
+        TreeItem<CompareSnapshotRow> root = new TreeItem<>(snapshots);
+        compareTree.setRoot(root);
+
+        for (TableDifference td : diff.getTableDiffs()) {
+            TreeItem<CompareSnapshotRow> tableRow = new TreeItem<>(new CompareSnapshotRow(
+                    td.getSourceObject().getName(), td.isDifferent(), td.getTargetObject().getName(), CompareObjectType.TABLE));
+            root.getChildren().add(tableRow);
+
+            for (ColumnDifference cd : td.getColumnDiffs()) {
+                TreeItem<CompareSnapshotRow> columnRow = new TreeItem<>(new CompareSnapshotRow(
+                        cd.getSourceObject().getName(), cd.isDifferent(), cd.getTargetObject().getName(), CompareObjectType.COLUMN));
+                tableRow.getChildren().add(columnRow);
+            }
+        }
     }
 
     @FXML
@@ -86,6 +119,33 @@ public class CompareSnapshotsController {
         targetSnapshot.getItems().clear();
         targetSnapshot.getItems().addAll(snaps.stream().map(ApricotSnapshot::getName).collect(Collectors.toList()));
         targetSnapshot.getSelectionModel().select(defSnapshot.getName());
+
+        sourceColumn.setCellValueFactory(
+                new Callback<TreeTableColumn.CellDataFeatures<CompareSnapshotRow, String>, ObservableValue<String>>() {
+                    @Override
+                    public ObservableValue<String> call(CellDataFeatures<CompareSnapshotRow, String> param) {
+                        TreeItem<CompareSnapshotRow> item = param.getValue();
+                        return item.getValue().getSource();
+                    }
+                });
+
+        diffColumn.setCellValueFactory(
+                new Callback<TreeTableColumn.CellDataFeatures<CompareSnapshotRow, Boolean>, ObservableValue<Boolean>>() {
+                    @Override
+                    public ObservableValue<Boolean> call(CellDataFeatures<CompareSnapshotRow, Boolean> param) {
+                        TreeItem<CompareSnapshotRow> item = param.getValue();
+                        return item.getValue().getDiff();
+                    }
+                });
+
+        targetColumn.setCellValueFactory(
+                new Callback<TreeTableColumn.CellDataFeatures<CompareSnapshotRow, String>, ObservableValue<String>>() {
+                    @Override
+                    public ObservableValue<String> call(CellDataFeatures<CompareSnapshotRow, String> param) {
+                        TreeItem<CompareSnapshotRow> item = param.getValue();
+                        return item.getValue().getTarget();
+                    }
+                });
     }
 
     private Stage getStage() {

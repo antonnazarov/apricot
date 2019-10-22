@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TreeTableColumn?>
 <?import javafx.scene.control.TreeTableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -49,6 +50,11 @@
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" />
                </VBox.margin>
+               <columns>
+                  <TreeTableColumn fx:id="sourceColumn" prefWidth="347.0" text="Source Snapshot" />
+                  <TreeTableColumn fx:id="diffColumn" minWidth="0.0" prefWidth="42.0" text="diff" />
+                  <TreeTableColumn fx:id="targetColumn" prefWidth="347.0" text="Target Snapshot" />
+               </columns>
             </TreeTableView>
             <HBox alignment="CENTER_RIGHT" prefHeight="12.0" prefWidth="750.0" spacing="5.0">
                <children>
