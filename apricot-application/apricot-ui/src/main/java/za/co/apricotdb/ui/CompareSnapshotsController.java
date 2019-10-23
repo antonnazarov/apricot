@@ -168,7 +168,7 @@ public class CompareSnapshotsController {
                         this.setStyle("-fx-font-weight: bold;");
                         ImageView img = new ImageView();
                         img.setImage(new Image(
-                                getClass().getResourceAsStream("/za/co/apricotdb/ui/handler/table-small-black.jpg")));
+                                getClass().getResourceAsStream("/za/co/apricotdb/ui/comparator/field-plus.png")));
                         this.setGraphic(img);
                     }
                 }
