@@ -12,10 +12,14 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableColumn.CellDataFeatures;
 import javafx.scene.control.TreeTableView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -83,16 +87,37 @@ public class CompareSnapshotsController {
         CompareSnapshotRow snapshots = new CompareSnapshotRow(diff.getSourceObject().getName(), diff.isDifferent(),
                 diff.getTargetObject().getName(), CompareObjectType.SNAPSHOT);
         TreeItem<CompareSnapshotRow> root = new TreeItem<>(snapshots);
+        root.setExpanded(true);
+        ImageView img = new ImageView();
+        img.setImage(new Image(getClass().getResourceAsStream("/za/co/apricotdb/ui/handler/table-small-black.jpg")));
+        // root.setGraphic(img);
         compareTree.setRoot(root);
 
         for (TableDifference td : diff.getTableDiffs()) {
-            TreeItem<CompareSnapshotRow> tableRow = new TreeItem<>(new CompareSnapshotRow(
-                    td.getSourceObject().getName(), td.isDifferent(), td.getTargetObject().getName(), CompareObjectType.TABLE));
+            String sourceName = null;
+            if (td.getSourceObject() != null) {
+                sourceName = td.getSourceObject().getName();
+            }
+            String targetName = null;
+            if (td.getTargetObject() != null) {
+                targetName = td.getTargetObject().getName();
+            }
+            TreeItem<CompareSnapshotRow> tableRow = new TreeItem<>(
+                    new CompareSnapshotRow(sourceName, td.isDifferent(), targetName, CompareObjectType.TABLE));
+            // tableRow.setGraphic(img);
             root.getChildren().add(tableRow);
 
             for (ColumnDifference cd : td.getColumnDiffs()) {
-                TreeItem<CompareSnapshotRow> columnRow = new TreeItem<>(new CompareSnapshotRow(
-                        cd.getSourceObject().getName(), cd.isDifferent(), cd.getTargetObject().getName(), CompareObjectType.COLUMN));
+                sourceName = null;
+                if (cd.getSourceObject() != null) {
+                    sourceName = cd.getSourceObject().getName();
+                }
+                targetName = null;
+                if (cd.getTargetObject() != null) {
+                    targetName = cd.getTargetObject().getName();
+                }
+                TreeItem<CompareSnapshotRow> columnRow = new TreeItem<>(
+                        new CompareSnapshotRow(sourceName, cd.isDifferent(), targetName, CompareObjectType.COLUMN));
                 tableRow.getChildren().add(columnRow);
             }
         }
@@ -128,6 +153,27 @@ public class CompareSnapshotsController {
                         return item.getValue().getSource();
                     }
                 });
+
+        sourceColumn.setCellFactory(column -> {
+            return new TreeTableCell<CompareSnapshotRow, String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+
+                    if (empty || item == null) {
+                        setText(null);
+                        setGraphic(null);
+                    } else {
+                        setText(item.toString());
+                        this.setStyle("-fx-font-weight: bold;");
+                        ImageView img = new ImageView();
+                        img.setImage(new Image(
+                                getClass().getResourceAsStream("/za/co/apricotdb/ui/handler/table-small-black.jpg")));
+                        this.setGraphic(img);
+                    }
+                }
+            };
+        });
 
         diffColumn.setCellValueFactory(
                 new Callback<TreeTableColumn.CellDataFeatures<CompareSnapshotRow, Boolean>, ObservableValue<Boolean>>() {
