@@ -17,6 +17,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableColumn.CellDataFeatures;
+import javafx.scene.control.TreeTableRow;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -160,15 +161,22 @@ public class CompareSnapshotsController {
                 protected void updateItem(String item, boolean empty) {
                     super.updateItem(item, empty);
 
+                    TreeTableRow<CompareSnapshotRow> row = this.getTreeTableRow();
+                    String eq = "none";
+                    if (row.getTreeItem() != null) {
+                        CompareSnapshotRow cRow = row.getTreeItem().getValue();
+                        eq = cRow.getDiff().getValue().toString();
+                    }
+                    
                     if (empty || item == null) {
                         setText(null);
                         setGraphic(null);
                     } else {
-                        setText(item.toString());
+                        setText(item.toString() + " --> " + eq);
                         this.setStyle("-fx-font-weight: bold;");
                         ImageView img = new ImageView();
                         img.setImage(new Image(
-                                getClass().getResourceAsStream("/za/co/apricotdb/ui/comparator/field-plus.png")));
+                                getClass().getResourceAsStream("/za/co/apricotdb/ui/comparator/table-minus.png")));
                         this.setGraphic(img);
                     }
                 }
