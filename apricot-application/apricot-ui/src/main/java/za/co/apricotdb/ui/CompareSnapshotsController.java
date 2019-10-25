@@ -176,7 +176,7 @@ public class CompareSnapshotsController {
                         this.setStyle("-fx-font-weight: bold;");
                         ImageView img = new ImageView();
                         img.setImage(new Image(
-                                getClass().getResourceAsStream("/za/co/apricotdb/ui/comparator/table-minus.png")));
+                                getClass().getResourceAsStream("/za/co/apricotdb/ui/comparator/relationship-not-equal.png")));
                         this.setGraphic(img);
                     }
                 }
