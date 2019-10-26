@@ -1,4 +1,4 @@
-package za.co.apricotdb.ui;
+package za.co.apricotdb.ui.comparator;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -14,9 +14,9 @@ public class CompareSnapshotRow {
     private SimpleStringProperty source;
     private SimpleBooleanProperty diff;
     private SimpleStringProperty target;
-    private CompareObjectType type;
+    private CompareRowType type;
 
-    public CompareSnapshotRow(String source, boolean diff, String target, CompareObjectType type) {
+    public CompareSnapshotRow(String source, boolean diff, String target, CompareRowType type) {
         this.source = new SimpleStringProperty(source);
         this.diff = new SimpleBooleanProperty(diff);
         this.target = new SimpleStringProperty(target);
@@ -35,11 +35,11 @@ public class CompareSnapshotRow {
         return target;
     }
 
-    public CompareObjectType getType() {
+    public CompareRowType getType() {
         return type;
     }
 
-    public void setType(CompareObjectType type) {
+    public void setType(CompareRowType type) {
         this.type = type;
     }
 }
