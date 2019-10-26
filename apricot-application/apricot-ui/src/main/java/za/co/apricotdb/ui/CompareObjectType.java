@@ -7,5 +7,5 @@ package za.co.apricotdb.ui;
  * @since 22/10/2019
  */
 public enum CompareObjectType {
-    SNAPSHOT, TABLE, COLUMN, CONSTRAINT, RELATIONSHIP 
+    SNAPSHOT, TABLE, COLUMN, CONSTRAINT, RELATIONSHIP , CONSTRAINT_COLUMNS
 }

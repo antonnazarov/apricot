@@ -12,7 +12,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
@@ -25,10 +24,14 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import za.co.apricotdb.persistence.comparator.ColumnDifference;
+import za.co.apricotdb.persistence.comparator.ConstraintDifference;
 import za.co.apricotdb.persistence.comparator.SnapshotDifference;
 import za.co.apricotdb.persistence.comparator.TableDifference;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
+import za.co.apricotdb.persistence.entity.ApricotColumn;
+import za.co.apricotdb.persistence.entity.ApricotColumnConstraint;
+import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.ui.handler.CompareSnapshotsHandler;
 
@@ -89,11 +92,9 @@ public class CompareSnapshotsController {
                 diff.getTargetObject().getName(), CompareObjectType.SNAPSHOT);
         TreeItem<CompareSnapshotRow> root = new TreeItem<>(snapshots);
         root.setExpanded(true);
-        ImageView img = new ImageView();
-        img.setImage(new Image(getClass().getResourceAsStream("/za/co/apricotdb/ui/handler/table-small-black.jpg")));
-        // root.setGraphic(img);
         compareTree.setRoot(root);
 
+        // the cycle through the tables
         for (TableDifference td : diff.getTableDiffs()) {
             String sourceName = null;
             if (td.getSourceObject() != null) {
@@ -105,23 +106,88 @@ public class CompareSnapshotsController {
             }
             TreeItem<CompareSnapshotRow> tableRow = new TreeItem<>(
                     new CompareSnapshotRow(sourceName, td.isDifferent(), targetName, CompareObjectType.TABLE));
-            // tableRow.setGraphic(img);
             root.getChildren().add(tableRow);
 
+            // the cycle through the columns
             for (ColumnDifference cd : td.getColumnDiffs()) {
-                sourceName = null;
-                if (cd.getSourceObject() != null) {
-                    sourceName = cd.getSourceObject().getName();
-                }
-                targetName = null;
-                if (cd.getTargetObject() != null) {
-                    targetName = cd.getTargetObject().getName();
-                }
+                sourceName = formatColumn(cd.getSourceObject());
+                targetName = formatColumn(cd.getTargetObject());
                 TreeItem<CompareSnapshotRow> columnRow = new TreeItem<>(
                         new CompareSnapshotRow(sourceName, cd.isDifferent(), targetName, CompareObjectType.COLUMN));
                 tableRow.getChildren().add(columnRow);
             }
+
+            for (ConstraintDifference cnstrd : td.getConstraintDiffs()) {
+                sourceName = formatConstraint(cnstrd.getSourceObject());
+                targetName = formatConstraint(cnstrd.getTargetObject());
+                TreeItem<CompareSnapshotRow> constrRow = new TreeItem<>(new CompareSnapshotRow(sourceName,
+                        cnstrd.isDifferent(), targetName, CompareObjectType.CONSTRAINT));
+                tableRow.getChildren().add(constrRow);
+
+                sourceName = getConstraintFields(cnstrd.getSourceObject());
+                targetName = getConstraintFields(cnstrd.getTargetObject());
+                boolean different = false;
+                if (sourceName != null && targetName != null) {
+                    different = (sourceName.length() != targetName.length());
+                } else {
+                    different = true;
+                }
+                TreeItem<CompareSnapshotRow> constrColRow = new TreeItem<>(new CompareSnapshotRow(sourceName, different,
+                        targetName, CompareObjectType.CONSTRAINT_COLUMNS));
+                constrRow.getChildren().add(constrColRow);
+            }
         }
+    }
+
+    /**
+     * Format the column info uniformly.
+     */
+    private String formatColumn(ApricotColumn column) {
+        if (column == null) {
+            return null;
+        }
+
+        StringBuilder sb = new StringBuilder(column.getName());
+
+        if (!column.isNullable()) {
+            sb.append(" *");
+        }
+        sb.append(" ").append(column.getDataType());
+        if (column.getValueLength() != null && column.getValueLength().length() > 0) {
+            sb.append(" (").append(column.getValueLength()).append(")");
+        }
+
+        return sb.toString();
+    }
+
+    /**
+     * Format the constraint name uniformly.
+     */
+    private String formatConstraint(ApricotConstraint constraint) {
+        if (constraint == null) {
+            return null;
+        }
+
+        StringBuilder sb = new StringBuilder(constraint.getName());
+        sb.append(" (").append(constraint.getType().getAbbreviation()).append(")");
+
+        return sb.toString();
+    }
+
+    private String getConstraintFields(ApricotConstraint constraint) {
+        if (constraint == null) {
+            return null;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (ApricotColumnConstraint acc : constraint.getColumns()) {
+            if (sb.length() != 0) {
+                sb.append(",\n");
+            }
+            sb.append(acc.getColumn().getName());
+        }
+
+        return sb.toString();
     }
 
     @FXML
@@ -167,7 +233,7 @@ public class CompareSnapshotsController {
                         CompareSnapshotRow cRow = row.getTreeItem().getValue();
                         eq = cRow.getDiff().getValue().toString();
                     }
-                    
+
                     if (empty || item == null) {
                         setText(null);
                         setGraphic(null);
@@ -175,8 +241,8 @@ public class CompareSnapshotsController {
                         setText(item.toString() + " --> " + eq);
                         this.setStyle("-fx-font-weight: bold;");
                         ImageView img = new ImageView();
-                        img.setImage(new Image(
-                                getClass().getResourceAsStream("/za/co/apricotdb/ui/comparator/relationship-not-equal.png")));
+                        img.setImage(new Image(getClass()
+                                .getResourceAsStream("/za/co/apricotdb/ui/comparator/relationship-not-equal.png")));
                         this.setGraphic(img);
                     }
                 }
