@@ -2,6 +2,7 @@ package za.co.apricotdb.ui.comparator;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 
 /**
  * The state of the comparison results. There might be several possible states:
@@ -16,11 +17,15 @@ public interface CompareState {
 
     ImageView getSourceImage(CompareRowType type);
 
-    ImageView getTargetView(CompareRowType type);
+    ImageView getTargetImage(CompareRowType type);
 
     String getSourceStyle(CompareRowType type);
 
     String getTargetStyle(CompareRowType type);
+    
+    Color getSourceColor(CompareRowType type);
+    
+    Color getTargetColor(CompareRowType type);    
 
     default ImageView getImage(String image) {
         ImageView img = new ImageView();

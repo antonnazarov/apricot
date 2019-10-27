@@ -15,12 +15,14 @@ public class CompareSnapshotRow {
     private SimpleBooleanProperty diff;
     private SimpleStringProperty target;
     private CompareRowType type;
+    private CompareState state;
 
-    public CompareSnapshotRow(String source, boolean diff, String target, CompareRowType type) {
+    public CompareSnapshotRow(String source, boolean diff, String target, CompareRowType type, CompareState state) {
         this.source = new SimpleStringProperty(source);
         this.diff = new SimpleBooleanProperty(diff);
         this.target = new SimpleStringProperty(target);
         this.type = type;
+        this.state = state;
     }
 
     public SimpleStringProperty getSource() {
@@ -41,5 +43,13 @@ public class CompareSnapshotRow {
 
     public void setType(CompareRowType type) {
         this.type = type;
+    }
+
+    public CompareState getState() {
+        return state;
+    }
+
+    public void setState(CompareState state) {
+        this.state = state;
     }
 }

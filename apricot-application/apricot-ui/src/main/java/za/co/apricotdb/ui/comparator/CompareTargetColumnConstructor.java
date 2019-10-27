@@ -6,11 +6,8 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
-import javafx.scene.control.TreeTableRow;
 import javafx.scene.control.TreeTableColumn.CellDataFeatures;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
+import javafx.scene.control.TreeTableRow;
 import javafx.util.Callback;
 
 /**
@@ -38,26 +35,22 @@ public class CompareTargetColumnConstructor implements CompareColumnConstructor<
             return new TreeTableCell<CompareSnapshotRow, String>() {
                 @Override
                 protected void updateItem(String item, boolean empty) {
-                    super.updateItem(item, empty);
+                    updateItem(item, empty);
 
-                    TreeTableRow<CompareSnapshotRow> row = this.getTreeTableRow();
-                    String eq = "none";
+                    CompareSnapshotRow cRow = null;
+                    TreeTableRow<CompareSnapshotRow> row = getTreeTableRow();
                     if (row.getTreeItem() != null) {
-                        CompareSnapshotRow cRow = row.getTreeItem().getValue();
-                        eq = cRow.getDiff().getValue().toString();
+                        cRow = row.getTreeItem().getValue();
                     }
 
                     if (empty || item == null) {
                         setText(null);
                         setGraphic(null);
                     } else {
-                        setText(item.toString() + " --> " + eq);
-                        setStyle("-fx-font-weight: bold;");
-                        setTextFill(Color.RED);
-                        ImageView img = new ImageView();
-                        img.setImage(new Image(getClass()
-                                .getResourceAsStream("/za/co/apricotdb/ui/comparator/relationship-not-equal.png")));
-                        this.setGraphic(img);
+                        setText(item);
+                        setStyle(cRow.getState().getTargetStyle(cRow.getType()));
+                        setGraphic(cRow.getState().getTargetImage(cRow.getType()));
+                        setTextFill(cRow.getState().getTargetColor(cRow.getType()));
                     }
                 }
             };

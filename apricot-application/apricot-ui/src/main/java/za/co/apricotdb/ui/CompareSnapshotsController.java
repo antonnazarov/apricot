@@ -16,6 +16,7 @@ import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import za.co.apricotdb.persistence.comparator.ApricotObjectDifference;
 import za.co.apricotdb.persistence.comparator.ColumnDifference;
 import za.co.apricotdb.persistence.comparator.ConstraintDifference;
 import za.co.apricotdb.persistence.comparator.SnapshotDifference;
@@ -30,6 +31,11 @@ import za.co.apricotdb.ui.comparator.CompareDiffColumnConstructor;
 import za.co.apricotdb.ui.comparator.CompareRowType;
 import za.co.apricotdb.ui.comparator.CompareSnapshotRow;
 import za.co.apricotdb.ui.comparator.CompareSourceColumnConstructor;
+import za.co.apricotdb.ui.comparator.CompareState;
+import za.co.apricotdb.ui.comparator.CompareStateAdd;
+import za.co.apricotdb.ui.comparator.CompareStateDiff;
+import za.co.apricotdb.ui.comparator.CompareStateEqual;
+import za.co.apricotdb.ui.comparator.CompareStateRemove;
 import za.co.apricotdb.ui.comparator.CompareTargetColumnConstructor;
 import za.co.apricotdb.ui.handler.CompareSnapshotsHandler;
 
@@ -95,8 +101,14 @@ public class CompareSnapshotsController {
 
         logger.info(diff.toString());
 
+        CompareState state = null;
+        if (diff.isDifferent()) {
+            state = new CompareStateDiff();
+        } else {
+            state = new CompareStateEqual();
+        }
         CompareSnapshotRow snapshots = new CompareSnapshotRow(diff.getSourceObject().getName(), diff.isDifferent(),
-                diff.getTargetObject().getName(), CompareRowType.SNAPSHOT);
+                diff.getTargetObject().getName(), CompareRowType.SNAPSHOT, state);
         TreeItem<CompareSnapshotRow> root = new TreeItem<>(snapshots);
         root.setExpanded(true);
         compareTree.setRoot(root);
@@ -111,8 +123,9 @@ public class CompareSnapshotsController {
             if (td.getTargetObject() != null) {
                 targetName = td.getTargetObject().getName();
             }
-            TreeItem<CompareSnapshotRow> tableRow = new TreeItem<>(
-                    new CompareSnapshotRow(sourceName, td.isDifferent(), targetName, CompareRowType.TABLE));
+
+            TreeItem<CompareSnapshotRow> tableRow = new TreeItem<>(new CompareSnapshotRow(sourceName, td.isDifferent(),
+                    targetName, CompareRowType.TABLE, getCompareState(td, sourceName, targetName)));
             root.getChildren().add(tableRow);
 
             // the cycle through the columns
@@ -120,28 +133,50 @@ public class CompareSnapshotsController {
                 sourceName = formatColumn(cd.getSourceObject());
                 targetName = formatColumn(cd.getTargetObject());
                 TreeItem<CompareSnapshotRow> columnRow = new TreeItem<>(
-                        new CompareSnapshotRow(sourceName, cd.isDifferent(), targetName, CompareRowType.COLUMN));
+                        new CompareSnapshotRow(sourceName, cd.isDifferent(), targetName, CompareRowType.COLUMN,
+                                getCompareState(cd, sourceName, targetName)));
                 tableRow.getChildren().add(columnRow);
             }
 
-            //  the cycle through constraints
+            // the cycle through constraints
             for (ConstraintDifference cnstrd : td.getConstraintDiffs()) {
                 sourceName = formatConstraint(cnstrd.getSourceObject());
                 targetName = formatConstraint(cnstrd.getTargetObject());
-                TreeItem<CompareSnapshotRow> constrRow = new TreeItem<>(new CompareSnapshotRow(sourceName,
-                        cnstrd.isDifferent(), targetName, CompareRowType.CONSTRAINT));
+                TreeItem<CompareSnapshotRow> constrRow = new TreeItem<>(
+                        new CompareSnapshotRow(sourceName, cnstrd.isDifferent(), targetName, CompareRowType.CONSTRAINT,
+                                getCompareState(cnstrd, sourceName, targetName)));
                 tableRow.getChildren().add(constrRow);
 
                 sourceName = getConstraintFields(cnstrd.getSourceObject());
                 targetName = getConstraintFields(cnstrd.getTargetObject());
                 if (sourceName != null && targetName != null) {
                     boolean different = (sourceName.length() != targetName.length());
+                    if (!different) {
+                        state = new CompareStateEqual();
+                    } else {
+                        state = new CompareStateDiff();
+                    }
                     TreeItem<CompareSnapshotRow> constrColRow = new TreeItem<>(new CompareSnapshotRow(sourceName,
-                            different, targetName, CompareRowType.CONSTRAINT_COLUMNS));
+                            different, targetName, CompareRowType.CONSTRAINT_COLUMNS, state));
                     constrRow.getChildren().add(constrColRow);
                 }
             }
         }
+    }
+
+    private CompareState getCompareState(ApricotObjectDifference<?> diff, String source, String target) {
+        CompareState state = new CompareStateEqual();
+        if (diff.isDifferent()) {
+            if (source != null && target != null) {
+                state = new CompareStateDiff();
+            } else if (source == null && target != null) {
+                state = new CompareStateAdd();
+            } else if (source != null && target == null) {
+                state = new CompareStateRemove();
+            }
+        }
+
+        return state;
     }
 
     /**

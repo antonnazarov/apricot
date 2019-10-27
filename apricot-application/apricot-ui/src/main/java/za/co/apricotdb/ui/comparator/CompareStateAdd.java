@@ -4,21 +4,21 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
 /**
- * The compare state = EQUAL.
+ * The compare state = ADD (the left side is empty).
  * 
  * @author Anton Nazarov
  * @since 27/10/2019
  */
-public class CompareStateEqual implements CompareState {
+public class CompareStateAdd implements CompareState {
 
     @Override
     public ImageView getSourceImage(CompareRowType type) {
-        return getImage(ICON_PATH + type.getGray());
+        return getImage(ICON_PATH + type.getPlus());
     }
 
     @Override
     public ImageView getTargetImage(CompareRowType type) {
-        return getImage(ICON_PATH + type.getGray());
+        return getImage(ICON_PATH + type.getPlus());
     }
 
     @Override
@@ -45,11 +45,11 @@ public class CompareStateEqual implements CompareState {
 
     @Override
     public Color getSourceColor(CompareRowType type) {
-        return Color.GRAY;
+        return Color.GREEN;
     }
 
     @Override
     public Color getTargetColor(CompareRowType type) {
-        return Color.GRAY;
+        return Color.GREEN;
     }
 }
