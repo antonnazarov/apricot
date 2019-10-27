@@ -52,4 +52,9 @@ public class CompareStateAdd implements CompareState {
     public Color getTargetColor(CompareRowType type) {
         return Color.GREEN;
     }
+
+    @Override
+    public String toString() {
+        return "ADD";
+    }
 }

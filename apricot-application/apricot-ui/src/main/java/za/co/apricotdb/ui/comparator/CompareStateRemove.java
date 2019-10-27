@@ -52,4 +52,9 @@ public class CompareStateRemove implements CompareState {
     public Color getTargetColor(CompareRowType type) {
         return Color.RED;
     }
+    
+    @Override
+    public String toString() {
+        return "REMOVE";
+    }
 }

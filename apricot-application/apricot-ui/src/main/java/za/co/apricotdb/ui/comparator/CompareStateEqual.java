@@ -13,11 +13,19 @@ public class CompareStateEqual implements CompareState {
 
     @Override
     public ImageView getSourceImage(CompareRowType type) {
+        if (type == CompareRowType.SNAPSHOT) {
+            return getImage(ICON_PATH + type.getPlain());
+        }
+
         return getImage(ICON_PATH + type.getGray());
     }
 
     @Override
     public ImageView getTargetImage(CompareRowType type) {
+        if (type == CompareRowType.SNAPSHOT) {
+            return getImage(ICON_PATH + type.getGray());
+        }
+
         return getImage(ICON_PATH + type.getGray());
     }
 
@@ -51,5 +59,10 @@ public class CompareStateEqual implements CompareState {
     @Override
     public Color getTargetColor(CompareRowType type) {
         return Color.GRAY;
+    }
+
+    @Override
+    public String toString() {
+        return "EQUAL";
     }
 }

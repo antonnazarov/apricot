@@ -35,7 +35,7 @@ public class CompareTargetColumnConstructor implements CompareColumnConstructor<
             return new TreeTableCell<CompareSnapshotRow, String>() {
                 @Override
                 protected void updateItem(String item, boolean empty) {
-                    updateItem(item, empty);
+                    super.updateItem(item, empty);
 
                     CompareSnapshotRow cRow = null;
                     TreeTableRow<CompareSnapshotRow> row = getTreeTableRow();

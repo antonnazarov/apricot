@@ -52,4 +52,16 @@ public class CompareSnapshotRow {
     public void setState(CompareState state) {
         this.state = state;
     }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Source=[").append(source.getValue()).append("], ");
+        sb.append("Target=[").append(target.getValue()).append("], ");
+        sb.append("is different=[").append(diff.getValue()).append("], ");
+        sb.append("type=[").append(type).append("], ");
+        sb.append("state=[").append(state).append("]");
+        
+        return sb.toString();
+    }
 }

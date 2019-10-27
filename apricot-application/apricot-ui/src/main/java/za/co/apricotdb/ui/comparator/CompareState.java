@@ -30,6 +30,7 @@ public interface CompareState {
     default ImageView getImage(String image) {
         ImageView img = new ImageView();
         img.setImage(new Image(getClass().getResourceAsStream(image)));
+        
         return img;
     }
 }

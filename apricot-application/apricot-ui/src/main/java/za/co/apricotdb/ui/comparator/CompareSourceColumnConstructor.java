@@ -35,7 +35,7 @@ public class CompareSourceColumnConstructor implements CompareColumnConstructor<
             return new TreeTableCell<CompareSnapshotRow, String>() {
                 @Override
                 protected void updateItem(String item, boolean empty) {
-                    updateItem(item, empty);
+                    super.updateItem(item, empty);
 
                     CompareSnapshotRow cRow = null;
                     TreeTableRow<CompareSnapshotRow> row = getTreeTableRow();
@@ -49,6 +49,7 @@ public class CompareSourceColumnConstructor implements CompareColumnConstructor<
                     } else {
                         setText(item);
                         setStyle(cRow.getState().getSourceStyle(cRow.getType()));
+                        System.out.println(cRow.toString());
                         setGraphic(cRow.getState().getSourceImage(cRow.getType()));
                         setTextFill(cRow.getState().getSourceColor(cRow.getType()));
                     }
