@@ -12,15 +12,18 @@ import javafx.beans.property.SimpleStringProperty;
 public class CompareSnapshotRow {
 
     private SimpleStringProperty source;
-    private SimpleBooleanProperty diff;
+    private boolean diff;
+    private SimpleBooleanProperty equalize;
     private SimpleStringProperty target;
     private CompareRowType type;
     private CompareState state;
 
     public CompareSnapshotRow(String source, boolean diff, String target, CompareRowType type, CompareState state) {
         this.source = new SimpleStringProperty(source);
-        this.diff = new SimpleBooleanProperty(diff);
+        this.diff = diff;
         this.target = new SimpleStringProperty(target);
+        this.equalize = new SimpleBooleanProperty(false);
+
         this.type = type;
         this.state = state;
     }
@@ -29,8 +32,12 @@ public class CompareSnapshotRow {
         return source;
     }
 
-    public SimpleBooleanProperty getDiff() {
+    public boolean getDiff() {
         return diff;
+    }
+
+    public SimpleBooleanProperty getEqualize() {
+        return equalize;
     }
 
     public SimpleStringProperty getTarget() {
@@ -52,16 +59,16 @@ public class CompareSnapshotRow {
     public void setState(CompareState state) {
         this.state = state;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Source=[").append(source.getValue()).append("], ");
         sb.append("Target=[").append(target.getValue()).append("], ");
-        sb.append("is different=[").append(diff.getValue()).append("], ");
+        sb.append("is different=[").append(diff).append("], ");
         sb.append("type=[").append(type).append("], ");
         sb.append("state=[").append(state).append("]");
-        
+
         return sb.toString();
     }
 }

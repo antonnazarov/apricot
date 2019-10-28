@@ -89,6 +89,8 @@ public class CompareSnapshotsController {
     @FXML
     AnchorPane mainPane;
 
+    private TreeItem<CompareSnapshotRow> root;
+
     @FXML
     public void swapSnapshots(ActionEvent event) {
 
@@ -109,7 +111,7 @@ public class CompareSnapshotsController {
         }
         CompareSnapshotRow snapshots = new CompareSnapshotRow(diff.getSourceObject().getName(), diff.isDifferent(),
                 diff.getTargetObject().getName(), CompareRowType.SNAPSHOT, state);
-        TreeItem<CompareSnapshotRow> root = new TreeItem<>(snapshots);
+        root = new TreeItem<>(snapshots);
         root.setExpanded(true);
         compareTree.setRoot(root);
 
@@ -118,10 +120,14 @@ public class CompareSnapshotsController {
             String sourceName = null;
             if (td.getSourceObject() != null) {
                 sourceName = td.getSourceObject().getName();
+            } else {
+                sourceName = "?";
             }
             String targetName = null;
             if (td.getTargetObject() != null) {
                 targetName = td.getTargetObject().getName();
+            } else {
+                targetName = "?";
             }
 
             TreeItem<CompareSnapshotRow> tableRow = new TreeItem<>(new CompareSnapshotRow(sourceName, td.isDifferent(),
@@ -162,16 +168,18 @@ public class CompareSnapshotsController {
                 }
             }
         }
+
+        compareTree.refresh();
     }
 
     private CompareState getCompareState(ApricotObjectDifference<?> diff, String source, String target) {
         CompareState state = new CompareStateEqual();
         if (diff.isDifferent()) {
-            if (source != null && target != null) {
+            if (!source.equals("?") && !target.equals("?")) {
                 state = new CompareStateDiff();
-            } else if (source == null && target != null) {
+            } else if (source.equals("?") && !target.equals("?")) {
                 state = new CompareStateAdd();
-            } else if (source != null && target == null) {
+            } else if (!source.equals("?") && target.equals("?")) {
                 state = new CompareStateRemove();
             }
         }
@@ -184,7 +192,7 @@ public class CompareSnapshotsController {
      */
     private String formatColumn(ApricotColumn column) {
         if (column == null) {
-            return null;
+            return "?";
         }
 
         StringBuilder sb = new StringBuilder(column.getName());
@@ -205,7 +213,7 @@ public class CompareSnapshotsController {
      */
     private String formatConstraint(ApricotConstraint constraint) {
         if (constraint == null) {
-            return null;
+            return "?";
         }
 
         StringBuilder sb = new StringBuilder(constraint.getName());

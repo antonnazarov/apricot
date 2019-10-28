@@ -7,6 +7,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableColumn.CellDataFeatures;
+import javafx.scene.paint.Color;
 import javafx.scene.control.TreeTableRow;
 import javafx.util.Callback;
 
@@ -46,6 +47,11 @@ public class CompareTargetColumnConstructor implements CompareColumnConstructor<
                     if (empty || item == null) {
                         setText(null);
                         setGraphic(null);
+                    } else if (item.equals("?")) {
+                        setText(item);
+                        setGraphic(null);
+                        setStyle("-fx-font-weight: bold;");
+                        setTextFill(Color.BLACK);
                     } else {
                         setText(item);
                         setStyle(cRow.getState().getTargetStyle(cRow.getType()));

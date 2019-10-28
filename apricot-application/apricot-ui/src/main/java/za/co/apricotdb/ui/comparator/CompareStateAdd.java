@@ -32,6 +32,7 @@ public class CompareStateAdd implements CompareState {
             style = "-fx-font-weight: bold;";
             break;
         default:
+            style = "-fx-font-weight: normal;";
             break;
         }
 

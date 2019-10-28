@@ -47,7 +47,7 @@
                   </Button>
                </children>
             </HBox>
-            <TreeTableView fx:id="compareTree" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+            <TreeTableView fx:id="compareTree" editable="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" />
                </VBox.margin>

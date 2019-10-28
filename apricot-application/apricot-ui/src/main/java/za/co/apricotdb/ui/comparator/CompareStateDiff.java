@@ -34,12 +34,19 @@ public class CompareStateDiff implements CompareState {
         String style = null;
         switch (type) {
         case SNAPSHOT:
-            style = "-fx-font-weight: bold;";
+            style = 
+                    "-fx-padding: 3;" +
+                            "-fx-border-style: solid inside;" +
+                            "-fx-border-width: 2;" +
+                            "-fx-border-insets: 2;" +
+                            "-fx-border-radius: 5;" +
+                            "-fx-border-color: red;";            
             break;
         case TABLE:
             style = "-fx-font-weight: bold;";
             break;
         default:
+            style = "-fx-font-weight: normal;";
             break;
         }
 
