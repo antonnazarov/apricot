@@ -47,7 +47,7 @@ public class CompareTargetColumnConstructor implements CompareColumnConstructor<
                     if (empty || item == null) {
                         setText(null);
                         setGraphic(null);
-                    } else if (item.equals("?")) {
+                    } else if (item.equals("...")) {
                         setText(item);
                         setGraphic(null);
                         setStyle("-fx-font-weight: bold;");

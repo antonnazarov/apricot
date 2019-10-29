@@ -17,12 +17,14 @@ public class CompareSnapshotRow {
     private SimpleStringProperty target;
     private CompareRowType type;
     private CompareState state;
+    private SimpleBooleanProperty checkBoxDisabled;
 
     public CompareSnapshotRow(String source, boolean diff, String target, CompareRowType type, CompareState state) {
         this.source = new SimpleStringProperty(source);
         this.diff = diff;
         this.target = new SimpleStringProperty(target);
         this.equalize = new SimpleBooleanProperty(false);
+        this.checkBoxDisabled = new SimpleBooleanProperty(false); // all the check boxes have been initialized editable
 
         this.type = type;
         this.state = state;
@@ -58,6 +60,10 @@ public class CompareSnapshotRow {
 
     public void setState(CompareState state) {
         this.state = state;
+    }
+
+    public SimpleBooleanProperty getCheckBoxDisabled() {
+        return checkBoxDisabled;
     }
 
     @Override

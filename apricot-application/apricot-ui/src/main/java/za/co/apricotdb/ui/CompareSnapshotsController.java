@@ -121,13 +121,13 @@ public class CompareSnapshotsController {
             if (td.getSourceObject() != null) {
                 sourceName = td.getSourceObject().getName();
             } else {
-                sourceName = "?";
+                sourceName = "...";
             }
             String targetName = null;
             if (td.getTargetObject() != null) {
                 targetName = td.getTargetObject().getName();
             } else {
-                targetName = "?";
+                targetName = "...";
             }
 
             TreeItem<CompareSnapshotRow> tableRow = new TreeItem<>(new CompareSnapshotRow(sourceName, td.isDifferent(),
@@ -175,11 +175,11 @@ public class CompareSnapshotsController {
     private CompareState getCompareState(ApricotObjectDifference<?> diff, String source, String target) {
         CompareState state = new CompareStateEqual();
         if (diff.isDifferent()) {
-            if (!source.equals("?") && !target.equals("?")) {
+            if (!source.equals("...") && !target.equals("...")) {
                 state = new CompareStateDiff();
-            } else if (source.equals("?") && !target.equals("?")) {
+            } else if (source.equals("...") && !target.equals("...")) {
                 state = new CompareStateAdd();
-            } else if (!source.equals("?") && target.equals("?")) {
+            } else if (!source.equals("...") && target.equals("...")) {
                 state = new CompareStateRemove();
             }
         }
@@ -192,7 +192,7 @@ public class CompareSnapshotsController {
      */
     private String formatColumn(ApricotColumn column) {
         if (column == null) {
-            return "?";
+            return "...";
         }
 
         StringBuilder sb = new StringBuilder(column.getName());
@@ -213,7 +213,7 @@ public class CompareSnapshotsController {
      */
     private String formatConstraint(ApricotConstraint constraint) {
         if (constraint == null) {
-            return "?";
+            return "...";
         }
 
         StringBuilder sb = new StringBuilder(constraint.getName());

@@ -1,6 +1,8 @@
 package za.co.apricotdb.persistence.comparator;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -40,8 +42,8 @@ public class SnapshotComparator implements ApricotObjectComparator<ApricotSnapsh
     }
 
     private void compareTables(SnapshotDifference diff) {
-        List<ApricotTable> sourceTables = diff.getSourceObject().getTables();
-        List<ApricotTable> targetTables = diff.getTargetObject().getTables();
+        List<ApricotTable> sourceTables = sortTables(diff.getSourceObject().getTables());
+        List<ApricotTable> targetTables = sortTables(diff.getTargetObject().getTables());
 
         for (ApricotTable srcTable : sourceTables) {
             ApricotTable trgtTable = targetTables.stream().filter(trgt -> trgt.equals(srcTable)).findFirst()
@@ -58,13 +60,18 @@ public class SnapshotComparator implements ApricotObjectComparator<ApricotSnapsh
         }
 
         for (ApricotTable trgtTable : targetTables) {
-            ApricotTable srcTable = sourceTables.stream().filter(src -> src.equals(trgtTable)).findFirst()
-                    .orElse(null);
+            ApricotTable srcTable = sourceTables.stream().filter(src -> src.equals(trgtTable)).findFirst().orElse(null);
             if (srcTable == null) {
                 TableDifference td = new TableDifference(null, clone(trgtTable));
                 diff.getTableDiffs().add(td);
             }
         }
+    }
+
+    private List<ApricotTable> sortTables(List<ApricotTable> tables) {
+        List<ApricotTable> ret = tables.stream().sorted(Comparator.comparing(ApricotTable::getName))
+                .collect(Collectors.toList());
+        return ret;
     }
 
     private ApricotTable clone(ApricotTable table) {
