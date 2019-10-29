@@ -52,7 +52,7 @@ public class CompareSourceColumnConstructor implements CompareColumnConstructor<
                         setGraphic(null);
                         setStyle("-fx-font-weight: bold;");
                         setTextFill(Color.BLACK);
-                    } else {
+                    } else if (cRow != null) {
                         setText(item);
                         setStyle(cRow.getState().getSourceStyle(cRow.getType()));
                         setGraphic(cRow.getState().getSourceImage(cRow.getType()));

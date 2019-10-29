@@ -24,9 +24,7 @@ public class CompareDiffColumnConstructor implements CompareColumnConstructor<Co
     @Override
     public void construct(TreeTableColumn<CompareSnapshotRow, Boolean> column) {
         column.setText(null);
-        ImageView img = new ImageView();
-        img.setImage(new Image(getClass().getResourceAsStream(CompareState.ICON_PATH + "snapshot-target.png")));
-        column.setGraphic(img);
+        column.setGraphic(getImage("header-diff.png"));
 
         column.setCellValueFactory(e -> e.getValue().getValue().getEqualize());
 
@@ -49,7 +47,7 @@ public class CompareDiffColumnConstructor implements CompareColumnConstructor<Co
                         setGraphic(null);
                     } else {
                         if (cRow != null && !cRow.getDiff()) {
-                            setGraphic(cRow.getState().getSourceImage(cRow.getType()));
+                            setGraphic(getImage("equal-all.png"));
                         } else if (cRow != null) {
                             CheckBox cb = (CheckBox) getGraphic();
                             cb.disableProperty().unbind();
@@ -75,6 +73,12 @@ public class CompareDiffColumnConstructor implements CompareColumnConstructor<Co
                 modifyChildItemsRecursively(itm, disable);
             }
         }
+    }
 
+    private ImageView getImage(String image) {
+        ImageView img = new ImageView();
+        img.setImage(new Image(getClass().getResourceAsStream(CompareState.ICON_PATH + image)));
+
+        return img;
     }
 }
