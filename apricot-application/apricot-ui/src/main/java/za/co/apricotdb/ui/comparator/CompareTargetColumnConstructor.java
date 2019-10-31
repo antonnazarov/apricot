@@ -10,6 +10,7 @@ import javafx.scene.control.TreeTableColumn.CellDataFeatures;
 import javafx.scene.paint.Color;
 import javafx.scene.control.TreeTableRow;
 import javafx.util.Callback;
+import za.co.apricotdb.ui.util.UiConstants;
 
 /**
  * The constructor component for the target column of the Snapshot comparator
@@ -47,7 +48,7 @@ public class CompareTargetColumnConstructor implements CompareColumnConstructor<
                     if (empty || item == null) {
                         setText(null);
                         setGraphic(null);
-                    } else if (item.equals("...")) {
+                    } else if (item.equals(UiConstants.ELLIPSIS)) {
                         setText(item);
                         setGraphic(null);
                         setStyle("-fx-font-weight: bold;");

@@ -18,8 +18,10 @@ public class CompareSnapshotRow {
     private CompareRowType type;
     private CompareState state;
     private SimpleBooleanProperty checkBoxDisabled;
+    private String objectName;
 
-    public CompareSnapshotRow(String source, boolean diff, String target, CompareRowType type, CompareState state) {
+    public CompareSnapshotRow(String source, boolean diff, String target, CompareRowType type, CompareState state,
+            String objectName) {
         this.source = new SimpleStringProperty(source);
         this.diff = diff;
         this.target = new SimpleStringProperty(target);
@@ -28,6 +30,8 @@ public class CompareSnapshotRow {
 
         this.type = type;
         this.state = state;
+
+        this.objectName = objectName;
     }
 
     public SimpleStringProperty getSource() {
@@ -64,6 +68,14 @@ public class CompareSnapshotRow {
 
     public SimpleBooleanProperty getCheckBoxDisabled() {
         return checkBoxDisabled;
+    }
+
+    public String getObjectName() {
+        return objectName;
+    }
+
+    public void setObjectName(String objectName) {
+        this.objectName = objectName;
     }
 
     @Override

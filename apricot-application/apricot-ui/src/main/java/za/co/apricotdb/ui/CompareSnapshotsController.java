@@ -38,6 +38,7 @@ import za.co.apricotdb.ui.comparator.CompareStateEqual;
 import za.co.apricotdb.ui.comparator.CompareStateRemove;
 import za.co.apricotdb.ui.comparator.CompareTargetColumnConstructor;
 import za.co.apricotdb.ui.handler.CompareSnapshotsHandler;
+import za.co.apricotdb.ui.util.UiConstants;
 
 /**
  * This is a controller, which serves the apricot-compare-snapshots.fxml form.
@@ -110,7 +111,7 @@ public class CompareSnapshotsController {
             state = new CompareStateEqual();
         }
         CompareSnapshotRow snapshots = new CompareSnapshotRow(diff.getSourceObject().getName(), diff.isDifferent(),
-                diff.getTargetObject().getName(), CompareRowType.SNAPSHOT, state);
+                diff.getTargetObject().getName(), CompareRowType.SNAPSHOT, state, "snapshot");
         root = new TreeItem<>(snapshots);
         root.setExpanded(true);
         compareTree.setRoot(root);
@@ -118,29 +119,37 @@ public class CompareSnapshotsController {
         // the cycle through the tables
         for (TableDifference td : diff.getTableDiffs()) {
             String sourceName = null;
+            String objectName = null;
             if (td.getSourceObject() != null) {
                 sourceName = td.getSourceObject().getName();
+                objectName = sourceName;
             } else {
-                sourceName = "...";
+                sourceName = UiConstants.ELLIPSIS;
             }
             String targetName = null;
             if (td.getTargetObject() != null) {
                 targetName = td.getTargetObject().getName();
+                objectName = targetName;
             } else {
-                targetName = "...";
+                targetName = UiConstants.ELLIPSIS;
             }
 
             TreeItem<CompareSnapshotRow> tableRow = new TreeItem<>(new CompareSnapshotRow(sourceName, td.isDifferent(),
-                    targetName, CompareRowType.TABLE, getCompareState(td, sourceName, targetName)));
+                    targetName, CompareRowType.TABLE, getCompareState(td, sourceName, targetName), objectName));
             root.getChildren().add(tableRow);
 
             // the cycle through the columns
             for (ColumnDifference cd : td.getColumnDiffs()) {
                 sourceName = formatColumn(cd.getSourceObject());
                 targetName = formatColumn(cd.getTargetObject());
+                if (!sourceName.equals(UiConstants.ELLIPSIS)) {
+                    objectName = cd.getSourceObject().getName();
+                } else {
+                    objectName = cd.getTargetObject().getName();
+                }
                 TreeItem<CompareSnapshotRow> columnRow = new TreeItem<>(
                         new CompareSnapshotRow(sourceName, cd.isDifferent(), targetName, CompareRowType.COLUMN,
-                                getCompareState(cd, sourceName, targetName)));
+                                getCompareState(cd, sourceName, targetName), objectName));
                 tableRow.getChildren().add(columnRow);
             }
 
@@ -148,9 +157,14 @@ public class CompareSnapshotsController {
             for (ConstraintDifference cnstrd : td.getConstraintDiffs()) {
                 sourceName = formatConstraint(cnstrd.getSourceObject());
                 targetName = formatConstraint(cnstrd.getTargetObject());
+                if (!sourceName.equals(UiConstants.ELLIPSIS)) {
+                    objectName = cnstrd.getSourceObject().getName();
+                } else {
+                    objectName = cnstrd.getTargetObject().getName();
+                }
                 TreeItem<CompareSnapshotRow> constrRow = new TreeItem<>(
                         new CompareSnapshotRow(sourceName, cnstrd.isDifferent(), targetName, CompareRowType.CONSTRAINT,
-                                getCompareState(cnstrd, sourceName, targetName)));
+                                getCompareState(cnstrd, sourceName, targetName), objectName));
                 tableRow.getChildren().add(constrRow);
 
                 sourceName = getConstraintFields(cnstrd.getSourceObject());
@@ -163,7 +177,7 @@ public class CompareSnapshotsController {
                         state = new CompareStateDiff();
                     }
                     TreeItem<CompareSnapshotRow> constrColRow = new TreeItem<>(new CompareSnapshotRow(sourceName,
-                            different, targetName, CompareRowType.CONSTRAINT_COLUMNS, state));
+                            different, targetName, CompareRowType.CONSTRAINT_COLUMNS, state, "list of fields"));
                     constrRow.getChildren().add(constrColRow);
                 }
             }
@@ -175,11 +189,11 @@ public class CompareSnapshotsController {
     private CompareState getCompareState(ApricotObjectDifference<?> diff, String source, String target) {
         CompareState state = new CompareStateEqual();
         if (diff.isDifferent()) {
-            if (!source.equals("...") && !target.equals("...")) {
+            if (!source.equals(UiConstants.ELLIPSIS) && !target.equals(UiConstants.ELLIPSIS)) {
                 state = new CompareStateDiff();
-            } else if (source.equals("...") && !target.equals("...")) {
+            } else if (source.equals(UiConstants.ELLIPSIS) && !target.equals(UiConstants.ELLIPSIS)) {
                 state = new CompareStateAdd();
-            } else if (!source.equals("...") && target.equals("...")) {
+            } else if (!source.equals(UiConstants.ELLIPSIS) && target.equals(UiConstants.ELLIPSIS)) {
                 state = new CompareStateRemove();
             }
         }
@@ -192,7 +206,7 @@ public class CompareSnapshotsController {
      */
     private String formatColumn(ApricotColumn column) {
         if (column == null) {
-            return "...";
+            return UiConstants.ELLIPSIS;
         }
 
         StringBuilder sb = new StringBuilder(column.getName());
@@ -213,7 +227,7 @@ public class CompareSnapshotsController {
      */
     private String formatConstraint(ApricotConstraint constraint) {
         if (constraint == null) {
-            return "...";
+            return UiConstants.ELLIPSIS;
         }
 
         StringBuilder sb = new StringBuilder(constraint.getName());

@@ -3,13 +3,16 @@ package za.co.apricotdb.ui.comparator;
 import org.springframework.stereotype.Component;
 
 import javafx.beans.value.ObservableValue;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableColumn.CellDataFeatures;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.control.TreeTableRow;
 import javafx.util.Callback;
+import za.co.apricotdb.ui.util.UiConstants;
 
 /**
  * The constructor component for the source column of the Snapshot comparator
@@ -40,14 +43,16 @@ public class CompareSourceColumnConstructor implements CompareColumnConstructor<
 
                     CompareSnapshotRow cRow = null;
                     TreeTableRow<CompareSnapshotRow> row = getTreeTableRow();
-                    if (row.getTreeItem() != null) {
+
+                    if (row != null && row.getTreeItem() != null) {
                         cRow = row.getTreeItem().getValue();
+                        row.setTooltip(getToolTip(cRow));
                     }
 
                     if (empty || item == null) {
                         setText(null);
                         setGraphic(null);
-                    } else if (item.equals("...")) {
+                    } else if (item.equals(UiConstants.ELLIPSIS)) {
                         setText(item);
                         setGraphic(null);
                         setStyle("-fx-font-weight: bold;");
@@ -61,5 +66,57 @@ public class CompareSourceColumnConstructor implements CompareColumnConstructor<
                 }
             };
         });
+    }
+
+    private Tooltip getToolTip(CompareSnapshotRow row) {
+        Tooltip tip = new Tooltip();
+        StringBuilder text = new StringBuilder("The ");
+        if (row.getType() == CompareRowType.SNAPSHOT) {
+            if (row.getDiff()) {
+                text.append("snapshots have been different");
+            } else {
+                text.append("snapshots are equal");
+            }
+        } else if (row.getType() == CompareRowType.CONSTRAINT_COLUMNS) {
+            if (row.getDiff()) {
+                text.append("list of the table fields included into the constraint is different in the source and target snapshot");
+            } else {
+                text.append("list of the table fields included into the constraint is the same in the source and target snapshot");
+            }
+        } else {
+
+            text.append(row.getType().getName()).append(" \"").append(row.getObjectName()).append("\" ");
+            if (!row.getDiff()) {
+                text.append(UiConstants.OBJECTS_EQUAL);
+            } else if (!emptySource(row) && !emptyTarget(row)) {
+                text.append(UiConstants.OBJECTS_DIFFERENT);
+            } else if (emptySource(row) && !emptyTarget(row)) {
+                text.append(UiConstants.OBJECTS_ADDED);
+            } else if (!emptySource(row) && emptyTarget(row)) {
+                text.append(UiConstants.OBJECTS_REMOVED);
+            }
+        }
+
+        tip.setText(text.toString());
+        Font f = new Font(15);
+        tip.setFont(f);
+
+        return tip;
+
+    }
+
+    private boolean emptySource(CompareSnapshotRow row) {
+        return empty(row, true);
+    }
+
+    private boolean emptyTarget(CompareSnapshotRow row) {
+        return empty(row, false);
+    }
+
+    private boolean empty(CompareSnapshotRow row, boolean source) {
+        if (source) {
+            return row.getSource().getValue().equals(UiConstants.ELLIPSIS);
+        }
+        return row.getTarget().getValue().equals(UiConstants.ELLIPSIS);
     }
 }
