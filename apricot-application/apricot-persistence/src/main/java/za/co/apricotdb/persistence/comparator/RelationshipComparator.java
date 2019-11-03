@@ -36,8 +36,8 @@ public class RelationshipComparator implements ApricotObjectComparator<ApricotRe
 
         for (ApricotRelationship srcr : sourceRls) {
             ApricotRelationship trgtr = targetRls.stream()
-                    .filter(trgt -> trgt.getParent().getName().equalsIgnoreCase(srcr.getParent().getName())
-                            && trgt.getChild().getName().equalsIgnoreCase(srcr.getChild().getName()))
+                    .filter(trgt -> trgt.getParent().getTable().getName().equalsIgnoreCase(srcr.getParent().getTable().getName())
+                            && trgt.getChild().getTable().getName().equalsIgnoreCase(srcr.getChild().getTable().getName()))
                     .findFirst().orElse(null);
             if (trgtr == null) {
                 RelationshipDifference diff = new RelationshipDifference(srcr, trgtr);
@@ -49,9 +49,9 @@ public class RelationshipComparator implements ApricotObjectComparator<ApricotRe
         }
 
         for (ApricotRelationship trgtr : targetRls) {
-            ApricotRelationship srcr = targetRls.stream()
-                    .filter(src -> src.getParent().getName().equalsIgnoreCase(trgtr.getParent().getName())
-                            && src.getChild().getName().equalsIgnoreCase(trgtr.getChild().getName()))
+            ApricotRelationship srcr = sourceRls.stream()
+                    .filter(src -> src.getParent().getTable().getName().equalsIgnoreCase(trgtr.getParent().getTable().getName())
+                            && src.getChild().getTable().getName().equalsIgnoreCase(trgtr.getChild().getTable().getName()))
                     .findFirst().orElse(null);
             if (srcr == null) {
                 RelationshipDifference diff = new RelationshipDifference(srcr, trgtr);

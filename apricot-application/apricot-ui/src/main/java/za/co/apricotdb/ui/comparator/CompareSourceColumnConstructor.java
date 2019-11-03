@@ -79,13 +79,18 @@ public class CompareSourceColumnConstructor implements CompareColumnConstructor<
             }
         } else if (row.getType() == CompareRowType.CONSTRAINT_COLUMNS) {
             if (row.getDiff()) {
-                text.append("list of the table fields included into the constraint is different in the source and target snapshot");
+                text.append(
+                        "list of the table fields included into the constraint is different in the source and target snapshot");
             } else {
-                text.append("list of the table fields included into the constraint is the same in the source and target snapshot");
+                text.append(
+                        "list of the table fields included into the constraint is the same in the source and target snapshot");
             }
         } else {
-
-            text.append(row.getType().getName()).append(" \"").append(row.getObjectName()).append("\" ");
+            if (row.getType() != CompareRowType.RELATIONSHIP) {
+                text.append(row.getType().getName()).append(" \"").append(row.getObjectName()).append("\" ");
+            } else {
+                text.append(row.getType().getName()).append(" ").append(row.getObjectName()).append(" ");
+            }
             if (!row.getDiff()) {
                 text.append(UiConstants.OBJECTS_EQUAL);
             } else if (!emptySource(row) && !emptyTarget(row)) {

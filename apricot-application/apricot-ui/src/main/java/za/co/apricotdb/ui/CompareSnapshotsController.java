@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 import za.co.apricotdb.persistence.comparator.ApricotObjectDifference;
 import za.co.apricotdb.persistence.comparator.ColumnDifference;
 import za.co.apricotdb.persistence.comparator.ConstraintDifference;
+import za.co.apricotdb.persistence.comparator.RelationshipDifference;
 import za.co.apricotdb.persistence.comparator.SnapshotDifference;
 import za.co.apricotdb.persistence.comparator.TableDifference;
 import za.co.apricotdb.persistence.data.ProjectManager;
@@ -26,6 +27,7 @@ import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.persistence.entity.ApricotColumnConstraint;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
+import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.ui.comparator.CompareDiffColumnConstructor;
 import za.co.apricotdb.ui.comparator.CompareRowType;
@@ -116,17 +118,19 @@ public class CompareSnapshotsController {
         root.setExpanded(true);
         compareTree.setRoot(root);
 
+        String sourceName = null;
+        String targetName = null;
+        String objectName = null;
+
         // the cycle through the tables
         for (TableDifference td : diff.getTableDiffs()) {
-            String sourceName = null;
-            String objectName = null;
             if (td.getSourceObject() != null) {
                 sourceName = td.getSourceObject().getName();
                 objectName = sourceName;
             } else {
                 sourceName = UiConstants.ELLIPSIS;
             }
-            String targetName = null;
+
             if (td.getTargetObject() != null) {
                 targetName = td.getTargetObject().getName();
                 objectName = targetName;
@@ -155,35 +159,66 @@ public class CompareSnapshotsController {
 
             // the cycle through constraints
             for (ConstraintDifference cnstrd : td.getConstraintDiffs()) {
-                sourceName = formatConstraint(cnstrd.getSourceObject());
-                targetName = formatConstraint(cnstrd.getTargetObject());
-                if (!sourceName.equals(UiConstants.ELLIPSIS)) {
-                    objectName = cnstrd.getSourceObject().getName();
-                } else {
-                    objectName = cnstrd.getTargetObject().getName();
-                }
-                TreeItem<CompareSnapshotRow> constrRow = new TreeItem<>(
-                        new CompareSnapshotRow(sourceName, cnstrd.isDifferent(), targetName, CompareRowType.CONSTRAINT,
-                                getCompareState(cnstrd, sourceName, targetName), objectName));
-                tableRow.getChildren().add(constrRow);
-
-                sourceName = getConstraintFields(cnstrd.getSourceObject());
-                targetName = getConstraintFields(cnstrd.getTargetObject());
-                if (sourceName != null && targetName != null) {
-                    boolean different = (sourceName.length() != targetName.length());
-                    if (!different) {
-                        state = new CompareStateEqual();
-                    } else {
-                        state = new CompareStateDiff();
-                    }
-                    TreeItem<CompareSnapshotRow> constrColRow = new TreeItem<>(new CompareSnapshotRow(sourceName,
-                            different, targetName, CompareRowType.CONSTRAINT_COLUMNS, state, "list of fields"));
-                    constrRow.getChildren().add(constrColRow);
-                }
+                populateConstraint(cnstrd, tableRow);
             }
         }
 
+        // scan through relationships
+        for (RelationshipDifference rd : diff.getRelationshipDiffs()) {
+            sourceName = formatRelationship(rd.getSourceObject());
+            targetName = formatRelationship(rd.getTargetObject());
+            if (!sourceName.equals(UiConstants.ELLIPSIS)) {
+
+                objectName = " between " + rd.getSourceObject().getParent().getTable().getName() + " and "
+                        + rd.getSourceObject().getChild().getTable().getName() + " tables";
+            } else {
+                objectName = " between " + rd.getTargetObject().getParent().getTable().getName() + " and "
+                        + rd.getTargetObject().getChild().getTable().getName() + " tables";
+
+            }
+            TreeItem<CompareSnapshotRow> relationshipRow = new TreeItem<>(
+                    new CompareSnapshotRow(sourceName, rd.isDifferent(), targetName, CompareRowType.RELATIONSHIP,
+                            getCompareState(rd, sourceName, targetName), objectName));
+            root.getChildren().add(relationshipRow);
+
+            populateConstraint(rd.getPkDiff(), relationshipRow);
+            populateConstraint(rd.getFkDiff(), relationshipRow);
+        }
+
         compareTree.refresh();
+    }
+
+    private void populateConstraint(ConstraintDifference cnstrd, TreeItem<CompareSnapshotRow> parentRow) {
+        if (cnstrd == null) {
+            return;
+        }
+
+        String sourceName = formatConstraint(cnstrd.getSourceObject());
+        String targetName = formatConstraint(cnstrd.getTargetObject());
+        String objectName = null;
+        CompareState state = null;
+        if (!sourceName.equals(UiConstants.ELLIPSIS)) {
+            objectName = cnstrd.getSourceObject().getName();
+        } else {
+            objectName = cnstrd.getTargetObject().getName();
+        }
+        TreeItem<CompareSnapshotRow> constrRow = new TreeItem<>(new CompareSnapshotRow(sourceName, cnstrd.isDifferent(),
+                targetName, CompareRowType.CONSTRAINT, getCompareState(cnstrd, sourceName, targetName), objectName));
+        parentRow.getChildren().add(constrRow);
+
+        sourceName = getConstraintFields(cnstrd.getSourceObject());
+        targetName = getConstraintFields(cnstrd.getTargetObject());
+        if (sourceName != null && targetName != null) {
+            boolean different = (sourceName.length() != targetName.length());
+            if (!different) {
+                state = new CompareStateEqual();
+            } else {
+                state = new CompareStateDiff();
+            }
+            TreeItem<CompareSnapshotRow> constrColRow = new TreeItem<>(new CompareSnapshotRow(sourceName, different,
+                    targetName, CompareRowType.CONSTRAINT_COLUMNS, state, "list of fields"));
+            constrRow.getChildren().add(constrColRow);
+        }
     }
 
     private CompareState getCompareState(ApricotObjectDifference<?> diff, String source, String target) {
@@ -248,6 +283,18 @@ public class CompareSnapshotsController {
             }
             sb.append(acc.getColumn().getName());
         }
+
+        return sb.toString();
+    }
+
+    private String formatRelationship(ApricotRelationship relationship) {
+        if (relationship == null) {
+            return UiConstants.ELLIPSIS;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(relationship.getParent().getTable().getName()).append("->")
+                .append(relationship.getChild().getTable().getName());
 
         return sb.toString();
     }
