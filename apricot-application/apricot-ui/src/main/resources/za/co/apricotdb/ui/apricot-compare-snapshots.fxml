@@ -59,7 +59,7 @@
             </TreeTableView>
             <HBox alignment="CENTER_RIGHT" prefHeight="12.0" prefWidth="750.0" spacing="5.0">
                <children>
-                  <CheckBox mnemonicParsing="false" text="show different only ">
+                  <CheckBox fx:id="diffOnlyFlag" mnemonicParsing="false" text="show differences only">
                      <padding>
                         <Insets right="30.0" />
                      </padding>

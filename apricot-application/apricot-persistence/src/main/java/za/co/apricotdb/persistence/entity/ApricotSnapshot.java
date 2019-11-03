@@ -140,11 +140,11 @@ public class ApricotSnapshot implements Serializable {
     public void setTables(List<ApricotTable> tables) {
         this.tables = tables;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        
+
         List<ApricotTable> sorted = new ArrayList<>(tables);
         sorted.sort((t1, t2) -> {
             return t1.getName().compareTo(t2.getName());
@@ -153,7 +153,37 @@ public class ApricotSnapshot implements Serializable {
         for (ApricotTable t : sorted) {
             sb.append(t.getName()).append("\n");
         }
-        
+
         return sb.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        ApricotSnapshot other = (ApricotSnapshot) obj;
+        if (name == null) {
+            if (other.name != null) {
+                return false;
+            }
+        } else if (!name.equals(other.name)) {
+            return false;
+        }
+        return true;
     }
 }
