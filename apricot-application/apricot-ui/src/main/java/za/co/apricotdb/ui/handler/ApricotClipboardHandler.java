@@ -1,6 +1,5 @@
 package za.co.apricotdb.ui.handler;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -33,7 +32,6 @@ public class ApricotClipboardHandler {
 
     public static final String CLIPBOARD_HEADER = "CLIPBOARD_HEADER";
     public static final String CLIPBOARD_BODY = "CLIPBOARD_BODY";
-    public static final String CLIPBOARD_MARKER = "ApricotClipboard, view=";
 
     @Autowired
     ApricotCanvasHandler canvasHandler;
@@ -58,9 +56,12 @@ public class ApricotClipboardHandler {
 
     @Autowired
     ProjectManager projectManager;
-    
+
     @Autowired
     MainAppController appController;
+
+    @Autowired
+    ClipboardMarkerHandler markerHandler;
 
     @Transactional
     public void copySelectedToClipboard() {
@@ -79,9 +80,11 @@ public class ApricotClipboardHandler {
         Clipboard clipboard = Clipboard.getSystemClipboard();
         if (containsInfoToPaste(clipboard)) {
             String header = (String) clipboard.getContent(DataFormat.URL);
-            List<String> sEntities = getEntitesToPaste(header);
-            String sourceViewName = getViewName(header); // the name of the original view
-            List<String> sDuplicated = duplicateHandler.duplicate(sEntities, sourceViewName);
+            ClipboardMarker marker = markerHandler.parseMarker(header);
+            List<String> sEntities = marker.getTables();
+            String sourceSnapshotName = marker.getSnapshotName();
+            String sourceViewName = marker.getViewName(); // the name of the original view
+            List<String> sDuplicated = duplicateHandler.duplicate(sEntities, sourceViewName, sourceSnapshotName);
 
             appController.save(null);
             snapshotHandler.syncronizeSnapshot(true);
@@ -93,7 +96,7 @@ public class ApricotClipboardHandler {
 
     public boolean containsInfoToPaste(Clipboard clipboard) {
         String header = (String) clipboard.getContent(DataFormat.URL);
-        if (header != null && header.startsWith(CLIPBOARD_MARKER)) {
+        if (header != null && header.startsWith(ClipboardMarker.CLIPBOARD_MARKER)) {
             return true;
         }
 
@@ -104,49 +107,17 @@ public class ApricotClipboardHandler {
         return containsInfoToPaste(Clipboard.getSystemClipboard());
     }
 
-    private List<String> getEntitesToPaste(String header) {
-        String l = header.substring(header.indexOf("|") + 1);
-        String[] ents = l.split(";");
-        List<String> ret = new ArrayList<>();
-        for (String s : ents) {
-            ret.add(s);
-        }
-        return ret;
-    }
-
-    private String getViewName(String header) {
-        String p = header.substring(0, header.indexOf("|"));
-        String[] arr = p.split("=");
-        if (arr.length == 2) {
-            return arr[1];
-        }
-
-        return null;
-    }
-
     private boolean createClipboardContent(Properties props) {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
-        String viewName = canvasHandler.getCurrentViewTabInfo().getView().getName();
-
         List<ApricotEntity> entities = canvas.getSelectedEntities();
         if (entities.isEmpty()) {
             return false;
         }
 
-        boolean first = true;
-        StringBuilder sb = new StringBuilder(CLIPBOARD_MARKER);
-        sb.append(viewName).append("|");
-        for (ApricotEntity ent : entities) {
-            if (first) {
-                first = false;
-            } else {
-                sb.append(";");
-            }
-            sb.append(ent.getTableName());
-        }
+        String marker = markerHandler.buildMarker(entities);
 
         String script = scriptHandler.generateCreateScript(ScriptSource.SELECTED, null);
-        props.put(CLIPBOARD_HEADER, sb.toString());
+        props.put(CLIPBOARD_HEADER, marker);
         props.put(CLIPBOARD_BODY, script);
 
         return true;

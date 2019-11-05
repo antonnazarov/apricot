@@ -20,6 +20,7 @@ import za.co.apricotdb.persistence.data.ViewManager;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
+import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.persistence.entity.ConstraintType;
@@ -61,15 +62,17 @@ public class DuplicateHandler {
     ApricotObjectLayoutHandler layoutHandler;
 
     @Transactional
-    public List<String> duplicate(List<String> sTables, String sourceViewName) {
+    public List<String> duplicate(List<String> sTables, String sourceViewName, String sourceSnapshotName) {
         List<String> ret = new ArrayList<>();
+        ApricotProject project = projectManager.findCurrentProject();
         Map<ApricotTable, ApricotTable> clonedTables = new HashMap<>();
         Map<ApricotConstraint, ApricotConstraint> clonedConstraints = new HashMap<>();
 
-        List<ApricotTable> tables = getTables(sTables);
+        ApricotSnapshot sourceSnapshot = snapshotManager.getSnapshotByName(project, sourceSnapshotName);
+        List<ApricotTable> tables = getTables(sTables, sourceSnapshot);
         List<ApricotRelationship> relationships = relationshipManager.getRelationshipsForTables(tables);
         ApricotView currentView = canvasHandler.getCurrentView();
-        ApricotView sourceView = getSourceView(sourceViewName, currentView);
+        ApricotView sourceView = getSourceView(sourceViewName, currentView, project);
 
         for (ApricotTable table : tables) {
             ApricotTable clonedTable = tableCloneManager.cloneTable(snapshotManager.getDefaultSnapshot(), table, false,
@@ -87,10 +90,9 @@ public class DuplicateHandler {
         return ret;
     }
 
-    private ApricotView getSourceView(String sourceViewName, ApricotView currentView) {
+    private ApricotView getSourceView(String sourceViewName, ApricotView currentView, ApricotProject project) {
         ApricotView sourceView = null;
         if (!currentView.getName().equals(sourceViewName)) {
-            ApricotProject project = projectManager.findCurrentProject();
             List<ApricotView> vws = viewManager.getViewByName(project, sourceViewName);
             if (vws != null && vws.size() > 0) {
                 sourceView = vws.get(0);
@@ -140,11 +142,11 @@ public class DuplicateHandler {
         }
     }
 
-    private List<ApricotTable> getTables(List<String> sTables) {
+    private List<ApricotTable> getTables(List<String> sTables, ApricotSnapshot sourceSnapshot) {
         List<ApricotTable> ret = new ArrayList<>();
 
         sTables.forEach(ent -> {
-            ApricotTable table = tableManager.getTableByName(ent);
+            ApricotTable table = tableManager.getTableByName(ent, sourceSnapshot);
             if (table != null) {
                 ret.add(table);
             }
