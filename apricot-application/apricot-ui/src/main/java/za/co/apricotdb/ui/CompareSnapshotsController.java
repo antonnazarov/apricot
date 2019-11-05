@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TreeItem;
@@ -40,6 +41,7 @@ import za.co.apricotdb.ui.comparator.CompareStateDiff;
 import za.co.apricotdb.ui.comparator.CompareStateEqual;
 import za.co.apricotdb.ui.comparator.CompareStateRemove;
 import za.co.apricotdb.ui.comparator.CompareTargetColumnConstructor;
+import za.co.apricotdb.ui.handler.CompareScriptHandler;
 import za.co.apricotdb.ui.handler.CompareSnapshotsHandler;
 import za.co.apricotdb.ui.util.UiConstants;
 
@@ -72,6 +74,9 @@ public class CompareSnapshotsController {
     @Autowired
     CompareDiffColumnConstructor diffColumnConstructor;
 
+    @Autowired
+    CompareScriptHandler compareScriptHandler;
+
     @FXML
     ChoiceBox<String> sourceSnapshot;
 
@@ -96,6 +101,9 @@ public class CompareSnapshotsController {
     @FXML
     CheckBox diffOnlyFlag;
 
+    @FXML
+    Button generateScriptButton;
+
     private TreeItem<CompareSnapshotRow> root;
     private boolean compared = false;
 
@@ -111,6 +119,9 @@ public class CompareSnapshotsController {
         }
     }
 
+    /**
+     * Perform the comparison of the selected snapshots.
+     */
     @FXML
     public void compare(ActionEvent event) {
         SnapshotDifference diff = compareSnapshotsHandler.compare(sourceSnapshot.getSelectionModel().getSelectedItem(),
@@ -207,6 +218,7 @@ public class CompareSnapshotsController {
 
         compareTree.refresh();
         compared = true;
+        generateScriptButton.setDisable(false);
     }
 
     private void populateConstraint(ConstraintDifference cnstrd, TreeItem<CompareSnapshotRow> parentRow) {
@@ -330,9 +342,14 @@ public class CompareSnapshotsController {
         getStage().close();
     }
 
+    /**
+     * Generate the script for the selected differences alignment.
+     */
     @FXML
     public void generateScript(ActionEvent event) {
-
+        if (compared && root != null) {
+            compareScriptHandler.generateScript(root);
+        }
     }
 
     public void init() {

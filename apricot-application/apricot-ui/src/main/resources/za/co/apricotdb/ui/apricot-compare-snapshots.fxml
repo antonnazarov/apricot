@@ -65,7 +65,7 @@
                      </padding>
                   </CheckBox>
                   <Button mnemonicParsing="false" onAction="#cancel" text="Cancel" />
-                  <Button layoutX="703.0" layoutY="19.0" mnemonicParsing="false" onAction="#generateScript" text="Generate Script" />
+                  <Button fx:id="generateScriptButton" disable="true" layoutX="703.0" layoutY="19.0" mnemonicParsing="false" onAction="#generateScript" text="Generate Script" />
                </children>
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
