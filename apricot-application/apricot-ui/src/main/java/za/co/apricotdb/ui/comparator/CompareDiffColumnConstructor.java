@@ -46,7 +46,7 @@ public class CompareDiffColumnConstructor implements CompareColumnConstructor<Co
                         setText(null);
                         setGraphic(null);
                     } else {
-                        if (cRow != null && !cRow.getDiff()) {
+                        if (cRow != null && !cRow.isDifferent()) {
                             setGraphic(getImage("equal-all.png"));
                         } else if (cRow != null) {
                             CheckBox cb = (CheckBox) getGraphic();

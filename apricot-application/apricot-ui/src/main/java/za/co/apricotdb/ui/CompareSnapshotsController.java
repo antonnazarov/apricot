@@ -137,7 +137,7 @@ public class CompareSnapshotsController {
         }
 
         CompareSnapshotRow snapshots = new CompareSnapshotRow(diff.getSourceObject().getName(), diff.isDifferent(),
-                diff.getTargetObject().getName(), CompareRowType.SNAPSHOT, state, "snapshot");
+                diff.getTargetObject().getName(), CompareRowType.SNAPSHOT, state, "snapshot", diff);
         root = new TreeItem<>(snapshots);
         root.setExpanded(true);
         compareTree.setRoot(root);
@@ -165,7 +165,7 @@ public class CompareSnapshotsController {
             if (!diffOnlyFlag.isSelected() || td.isDifferent()) {
                 TreeItem<CompareSnapshotRow> tableRow = new TreeItem<>(
                         new CompareSnapshotRow(sourceName, td.isDifferent(), targetName, CompareRowType.TABLE,
-                                getCompareState(td, sourceName, targetName), objectName));
+                                getCompareState(td, sourceName, targetName), objectName, td));
                 root.getChildren().add(tableRow);
 
                 // the cycle through the columns
@@ -180,7 +180,7 @@ public class CompareSnapshotsController {
                     if (!diffOnlyFlag.isSelected() || cd.isDifferent()) {
                         TreeItem<CompareSnapshotRow> columnRow = new TreeItem<>(
                                 new CompareSnapshotRow(sourceName, cd.isDifferent(), targetName, CompareRowType.COLUMN,
-                                        getCompareState(cd, sourceName, targetName), objectName));
+                                        getCompareState(cd, sourceName, targetName), objectName, cd));
                         tableRow.getChildren().add(columnRow);
                     }
                 }
@@ -208,7 +208,7 @@ public class CompareSnapshotsController {
             if (!diffOnlyFlag.isSelected() || rd.isDifferent()) {
                 TreeItem<CompareSnapshotRow> relationshipRow = new TreeItem<>(
                         new CompareSnapshotRow(sourceName, rd.isDifferent(), targetName, CompareRowType.RELATIONSHIP,
-                                getCompareState(rd, sourceName, targetName), objectName));
+                                getCompareState(rd, sourceName, targetName), objectName, rd));
                 root.getChildren().add(relationshipRow);
 
                 populateConstraint(rd.getPkDiff(), relationshipRow);
@@ -238,7 +238,7 @@ public class CompareSnapshotsController {
         if (!diffOnlyFlag.isSelected() || cnstrd.isDifferent()) {
             TreeItem<CompareSnapshotRow> constrRow = new TreeItem<>(
                     new CompareSnapshotRow(sourceName, cnstrd.isDifferent(), targetName, CompareRowType.CONSTRAINT,
-                            getCompareState(cnstrd, sourceName, targetName), objectName));
+                            getCompareState(cnstrd, sourceName, targetName), objectName, cnstrd));
             parentRow.getChildren().add(constrRow);
 
             sourceName = getConstraintFields(cnstrd.getSourceObject());
@@ -252,7 +252,7 @@ public class CompareSnapshotsController {
                 }
                 if (!diffOnlyFlag.isSelected() || different) {
                     TreeItem<CompareSnapshotRow> constrColRow = new TreeItem<>(new CompareSnapshotRow(sourceName,
-                            different, targetName, CompareRowType.CONSTRAINT_COLUMNS, state, "list of fields"));
+                            different, targetName, CompareRowType.CONSTRAINT_COLUMNS, state, "list of fields", null));
                     constrRow.getChildren().add(constrColRow);
                 }
             }

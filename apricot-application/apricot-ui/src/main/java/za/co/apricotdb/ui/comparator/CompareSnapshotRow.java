@@ -1,7 +1,10 @@
 package za.co.apricotdb.ui.comparator;
 
+import java.io.Serializable;
+
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
+import za.co.apricotdb.persistence.comparator.ApricotObjectDifference;
 
 /**
  * This bean is a model for the Compare Snapshots TreeTableView.
@@ -12,21 +15,23 @@ import javafx.beans.property.SimpleStringProperty;
 public class CompareSnapshotRow {
 
     private SimpleStringProperty source;
-    private boolean diff;
+    private boolean different;
     private SimpleBooleanProperty equalize;
     private SimpleStringProperty target;
     private CompareRowType type;
     private CompareState state;
     private SimpleBooleanProperty checkBoxDisabled;
     private String objectName;
+    private ApricotObjectDifference<? extends Serializable> difference;
 
-    public CompareSnapshotRow(String source, boolean diff, String target, CompareRowType type, CompareState state,
-            String objectName) {
+    public CompareSnapshotRow(String source, boolean different, String target, CompareRowType type, CompareState state,
+            String objectName, ApricotObjectDifference<? extends Serializable> difference) {
         this.source = new SimpleStringProperty(source);
-        this.diff = diff;
+        this.different = different;
         this.target = new SimpleStringProperty(target);
         this.equalize = new SimpleBooleanProperty(false);
         this.checkBoxDisabled = new SimpleBooleanProperty(false); // all the check boxes have been initialized editable
+        this.difference = difference;
 
         this.type = type;
         this.state = state;
@@ -38,8 +43,8 @@ public class CompareSnapshotRow {
         return source;
     }
 
-    public boolean getDiff() {
-        return diff;
+    public boolean isDifferent() {
+        return different;
     }
 
     public SimpleBooleanProperty getEqualize() {
@@ -78,12 +83,16 @@ public class CompareSnapshotRow {
         this.objectName = objectName;
     }
 
+    public ApricotObjectDifference<? extends Serializable> getDifference() {
+        return difference;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Source=[").append(source.getValue()).append("], ");
         sb.append("Target=[").append(target.getValue()).append("], ");
-        sb.append("is different=[").append(diff).append("], ");
+        sb.append("is different=[").append(different).append("], ");
         sb.append("type=[").append(type).append("], ");
         sb.append("state=[").append(state).append("]");
 

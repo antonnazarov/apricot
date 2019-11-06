@@ -72,13 +72,13 @@ public class CompareSourceColumnConstructor implements CompareColumnConstructor<
         Tooltip tip = new Tooltip();
         StringBuilder text = new StringBuilder("The ");
         if (row.getType() == CompareRowType.SNAPSHOT) {
-            if (row.getDiff()) {
+            if (row.isDifferent()) {
                 text.append("snapshots have been different");
             } else {
                 text.append("snapshots are equal");
             }
         } else if (row.getType() == CompareRowType.CONSTRAINT_COLUMNS) {
-            if (row.getDiff()) {
+            if (row.isDifferent()) {
                 text.append(
                         "list of the table fields included into the constraint is different in the source and target snapshot");
             } else {
@@ -91,7 +91,7 @@ public class CompareSourceColumnConstructor implements CompareColumnConstructor<
             } else {
                 text.append(row.getType().getName()).append(" ").append(row.getObjectName()).append(" ");
             }
-            if (!row.getDiff()) {
+            if (!row.isDifferent()) {
                 text.append(UiConstants.OBJECTS_EQUAL);
             } else if (!emptySource(row) && !emptyTarget(row)) {
                 text.append(UiConstants.OBJECTS_DIFFERENT);
