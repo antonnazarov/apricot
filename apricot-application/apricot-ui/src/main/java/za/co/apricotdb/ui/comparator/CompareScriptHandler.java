@@ -1,4 +1,4 @@
-package za.co.apricotdb.ui.handler;
+package za.co.apricotdb.ui.comparator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TreeItem;
-import za.co.apricotdb.ui.comparator.CompareSnapshotRow;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
 /**
@@ -20,36 +19,52 @@ import za.co.apricotdb.ui.util.AlertMessageDecorator;
  */
 @Component
 public class CompareScriptHandler {
-    
+
     @Autowired
     AlertMessageDecorator alertDecorator;
 
     public void generateScript(TreeItem<CompareSnapshotRow> root) {
         if (!hasDifference(root)) {
-            Alert alert = alertDecorator.getAlert("Compare Snapshot", "The selected Snapshots are equal", AlertType.WARNING);
+            Alert alert = alertDecorator.getAlert("Compare Snapshot", "The selected Snapshots are equal",
+                    AlertType.WARNING);
             alert.showAndWait();
-            
+
             return;
         }
-        
+
         List<TreeItem<CompareSnapshotRow>> diffItems = retrieveAlignItems(root, false);
+        if (diffItems.isEmpty()) {
+            Alert alert = alertDecorator.getAlert("Compare Snapshot",
+                    "You need to checkmark the items with differences, which you'd like to generate the script for",
+                    AlertType.WARNING);
+            alert.showAndWait();
+        }
+
+        List<CompareSnapshotRow> diffRows = getDifferences(diffItems);
+
+        for (CompareSnapshotRow row : diffRows) {
+
+            System.out.println(row);
+
+        }
     }
 
     /**
      * Get all items, the diff alignment script has to be generated for.
      */
-    private List<TreeItem<CompareSnapshotRow>> retrieveAlignItems(TreeItem<CompareSnapshotRow> item, boolean isParentSelected) {
+    private List<TreeItem<CompareSnapshotRow>> retrieveAlignItems(TreeItem<CompareSnapshotRow> item,
+            boolean isParentSelected) {
         List<TreeItem<CompareSnapshotRow>> ret = new ArrayList<>();
 
         if (!isParentSelected) {
             isParentSelected = isItemSelected(item);
         }
-        
+
         for (TreeItem<CompareSnapshotRow> itm : item.getChildren()) {
             if ((isParentSelected || isItemSelected(itm)) && hasDifference(itm)) {
                 ret.add(itm);
             }
-            
+
             if (hasDifference(itm)) {
                 ret.addAll(retrieveAlignItems(itm, isParentSelected));
             }
@@ -69,17 +84,20 @@ public class CompareScriptHandler {
 
         return row.isDifferent();
     }
-    
+
     private List<CompareSnapshotRow> getDifferences(List<TreeItem<CompareSnapshotRow>> items) {
         List<CompareSnapshotRow> ret = new ArrayList<>();
-        
+
         for (TreeItem<CompareSnapshotRow> item : items) {
             CompareSnapshotRow row = item.getValue();
-            
-            row.getState()
+
+            String state = row.getState().toString();
+            if (state.equals("ADD") || state.equals("REMOVE") || (state.equals("DIFF")
+                    && (row.getType() == CompareRowType.COLUMN || row.getType() == CompareRowType.CONSTRAINT))) {
+                ret.add(row);
+            }
         }
-        
-        
+
         return ret;
     }
 }

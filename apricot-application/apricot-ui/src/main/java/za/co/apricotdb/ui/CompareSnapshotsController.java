@@ -33,6 +33,7 @@ import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.ui.comparator.CompareDiffColumnConstructor;
 import za.co.apricotdb.ui.comparator.CompareRowType;
+import za.co.apricotdb.ui.comparator.CompareScriptHandler;
 import za.co.apricotdb.ui.comparator.CompareSnapshotRow;
 import za.co.apricotdb.ui.comparator.CompareSourceColumnConstructor;
 import za.co.apricotdb.ui.comparator.CompareState;
@@ -41,7 +42,6 @@ import za.co.apricotdb.ui.comparator.CompareStateDiff;
 import za.co.apricotdb.ui.comparator.CompareStateEqual;
 import za.co.apricotdb.ui.comparator.CompareStateRemove;
 import za.co.apricotdb.ui.comparator.CompareTargetColumnConstructor;
-import za.co.apricotdb.ui.handler.CompareScriptHandler;
 import za.co.apricotdb.ui.handler.CompareSnapshotsHandler;
 import za.co.apricotdb.ui.util.UiConstants;
 
