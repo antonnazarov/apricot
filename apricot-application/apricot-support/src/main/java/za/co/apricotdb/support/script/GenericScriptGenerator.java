@@ -23,7 +23,7 @@ public class GenericScriptGenerator implements ScriptGenerator {
 
     @Autowired
     RelationshipManager relationshipManager;
-    
+
     @Autowired
     EntityChainHandler entityChainHandler;
 
@@ -51,7 +51,7 @@ public class GenericScriptGenerator implements ScriptGenerator {
         StringBuilder sb = new StringBuilder();
 
         String tableName = table.getName();
-        if (schema != null) {
+        if (StringUtils.isNotEmpty(schema)) {
             tableName = schema + "." + tableName;
         }
 
@@ -206,7 +206,7 @@ public class GenericScriptGenerator implements ScriptGenerator {
         if (children.size() > 0) {
             sb.append(deleteInAllTables(children, schema)).append("\n");
         }
-        
+
         sb.append(deleteInAllTables(tables, schema));
 
         return sb.toString();
@@ -291,7 +291,7 @@ public class GenericScriptGenerator implements ScriptGenerator {
     private String createUniqueConstraint(ApricotConstraint constraint, String schema) {
         StringBuilder sb = new StringBuilder();
         String tableName = constraint.getTable().getName();
-        if (schema != null) {
+        if (StringUtils.isNotEmpty(schema)) {
             tableName = schema + "." + tableName;
         }
 
@@ -304,7 +304,7 @@ public class GenericScriptGenerator implements ScriptGenerator {
     private String createIndex(ApricotConstraint constraint, boolean unique, String schema) {
         StringBuilder sb = new StringBuilder();
         String tableName = constraint.getTable().getName();
-        if (schema != null) {
+        if (StringUtils.isNotEmpty(schema)) {
             tableName = schema + "." + tableName;
         }
 

@@ -1,14 +1,30 @@
-package za.co.apricotdb.ui.comparator;
+package za.co.apricotdb.ui.handler;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TreeItem;
+import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import za.co.apricotdb.ui.CompareScriptController;
+import za.co.apricotdb.ui.comparator.CompareRowType;
+import za.co.apricotdb.ui.comparator.CompareSnapshotRow;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
 /**
@@ -19,6 +35,9 @@ import za.co.apricotdb.ui.util.AlertMessageDecorator;
  */
 @Component
 public class CompareScriptHandler {
+
+    @Resource
+    ApplicationContext context;
 
     @Autowired
     AlertMessageDecorator alertDecorator;
@@ -41,11 +60,12 @@ public class CompareScriptHandler {
         }
 
         List<CompareSnapshotRow> diffRows = getDifferences(diffItems);
+        String scriptText = generate(diffRows);
 
-        for (CompareSnapshotRow row : diffRows) {
-
-            System.out.println(row);
-
+        try {
+            createGenerateScriptForm(scriptText);
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -99,5 +119,38 @@ public class CompareScriptHandler {
         }
 
         return ret;
+    }
+
+    public void createGenerateScriptForm(String scriptText) throws IOException {
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/za/co/apricotdb/ui/apricot-generate-diff-script.fxml"));
+        loader.setControllerFactory(context::getBean);
+        Pane window = loader.load();
+
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setTitle("Generate Alignment Script");
+        Scene generateScriptScene = new Scene(window);
+        dialog.setScene(generateScriptScene);
+        dialog.getIcons().add(
+                new Image(getClass().getResourceAsStream("/za/co/apricotdb/ui/toolbar/tbInsertScriptEnabled.png")));
+        generateScriptScene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.ESCAPE) {
+                    dialog.close();
+                }
+            }
+        });
+
+        CompareScriptController controller = loader.<CompareScriptController>getController();
+        controller.init(scriptText);
+        dialog.show();
+    }
+    
+    private String generate(List<CompareSnapshotRow> diffs) {
+        StringBuilder sb = new StringBuilder();
+        
+        return sb.toString();
     }
 }
