@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class AlterFieldScript implements CompareScriptGenerator {
 
     @Override
-    public String generate(List<CompareSnapshotRow> diffs) {
+    public String generate(List<CompareSnapshotRow> diffs, String schema) {
         // TODO Auto-generated method stub
         return null;
     }

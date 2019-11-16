@@ -75,6 +75,11 @@ public class SnapshotComparator implements ApricotObjectComparator<ApricotSnapsh
     }
 
     private ApricotTable clone(ApricotTable table) {
-        return tableCloneManager.cloneTable(null, table, true, false);
+        ApricotTable tbl = tableCloneManager.cloneTable(null, table, true, false);
+        if (tbl != null) {
+            tbl.setId(table.getId());
+        }
+
+        return tbl;
     }
 }

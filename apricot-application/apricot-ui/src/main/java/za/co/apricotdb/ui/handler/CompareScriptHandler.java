@@ -23,8 +23,10 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import za.co.apricotdb.ui.CompareScriptController;
+import za.co.apricotdb.ui.comparator.AddTableScript;
 import za.co.apricotdb.ui.comparator.CompareRowType;
 import za.co.apricotdb.ui.comparator.CompareSnapshotRow;
+import za.co.apricotdb.ui.comparator.RemoveTableScript;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
 /**
@@ -41,6 +43,12 @@ public class CompareScriptHandler {
 
     @Autowired
     AlertMessageDecorator alertDecorator;
+
+    @Autowired
+    AddTableScript addTableScript;
+    
+    @Autowired
+    RemoveTableScript removeTableScript;
 
     public void generateScript(TreeItem<CompareSnapshotRow> root) {
         if (!hasDifference(root)) {
@@ -59,11 +67,10 @@ public class CompareScriptHandler {
             alert.showAndWait();
         }
 
-        List<CompareSnapshotRow> diffRows = getDifferences(diffItems);
-        String scriptText = generate(diffRows);
+        List<CompareSnapshotRow> differences = getDifferences(diffItems);
 
         try {
-            createGenerateScriptForm(scriptText);
+            createGenerateScriptForm(differences);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -121,7 +128,7 @@ public class CompareScriptHandler {
         return ret;
     }
 
-    public void createGenerateScriptForm(String scriptText) throws IOException {
+    public void createGenerateScriptForm(List<CompareSnapshotRow> differences) throws IOException {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/za/co/apricotdb/ui/apricot-generate-diff-script.fxml"));
         loader.setControllerFactory(context::getBean);
@@ -144,13 +151,20 @@ public class CompareScriptHandler {
         });
 
         CompareScriptController controller = loader.<CompareScriptController>getController();
-        controller.init(scriptText);
+        controller.init(differences);
         dialog.show();
     }
-    
-    private String generate(List<CompareSnapshotRow> diffs) {
+
+    /**
+     * Generate the differences alignment script using the collection of the
+     * differences and the schema name (if any).
+     */
+    public String generate(List<CompareSnapshotRow> differences, String schema) {
         StringBuilder sb = new StringBuilder();
-        
+
+        sb.append(addTableScript.generate(differences, schema));
+        sb.append(removeTableScript.generate(differences, schema));
+
         return sb.toString();
     }
 }

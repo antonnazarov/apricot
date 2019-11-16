@@ -2,6 +2,7 @@ package za.co.apricotdb.persistence.data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
@@ -65,6 +66,12 @@ public class TableManager {
         ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
 
         return getTableByName(name, snapshot);
+    }
+
+    public ApricotTable getTableById(long id) {
+        Optional<ApricotTable> o = tableRep.findById(id);
+
+        return o.get();
     }
 
     public void deleteTable(ApricotTable table) {

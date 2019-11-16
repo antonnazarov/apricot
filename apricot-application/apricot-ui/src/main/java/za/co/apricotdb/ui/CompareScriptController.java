@@ -13,6 +13,8 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import za.co.apricotdb.ui.comparator.CompareSnapshotRow;
+import za.co.apricotdb.ui.handler.CompareScriptHandler;
 import za.co.apricotdb.ui.handler.GenerateScriptHandler;
 import za.co.apricotdb.ui.handler.SyntaxEditorHandler;
 
@@ -31,6 +33,9 @@ public class CompareScriptController {
     @Autowired
     SyntaxEditorHandler syntaxEditorHandler;
 
+    @Autowired
+    CompareScriptHandler compareScriptHandler;
+
     @FXML
     Pane mainPane;
 
@@ -43,8 +48,9 @@ public class CompareScriptController {
     @FXML
     ComboBox<String> schema;
 
+    private List<CompareSnapshotRow> differences;
+
     private ToggleGroup targetGroup = new ToggleGroup();
-    private String scriptText;
 
     public enum ScriptTarget {
         FILE, SQL_EDITOR;
@@ -53,8 +59,8 @@ public class CompareScriptController {
     /**
      * Initialize the script generation form.
      */
-    public void init(String scriptText) {
-        this.scriptText = scriptText;
+    public void init(List<CompareSnapshotRow> differences) {
+        this.differences = differences;
 
         targetFile.setToggleGroup(targetGroup);
         targetSqlEditor.setToggleGroup(targetGroup);
@@ -68,13 +74,14 @@ public class CompareScriptController {
 
     @FXML
     public void generate(ActionEvent event) {
+        String scriptText = compareScriptHandler.generate(differences, schema.getValue());
         switch (getScriptTarget()) {
         case FILE:
             generateScriptHandler.saveToFile("Generate Alignment Script", scriptText, mainPane.getScene().getWindow());
             break;
         case SQL_EDITOR:
             try {
-                syntaxEditorHandler.createSyntaxEditorForm(scriptText, "Generate Alignment Script");
+                syntaxEditorHandler.createSyntaxEditorForm(scriptText, "The Snapshots Alignment Script");
             } catch (IOException e) {
                 e.printStackTrace();
             }
