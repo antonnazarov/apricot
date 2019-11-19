@@ -14,7 +14,7 @@ public class FieldAttributeHelper {
         StringBuilder sb = new StringBuilder("");
         
         if (!StringUtils.isEmpty(length) && !length.equals("0")) {
-            sb.append(" (").append(length).append(")");
+            sb.append("(").append(length).append(")");
         }
         
         return sb.toString();

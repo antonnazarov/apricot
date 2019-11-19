@@ -27,6 +27,6 @@ public class AlterFieldScript implements CompareScriptGenerator {
 
     @Override
     public CompareRowType getRowType() {
-        return CompareRowType.CONSTRAINT;
+        return CompareRowType.COLUMN;
     }
 }

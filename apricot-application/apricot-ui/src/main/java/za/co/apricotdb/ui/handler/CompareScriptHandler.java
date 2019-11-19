@@ -23,6 +23,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import za.co.apricotdb.ui.CompareScriptController;
+import za.co.apricotdb.ui.comparator.AddColumnScript;
 import za.co.apricotdb.ui.comparator.AddTableScript;
 import za.co.apricotdb.ui.comparator.CompareRowType;
 import za.co.apricotdb.ui.comparator.CompareSnapshotRow;
@@ -46,9 +47,12 @@ public class CompareScriptHandler {
 
     @Autowired
     AddTableScript addTableScript;
-    
+
     @Autowired
     RemoveTableScript removeTableScript;
+    
+    @Autowired
+    AddColumnScript addColumnScript;
 
     public void generateScript(TreeItem<CompareSnapshotRow> root) {
         if (!hasDifference(root)) {
@@ -65,6 +69,8 @@ public class CompareScriptHandler {
                     "You need to checkmark the items with differences, which you'd like to generate the script for",
                     AlertType.WARNING);
             alert.showAndWait();
+
+            return;
         }
 
         List<CompareSnapshotRow> differences = getDifferences(diffItems);
@@ -164,6 +170,8 @@ public class CompareScriptHandler {
 
         sb.append(addTableScript.generate(differences, schema));
         sb.append(removeTableScript.generate(differences, schema));
+        sb.append("\n");
+        sb.append(addColumnScript.generate(differences, schema));
 
         return sb.toString();
     }

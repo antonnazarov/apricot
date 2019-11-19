@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * @since 09/11/2019
  */
 @Component
-public class RemoveFieldScript implements CompareScriptGenerator {
+public class RemoveColumnScript implements CompareScriptGenerator {
 
     @Override
     public String generate(List<CompareSnapshotRow> diffs, String schema) {

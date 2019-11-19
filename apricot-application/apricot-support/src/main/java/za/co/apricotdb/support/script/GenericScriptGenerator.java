@@ -317,4 +317,40 @@ public class GenericScriptGenerator implements ScriptGenerator {
 
         return sb.toString();
     }
+
+    /**
+     * Add column to the existing table.
+     */
+    @Override
+    public String addColumn(ApricotColumn column, String schema) {
+        StringBuilder sb = new StringBuilder();
+
+        String tableName = column.getTable().getName();
+        if (StringUtils.isNotEmpty(schema)) {
+            tableName = schema + "." + tableName;
+        }
+        sb.append("alter table ").append(tableName).append("\n");
+        sb.append("add ").append(column.getName()).append(" ").append(column.getDataType());
+        sb.append(FieldAttributeHelper.formFieldLength(column.getValueLength()));
+        if (!column.isNullable()) {
+            sb.append(" not null");
+        }
+        sb.append(";");
+
+        return sb.toString();
+    }
+
+    @Override
+    public String dropColumn(ApricotColumn column, String schema) {
+        StringBuilder sb = new StringBuilder();
+
+        String tableName = column.getTable().getName();
+        if (StringUtils.isNotEmpty(schema)) {
+            tableName = schema + "." + tableName;
+        }
+        sb.append("alter table ").append(tableName).append("\n");
+        sb.append("drop column ").append(column.getName()).append(";");
+
+        return sb.toString();
+    }
 }
