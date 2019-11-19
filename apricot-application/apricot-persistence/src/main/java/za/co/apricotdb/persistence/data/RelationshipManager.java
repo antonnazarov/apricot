@@ -7,6 +7,7 @@ import java.util.Optional;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Component;
 
@@ -85,6 +86,7 @@ public class RelationshipManager {
      * Find all Relationships for the given Entities, which are not internal between
      * these Entities.
      */
+    @Transactional
     public List<ApricotRelationship> findExernalRelationships(List<ApricotTable> tables, boolean outgoing) {
         List<ApricotRelationship> ret = new ArrayList<>();
 

@@ -64,7 +64,7 @@ public class CompareScriptController {
 
         targetFile.setToggleGroup(targetGroup);
         targetSqlEditor.setToggleGroup(targetGroup);
-        targetFile.setSelected(true);
+        targetSqlEditor.setSelected(true);
 
         List<String> schemaNames = generateScriptHandler.getSchemaNames();
         if (!schemaNames.isEmpty()) {

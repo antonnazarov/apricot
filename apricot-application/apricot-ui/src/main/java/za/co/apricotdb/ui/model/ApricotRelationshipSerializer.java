@@ -3,6 +3,7 @@ package za.co.apricotdb.ui.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -49,7 +50,7 @@ public class ApricotRelationshipSerializer {
         if (model.getChildTable().getConstraintByName(fk.getName()) == null) {
             model.getChildTable().getConstraints().add(fk);
         }
-        constraintManager.saveConstraint(fk);        
+        constraintManager.saveConstraint(fk);
 
         ApricotConstraint childPk = buildPrimaryKey(columns, model);
         if (childPk != null) {
@@ -82,7 +83,7 @@ public class ApricotRelationshipSerializer {
                 ApricotColumn pkColumn = model.getParentTable().getColumnByName(h.getPrimaryKeyField());
                 if (pkColumn != null) {
                     column.setDataType(pkColumn.getDataType());
-                    if (pkColumn.getValueLength() != null) {
+                    if (StringUtils.isNotEmpty(pkColumn.getValueLength())) {
                         column.setValueLength(pkColumn.getValueLength());
                     }
                 }

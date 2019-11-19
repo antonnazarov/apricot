@@ -31,6 +31,7 @@ import za.co.apricotdb.persistence.entity.ApricotColumnConstraint;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
+import za.co.apricotdb.support.util.FieldAttributeHelper;
 import za.co.apricotdb.ui.comparator.CompareDiffColumnConstructor;
 import za.co.apricotdb.ui.comparator.CompareRowType;
 import za.co.apricotdb.ui.comparator.CompareSnapshotRow;
@@ -288,9 +289,7 @@ public class CompareSnapshotsController {
             sb.append(" *");
         }
         sb.append(" ").append(column.getDataType());
-        if (column.getValueLength() != null && column.getValueLength().length() > 0) {
-            sb.append(" (").append(column.getValueLength()).append(")");
-        }
+        sb.append(FieldAttributeHelper.formFieldLength(column.getValueLength()));
 
         return sb.toString();
     }

@@ -14,6 +14,7 @@ import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ConstraintType;
+import za.co.apricotdb.support.util.FieldAttributeHelper;
 
 @Component
 public class GenericScriptGenerator implements ScriptGenerator {
@@ -66,9 +67,7 @@ public class GenericScriptGenerator implements ScriptGenerator {
             }
             sb.append(INDENT).append(StringUtils.rightPad(col.getName(), maxLength)).append(" ")
                     .append(col.getDataType());
-            if (col.getValueLength() != null) {
-                sb.append("(").append(col.getValueLength()).append(")");
-            }
+            sb.append(FieldAttributeHelper.formFieldLength(col.getValueLength()));
             if (!col.isNullable()) {
                 sb.append(" not null");
             }

@@ -12,6 +12,7 @@ import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ConstraintType;
+import za.co.apricotdb.support.util.FieldAttributeHelper;
 
 /**
  * This class wraps the ApricotTable entity, adding the report specific
@@ -54,9 +55,7 @@ public class TableWrapper {
                 row.columnName += " *";
             }
             row.columnType = c.getDataType();
-            if (c.getValueLength() != null && !c.getValueLength().equals("0")) {
-                row.columnType += " (" + c.getValueLength() + ")";
-            }
+            row.columnType += FieldAttributeHelper.formFieldLength(c.getValueLength());
             row.isColumnDefinition = true;
             row.ordinalPosition = c.getOrdinalPosition();
 
