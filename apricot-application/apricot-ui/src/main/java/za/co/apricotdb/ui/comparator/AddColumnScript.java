@@ -9,8 +9,7 @@ import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.support.script.GenericScriptGenerator;
 
 /**
- * Generator for the ADD FIELD SQL for the tables newly added into the target
- * snapshot.
+ * Generator for the ADD COLUMN's SQL.
  * 
  * @author Anton Nazarov
  * @since 09/11/2019

@@ -27,6 +27,7 @@ import za.co.apricotdb.ui.comparator.AddColumnScript;
 import za.co.apricotdb.ui.comparator.AddTableScript;
 import za.co.apricotdb.ui.comparator.CompareRowType;
 import za.co.apricotdb.ui.comparator.CompareSnapshotRow;
+import za.co.apricotdb.ui.comparator.RemoveColumnScript;
 import za.co.apricotdb.ui.comparator.RemoveTableScript;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
@@ -53,6 +54,9 @@ public class CompareScriptHandler {
     
     @Autowired
     AddColumnScript addColumnScript;
+    
+    @Autowired
+    RemoveColumnScript removeColumnScript;
 
     public void generateScript(TreeItem<CompareSnapshotRow> root) {
         if (!hasDifference(root)) {
@@ -172,6 +176,8 @@ public class CompareScriptHandler {
         sb.append(removeTableScript.generate(differences, schema));
         sb.append("\n");
         sb.append(addColumnScript.generate(differences, schema));
+        sb.append("\n");
+        sb.append(removeColumnScript.generate(differences, schema));
 
         return sb.toString();
     }

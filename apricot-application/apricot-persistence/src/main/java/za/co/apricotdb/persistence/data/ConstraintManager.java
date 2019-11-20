@@ -10,6 +10,7 @@ import javax.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.persistence.entity.ApricotColumnConstraint;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotTable;
@@ -83,5 +84,16 @@ public class ConstraintManager {
 
     public void saveConstraint(ApricotConstraint constraint) {
         constraintRepository.save(constraint);
+    }
+
+    /**
+     * Find all unique constraints, which contain the given column.
+     */
+    public List<ApricotConstraint> getConstraintsByColumn(ApricotColumn column) {
+        TypedQuery<ApricotConstraint> query = em.createNamedQuery("ApricotConstraint.getConstraintsByColumn",
+                ApricotConstraint.class);
+        query.setParameter("column", column);
+
+        return query.getResultList();
     }
 }
