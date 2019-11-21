@@ -43,7 +43,7 @@ public class SnapshotCloneManager {
 
         // scan and clone the tables of the original snapshot
         for (ApricotTable table : snapshot.getTables()) {
-            clonedTables.add(tableCloneManager.cloneTable(clonedSnapshot, table, true, false));
+            clonedTables.add(tableCloneManager.cloneTable(clonedSnapshot, table, true, false, false));
         }
 
         snapshotRepository.save(clonedSnapshot);

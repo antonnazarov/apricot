@@ -33,7 +33,7 @@ public class TableCloneManager {
      * Clone the table.
      */
     public ApricotTable cloneTable(ApricotSnapshot newSnapshot, ApricotTable table, boolean cloneConstraints,
-            boolean generateName) {
+            boolean generateName, boolean cloneWithId) {
         List<ApricotColumn> clonedColumns = new ArrayList<>();
         List<ApricotConstraint> clonedConstraints = new ArrayList<>();
 
@@ -45,9 +45,12 @@ public class TableCloneManager {
         }
 
         ApricotTable clonedTable = new ApricotTable(name, clonedColumns, clonedConstraints, newSnapshot);
+        if (cloneWithId) {
+            clonedTable.setId(table.getId());
+        }
 
         for (ApricotColumn column : table.getColumns()) {
-            clonedColumns.add(cloneColumn(clonedTable, column));
+            clonedColumns.add(cloneColumn(clonedTable, column, cloneWithId));
         }
 
         if (cloneConstraints) {
@@ -78,9 +81,12 @@ public class TableCloneManager {
     /**
      * Clone the column.
      */
-    private ApricotColumn cloneColumn(ApricotTable clonedTable, ApricotColumn column) {
+    private ApricotColumn cloneColumn(ApricotTable clonedTable, ApricotColumn column, boolean cloneWithId) {
         ApricotColumn clonedColumn = new ApricotColumn(column.getName(), column.getOrdinalPosition(),
                 column.isNullable(), column.getDataType(), column.getValueLength(), clonedTable);
+        if (cloneWithId) {
+            clonedColumn.setId(column.getId());
+        }
 
         return clonedColumn;
     }

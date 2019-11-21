@@ -76,7 +76,7 @@ public class DuplicateHandler {
 
         for (ApricotTable table : tables) {
             ApricotTable clonedTable = tableCloneManager.cloneTable(snapshotManager.getDefaultSnapshot(), table, false,
-                    true);
+                    true, false);
             tableManager.saveTable(clonedTable);
             ret.add(clonedTable.getName());
             cloneNonFKConstraints(table, clonedTable, clonedConstraints);
