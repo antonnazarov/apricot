@@ -28,7 +28,7 @@ public class AddColumnScript implements CompareScriptGenerator {
         if (!flt.isEmpty()) {
             sb.append("--******************************************\n");
             sb.append("--               ADD COLUMNS\n");
-            sb.append("--******************************************\n\n");
+            sb.append("--******************************************\n");
             for (CompareSnapshotRow r : flt) {
                 sb.append(scriptGenerator.addColumn((ApricotColumn) r.getDifference().getTargetObject(), schema));
                 sb.append("\n\n");

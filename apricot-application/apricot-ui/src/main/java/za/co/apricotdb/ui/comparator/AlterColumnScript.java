@@ -5,14 +5,13 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 /**
- * Generator for the ADD CONSTRAINT SQL for the tables newly added into the target
- * snapshot.
+ * Generator for the alteration of the column script.
  * 
  * @author Anton Nazarov
  * @since 09/11/2019
  */
 @Component
-public class AlterFieldScript implements CompareScriptGenerator {
+public class AlterColumnScript implements CompareScriptGenerator {
 
     @Override
     public String generate(List<CompareSnapshotRow> diffs, String schema) {
@@ -22,7 +21,7 @@ public class AlterFieldScript implements CompareScriptGenerator {
 
     @Override
     public String getRowState() {
-        return "ADD";
+        return "DIFF";
     }
 
     @Override

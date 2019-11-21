@@ -22,6 +22,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.ui.CompareScriptController;
 import za.co.apricotdb.ui.comparator.AddColumnScript;
 import za.co.apricotdb.ui.comparator.AddTableScript;
@@ -177,6 +178,8 @@ public class CompareScriptHandler {
         sb.append("\n");
         sb.append(addColumnScript.generate(differences, schema));
         sb.append("\n");
+        
+        List<ApricotConstraint> removeCnstrRel = removeColumnScript.getRelatedConstraints(differences);
         sb.append(removeColumnScript.generate(differences, schema));
 
         return sb.toString();

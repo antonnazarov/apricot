@@ -34,7 +34,7 @@ public class RemoveTableScript implements CompareScriptGenerator {
         if (!flt.isEmpty()) {
             sb.append("--******************************************\n");
             sb.append("--               DROP TABLES\n");
-            sb.append("--******************************************\n\n");
+            sb.append("--******************************************\n");
             List<ApricotTable> tables = new ArrayList<>();
             for (CompareSnapshotRow r : flt) {
                 ApricotTable tbl = (ApricotTable) r.getDifference().getSourceObject();

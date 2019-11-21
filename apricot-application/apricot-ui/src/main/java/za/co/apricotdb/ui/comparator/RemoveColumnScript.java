@@ -34,7 +34,7 @@ public class RemoveColumnScript implements CompareScriptGenerator {
         if (!flt.isEmpty()) {
             sb.append("--******************************************\n");
             sb.append("--               DROP COLUMNS\n");
-            sb.append("--******************************************\n\n");
+            sb.append("--******************************************\n");
             for (CompareSnapshotRow r : flt) {
                 sb.append(scriptGenerator.dropColumn((ApricotColumn) r.getDifference().getSourceObject(), schema));
                 sb.append("\n\n");

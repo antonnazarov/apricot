@@ -29,7 +29,7 @@ public class AddTableScript implements CompareScriptGenerator {
         if (!flt.isEmpty()) {
             sb.append("--******************************************\n");
             sb.append("--               NEW TABLES\n");
-            sb.append("--******************************************\n\n");
+            sb.append("--******************************************\n");
             for (CompareSnapshotRow r : flt) {
                 sb.append(scriptGenerator.createTable((ApricotTable) r.getDifference().getTargetObject(), schema));
             }
