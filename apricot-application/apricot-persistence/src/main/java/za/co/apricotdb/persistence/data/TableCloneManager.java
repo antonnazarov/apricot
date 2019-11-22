@@ -55,7 +55,7 @@ public class TableCloneManager {
 
         if (cloneConstraints) {
             for (ApricotConstraint constraint : table.getConstraints()) {
-                clonedConstraints.add(cloneConstraint(clonedTable, constraint, false));
+                clonedConstraints.add(cloneConstraint(clonedTable, constraint, false, cloneWithId));
             }
         }
 
@@ -95,7 +95,7 @@ public class TableCloneManager {
      * Clone the constraint.
      */
     public ApricotConstraint cloneConstraint(ApricotTable clonedTable, ApricotConstraint constraint,
-            boolean generateName) {
+            boolean generateName, boolean cloneWithId) {
         String name = constraint.getName();
         if (generateName) {
             while (!isUniqueConstraint(name)) {
@@ -106,6 +106,9 @@ public class TableCloneManager {
         ApricotConstraint clonedConstraint = new ApricotConstraint(name, constraint.getType(), clonedTable);
         List<ApricotColumnConstraint> clonedColumnConstraints = new ArrayList<>();
         clonedConstraint.setColumns(clonedColumnConstraints);
+        if (cloneWithId) {
+            clonedConstraint.setId(constraint.getId());
+        }
 
         for (ApricotColumnConstraint cc : constraint.getColumns()) {
             clonedColumnConstraints.add(cloneColumnConstraint(clonedTable, clonedConstraint, cc));

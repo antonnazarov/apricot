@@ -111,7 +111,7 @@ public class DuplicateHandler {
             Map<ApricotConstraint, ApricotConstraint> clonedConstraints) {
         for (ApricotConstraint constraint : table.getConstraints()) {
             if (constraint.getType() != ConstraintType.FOREIGN_KEY) {
-                ApricotConstraint clonedConstraint = tableCloneManager.cloneConstraint(clonedTable, constraint, true);
+                ApricotConstraint clonedConstraint = tableCloneManager.cloneConstraint(clonedTable, constraint, true, false);
                 constraintManager.saveConstraint(clonedConstraint);
                 clonedConstraints.put(constraint, clonedConstraint);
             }
@@ -134,7 +134,7 @@ public class DuplicateHandler {
                         "The cloned table for [" + rel.getChild().getTable().getName() + "] was not found");
             }
             ApricotConstraint clonedChildConstraint = tableCloneManager.cloneConstraint(clonedChild, childConstraint,
-                    true);
+                    true, false);
             constraintManager.saveConstraint(clonedChildConstraint);
 
             ApricotRelationship clonedRel = new ApricotRelationship(clonedParentConstraint, clonedChildConstraint);

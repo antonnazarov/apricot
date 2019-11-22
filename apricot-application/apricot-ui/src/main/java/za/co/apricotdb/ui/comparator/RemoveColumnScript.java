@@ -1,12 +1,12 @@
 package za.co.apricotdb.ui.comparator;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import za.co.apricotdb.persistence.data.ConstraintManager;
 import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.support.script.GenericScriptGenerator;
@@ -24,7 +24,7 @@ public class RemoveColumnScript implements CompareScriptGenerator {
     GenericScriptGenerator scriptGenerator;
 
     @Autowired
-    ConstraintManager constraintManager;
+    RelatedConstraintsHandler relConstrHandler;
 
     @Override
     public String generate(List<CompareSnapshotRow> diffs, String schema) {
@@ -55,21 +55,13 @@ public class RemoveColumnScript implements CompareScriptGenerator {
     }
 
     /**
-     * Get all the constraints, related to the columns, which are about to be
-     * DROPPED.
+     * Get all constraints, related to the columns, which are about to be DROPPED.
      */
+    @Override
+    @Transactional
     public List<ApricotConstraint> getRelatedConstraints(List<CompareSnapshotRow> diffs) {
-        List<ApricotConstraint> ret = new ArrayList<>();
-
         List<CompareSnapshotRow> flt = filter(diffs);
-        for (CompareSnapshotRow r : flt) {
-            ApricotColumn column = (ApricotColumn) r.getDifference().getSourceObject();
-            List<ApricotConstraint> constraints = constraintManager.getConstraintsByColumn(column);
-            if (constraints != null && !constraints.isEmpty()) {
-                ret.addAll(constraints);
-            }
-        }
 
-        return ret;
+        return relConstrHandler.getRelatedConstraints(flt, true);
     }
 }

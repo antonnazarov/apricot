@@ -2,9 +2,13 @@ package za.co.apricotdb.ui.comparator;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import za.co.apricotdb.persistence.data.TableManager;
+import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.support.script.GenericScriptGenerator;
 
@@ -21,7 +25,11 @@ public class AddTableScript implements CompareScriptGenerator {
     @Autowired
     GenericScriptGenerator scriptGenerator;
 
+    @Autowired
+    TableManager tableManager;
+
     @Override
+    @Transactional
     public String generate(List<CompareSnapshotRow> diffs, String schema) {
         StringBuilder sb = new StringBuilder();
         List<CompareSnapshotRow> flt = filter(diffs);
@@ -31,7 +39,10 @@ public class AddTableScript implements CompareScriptGenerator {
             sb.append("--               NEW TABLES\n");
             sb.append("--******************************************\n");
             for (CompareSnapshotRow r : flt) {
-                sb.append(scriptGenerator.createTable((ApricotTable) r.getDifference().getTargetObject(), schema));
+                ApricotTable table = tableManager
+                        .getTableById(((ApricotTable) r.getDifference().getTargetObject()).getId());
+                sb.append(scriptGenerator.createTable(table, schema));
+                sb.append(scriptGenerator.createConstraints(table, schema));
             }
         }
 
@@ -46,5 +57,10 @@ public class AddTableScript implements CompareScriptGenerator {
     @Override
     public CompareRowType getRowType() {
         return CompareRowType.TABLE;
+    }
+
+    @Override
+    public List<ApricotConstraint> getRelatedConstraints(List<CompareSnapshotRow> diffs) {
+        return null;
     }
 }

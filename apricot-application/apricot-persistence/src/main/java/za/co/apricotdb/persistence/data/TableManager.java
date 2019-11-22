@@ -71,6 +71,10 @@ public class TableManager {
     public ApricotTable getTableById(long id) {
         Optional<ApricotTable> o = tableRep.findById(id);
 
+        if (o.isEmpty()) {
+            return null;
+        }
+
         return o.get();
     }
 

@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import za.co.apricotdb.persistence.entity.ApricotConstraint;
+
 /**
  * Generator for the ADD CONSTRAINT SQL for the tables newly added into the target
  * snapshot.
@@ -28,5 +30,10 @@ public class AddConstraintScript implements CompareScriptGenerator {
     @Override
     public CompareRowType getRowType() {
         return CompareRowType.CONSTRAINT;
+    }
+
+    @Override
+    public List<ApricotConstraint> getRelatedConstraints(List<CompareSnapshotRow> diffs) {
+        return null;
     }
 }

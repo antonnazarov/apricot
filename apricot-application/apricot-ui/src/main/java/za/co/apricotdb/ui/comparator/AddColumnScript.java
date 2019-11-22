@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.persistence.entity.ApricotColumn;
+import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.support.script.GenericScriptGenerator;
 
 /**
@@ -46,6 +47,11 @@ public class AddColumnScript implements CompareScriptGenerator {
     @Override
     public CompareRowType getRowType() {
         return CompareRowType.COLUMN;
+    }
+
+    @Override
+    public List<ApricotConstraint> getRelatedConstraints(List<CompareSnapshotRow> diffs) {
+        return null;
     }
 
 }

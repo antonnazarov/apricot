@@ -243,7 +243,8 @@ public class GenericScriptGenerator implements ScriptGenerator {
             tableName = schema + "." + tableName;
         }
 
-        sb.append("alter table ").append(tableName).append("\n").append("drop constraint ").append(constraint.getName())
+        sb.append("alter table ").append(tableName).append("\n");
+        sb.append(INDENT).append("drop constraint ").append(constraint.getName())
                 .append(";\n");
 
         return sb.toString();
@@ -330,7 +331,7 @@ public class GenericScriptGenerator implements ScriptGenerator {
             tableName = schema + "." + tableName;
         }
         sb.append("alter table ").append(tableName).append("\n");
-        sb.append("add ").append(column.getName()).append(" ").append(column.getDataType());
+        sb.append(INDENT).append("add ").append(column.getName()).append(" ").append(column.getDataType());
         sb.append(FieldAttributeHelper.formFieldLength(column.getValueLength()));
         if (!column.isNullable()) {
             sb.append(" not null");
@@ -349,7 +350,7 @@ public class GenericScriptGenerator implements ScriptGenerator {
             tableName = schema + "." + tableName;
         }
         sb.append("alter table ").append(tableName).append("\n");
-        sb.append("drop column ").append(column.getName()).append(";");
+        sb.append(INDENT).append("drop column ").append(column.getName()).append(";");
 
         return sb.toString();
     }

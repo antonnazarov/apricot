@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.persistence.data.TableManager;
+import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.support.script.GenericScriptGenerator;
 
@@ -55,5 +56,10 @@ public class RemoveTableScript implements CompareScriptGenerator {
     @Override
     public CompareRowType getRowType() {
         return CompareRowType.TABLE;
+    }
+
+    @Override
+    public List<ApricotConstraint> getRelatedConstraints(List<CompareSnapshotRow> diffs) {
+        return null;
     }
 }

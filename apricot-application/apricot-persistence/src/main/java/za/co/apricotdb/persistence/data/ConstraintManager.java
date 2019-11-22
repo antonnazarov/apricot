@@ -2,6 +2,7 @@ package za.co.apricotdb.persistence.data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
@@ -95,5 +96,15 @@ public class ConstraintManager {
         query.setParameter("column", column);
 
         return query.getResultList();
+    }
+
+    public ApricotConstraint getConstraintById(long id) {
+        Optional<ApricotConstraint> o = constraintRepository.findById(id);
+
+        if (o.isEmpty()) {
+            return null;
+        }
+
+        return o.get();
     }
 }

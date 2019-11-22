@@ -2,9 +2,12 @@ package za.co.apricotdb.ui.handler;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -26,9 +29,13 @@ import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.ui.CompareScriptController;
 import za.co.apricotdb.ui.comparator.AddColumnScript;
 import za.co.apricotdb.ui.comparator.AddTableScript;
+import za.co.apricotdb.ui.comparator.AlterColumnScript;
+import za.co.apricotdb.ui.comparator.AlterConstraintScript;
 import za.co.apricotdb.ui.comparator.CompareRowType;
 import za.co.apricotdb.ui.comparator.CompareSnapshotRow;
+import za.co.apricotdb.ui.comparator.RelatedConstraintsHandler;
 import za.co.apricotdb.ui.comparator.RemoveColumnScript;
+import za.co.apricotdb.ui.comparator.RemoveConstraintScript;
 import za.co.apricotdb.ui.comparator.RemoveTableScript;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
@@ -52,12 +59,24 @@ public class CompareScriptHandler {
 
     @Autowired
     RemoveTableScript removeTableScript;
-    
+
     @Autowired
     AddColumnScript addColumnScript;
-    
+
     @Autowired
     RemoveColumnScript removeColumnScript;
+
+    @Autowired
+    AlterColumnScript alterColumnScript;
+    
+    @Autowired
+    RemoveConstraintScript removeConstraintScript;
+    
+    @Autowired
+    AlterConstraintScript alterConstraintScript;
+
+    @Autowired
+    RelatedConstraintsHandler relConstrHandler;
 
     public void generateScript(TreeItem<CompareSnapshotRow> root) {
         if (!hasDifference(root)) {
@@ -170,6 +189,7 @@ public class CompareScriptHandler {
      * Generate the differences alignment script using the collection of the
      * differences and the schema name (if any).
      */
+    @Transactional
     public String generate(List<CompareSnapshotRow> differences, String schema) {
         StringBuilder sb = new StringBuilder();
 
@@ -178,9 +198,25 @@ public class CompareScriptHandler {
         sb.append("\n");
         sb.append(addColumnScript.generate(differences, schema));
         sb.append("\n");
-        
+
+        // collect the constraints eligible for removal and for removal/recover with the
+        // updated columns
         List<ApricotConstraint> removeCnstrRel = removeColumnScript.getRelatedConstraints(differences);
+        List<ApricotConstraint> removeRestoreCnstrRel = alterColumnScript.getRelatedConstraints(differences);
+        List<ApricotConstraint> removeCnstr = removeConstraintScript.getRelatedConstraints(differences);
+        List<ApricotConstraint> alterCnstr = alterConstraintScript.getRelatedConstraints(differences);
+
+        Set<ApricotConstraint> allCnstr = new HashSet<>(removeCnstrRel);
+        allCnstr.addAll(removeRestoreCnstrRel);
+        allCnstr.addAll(removeCnstr);
+        allCnstr.addAll(alterCnstr);
+        
+        sb.append(relConstrHandler.removeRelatedConstraints(allCnstr, schema));
+
         sb.append(removeColumnScript.generate(differences, schema));
+
+        sb.append(alterColumnScript.generate(differences, schema));
+        sb.append("\n");
 
         return sb.toString();
     }

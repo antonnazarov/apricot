@@ -3,6 +3,8 @@ package za.co.apricotdb.ui.comparator;
 import java.util.ArrayList;
 import java.util.List;
 
+import za.co.apricotdb.persistence.entity.ApricotConstraint;
+
 /**
  * The generator of the difference alignment script.
  * 
@@ -12,6 +14,8 @@ import java.util.List;
 public interface CompareScriptGenerator {
 
     String generate(List<CompareSnapshotRow> diffs, String schema);
+    
+    List<ApricotConstraint> getRelatedConstraints(List<CompareSnapshotRow> diffs);    
 
     String getRowState();
 
