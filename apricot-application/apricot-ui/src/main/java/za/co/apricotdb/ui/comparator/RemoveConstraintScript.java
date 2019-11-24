@@ -1,12 +1,10 @@
 package za.co.apricotdb.ui.comparator;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import za.co.apricotdb.persistence.data.ConstraintManager;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
 
 /**
@@ -18,9 +16,9 @@ import za.co.apricotdb.persistence.entity.ApricotConstraint;
  */
 @Component
 public class RemoveConstraintScript implements CompareScriptGenerator {
-    
+
     @Autowired
-    ConstraintManager constraintManager;
+    RelatedConstraintsHandler relatedConstraintsHandler;
 
     @Override
     public String generate(List<CompareSnapshotRow> diffs, String schema) {
@@ -39,17 +37,6 @@ public class RemoveConstraintScript implements CompareScriptGenerator {
 
     @Override
     public List<ApricotConstraint> getRelatedConstraints(List<CompareSnapshotRow> diffs) {
-        List<ApricotConstraint> ret = new ArrayList<>();
-        List<CompareSnapshotRow> flt = filter(diffs);
-
-        for (CompareSnapshotRow r : flt) {
-            ApricotConstraint constraint = (ApricotConstraint) r.getDifference().getSourceObject();
-            constraint = constraintManager.getConstraintById(constraint.getId());
-            if (constraint != null) {
-                ret.add(constraint);
-            }
-        }
-
-        return ret;
+        return relatedConstraintsHandler.getRelatedConstraints(filter(diffs), true);
     }
 }

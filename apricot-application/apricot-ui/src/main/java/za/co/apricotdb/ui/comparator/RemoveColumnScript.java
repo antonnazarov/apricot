@@ -62,6 +62,6 @@ public class RemoveColumnScript implements CompareScriptGenerator {
     public List<ApricotConstraint> getRelatedConstraints(List<CompareSnapshotRow> diffs) {
         List<CompareSnapshotRow> flt = filter(diffs);
 
-        return relConstrHandler.getRelatedConstraints(flt, true);
+        return relConstrHandler.getConstraintsRelatedToColumn(flt, true);
     }
 }

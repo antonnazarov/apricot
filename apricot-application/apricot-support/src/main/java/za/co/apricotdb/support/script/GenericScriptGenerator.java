@@ -100,9 +100,14 @@ public class GenericScriptGenerator implements ScriptGenerator {
 
     @Override
     public String createConstraints(ApricotTable table, String schema) {
+        return createConstraints(table.getConstraints(), schema);
+    }
+
+    @Override
+    public String createConstraints(List<ApricotConstraint> constraints, String schema) {
         StringBuilder sb = new StringBuilder();
 
-        for (ApricotConstraint constr : table.getConstraints()) {
+        for (ApricotConstraint constr : constraints) {
             if (constr.getType() != ConstraintType.PRIMARY_KEY && constr.getType() != ConstraintType.FOREIGN_KEY) {
                 switch (constr.getType()) {
                 case UNIQUE_INDEX:
@@ -244,8 +249,7 @@ public class GenericScriptGenerator implements ScriptGenerator {
         }
 
         sb.append("alter table ").append(tableName).append("\n");
-        sb.append(INDENT).append("drop constraint ").append(constraint.getName())
-                .append(";\n");
+        sb.append(INDENT).append("drop constraint ").append(constraint.getName()).append(";\n");
 
         return sb.toString();
     }

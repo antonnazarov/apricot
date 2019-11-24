@@ -8,9 +8,8 @@ import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 
 /**
- * The interface of the script generator.
- * There might be different implementations of the generator for
- * differen databases.
+ * The interface of the script generator. There might be different
+ * implementations of the generator for differen databases.
  * 
  * @author Anton Nazarov
  * @since 19/11/2019, the comment was added
@@ -38,4 +37,6 @@ public interface ScriptGenerator {
     String addColumn(ApricotColumn column, String schema);
 
     String dropColumn(ApricotColumn column, String schema);
+
+    String createConstraints(List<ApricotConstraint> constraints, String schema);
 }

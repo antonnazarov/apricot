@@ -53,5 +53,4 @@ public class AddColumnScript implements CompareScriptGenerator {
     public List<ApricotConstraint> getRelatedConstraints(List<CompareSnapshotRow> diffs) {
         return null;
     }
-
 }

@@ -28,6 +28,7 @@ import javafx.stage.Stage;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.ui.CompareScriptController;
 import za.co.apricotdb.ui.comparator.AddColumnScript;
+import za.co.apricotdb.ui.comparator.AddConstraintScript;
 import za.co.apricotdb.ui.comparator.AddTableScript;
 import za.co.apricotdb.ui.comparator.AlterColumnScript;
 import za.co.apricotdb.ui.comparator.AlterConstraintScript;
@@ -68,12 +69,15 @@ public class CompareScriptHandler {
 
     @Autowired
     AlterColumnScript alterColumnScript;
-    
+
     @Autowired
     RemoveConstraintScript removeConstraintScript;
-    
+
     @Autowired
     AlterConstraintScript alterConstraintScript;
+
+    @Autowired
+    AddConstraintScript addConstraintScript;
 
     @Autowired
     RelatedConstraintsHandler relConstrHandler;
@@ -210,13 +214,20 @@ public class CompareScriptHandler {
         allCnstr.addAll(removeRestoreCnstrRel);
         allCnstr.addAll(removeCnstr);
         allCnstr.addAll(alterCnstr);
-        
+
         sb.append(relConstrHandler.removeRelatedConstraints(allCnstr, schema));
 
         sb.append(removeColumnScript.generate(differences, schema));
 
         sb.append(alterColumnScript.generate(differences, schema));
-        sb.append("\n");
+
+        // prepare the constraints for the creation/redo
+        List<ApricotConstraint> addCnstr = addConstraintScript.getRelatedConstraints(differences);
+        allCnstr = new HashSet<>(removeRestoreCnstrRel);
+        allCnstr.addAll(alterCnstr);
+        allCnstr.addAll(addCnstr);
+
+        sb.append(relConstrHandler.addRelatedConstraints(allCnstr, schema));
 
         return sb.toString();
     }

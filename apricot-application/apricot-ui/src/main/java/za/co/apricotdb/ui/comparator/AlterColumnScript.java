@@ -37,7 +37,7 @@ public class AlterColumnScript implements CompareScriptGenerator {
             sb.append("--******************************************\n");
             for (CompareSnapshotRow r : flt) {
                 sb.append(scriptGenerator.dropColumn((ApricotColumn) r.getDifference().getSourceObject(), schema));
-                sb.append("\n");
+                sb.append("\n\n");
                 sb.append(scriptGenerator.addColumn((ApricotColumn) r.getDifference().getTargetObject(), schema));
                 sb.append("\n\n");
             }
@@ -65,6 +65,6 @@ public class AlterColumnScript implements CompareScriptGenerator {
     public List<ApricotConstraint> getRelatedConstraints(List<CompareSnapshotRow> diffs) {
         List<CompareSnapshotRow> flt = filter(diffs);
 
-        return relConstrHandler.getRelatedConstraints(flt, false);
+        return relConstrHandler.getConstraintsRelatedToColumn(flt, false);
     }
 }

@@ -34,7 +34,8 @@ public class RelatedConstraintsHandler {
     GenericScriptGenerator scriptGenerator;
 
     @Transactional
-    public List<ApricotConstraint> getRelatedConstraints(List<CompareSnapshotRow> differences, boolean useSource) {
+    public List<ApricotConstraint> getConstraintsRelatedToColumn(List<CompareSnapshotRow> differences,
+            boolean useSource) {
         List<ApricotConstraint> ret = new ArrayList<>();
 
         for (CompareSnapshotRow r : differences) {
@@ -58,6 +59,27 @@ public class RelatedConstraintsHandler {
         return ret;
     }
 
+    @Transactional
+    public List<ApricotConstraint> getRelatedConstraints(List<CompareSnapshotRow> differences, boolean useSource) {
+        List<ApricotConstraint> ret = new ArrayList<>();
+
+        for (CompareSnapshotRow r : differences) {
+            ApricotConstraint constraint = null;
+            if (useSource) {
+                constraint = (ApricotConstraint) r.getDifference().getSourceObject();
+            } else {
+                constraint = (ApricotConstraint) r.getDifference().getTargetObject();
+            }
+
+            constraint = constraintManager.getConstraintById(constraint.getId());
+            if (constraint != null) {
+                ret.add(constraint);
+            }
+        }
+
+        return ret;
+    }
+
     public String removeRelatedConstraints(Set<ApricotConstraint> constraints, String schema) {
         StringBuilder sb = new StringBuilder();
 
@@ -68,8 +90,23 @@ public class RelatedConstraintsHandler {
             sb.append("--******************************************\n");
             for (ApricotConstraint cnstr : constraints) {
                 sb.append(scriptGenerator.dropConstraint(cnstr, schema));
-                sb.append("\n\n");
+                sb.append("\n");
             }
+        }
+
+        return sb.toString();
+    }
+
+    public String addRelatedConstraints(Set<ApricotConstraint> constraints, String schema) {
+        StringBuilder sb = new StringBuilder();
+
+        if (!constraints.isEmpty()) {
+            sb.append("--******************************************\n");
+            sb.append("--             ADD CONSTRAINTS              \n");
+            sb.append("--******************************************\n");
+
+            sb.append(scriptGenerator.createConstraints(new ArrayList<>(constraints), schema));
+            sb.append("\n\n");
         }
 
         return sb.toString();
