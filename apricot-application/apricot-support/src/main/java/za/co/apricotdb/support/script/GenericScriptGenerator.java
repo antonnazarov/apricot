@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import za.co.apricotdb.metascan.ApricotTargetDatabase;
 import za.co.apricotdb.persistence.data.RelationshipManager;
 import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.persistence.entity.ApricotColumnConstraint;
@@ -27,6 +28,16 @@ public class GenericScriptGenerator implements ScriptGenerator {
 
     @Autowired
     EntityChainHandler entityChainHandler;
+    
+    private SqlSyntax sqlSyntax = SqlSyntaxFactory.getGefaultSyntax();
+    
+    /**
+     * Initialize the ScriptGenerator before use.
+     * @param databaseType
+     */
+    public void init(ApricotTargetDatabase databaseType) {
+        sqlSyntax = SqlSyntaxFactory.getSqlSyntax(databaseType);
+    }
 
     @Override
     public String createTableAll(ApricotTable table, List<ApricotRelationship> relationships, String schema) {
