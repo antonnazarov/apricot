@@ -109,7 +109,7 @@ public class CompareScriptHandler {
             ex.printStackTrace();
         }
     }
-
+    
     /**
      * Get all items, the diff alignment script has to be generated for.
      */

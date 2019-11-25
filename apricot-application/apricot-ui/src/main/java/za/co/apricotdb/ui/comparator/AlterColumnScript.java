@@ -2,6 +2,7 @@ package za.co.apricotdb.ui.comparator;
 
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
-import za.co.apricotdb.support.script.GenericScriptGenerator;
+import za.co.apricotdb.support.script.SqlScriptGenerator;
 
 /**
  * Generator for the alteration of the column script.
@@ -21,7 +22,7 @@ import za.co.apricotdb.support.script.GenericScriptGenerator;
 public class AlterColumnScript implements CompareScriptGenerator {
 
     @Autowired
-    GenericScriptGenerator scriptGenerator;
+    SqlScriptGenerator scriptGenerator;
 
     @Autowired
     RelatedConstraintsHandler relConstrHandler;
@@ -36,9 +37,7 @@ public class AlterColumnScript implements CompareScriptGenerator {
             sb.append("--               ALTER COLUMNS\n");
             sb.append("--******************************************\n");
             for (CompareSnapshotRow r : flt) {
-                sb.append(scriptGenerator.dropColumn((ApricotColumn) r.getDifference().getSourceObject(), schema));
-                sb.append("\n\n");
-                sb.append(scriptGenerator.addColumn((ApricotColumn) r.getDifference().getTargetObject(), schema));
+                sb.append(scriptGenerator.alterColumn((ApricotColumn) r.getDifference().getTargetObject(), schema));
                 sb.append("\n\n");
             }
         }
@@ -66,5 +65,11 @@ public class AlterColumnScript implements CompareScriptGenerator {
         List<CompareSnapshotRow> flt = filter(diffs);
 
         return relConstrHandler.getConstraintsRelatedToColumn(flt, false);
+    }
+
+    @Override
+    @PostConstruct
+    public void init() {
+        scriptGenerator.init();
     }
 }

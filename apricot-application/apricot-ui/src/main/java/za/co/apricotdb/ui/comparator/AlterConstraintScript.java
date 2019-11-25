@@ -2,6 +2,7 @@ package za.co.apricotdb.ui.comparator;
 
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,5 +41,10 @@ public class AlterConstraintScript implements CompareScriptGenerator {
     @Override
     public CompareRowType getRowType() {
         return CompareRowType.CONSTRAINT;
+    }
+
+    @Override
+    @PostConstruct
+    public void init() {
     }
 }

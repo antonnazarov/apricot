@@ -13,7 +13,7 @@ import za.co.apricotdb.persistence.data.ColumnManager;
 import za.co.apricotdb.persistence.data.ConstraintManager;
 import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
-import za.co.apricotdb.support.script.GenericScriptGenerator;
+import za.co.apricotdb.support.script.SqlScriptGenerator;
 
 /**
  * This component handles the related constraints business logic.
@@ -31,7 +31,7 @@ public class RelatedConstraintsHandler {
     ColumnManager columnManager;
 
     @Autowired
-    GenericScriptGenerator scriptGenerator;
+    SqlScriptGenerator scriptGenerator;
 
     @Transactional
     public List<ApricotConstraint> getConstraintsRelatedToColumn(List<CompareSnapshotRow> differences,
@@ -105,10 +105,14 @@ public class RelatedConstraintsHandler {
             sb.append("--             ADD CONSTRAINTS              \n");
             sb.append("--******************************************\n");
 
-            sb.append(scriptGenerator.createConstraints(new ArrayList<>(constraints), schema));
+            sb.append(scriptGenerator.createConstraints(new ArrayList<>(constraints), schema, true));
             sb.append("\n\n");
         }
 
         return sb.toString();
+    }
+
+    public void init() {
+        scriptGenerator.init();
     }
 }

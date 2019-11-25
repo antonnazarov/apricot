@@ -2,12 +2,14 @@ package za.co.apricotdb.ui.comparator;
 
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
-import za.co.apricotdb.support.script.GenericScriptGenerator;
+import za.co.apricotdb.support.script.SqlScriptGenerator;
 
 /**
  * Generator for the ADD COLUMN's SQL.
@@ -19,7 +21,7 @@ import za.co.apricotdb.support.script.GenericScriptGenerator;
 public class AddColumnScript implements CompareScriptGenerator {
 
     @Autowired
-    GenericScriptGenerator scriptGenerator;
+    SqlScriptGenerator scriptGenerator;
 
     @Override
     public String generate(List<CompareSnapshotRow> diffs, String schema) {
@@ -52,5 +54,11 @@ public class AddColumnScript implements CompareScriptGenerator {
     @Override
     public List<ApricotConstraint> getRelatedConstraints(List<CompareSnapshotRow> diffs) {
         return null;
+    }
+
+    @Override
+    @PostConstruct
+    public void init() {
+        scriptGenerator.init();
     }
 }

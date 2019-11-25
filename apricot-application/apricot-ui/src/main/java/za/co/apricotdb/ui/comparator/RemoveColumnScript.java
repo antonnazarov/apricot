@@ -2,6 +2,7 @@ package za.co.apricotdb.ui.comparator;
 
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
-import za.co.apricotdb.support.script.GenericScriptGenerator;
+import za.co.apricotdb.support.script.SqlScriptGenerator;
 
 /**
  * Generator for the DROP COLUMN's SQL.
@@ -21,7 +22,7 @@ import za.co.apricotdb.support.script.GenericScriptGenerator;
 public class RemoveColumnScript implements CompareScriptGenerator {
 
     @Autowired
-    GenericScriptGenerator scriptGenerator;
+    SqlScriptGenerator scriptGenerator;
 
     @Autowired
     RelatedConstraintsHandler relConstrHandler;
@@ -63,5 +64,11 @@ public class RemoveColumnScript implements CompareScriptGenerator {
         List<CompareSnapshotRow> flt = filter(diffs);
 
         return relConstrHandler.getConstraintsRelatedToColumn(flt, true);
+    }
+
+    @Override
+    @PostConstruct
+    public void init() {
+        scriptGenerator.init();
     }
 }

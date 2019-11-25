@@ -8,17 +8,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.metascan.ApricotTargetDatabase;
+import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.RelationshipManager;
 import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.persistence.entity.ApricotColumnConstraint;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
+import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ConstraintType;
 import za.co.apricotdb.support.util.FieldAttributeHelper;
 
 @Component
-public class GenericScriptGenerator implements ScriptGenerator {
+public class SqlScriptGenerator {
 
     public static final String INDENT = "   ";
     public static final int COMMENT_LENGTH = 55;
@@ -28,18 +30,29 @@ public class GenericScriptGenerator implements ScriptGenerator {
 
     @Autowired
     EntityChainHandler entityChainHandler;
-    
+
+    @Autowired
+    ProjectManager projectManager;
+
     private SqlSyntax sqlSyntax = SqlSyntaxFactory.getGefaultSyntax();
-    
+
     /**
      * Initialize the ScriptGenerator before use.
-     * @param databaseType
      */
     public void init(ApricotTargetDatabase databaseType) {
         sqlSyntax = SqlSyntaxFactory.getSqlSyntax(databaseType);
     }
 
-    @Override
+    public void init() {
+        ApricotProject project = projectManager.findCurrentProject();
+        ApricotTargetDatabase dbType = ApricotTargetDatabase.valueOf(project.getTargetDatabase());
+        sqlSyntax = SqlSyntaxFactory.getSqlSyntax(dbType);
+    }
+
+    /**
+     * Create the table with the related (provided) relationships for the given
+     * schema.
+     */
     public String createTableAll(ApricotTable table, List<ApricotRelationship> relationships, String schema) {
         StringBuilder sb = new StringBuilder();
 
@@ -47,8 +60,8 @@ public class GenericScriptGenerator implements ScriptGenerator {
         sb.append("-- * ").append(StringUtils.center(table.getName(), COMMENT_LENGTH - 6)).append("*\n");
         sb.append(StringUtils.rightPad("-- ", COMMENT_LENGTH, "*")).append("\n");
 
-        sb.append(createTable(table, schema));
-        sb.append(createConstraints(table, schema));
+        sb.append(createTable(table, schema, true));
+        sb.append(createConstraints(table, schema, false));
         for (ApricotRelationship r : relationships) {
             if (table.equals(r.getChild().getTable())) {
                 sb.append(createForeignKeyConstraint(r, schema));
@@ -58,8 +71,10 @@ public class GenericScriptGenerator implements ScriptGenerator {
         return sb.toString();
     }
 
-    @Override
-    public String createTable(ApricotTable table, String schema) {
+    /**
+     * Generate the "CREATE TABLE" SQL sentence.
+     */
+    public String createTable(ApricotTable table, String schema, boolean buildPK) {
         StringBuilder sb = new StringBuilder();
 
         String tableName = table.getName();
@@ -84,12 +99,14 @@ public class GenericScriptGenerator implements ScriptGenerator {
             }
         }
 
-        ApricotConstraint pk = getPrimaryKey(table);
-        if (pk != null) {
-            String pkCols = getConstraintColumnsAsString(pk);
-            sb.append(",\n");
-            sb.append(INDENT).append("constraint ").append(pk.getName()).append(" primary key (").append(pkCols)
-                    .append(")\n");
+        if (buildPK) {
+            ApricotConstraint pk = getPrimaryKey(table);
+            if (pk != null) {
+                String pkCols = getConstraintColumnsAsString(pk);
+                sb.append(",\n");
+                sb.append(INDENT).append("constraint ").append(pk.getName()).append(" primary key (").append(pkCols)
+                        .append(")\n");
+            }
         }
 
         sb.append(");\n\n");
@@ -109,13 +126,18 @@ public class GenericScriptGenerator implements ScriptGenerator {
         return ret;
     }
 
-    @Override
-    public String createConstraints(ApricotTable table, String schema) {
-        return createConstraints(table.getConstraints(), schema);
+    /**
+     * Create all constraints, associated with the given table.
+     */
+    public String createConstraints(ApricotTable table, String schema, boolean buildAll) {
+        return createConstraints(table.getConstraints(), schema, buildAll);
     }
 
-    @Override
-    public String createConstraints(List<ApricotConstraint> constraints, String schema) {
+    /**
+     * Create the constraints of all major types. (if buildAll==false except PK and
+     * FK)
+     */
+    public String createConstraints(List<ApricotConstraint> constraints, String schema, boolean buildAll) {
         StringBuilder sb = new StringBuilder();
 
         for (ApricotConstraint constr : constraints) {
@@ -133,13 +155,40 @@ public class GenericScriptGenerator implements ScriptGenerator {
                 default:
                     break;
                 }
+            } else if (buildAll) {
+                // create constraints in case of "create all"
+                if (constr.getType() == ConstraintType.PRIMARY_KEY) {
+                    sb.append(createPrimaryKeyConstraint(constr, schema)).append("\n\n");
+                } else if (constr.getType() == ConstraintType.FOREIGN_KEY) {
+                    sb.append(createForeignKeyConstraint(constr, schema)).append("\n\n");
+                }
             }
         }
 
         return sb.toString();
     }
 
-    @Override
+    /**
+     * Create the FK as an alteration of the table.
+     */
+    public String createForeignKeyConstraint(ApricotConstraint constraint, String schema) {
+        StringBuilder sb = new StringBuilder();
+
+        // it is working only for the foreign keys
+        if (constraint.getType() == ConstraintType.FOREIGN_KEY) {
+            List<ApricotRelationship> res = relationshipManager.findRelationshipsByConstraint(constraint);
+            if (res != null && !res.isEmpty()) {
+                ApricotRelationship relationship = res.get(0);
+                sb.append(createForeignKeyConstraint(relationship, schema));
+            }
+        }
+
+        return sb.toString();
+    }
+
+    /**
+     * Create the FK as an alteration of the table.
+     */
     public String createForeignKeyConstraint(ApricotRelationship relationship, String schema) {
         StringBuilder sb = new StringBuilder();
         ApricotTable parent = relationship.getParent().getTable();
@@ -161,7 +210,23 @@ public class GenericScriptGenerator implements ScriptGenerator {
         return sb.toString();
     }
 
-    @Override
+    /**
+     * Add the Primary Key constraint.
+     */
+    public String createPrimaryKeyConstraint(ApricotConstraint constraint, String schema) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("alter table ").append(constraint.getTable().getName()).append("\n");
+        sb.append(INDENT).append("add constraint ").append(constraint.getName()).append(" primary key (")
+                .append(getConstraintColumnsAsString(constraint)).append(");\n\n");
+
+        return sb.toString();
+    }
+
+    /**
+     * Generate the "drop" SQL for the tables in the list. No constraints have been
+     * taken into account.
+     */
     public String dropAllTables(List<ApricotTable> tables, String schema) {
         StringBuilder sb = new StringBuilder();
 
@@ -177,7 +242,10 @@ public class GenericScriptGenerator implements ScriptGenerator {
         return sb.toString();
     }
 
-    @Override
+    /**
+     * Generate the "drop" SQL for the given collection of tables. Destroys the
+     * "outgoing" relationships if exist.
+     */
     public String dropSelectedTables(List<ApricotTable> tables, String schema) {
         StringBuilder sb = new StringBuilder();
 
@@ -194,7 +262,9 @@ public class GenericScriptGenerator implements ScriptGenerator {
         return sb.toString();
     }
 
-    @Override
+    /**
+     * Delete data in the tables unconditionally.
+     */
     public String deleteInAllTables(List<ApricotTable> tables, String schema) {
         StringBuilder sb = new StringBuilder();
 
@@ -210,7 +280,9 @@ public class GenericScriptGenerator implements ScriptGenerator {
         return sb.toString();
     }
 
-    @Override
+    /**
+     * Delete data in the tables taking into account the existing relationships.
+     */
     public String deleteInSelectedTables(List<ApricotTable> tables, String schema) {
         StringBuilder sb = new StringBuilder();
 
@@ -250,7 +322,9 @@ public class GenericScriptGenerator implements ScriptGenerator {
         return ret;
     }
 
-    @Override
+    /**
+     * Prepare the drop constraint SQL for the given constraint.
+     */
     public String dropConstraint(ApricotConstraint constraint, String schema) {
         StringBuilder sb = new StringBuilder();
 
@@ -259,8 +333,22 @@ public class GenericScriptGenerator implements ScriptGenerator {
             tableName = schema + "." + tableName;
         }
 
-        sb.append("alter table ").append(tableName).append("\n");
-        sb.append(INDENT).append("drop constraint ").append(constraint.getName()).append(";\n");
+        switch (constraint.getType()) {
+        case UNIQUE:
+            sb.append(sqlSyntax.dropUniqueConstraint(tableName, constraint.getName()));
+            break;
+        case UNIQUE_INDEX:
+        case NON_UNIQUE_INDEX:
+            sb.append(sqlSyntax.dropIndex(tableName, constraint.getName()));
+            break;
+        case PRIMARY_KEY:
+            sb.append(sqlSyntax.dropPrimaryKeyConstraint(tableName, constraint.getName()));
+            break;
+        case FOREIGN_KEY:
+            sb.append(sqlSyntax.dropForeignKeyConstraint(tableName, constraint.getName()));
+            break;
+        }
+        sb.append(";\n");
 
         return sb.toString();
     }
@@ -337,7 +425,6 @@ public class GenericScriptGenerator implements ScriptGenerator {
     /**
      * Add column to the existing table.
      */
-    @Override
     public String addColumn(ApricotColumn column, String schema) {
         StringBuilder sb = new StringBuilder();
 
@@ -356,7 +443,9 @@ public class GenericScriptGenerator implements ScriptGenerator {
         return sb.toString();
     }
 
-    @Override
+    /**
+     * Drop column in the table.
+     */
     public String dropColumn(ApricotColumn column, String schema) {
         StringBuilder sb = new StringBuilder();
 
@@ -368,5 +457,18 @@ public class GenericScriptGenerator implements ScriptGenerator {
         sb.append(INDENT).append("drop column ").append(column.getName()).append(";");
 
         return sb.toString();
+    }
+
+    /**
+     * Alter the given column in the table.
+     */
+    public String alterColumn(ApricotColumn column, String schema) {
+        String tableName = column.getTable().getName();
+        if (StringUtils.isNotEmpty(schema)) {
+            tableName = schema + "." + tableName;
+        }
+
+        return sqlSyntax.alterColumn(tableName, column.getName(), column.getDataType(), column.getValueLength(),
+                column.isNullable());
     }
 }

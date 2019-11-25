@@ -2,6 +2,8 @@ package za.co.apricotdb.ui.comparator;
 
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,5 +40,10 @@ public class AddConstraintScript implements CompareScriptGenerator {
     @Override
     public List<ApricotConstraint> getRelatedConstraints(List<CompareSnapshotRow> diffs) {
         return relatedConstraintsHandler.getRelatedConstraints(filter(diffs), false);
+    }
+
+    @Override
+    @PostConstruct
+    public void init() {
     }
 }

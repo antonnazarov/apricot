@@ -17,4 +17,6 @@ public interface SqlSyntax {
     String dropPrimaryKeyConstraint(String tableName, String constraintName);
 
     String dropIndex(String tableName, String indexName);
+    
+    String dropConstraint(String tableName, String constraintName);
 }

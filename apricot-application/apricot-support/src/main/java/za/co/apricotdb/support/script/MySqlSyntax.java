@@ -1,7 +1,7 @@
 package za.co.apricotdb.support.script;
 
 /**
- * The NySQL specific syntax.
+ * The MySQL specific syntax.
  * 
  * @author Anton Nazarov
  * @since 24/11/2019
@@ -17,31 +17,46 @@ public class MySqlSyntax implements SqlSyntax {
     @Override
     public String alterColumn(String tableName, String columnName, String dataType, String valueLength,
             boolean nullable) {
-        // TODO Auto-generated method stub
-        return null;
+        return defaultSyntax.alterColumn(tableName, columnName, dataType, valueLength, nullable);
     }
 
     @Override
     public String dropUniqueConstraint(String tableName, String constraintName) {
-        // TODO Auto-generated method stub
-        return null;
+        return dropIndex(tableName, constraintName);
     }
 
     @Override
     public String dropForeignKeyConstraint(String tableName, String constraintName) {
-        // TODO Auto-generated method stub
-        return null;
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("alter table ").append(tableName).append("\n");
+        sb.append(SqlScriptGenerator.INDENT).append("drop foreign key ").append(constraintName).append(";");
+
+        return sb.toString();
     }
 
     @Override
     public String dropPrimaryKeyConstraint(String tableName, String constraintName) {
-        // TODO Auto-generated method stub
-        return null;
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("alter table ").append(tableName).append("\n");
+        sb.append(SqlScriptGenerator.INDENT).append("drop primary key ").append(constraintName).append(";");
+
+        return sb.toString();
     }
 
     @Override
     public String dropIndex(String tableName, String indexName) {
-        // TODO Auto-generated method stub
-        return null;
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("alter table ").append(tableName).append("\n");
+        sb.append(SqlScriptGenerator.INDENT).append("drop index ").append(indexName).append(";");
+
+        return sb.toString();
+    }
+
+    @Override
+    public String dropConstraint(String tableName, String constraintName) {
+        return defaultSyntax.dropConstraint(tableName, constraintName);
     }
 }

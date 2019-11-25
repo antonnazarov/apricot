@@ -3,13 +3,15 @@ package za.co.apricotdb.ui.comparator;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.persistence.data.TableManager;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotTable;
-import za.co.apricotdb.support.script.GenericScriptGenerator;
+import za.co.apricotdb.support.script.SqlScriptGenerator;
 
 /**
  * Generator for the DROP TABLE SQL for the tables newly added into the target
@@ -22,7 +24,7 @@ import za.co.apricotdb.support.script.GenericScriptGenerator;
 public class RemoveTableScript implements CompareScriptGenerator {
 
     @Autowired
-    GenericScriptGenerator scriptGenerator;
+    SqlScriptGenerator scriptGenerator;
 
     @Autowired
     TableManager tableManager;
@@ -61,5 +63,11 @@ public class RemoveTableScript implements CompareScriptGenerator {
     @Override
     public List<ApricotConstraint> getRelatedConstraints(List<CompareSnapshotRow> diffs) {
         return null;
+    }
+
+    @Override
+    @PostConstruct
+    public void init() {
+        scriptGenerator.init();
     }
 }

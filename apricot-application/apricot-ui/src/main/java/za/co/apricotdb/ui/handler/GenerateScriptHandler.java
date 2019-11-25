@@ -37,7 +37,7 @@ import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.support.script.EntityChainHandler;
-import za.co.apricotdb.support.script.GenericScriptGenerator;
+import za.co.apricotdb.support.script.SqlScriptGenerator;
 import za.co.apricotdb.ui.DBScriptType;
 import za.co.apricotdb.ui.ScriptGenerateController;
 import za.co.apricotdb.ui.ScriptGenerateController.ScriptSource;
@@ -75,7 +75,7 @@ public class GenerateScriptHandler {
     RelationshipManager relationshipManager;
 
     @Autowired
-    GenericScriptGenerator scriptGenerator;
+    SqlScriptGenerator scriptGenerator;
 
     @Autowired
     ProjectParameterManager parameterManager;
@@ -114,6 +114,10 @@ public class GenerateScriptHandler {
 
         ScriptGenerateController controller = loader.<ScriptGenerateController>getController();
         controller.init(scriptType, getSelectedEntities().size() > 0);
+        
+        //  initialize the SQL database dialect/syntax
+        scriptGenerator.init();
+        
         dialog.show();
     }
 

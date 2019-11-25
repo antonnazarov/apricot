@@ -20,6 +20,8 @@ public interface CompareScriptGenerator {
     String getRowState();
 
     CompareRowType getRowType();
+    
+    void init();
 
     default List<CompareSnapshotRow> filter(List<CompareSnapshotRow> diffs) {
         List<CompareSnapshotRow> ret = new ArrayList<>();
