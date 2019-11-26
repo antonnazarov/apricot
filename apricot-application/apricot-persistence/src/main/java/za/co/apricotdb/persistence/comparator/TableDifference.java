@@ -85,4 +85,21 @@ public class TableDifference implements ApricotObjectDifference<ApricotTable> {
 
         return sb.toString();
     }
+
+    public String getOrderWeight() {
+        String ret = null;
+        if (isDifferent()) {
+            if (source == null && target != null) {
+                ret = "0001" + target.getName();
+            } else if (source != null && target == null) {
+                ret = "0002" + source.getName();
+            } else if (source != null && target != null) {
+                ret = "0003" + source.getName();
+            }
+        } else {
+            ret = "0004" + source.getName();
+        }
+
+        return ret;
+    }
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.persistence.data.UndoSnapshotManager;
+import za.co.apricotdb.ui.MainAppController;
 import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.toolbar.TbUndoHandler;
 
@@ -33,6 +34,9 @@ public class ApricotUndoManager {
 
     @Autowired
     UndoSnapshotManager undoSnapshotManager;
+    
+    @Autowired
+    MainAppController appController;
     
     @Autowired
     TbUndoHandler undoHandler;
@@ -109,8 +113,10 @@ public class ApricotUndoManager {
     private void enableUndoButton(boolean enable, int steps) {
         if (enable) {
             undoHandler.enable();
+            appController.getMenuUndo().setDisable(false);
         } else {
             undoHandler.disable();
+            appController.getMenuUndo().setDisable(true);
         }
     }
 }

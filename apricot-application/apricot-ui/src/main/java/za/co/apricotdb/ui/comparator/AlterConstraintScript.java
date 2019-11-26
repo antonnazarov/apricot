@@ -17,7 +17,7 @@ import za.co.apricotdb.persistence.entity.ApricotConstraint;
  * @since 22/11/2019
  */
 @Component
-public class AlterConstraintScript implements CompareScriptGenerator {
+public class AlterConstraintScript implements CompareScript {
 
     @Autowired
     RelatedConstraintsHandler relatedConstraintsHandler;

@@ -107,4 +107,18 @@ public class ConstraintManager {
 
         return o.get();
     }
+    
+    public void sortConstraints(List<ApricotConstraint> constraints) {
+        constraints.sort((ApricotConstraint c1, ApricotConstraint c2) -> {
+            if (c1.getType().getOrder() == c2.getType().getOrder()) {
+                // use ordinal position of the constraint fields
+                if (c1.getColumns() != null && c1.getColumns().size() > 0 && c2.getColumns() != null
+                        && c2.getColumns().size() > 0) {
+                    return c1.getColumns().get(0).getColumn().getOrdinalPosition()
+                            - c2.getColumns().get(0).getColumn().getOrdinalPosition();
+                }
+            }
+            return c1.getType().getOrder() - c2.getType().getOrder();
+        });
+    }
 }

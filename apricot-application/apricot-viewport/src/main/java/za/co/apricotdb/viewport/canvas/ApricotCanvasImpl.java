@@ -416,4 +416,12 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
     public double getScale() {
         return scale;
     }
+
+    @Override
+    public void selectAllElements() {
+        List<ApricotElement> elements = getElements();
+        for (ApricotElement elm : elements) {
+            elm.setElementStatus(ElementStatus.SELECTED);
+        }
+    }
 }

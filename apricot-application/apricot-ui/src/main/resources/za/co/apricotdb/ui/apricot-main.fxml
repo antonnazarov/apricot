@@ -36,17 +36,25 @@
                               <MenuItem id="menuDelete" mnemonicParsing="false" onAction="#deleteProject" text="Delete" />
                         </items>
                       </Menu>
-                      <Menu disable="true" mnemonicParsing="false" text="Edit">
+                      <Menu mnemonicParsing="false" text="Edit">
                         <items>
-                          <MenuItem mnemonicParsing="false" text="Select All (Ctrl+A)" />
+                              <MenuItem fx:id="menuSave" disable="true" mnemonicParsing="false" onAction="#save" text="Save (Ctrl+S)" />
+                              <MenuItem fx:id="menuUndo" disable="true" mnemonicParsing="false" onAction="#undo" text="Undo (Ctrl+Z)" />
+                              <MenuItem mnemonicParsing="false" onAction="#refresh" text="Refresh (F5)" />
                               <SeparatorMenuItem mnemonicParsing="false" />
+                              <MenuItem fx:id="menuCopy" disable="true" mnemonicParsing="false" onAction="#copy" text="Copy (Ctrl+C)" />
+                              <MenuItem fx:id="menuPaste" disable="true" mnemonicParsing="false" onAction="#paste" text="Paste (Ctrl+V)" />
+                              <MenuItem mnemonicParsing="false" onAction="#selectAll" text="Select All (Ctrl+A)" />
+                              <SeparatorMenuItem mnemonicParsing="false" />
+                          <MenuItem disable="true" mnemonicParsing="false" text="Search" />
                               <Menu mnemonicParsing="false" text="Align Selected">
                                 <items>
-                                  <MenuItem mnemonicParsing="false" text="Left (Ctrl+Left)" />
-                                    <MenuItem mnemonicParsing="false" text="Right (Ctrl+Right)" />
-                                    <MenuItem mnemonicParsing="false" text="Top (Ctrl+Up)" />
-                                    <MenuItem mnemonicParsing="false" text="Bottom (Ctrl+Down)" />
-                                    <MenuItem mnemonicParsing="false" text="Width (Ctrl+Shift+Right)" />
+                                  <MenuItem fx:id="menuLeft" disable="true" mnemonicParsing="false" onAction="#alignLeft" text="Left (Ctrl+Left)" />
+                                    <MenuItem fx:id="menuRight" disable="true" mnemonicParsing="false" onAction="#alignRight" text="Right (Ctrl+Right)" />
+                                    <MenuItem fx:id="menuTop" disable="true" mnemonicParsing="false" onAction="#alignTop" text="Top (Ctrl+Up)" />
+                                    <MenuItem fx:id="menuBottom" disable="true" mnemonicParsing="false" onAction="#alignBottom" text="Bottom (Ctrl+Down)" />
+                                    <MenuItem fx:id="menuMinWidth" disable="true" mnemonicParsing="false" onAction="#minWidth" text="Min Width" />
+                                    <MenuItem fx:id="menuSameWidth" disable="true" mnemonicParsing="false" onAction="#sameWidth" text="Same Width" />
                                 </items>
                               </Menu>
                         </items>

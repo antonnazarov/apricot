@@ -18,7 +18,7 @@ import za.co.apricotdb.support.script.SqlScriptGenerator;
  * @since 09/11/2019
  */
 @Component
-public class AddColumnScript implements CompareScriptGenerator {
+public class AddColumnScript implements CompareScript {
 
     @Autowired
     SqlScriptGenerator scriptGenerator;

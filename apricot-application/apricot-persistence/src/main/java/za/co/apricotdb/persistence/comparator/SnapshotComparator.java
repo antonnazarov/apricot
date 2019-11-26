@@ -36,7 +36,12 @@ public class SnapshotComparator implements ApricotObjectComparator<ApricotSnapsh
     public SnapshotDifference compare(ApricotSnapshot source, ApricotSnapshot target) {
         SnapshotDifference diff = new SnapshotDifference(source, target);
         compareTables(diff);
-        diff.getRelationshipDiffs().addAll(relationshipComparator.compare(source, target, diff.getTableDiffs()));
+        // diff.getRelationshipDiffs().addAll(relationshipComparator.compare(source,
+        // target, diff.getTableDiffs()));
+
+        if (diff.isDifferent()) {
+            sortTablesByDiffType(diff.getTableDiffs());
+        }
 
         return diff;
     }
@@ -72,6 +77,12 @@ public class SnapshotComparator implements ApricotObjectComparator<ApricotSnapsh
         List<ApricotTable> ret = tables.stream().sorted(Comparator.comparing(ApricotTable::getName))
                 .collect(Collectors.toList());
         return ret;
+    }
+
+    public void sortTablesByDiffType(List<TableDifference> tableDiffs) {
+        tableDiffs.sort((TableDifference d1, TableDifference d2) -> {
+            return d1.getOrderWeight().compareTo(d2.getOrderWeight());
+        });
     }
 
     private ApricotTable clone(ApricotTable table) {

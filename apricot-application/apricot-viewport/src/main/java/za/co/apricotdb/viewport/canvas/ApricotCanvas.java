@@ -75,4 +75,6 @@ public interface ApricotCanvas {
     void setScale(double scale);
     
     double getScale();
+    
+    void selectAllElements();
 }

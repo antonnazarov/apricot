@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
+import za.co.apricotdb.ui.MainAppController;
 import za.co.apricotdb.ui.toolbar.TbAlignBottomHandler;
 import za.co.apricotdb.ui.toolbar.TbAlignLeftHandler;
 import za.co.apricotdb.ui.toolbar.TbAlignRightHandler;
@@ -37,6 +38,8 @@ public class EntityStatusChangedEventListener implements ApplicationListener<Ent
     TbSameWidthHandler sameWidthHandler;
     @Autowired
     TbMinimizeWidthHandler minWidthHandler;
+    @Autowired
+    MainAppController appController;
 
     @Override
     public void onApplicationEvent(EntityStatusChangedEvent event) {
@@ -63,18 +66,21 @@ public class EntityStatusChangedEventListener implements ApplicationListener<Ent
         editEntityHandler.enable();
         setAligners(false);
         minWidthHandler.enable();
+        appController.getMenuCopy().setDisable(false);
     }
 
     private void handleNone() {
         editEntityHandler.disable();
         setAligners(false);
         minWidthHandler.disable();
+        appController.getMenuCopy().setDisable(true);
     }
 
     private void handleMany() {
         editEntityHandler.disable();
         setAligners(true);
         minWidthHandler.enable();
+        appController.getMenuCopy().setDisable(false);
     }
 
     private void setAligners(boolean enabled) {
@@ -84,12 +90,14 @@ public class EntityStatusChangedEventListener implements ApplicationListener<Ent
             alignLeftHandler.enable();
             alignRightHandler.enable();
             sameWidthHandler.enable();
+            appController.getMenuLeft().setDisable(false);
         } else {
             alignTopHandler.disable();
             alignBottomHandler.disable();
             alignLeftHandler.disable();
             alignRightHandler.disable();
             sameWidthHandler.disable();
+            appController.getMenuLeft().setDisable(true);
         }
     }
 }

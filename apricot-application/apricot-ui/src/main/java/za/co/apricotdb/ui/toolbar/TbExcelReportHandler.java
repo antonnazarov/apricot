@@ -46,6 +46,6 @@ public class TbExcelReportHandler extends TbButtonHandlerState {
 
     @Override
     public String getToolpitText() {
-        return "Generate Excel Report for the current Snapshot";
+        return "Export into Excel- table";
     }
 }

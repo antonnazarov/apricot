@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.metascan.ApricotTargetDatabase;
+import za.co.apricotdb.persistence.data.ConstraintManager;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.RelationshipManager;
 import za.co.apricotdb.persistence.entity.ApricotColumn;
@@ -33,6 +34,9 @@ public class SqlScriptGenerator {
 
     @Autowired
     ProjectManager projectManager;
+
+    @Autowired
+    ConstraintManager constraintManager;
 
     private SqlSyntax sqlSyntax = SqlSyntaxFactory.getGefaultSyntax();
 
@@ -65,6 +69,7 @@ public class SqlScriptGenerator {
         for (ApricotRelationship r : relationships) {
             if (table.equals(r.getChild().getTable())) {
                 sb.append(createForeignKeyConstraint(r, schema));
+                sb.append("\n\n");
             }
         }
 
@@ -107,6 +112,8 @@ public class SqlScriptGenerator {
                 sb.append(INDENT).append("constraint ").append(pk.getName()).append(" primary key (").append(pkCols)
                         .append(")\n");
             }
+        } else {
+            sb.append("\n");
         }
 
         sb.append(");\n\n");
@@ -139,6 +146,8 @@ public class SqlScriptGenerator {
      */
     public String createConstraints(List<ApricotConstraint> constraints, String schema, boolean buildAll) {
         StringBuilder sb = new StringBuilder();
+
+        constraintManager.sortConstraints(constraints);
 
         for (ApricotConstraint constr : constraints) {
             if (constr.getType() != ConstraintType.PRIMARY_KEY && constr.getType() != ConstraintType.FOREIGN_KEY) {
@@ -196,16 +205,17 @@ public class SqlScriptGenerator {
 
         String parentTableName = parent.getName();
         String childTableName = child.getName();
-        if (schema != null) {
+        if (StringUtils.isNotEmpty(schema)) {
             parentTableName = schema + "." + parentTableName;
             childTableName = schema + "." + childTableName;
         }
 
-        sb.append("alter table ").append(childTableName).append("\n").append("add constraint ")
-                .append(relationship.getChild().getName()).append("\n").append("foreign key (")
+        sb.append("alter table ").append(childTableName).append("\n")
+                .append(INDENT).append("add constraint ").append(relationship.getChild().getName()).append("\n")
+                .append(INDENT).append("foreign key (")
                 .append(getConstraintColumnsAsString(relationship.getChild())).append(") ").append("references ")
                 .append(parentTableName).append(" (").append(getConstraintColumnsAsString(relationship.getParent()))
-                .append(");\n\n");
+                .append(");");
 
         return sb.toString();
     }
@@ -216,9 +226,14 @@ public class SqlScriptGenerator {
     public String createPrimaryKeyConstraint(ApricotConstraint constraint, String schema) {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("alter table ").append(constraint.getTable().getName()).append("\n");
+        String tableName = constraint.getTable().getName();
+        if (StringUtils.isNotEmpty(schema)) {
+            tableName = schema + "." + tableName;
+        }
+        
+        sb.append("alter table ").append(tableName).append("\n");
         sb.append(INDENT).append("add constraint ").append(constraint.getName()).append(" primary key (")
-                .append(getConstraintColumnsAsString(constraint)).append(");\n\n");
+                .append(getConstraintColumnsAsString(constraint)).append(");");
 
         return sb.toString();
     }
@@ -348,7 +363,7 @@ public class SqlScriptGenerator {
             sb.append(sqlSyntax.dropForeignKeyConstraint(tableName, constraint.getName()));
             break;
         }
-        sb.append(";\n");
+        sb.append("\n");
 
         return sb.toString();
     }

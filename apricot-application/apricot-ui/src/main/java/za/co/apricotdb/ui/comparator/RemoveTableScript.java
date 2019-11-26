@@ -21,7 +21,7 @@ import za.co.apricotdb.support.script.SqlScriptGenerator;
  * @since 09/11/2019
  */
 @Component
-public class RemoveTableScript implements CompareScriptGenerator {
+public class RemoveTableScript implements CompareScript {
 
     @Autowired
     SqlScriptGenerator scriptGenerator;
@@ -45,6 +45,7 @@ public class RemoveTableScript implements CompareScriptGenerator {
             }
 
             sb.append(scriptGenerator.dropSelectedTables(tables, schema));
+            sb.append("\n");
         }
 
         return sb.toString();

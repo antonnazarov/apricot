@@ -1,5 +1,6 @@
 package za.co.apricotdb.ui.comparator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -21,7 +22,7 @@ import za.co.apricotdb.support.script.SqlScriptGenerator;
  * @since 09/11/2019
  */
 @Component
-public class AddTableScript implements CompareScriptGenerator {
+public class AddTableScript implements CompareScript {
 
     @Autowired
     SqlScriptGenerator scriptGenerator;
@@ -37,14 +38,20 @@ public class AddTableScript implements CompareScriptGenerator {
 
         if (!flt.isEmpty()) {
             sb.append("--******************************************\n");
-            sb.append("--               NEW TABLES\n");
+            sb.append("--             THE NEW TABLES               \n");
             sb.append("--******************************************\n");
+            List<ApricotConstraint> constraints = new ArrayList<>();
             for (CompareSnapshotRow r : flt) {
                 ApricotTable table = tableManager
                         .getTableById(((ApricotTable) r.getDifference().getTargetObject()).getId());
                 sb.append(scriptGenerator.createTable(table, schema, false));
-                sb.append(scriptGenerator.createConstraints(table, schema, true));
+                constraints.addAll(table.getConstraints());
             }
+
+            sb.append("--******************************************\n");
+            sb.append("--    THE CONSTRAINTS OF THE NEW TABLES     \n");
+            sb.append("--******************************************\n");
+            sb.append(scriptGenerator.createConstraints(constraints, schema, true));
         }
 
         return sb.toString();

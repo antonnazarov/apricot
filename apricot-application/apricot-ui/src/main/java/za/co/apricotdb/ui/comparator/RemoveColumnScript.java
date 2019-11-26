@@ -19,7 +19,7 @@ import za.co.apricotdb.support.script.SqlScriptGenerator;
  * @since 09/11/2019
  */
 @Component
-public class RemoveColumnScript implements CompareScriptGenerator {
+public class RemoveColumnScript implements CompareScript {
 
     @Autowired
     SqlScriptGenerator scriptGenerator;

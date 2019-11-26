@@ -37,5 +37,7 @@ public class CanvasChangedEventListener implements ApplicationListener<CanvasCha
         canvas.setCanvasChanged(true);
         
         parent.getApplicationData().setLayoutEdited(true);
+        
+        appController.getMenuSave().setDisable(false);
     }
 }

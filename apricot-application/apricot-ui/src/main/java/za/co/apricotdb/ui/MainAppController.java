@@ -8,9 +8,11 @@ import org.springframework.stereotype.Component;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Side;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeView;
@@ -22,6 +24,7 @@ import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
 import za.co.apricotdb.ui.handler.ApricotAboutHandler;
 import za.co.apricotdb.ui.handler.ApricotCanvasHandler;
+import za.co.apricotdb.ui.handler.ApricotClipboardHandler;
 import za.co.apricotdb.ui.handler.ApricotEntityHandler;
 import za.co.apricotdb.ui.handler.ApricotProjectHandler;
 import za.co.apricotdb.ui.handler.ApricotRelationshipHandler;
@@ -29,6 +32,7 @@ import za.co.apricotdb.ui.handler.ApricotSnapshotHandler;
 import za.co.apricotdb.ui.handler.ApricotViewHandler;
 import za.co.apricotdb.ui.handler.CanvasScaleHandler;
 import za.co.apricotdb.ui.handler.CompareSnapshotsHandler;
+import za.co.apricotdb.ui.handler.EntityAlignHandler;
 import za.co.apricotdb.ui.handler.ExcelReportHandler;
 import za.co.apricotdb.ui.handler.GenerateScriptHandler;
 import za.co.apricotdb.ui.handler.ProjectExplorerContextMenuHandler;
@@ -41,6 +45,7 @@ import za.co.apricotdb.ui.toolbar.TbButton;
 import za.co.apricotdb.ui.toolbar.ToolbarHolder;
 import za.co.apricotdb.ui.undo.ApricotUndoManager;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
+import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 
 /**
  * This controller serves the main application form apricot-main.fxml.
@@ -113,6 +118,12 @@ public class MainAppController {
 
     @Autowired
     CompareSnapshotsHandler compareSnapshotsHandler;
+    
+    @Autowired
+    ApricotClipboardHandler clipboardHandler;
+    
+    @Autowired
+    EntityAlignHandler alignHandler;
 
     @FXML
     AnchorPane mainPane;
@@ -187,6 +198,18 @@ public class MainAppController {
     @FXML
     Button tbReverseEngineering;
 
+    // menu items
+    @FXML
+    MenuItem menuSave;
+    @FXML
+    MenuItem menuUndo;
+    @FXML
+    MenuItem menuCopy;
+    @FXML
+    MenuItem menuPaste;
+    @FXML
+    MenuItem menuLeft;
+
     public void init() {
         parentWindow.setParentPane(mainPane);
 
@@ -239,6 +262,7 @@ public class MainAppController {
             }
         }
         tbHolder.disable(TbButton.tbSave);
+        menuSave.setDisable(true);
         parentWindow.getApplicationData().setLayoutEdited(false);
     }
 
@@ -453,11 +477,56 @@ public class MainAppController {
         scaleHandler.setScale(scale.getSelectionModel().getSelectedItem());
     }
 
+    @FXML
+    public void refresh(ActionEvent event) {
+        snapshotHandler.syncronizeSnapshot(false);
+    }
+    
+    @FXML
+    public void copy(ActionEvent event) {
+        clipboardHandler.copySelectedToClipboard();
+        menuPaste.setDisable(false);
+    }
+    
+    @FXML
+    public void paste(ActionEvent event) {
+        clipboardHandler.pasteSelectedFromClipboard();
+    }
+    
+    @FXML
+    public void selectAll(ActionEvent event) {
+        ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
+        if (canvas != null) {
+            canvas.selectAllElements();
+        }
+    }
+    
+    @FXML
+    public void alignLeft(ActionEvent event) {
+        alignHandler.alignSelectedEntities(Side.LEFT);
+    }
+
     public TabPane getViewsTabPane() {
         return viewsTabPane;
     }
 
     public ComboBox<String> getScale() {
         return scale;
+    }
+
+    public MenuItem getMenuSave() {
+        return menuSave;
+    }
+
+    public MenuItem getMenuUndo() {
+        return menuUndo;
+    }
+    
+    public MenuItem getMenuCopy() {
+        return menuCopy;
+    }
+    
+    public MenuItem getMenuLeft() {
+        return menuLeft;
     }
 }

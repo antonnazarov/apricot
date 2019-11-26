@@ -1,5 +1,7 @@
 package za.co.apricotdb.persistence.comparator;
 
+import org.apache.commons.lang3.StringUtils;
+
 import za.co.apricotdb.persistence.entity.ApricotColumn;
 
 /**
@@ -39,11 +41,12 @@ public class ColumnDifference implements ApricotObjectDifference<ApricotColumn> 
                 return true;
             }
 
-            if (source.getValueLength() != null && target.getValueLength() != null
+            if (StringUtils.isNotEmpty(source.getValueLength()) && StringUtils.isNotEmpty(target.getValueLength())
                     && !source.getValueLength().equalsIgnoreCase(target.getValueLength())) {
                 return true;
-            } else if (source.getValueLength() == null && target.getValueLength() != null
-                    || source.getValueLength() != null && target.getValueLength() == null) {
+            } else if (StringUtils.isEmpty(source.getValueLength()) && StringUtils.isNotEmpty(target.getValueLength())
+                    || StringUtils.isNotEmpty(source.getValueLength())
+                            && StringUtils.isEmpty(target.getValueLength())) {
                 return true;
             }
         } else {

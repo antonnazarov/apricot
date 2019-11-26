@@ -13,8 +13,8 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import za.co.apricotdb.ui.comparator.CompareScriptGenerator;
 import za.co.apricotdb.ui.comparator.CompareSnapshotRow;
-import za.co.apricotdb.ui.handler.CompareScriptHandler;
 import za.co.apricotdb.ui.handler.GenerateScriptHandler;
 import za.co.apricotdb.ui.handler.SyntaxEditorHandler;
 
@@ -34,7 +34,7 @@ public class CompareScriptController {
     SyntaxEditorHandler syntaxEditorHandler;
 
     @Autowired
-    CompareScriptHandler compareScriptHandler;
+    CompareScriptGenerator compareScriptGenerator;
 
     @FXML
     Pane mainPane;
@@ -74,7 +74,7 @@ public class CompareScriptController {
 
     @FXML
     public void generate(ActionEvent event) {
-        String scriptText = compareScriptHandler.generate(differences, schema.getValue());
+        String scriptText = compareScriptGenerator.generate(differences, schema.getValue());
         switch (getScriptTarget()) {
         case FILE:
             generateScriptHandler.saveToFile("Generate Alignment Script", scriptText, mainPane.getScene().getWindow());
