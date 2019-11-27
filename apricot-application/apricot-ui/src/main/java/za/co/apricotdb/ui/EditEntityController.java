@@ -150,20 +150,15 @@ public class EditEntityController {
 
     private void initColumnsTab() {
         columnDefinitionTable.getSelectionModel().cellSelectionEnabledProperty().set(true);
-        columnDefinitionTable.setOnKeyPressed(e -> {
-            if (e.getCode().isLetterKey() || e.getCode().isDigitKey()) {
-                editFocusedCell();
-            }
-        });
-
         columnName.setCellValueFactory(e -> e.getValue().getName());
-        columnName.setCellFactory(TextFieldTableCell.forTableColumn());
-        columnName.setOnEditCommit(e -> {
-            TablePosition<ApricotColumnData, String> pos = e.getTablePosition();
-            model.getColumns().get(pos.getRow()).getName().setValue(e.getNewValue());
-            columnDefinitionTable.getSelectionModel().selectRightCell();
-            model.setEdited(true);
-        });
+
+        Callback<TableColumn<ApricotColumnData, String>, TableCell<ApricotColumnData, String>> editCellFactory = new Callback<TableColumn<ApricotColumnData, String>, TableCell<ApricotColumnData, String>>() {
+            @Override
+            public TableCell<ApricotColumnData, String> call(TableColumn<ApricotColumnData, String> p) {
+                return new EditCell();
+            }
+        };
+        columnName.setCellFactory(editCellFactory);
 
         primaryKey.setCellValueFactory(e -> e.getValue().getPrimaryKey());
         primaryKey.setCellFactory(CheckBoxTableCell.forTableColumn(i -> model.getColumns().get(i).getPrimaryKey()));
@@ -233,13 +228,6 @@ public class EditEntityController {
                 return comboCell;
             }
         };
-    }
-
-    @SuppressWarnings("unchecked")
-    private void editFocusedCell() {
-        final TablePosition<ApricotColumnData, ?> focusedCell = columnDefinitionTable.focusModelProperty().get()
-                .focusedCellProperty().get();
-        columnDefinitionTable.edit(focusedCell.getRow(), focusedCell.getTableColumn());
     }
 
     @FXML
