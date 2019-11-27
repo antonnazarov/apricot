@@ -22,40 +22,40 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "apricot_object_layout")
-@NamedQuery(name="ApricotObjectLayout.getLayoutsByType", query="SELECT ol FROM ApricotObjectLayout ol WHERE ol.view = :view AND ol.objectType = :objectType")
-@NamedQuery(name="ApricotObjectLayout.getLayoutByName", query="SELECT ol FROM ApricotObjectLayout ol WHERE ol.view = :view AND ol.objectName = :objectName")
-@NamedQuery(name="ApricotObjectLayout.getLayoutsForView", query="SELECT ol FROM ApricotObjectLayout ol WHERE ol.view = :view")
-@NamedQuery(name="ApricotObjectLayout.getLayoutsForProject", query="SELECT ol FROM ApricotProject p JOIN p.views v JOIN v.objectLayouts ol WHERE p = :project AND ol.objectName = :objectName")
-@NamedQuery(name="ApricotObjectLayout.getRelationshipLayoutsForProject", query="SELECT ol FROM ApricotProject p JOIN p.views v JOIN v.objectLayouts ol WHERE p = :project AND ol.objectType = :objectType AND ol.objectName LIKE CONCAT('%', :objectName, '%')")
+@NamedQuery(name = "ApricotObjectLayout.getLayoutsByType", query = "SELECT ol FROM ApricotObjectLayout ol WHERE ol.view = :view AND ol.objectType = :objectType")
+@NamedQuery(name = "ApricotObjectLayout.getLayoutByName", query = "SELECT ol FROM ApricotObjectLayout ol WHERE ol.view = :view AND ol.objectName = :objectName")
+@NamedQuery(name = "ApricotObjectLayout.getLayoutsForView", query = "SELECT ol FROM ApricotObjectLayout ol WHERE ol.view = :view")
+@NamedQuery(name = "ApricotObjectLayout.getLayoutsForProject", query = "SELECT ol FROM ApricotProject p JOIN p.views v JOIN v.objectLayouts ol WHERE p = :project AND ol.objectName = :objectName")
+@NamedQuery(name = "ApricotObjectLayout.getRelationshipLayoutsForProject", query = "SELECT ol FROM ApricotProject p JOIN p.views v JOIN v.objectLayouts ol WHERE p = :project AND ol.objectType = :objectType AND ol.objectName LIKE CONCAT('%', :objectName, '%')")
 public class ApricotObjectLayout implements Serializable {
 
     private static final long serialVersionUID = -7584762504719191646L;
-    
-    public ApricotObjectLayout() {}
-    
-    public ApricotObjectLayout(LayoutObjectType objectType, String objectName, 
-            String objectLayout, ApricotView view) {
+
+    public ApricotObjectLayout() {
+    }
+
+    public ApricotObjectLayout(LayoutObjectType objectType, String objectName, String objectLayout, ApricotView view) {
         this.objectType = objectType;
         this.objectName = objectName;
         this.objectLayout = objectLayout;
         this.view = view;
     }
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "layout_id")
     private long id;
-    
+
     @Enumerated(EnumType.STRING)
     @Column(name = "object_type")
-    private LayoutObjectType objectType;    
+    private LayoutObjectType objectType;
 
     @Column(name = "object_name")
-    private String objectName;  
-    
+    private String objectName;
+
     @Column(name = "object_layout")
-    private String objectLayout; 
-    
+    private String objectLayout;
+
     @ManyToOne
     @JoinColumn(name = "view_id")
     private ApricotView view;
@@ -99,21 +99,45 @@ public class ApricotObjectLayout implements Serializable {
     public void setView(ApricotView view) {
         this.view = view;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("ApricotObjectLayout: ")
-            .append("id=[").append(id).append("], ")
-            .append("objectName=[").append(objectName).append("], ")
-            .append("objectLayout=[").append(objectLayout).append("]");
-        
+        sb.append("ApricotObjectLayout: ").append("id=[").append(id).append("], ").append("objectName=[")
+                .append(objectName).append("], ").append("objectLayout=[").append(objectLayout).append("]");
+
         return sb.toString();
     }
-    
+
     public ApricotObjectLayout clone() {
-        ApricotObjectLayout clone = new ApricotObjectLayout(this.objectType, this.objectName, this.objectLayout, this.view);
-        
+        ApricotObjectLayout clone = new ApricotObjectLayout(this.objectType, this.objectName, this.objectLayout,
+                this.view);
+
         return clone;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((objectName == null) ? 0 : objectName.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ApricotObjectLayout other = (ApricotObjectLayout) obj;
+        if (objectName == null) {
+            if (other.objectName != null)
+                return false;
+        } else if (!objectName.equals(other.objectName))
+            return false;
+        return true;
     }
 }

@@ -67,6 +67,7 @@ public class EntityStatusChangedEventListener implements ApplicationListener<Ent
         setAligners(false);
         minWidthHandler.enable();
         appController.getMenuCopy().setDisable(false);
+        appController.getMenuMinWidth().setDisable(false);
     }
 
     private void handleNone() {
@@ -74,6 +75,7 @@ public class EntityStatusChangedEventListener implements ApplicationListener<Ent
         setAligners(false);
         minWidthHandler.disable();
         appController.getMenuCopy().setDisable(true);
+        appController.getMenuMinWidth().setDisable(true);
     }
 
     private void handleMany() {
@@ -81,6 +83,7 @@ public class EntityStatusChangedEventListener implements ApplicationListener<Ent
         setAligners(true);
         minWidthHandler.enable();
         appController.getMenuCopy().setDisable(false);
+        appController.getMenuMinWidth().setDisable(false);
     }
 
     private void setAligners(boolean enabled) {
@@ -91,6 +94,10 @@ public class EntityStatusChangedEventListener implements ApplicationListener<Ent
             alignRightHandler.enable();
             sameWidthHandler.enable();
             appController.getMenuLeft().setDisable(false);
+            appController.getMenuRight().setDisable(false);
+            appController.getMenuTop().setDisable(false);
+            appController.getMenuBottom().setDisable(false);
+            appController.getMenuSameWidth().setDisable(false);
         } else {
             alignTopHandler.disable();
             alignBottomHandler.disable();
@@ -98,6 +105,10 @@ public class EntityStatusChangedEventListener implements ApplicationListener<Ent
             alignRightHandler.disable();
             sameWidthHandler.disable();
             appController.getMenuLeft().setDisable(true);
+            appController.getMenuRight().setDisable(true);
+            appController.getMenuTop().setDisable(true);
+            appController.getMenuBottom().setDisable(true);
+            appController.getMenuSameWidth().setDisable(true);
         }
     }
 }

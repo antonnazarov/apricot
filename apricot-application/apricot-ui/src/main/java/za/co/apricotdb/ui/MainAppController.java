@@ -209,6 +209,16 @@ public class MainAppController {
     MenuItem menuPaste;
     @FXML
     MenuItem menuLeft;
+    @FXML
+    MenuItem menuRight;
+    @FXML
+    MenuItem menuTop;
+    @FXML
+    MenuItem menuBottom;
+    @FXML
+    MenuItem menuMinWidth;
+    @FXML
+    MenuItem menuSameWidth;
 
     public void init() {
         parentWindow.setParentPane(mainPane);
@@ -505,7 +515,32 @@ public class MainAppController {
     public void alignLeft(ActionEvent event) {
         alignHandler.alignSelectedEntities(Side.LEFT);
     }
+    
+    @FXML
+    public void alignRight(ActionEvent event) {
+        alignHandler.alignSelectedEntities(Side.RIGHT);
+    }
 
+    @FXML
+    public void alignTop(ActionEvent event) {
+        alignHandler.alignSelectedEntities(Side.TOP);
+    }
+
+    @FXML
+    public void alignBottom(ActionEvent event) {
+        alignHandler.alignSelectedEntities(Side.BOTTOM);
+    }
+
+    @FXML
+    public void minWidth(ActionEvent event) {
+        alignHandler.alignEntitySize(true);
+    }
+    
+    @FXML
+    public void sameWidth(ActionEvent event) {
+        alignHandler.alignEntitySize(false);
+    }
+    
     public TabPane getViewsTabPane() {
         return viewsTabPane;
     }
@@ -528,5 +563,25 @@ public class MainAppController {
     
     public MenuItem getMenuLeft() {
         return menuLeft;
+    }
+    
+    public MenuItem getMenuRight() {
+        return menuRight;
+    }
+    
+    public MenuItem getMenuTop() {
+        return menuTop;
+    }
+    
+    public MenuItem getMenuBottom() {
+        return menuBottom;
+    }
+
+    public MenuItem getMenuMinWidth() {
+        return menuMinWidth;
+    }
+    
+    public MenuItem getMenuSameWidth() {
+        return menuSameWidth;
     }
 }

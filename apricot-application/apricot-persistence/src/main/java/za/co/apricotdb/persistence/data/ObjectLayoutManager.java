@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.persistence.entity.ApricotObjectLayout;
 import za.co.apricotdb.persistence.entity.ApricotProject;
+import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.persistence.entity.LayoutObjectType;
 import za.co.apricotdb.persistence.repository.ApricotObjectLayoutRepository;
@@ -108,5 +109,26 @@ public class ObjectLayoutManager {
         ApricotView managedView = viewManager.getViewById(view.getId());
         managedView.getObjectLayouts().clear();
         viewManager.saveView(managedView);
+    }
+
+    /**
+     * Calculate the rate of the coverage of entities (tables) included in the given
+     * collection by the corresponding layout objects of the project.
+     */
+    public double calcCoverageRate(List<ApricotTable> tables, ApricotView view) {
+        double rate = 0.0;
+
+        int cnt = 0;
+        List<ApricotObjectLayout> layouts = getObjectLayoutsByType(view, LayoutObjectType.TABLE);
+        for (ApricotTable table : tables) {
+            for (ApricotObjectLayout l : layouts) {
+                if (l.getObjectName().equals(table.getName())) {
+                    cnt++;
+                }
+            }
+        }
+        rate = (double) cnt / tables.size();
+
+        return rate;
     }
 }

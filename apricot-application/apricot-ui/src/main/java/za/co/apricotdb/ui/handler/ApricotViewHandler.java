@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
@@ -38,6 +40,7 @@ import za.co.apricotdb.ui.model.EditViewModelBuilder;
 import za.co.apricotdb.ui.model.NewViewModelBuilder;
 import za.co.apricotdb.ui.model.ViewFormModel;
 import za.co.apricotdb.ui.undo.ApricotUndoManager;
+import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.CanvasBuilder;
 
@@ -82,6 +85,9 @@ public class ApricotViewHandler {
 
     @Autowired
     ApricotUndoManager undoManager;
+    
+    @Autowired
+    AlertMessageDecorator alertDecorator;
 
     public List<ApricotView> getAllViews(ApricotProject project) {
         checkGeneralView(project);
@@ -121,6 +127,14 @@ public class ApricotViewHandler {
     }
 
     public void createViewEditor(TabPane viewsTabPane, ApricotView view, Tab tab) throws Exception {
+        
+        //  check if this is not the "Main View"
+        if (view != null && view.isGeneral()) {
+            Alert alert = alertDecorator.getAlert("Edit View", "You cannot edit the Main View", AlertType.WARNING);
+            alert.showAndWait();
+            return;
+        }
+        
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-view-editor.fxml"));
         loader.setControllerFactory(context::getBean);
         Pane window = loader.load();

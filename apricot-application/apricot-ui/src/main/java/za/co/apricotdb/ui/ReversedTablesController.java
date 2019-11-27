@@ -20,7 +20,12 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import za.co.apricotdb.persistence.data.MetaData;
+import za.co.apricotdb.persistence.data.ObjectLayoutManager;
+import za.co.apricotdb.persistence.data.ProjectManager;
+import za.co.apricotdb.persistence.data.ViewManager;
+import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotTable;
+import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
 import za.co.apricotdb.ui.handler.CanvasAlignHandler;
 import za.co.apricotdb.ui.handler.ReverseEngineHandler;
@@ -42,6 +47,15 @@ public class ReversedTablesController {
 
     @Autowired
     CanvasAlignHandler alignHandler;
+
+    @Autowired
+    ObjectLayoutManager layoutManager;
+
+    @Autowired
+    ProjectManager projectManager;
+
+    @Autowired
+    ViewManager viewManager;
 
     @FXML
     TableView<ReversedTableRow> reversedTablesList;
@@ -115,7 +129,11 @@ public class ReversedTablesController {
                 reverseEngineeringParameters)) {
             // refresh the snapshot view
             applicationInitializer.initializeDefault();
-            alignAfterDelay(0.5).play();
+            
+            //  do the automatic alignment only in case of the coverage lower than 50%
+            if (getCoverageRate(included) < 0.5) {
+                alignAfterDelay(0.5).play();
+            }
             getStage().close();
         }
     }
@@ -129,7 +147,7 @@ public class ReversedTablesController {
     public void unselectAll() {
         setSelectedFlag(false);
     }
-    
+
     private void setSelectedFlag(boolean flag) {
         for (ReversedTableRow r : reversedTablesList.getItems()) {
             r.setIncluded(flag);
@@ -148,5 +166,23 @@ public class ReversedTablesController {
         });
 
         return transition;
+    }
+
+    /**
+     * Calculate the coverage rate for the selected tables in the current active
+     * project.
+     */
+    private double getCoverageRate(List<ApricotTable> tables) {
+        double rate = 0.0;
+
+        ApricotProject project = projectManager.findCurrentProject();
+        if (project != null) {
+            ApricotView view = viewManager.getGeneralView(project);
+            if (view != null) {
+                rate = layoutManager.calcCoverageRate(tables, view);
+            }
+        }
+
+        return rate;
     }
 }
