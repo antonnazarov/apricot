@@ -159,7 +159,7 @@ public class EditEntityController {
             }
         };
         columnName.setCellFactory(editCellFactory);
-
+        
         primaryKey.setCellValueFactory(e -> e.getValue().getPrimaryKey());
         primaryKey.setCellFactory(CheckBoxTableCell.forTableColumn(i -> model.getColumns().get(i).getPrimaryKey()));
 

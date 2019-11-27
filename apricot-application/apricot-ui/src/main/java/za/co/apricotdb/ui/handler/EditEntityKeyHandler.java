@@ -21,10 +21,10 @@ public class EditEntityKeyHandler implements EventHandler<KeyEvent> {
     @Override
     public void handle(KeyEvent event) {
         switch (event.getCode()) {
-        case ESCAPE:
-            controller.cancel(null);
-            event.consume();
-            break;
+        //case ESCAPE:
+        //    controller.cancel(null);
+        //    event.consume();
+        //    break;
 
         case ENTER:
             if (controller.getCurrentTab() == CurrentTab.CONSTRAINTS) {

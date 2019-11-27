@@ -7,7 +7,7 @@
     <parent>
         <groupId>za.co.apricot</groupId>
         <artifactId>apricotdb</artifactId>
-        <version>0.8</version>
+        <version>2.0</version>
     </parent>
 
     <artifactId>apricot-metascan</artifactId>
@@ -18,7 +18,7 @@
         <dependency>
             <groupId>za.co.apricot</groupId>
             <artifactId>apricot-persistence</artifactId>
-            <version>0.8</version>
+            <version>2.0</version>
         </dependency>
     </dependencies>
 </project>
