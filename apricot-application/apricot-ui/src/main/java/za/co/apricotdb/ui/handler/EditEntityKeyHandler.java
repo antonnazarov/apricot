@@ -39,8 +39,8 @@ public class EditEntityKeyHandler implements EventHandler<KeyEvent> {
                 //  controller.deleteColumn(null);
             } else {
                 controller.deleteConstraint(null);
+                event.consume();
             }
-            event.consume();
             break;
 
         case DOWN:
