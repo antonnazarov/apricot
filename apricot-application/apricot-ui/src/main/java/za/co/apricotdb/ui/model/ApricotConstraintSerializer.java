@@ -28,7 +28,7 @@ public class ApricotConstraintSerializer {
 
     @Autowired
     PrimaryKeySerializer primaryKeySerializer;
-    
+
     @Autowired
     ApricotConstraintHandler constraintHandler;
 
@@ -42,8 +42,7 @@ public class ApricotConstraintSerializer {
 
     private void updateConstraints(EditEntityModel model) {
         for (ApricotConstraintData cd : model.getConstraints()) {
-            if (cd.getConstraintTypeAsString().equals(ConstraintType.PRIMARY_KEY.name())
-                    || cd.getConstraintTypeAsString().equals(ConstraintType.FOREIGN_KEY.name()) || !cd.isEdited()) {
+            if (!cd.isEdited()) {
                 continue;
             }
 
@@ -57,12 +56,14 @@ public class ApricotConstraintSerializer {
             } else {
                 constraint = model.getTable().getConstraintById(cd.getId());
             }
-
             constraint.setName(cd.getConstraintNameAsString());
-            constraint.setType(ConstraintType.valueOf(cd.getConstraintTypeAsString()));
-            constraint.setTable(model.getTable());
 
-            serializeConstraintColumns(constraint, cd, model);
+            if (!cd.getConstraintTypeAsString().equals(ConstraintType.PRIMARY_KEY.name())
+                    && cd.getConstraintTypeAsString().equals(ConstraintType.FOREIGN_KEY.name())) {
+                constraint.setType(ConstraintType.valueOf(cd.getConstraintTypeAsString()));
+                constraint.setTable(model.getTable());
+                serializeConstraintColumns(constraint, cd, model);
+            }
         }
     }
 

@@ -74,7 +74,8 @@ public class ApricotConstraintHandler {
 
     @Transactional
     public void openConstraintEditorForm(boolean newConstraint, ApricotConstraintData constraintData,
-            EditEntityModel editEntityModel, TableView<ApricotConstraintData> constraintsTable) throws IOException {
+            EditEntityModel editEntityModel, TableView<ApricotConstraintData> constraintsTable, boolean editableFields)
+            throws IOException {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/za/co/apricotdb/ui/apricot-constraint-editor.fxml"));
         loader.setControllerFactory(context::getBean);
@@ -103,7 +104,7 @@ public class ApricotConstraintHandler {
         EditConstraintController controller = loader.<EditConstraintController>getController();
 
         EditConstraintModel model = modelBuilder.buildModel(newConstraint, constraintData, editEntityModel);
-        controller.init(model, constraintsTable, editEntityModel);
+        controller.init(model, constraintsTable, editEntityModel, editableFields);
 
         dialog.show();
     }

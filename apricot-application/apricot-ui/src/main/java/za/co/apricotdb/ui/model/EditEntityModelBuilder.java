@@ -18,6 +18,7 @@ import za.co.apricotdb.persistence.entity.ApricotColumnConstraint;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotTable;
+import za.co.apricotdb.persistence.entity.ConstraintType;
 import za.co.apricotdb.support.excel.TableWrapper;
 import za.co.apricotdb.support.excel.TableWrapper.ReportRow;
 
@@ -96,6 +97,14 @@ public class EditEntityModelBuilder {
                     constrCols.add(acd);
                 }
             }
+            
+            if (c.getType() == ConstraintType.FOREIGN_KEY) {
+                List<ApricotRelationship> rls = relationshipManager.findRelationshipsByConstraint(c);
+                if (rls != null && rls.size() == 1) {
+                    constraint.setParentName(rls.get(0).getParent().getTable().getName());
+                }
+            }
+            
             constraints.add(constraint);
         }
     }
