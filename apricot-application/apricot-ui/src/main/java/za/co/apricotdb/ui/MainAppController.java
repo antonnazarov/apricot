@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeView;
@@ -139,6 +140,9 @@ public class MainAppController {
 
     @FXML
     ComboBox<String> scale;
+    
+    @FXML
+    SplitPane splitPane;
 
     // tool bar
     @FXML
@@ -221,8 +225,9 @@ public class MainAppController {
     MenuItem menuSameWidth;
 
     public void init() {
+        parentWindow.init(this);
         parentWindow.setParentPane(mainPane);
-
+        
         selTabHandler.initTabPane(viewsTabPane, scale);
 
         projectsTreeView.setOnContextMenuRequested(e -> {

@@ -34,22 +34,18 @@ public class ParentWindow {
 
     private Pane mainAppPane;
     private Application application;
+    private MainAppController controller;
+
+    public void init(MainAppController controller) {
+        this.controller = controller;
+    }
 
     public void setParentPane(Pane mainAppPane) {
         this.mainAppPane = mainAppPane;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public TreeView<ProjectExplorerItem> getProjectTreeView() {
-        TreeView<ProjectExplorerItem> ret = null;
-
-        List<Node> l = getCenterNode().getItems();
-
-        if (l != null && l.size() == 2 && l.get(0) instanceof TreeView) {
-            ret = (TreeView) l.get(0);
-        }
-
-        return ret;
+        return controller.projectsTreeView;
     }
 
     public TabPane getProjectTabPane() {
@@ -122,11 +118,11 @@ public class ParentWindow {
     public Pane getMainAppPane() {
         return mainAppPane;
     }
-    
+
     public Window getWindow() {
         return mainAppPane.getScene().getWindow();
     }
-    
+
     public Application getApplication() {
         return application;
     }
