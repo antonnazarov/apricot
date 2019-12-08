@@ -98,6 +98,27 @@ public class TreeViewHandler {
         }
     }
 
+    /**
+     * Sort entities in the Project Explorer list to show the entities, included
+     * into the current view first, and then other entities, not included into the
+     * view.
+     */
+    public void sortEntitiesByView() {
+        TreeView<ProjectExplorerItem> tw = getTreeView();
+        TreeItem<ProjectExplorerItem> root = tw.getRoot();
+        List<TreeItem<ProjectExplorerItem>> entities = root.getChildren();
+
+        entities.sort((TreeItem<ProjectExplorerItem> e1, TreeItem<ProjectExplorerItem> e2) -> {
+            if (e1.getValue().isIncluded() && !e2.getValue().isIncluded()) {
+                return -1;
+            } else if (!e1.getValue().isIncluded() && e2.getValue().isIncluded()) {
+                return 1;
+            }
+
+            return e1.getValue().getItemName().compareTo(e2.getValue().getItemName());
+        });
+    }
+
     public void deselectProjectExplorerItems() {
         TreeView<ProjectExplorerItem> tw = getTreeView();
         TreeItem<ProjectExplorerItem> root = tw.getRoot();

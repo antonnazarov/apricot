@@ -155,6 +155,7 @@ public class ViewFormController {
                 model.getTabInfo().setView(view);
                 canvasHandler.populateCanvas(model.getSnapshot(), view, model.getTabInfo().getCanvas());
                 treeViewHandler.markEntitiesIncludedIntoView(view);
+                treeViewHandler.sortEntitiesByView();
             }
         }
 

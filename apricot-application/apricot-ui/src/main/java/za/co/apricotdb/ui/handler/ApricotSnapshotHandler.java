@@ -176,6 +176,7 @@ public class ApricotSnapshotHandler {
             if (tabInfo != null) {
                 synchronizeViewTab(tabInfo);
                 treeViewHandler.markEntitiesIncludedIntoView(tabInfo.getView());
+                treeViewHandler.sortEntitiesByView();
             }
         }
     }

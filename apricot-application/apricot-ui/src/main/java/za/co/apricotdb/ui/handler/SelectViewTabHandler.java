@@ -47,6 +47,7 @@ public class SelectViewTabHandler {
                     TabInfoObject tabInfo = TabInfoObject.getTabInfo(t1);
                     viewManager.setCurrentView(tabInfo.getView());
                     treeViewHandler.markEntitiesIncludedIntoView(tabInfo.getView());
+                    treeViewHandler.sortEntitiesByView();
                     scaleHandler.resetScaleIndicator(scale);
 
                     // notify listener that the tab has been changed and there is possible change in
