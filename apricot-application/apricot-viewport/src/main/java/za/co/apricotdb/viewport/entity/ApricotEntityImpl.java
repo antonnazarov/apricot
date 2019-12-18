@@ -25,7 +25,7 @@ public final class ApricotEntityImpl implements ApricotEntity {
     private final List<FieldDetail> details;
     private final boolean slave;
     private final EntityShapeBuilder shapeBuilder;
-    private ElementStatus status = ElementStatus.DEFAULT;
+    private ElementStatus status = ElementStatus.HIDDEN;
     private ApricotEntityShape entityShape;
     private List<ApricotRelationship> primaryLinks = new ArrayList<>();
     private List<ApricotRelationship> foreignLinks = new ArrayList<>();
@@ -50,24 +50,27 @@ public final class ApricotEntityImpl implements ApricotEntity {
 
     @Override
     public void setElementStatus(ElementStatus status) {
-        this.status = status;
+        // only change the status if the given one is different from the current one
+        if (this.status != status) {
+            this.status = status;
 
-        switch (status) {
-        case DEFAULT:
-            entityShape.setDefault();
-            makePrimaryRelationshipsDefault();
-            break;
-        case SELECTED:
-            entityShape.setSelected();
-            canvas.sendToFront(this);
-            makePrimaryRelationshipsSelected();
-            break;
-        default:
-            break;
+            switch (status) {
+            case DEFAULT:
+                entityShape.setDefault();
+                makePrimaryRelationshipsDefault();
+                break;
+            case SELECTED:
+                entityShape.setSelected();
+                canvas.sendToFront(this);
+                makePrimaryRelationshipsSelected();
+                break;
+            default:
+                break;
+            }
+
+            // notify the UI- side about the status was just changed
+            canvas.publishEvent(new EntityStatusChangedEvent(canvas));
         }
-        
-        //  notify the UI- side about the status was just changed 
-        canvas.publishEvent(new EntityStatusChangedEvent(canvas));
     }
 
     private void makePrimaryRelationshipsDefault() {

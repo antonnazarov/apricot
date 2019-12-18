@@ -44,10 +44,12 @@ public class ApricotRelationshipImpl implements ApricotRelationship {
 
     @Override
     public void setElementStatus(ElementStatus status) {
-        this.status = status;
-        if (relationshipShape != null) {
-            setShapeStyle();
-            canvas.sendToFront(this);
+        if (this.status != status) {
+            this.status = status;
+            if (relationshipShape != null) {
+                setShapeStyle();
+                canvas.sendToFront(this);
+            }
         }
     }
 
