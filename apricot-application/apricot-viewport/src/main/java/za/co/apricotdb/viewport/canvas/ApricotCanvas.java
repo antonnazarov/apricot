@@ -77,4 +77,6 @@ public interface ApricotCanvas {
     double getScale();
     
     void selectAllElements();
+    
+    String getDetailLevel();
 }

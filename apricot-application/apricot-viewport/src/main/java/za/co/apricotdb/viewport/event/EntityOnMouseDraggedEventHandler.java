@@ -15,6 +15,7 @@ import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ElementStatus;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
 import za.co.apricotdb.viewport.notification.CanvasChangedEvent;
+import za.co.apricotdb.viewport.relationship.RelationshipBatchBuilder;
 
 /**
  * The mouse is dragged event applied on the source Entity.
@@ -28,12 +29,14 @@ public class EntityOnMouseDraggedEventHandler implements EventHandler<MouseEvent
     private String tableName = null;
     private ApricotCanvas canvas = null;
     private GroupOperationHandler groupHandler = null;
+    private RelationshipBatchBuilder relationshipBuilder = null;
 
-    public EntityOnMouseDraggedEventHandler(String tableName, ApricotCanvas canvas,
-            GroupOperationHandler groupHandler) {
+    public EntityOnMouseDraggedEventHandler(String tableName, ApricotCanvas canvas, GroupOperationHandler groupHandler,
+            RelationshipBatchBuilder relationshipBuilder) {
         this.tableName = tableName;
         this.canvas = canvas;
         this.groupHandler = groupHandler;
+        this.relationshipBuilder = relationshipBuilder;
     }
 
     @Override
@@ -56,13 +59,13 @@ public class EntityOnMouseDraggedEventHandler implements EventHandler<MouseEvent
                     case ENTITY_POSITION_DRAGGING:
                         groupHandler.setEntityTranslatePosition(canvas, newTranslateX, newTranslateY,
                                 ElementStatus.SELECTED);
-                        canvas.buildRelationships();
+                        relationshipBuilder.buildRelationships(canvas.getSelectedEntities(), canvas.getDetailLevel());
                         scene.setCursor(Cursor.HAND);
 
                         break;
                     case ENTITY_HORIZONTAL_DRAGGING:
                         setNewWidth(b, pos, offsetX);
-                        canvas.buildRelationships();
+                        relationshipBuilder.buildRelationships(canvas.getSelectedEntities(), canvas.getDetailLevel());
                         scene.setCursor(Cursor.E_RESIZE);
 
                         break;
