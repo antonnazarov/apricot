@@ -37,12 +37,14 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
     private ScrollPane scroll;
     private double scale = 1;
     private final RelationshipBatchBuilder relationshipsBuilder = new RelationshipBatchBuilder();
+    private SelectedElementsBuffer selectedElementsBuffer;
 
     public ApricotCanvasImpl(ApplicationEventPublisher applicationEventPublisher, String detailLevel,
             String erdNotation) {
         this.applicationEventPublisher = applicationEventPublisher;
         this.detailLevel = detailLevel;
         this.erdNotation = erdNotation;
+        this.selectedElementsBuffer = new SelectedElementsBuffer(this);
     }
 
     /**
@@ -341,5 +343,10 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
     @Override
     public String getDetailLevel() {
         return detailLevel;
+    }
+
+    @Override
+    public SelectedElementsBuffer getSelectedElementsBuffer() {
+        return selectedElementsBuffer;
     }
 }

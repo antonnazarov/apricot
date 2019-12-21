@@ -59,13 +59,13 @@ public class EntityOnMouseDraggedEventHandler implements EventHandler<MouseEvent
                     case ENTITY_POSITION_DRAGGING:
                         groupHandler.setEntityTranslatePosition(canvas, newTranslateX, newTranslateY,
                                 ElementStatus.SELECTED);
-                        relationshipBuilder.buildRelationships(canvas.getSelectedEntities(), canvas.getDetailLevel());
+                        relationshipBuilder.buildRelationships(canvas);
                         scene.setCursor(Cursor.HAND);
 
                         break;
                     case ENTITY_HORIZONTAL_DRAGGING:
                         setNewWidth(b, pos, offsetX);
-                        relationshipBuilder.buildRelationships(canvas.getSelectedEntities(), canvas.getDetailLevel());
+                        relationshipBuilder.buildRelationships(canvas);
                         scene.setCursor(Cursor.E_RESIZE);
 
                         break;

@@ -81,4 +81,17 @@ public class TableManager {
     public void deleteTable(ApricotTable table) {
         tableRep.delete(table);
     }
+    
+    public List<ApricotTable> findTablesByName(String searchString) {
+        List<ApricotTable> ret = new ArrayList<>();
+        ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
+
+
+        TypedQuery<ApricotTable> query = em.createNamedQuery("ApricotTable.findTablesByName", ApricotTable.class);
+        query.setParameter("search", searchString);
+        query.setParameter("snapshot", snapshot);
+        ret = query.getResultList();
+
+        return ret;
+    }
 }

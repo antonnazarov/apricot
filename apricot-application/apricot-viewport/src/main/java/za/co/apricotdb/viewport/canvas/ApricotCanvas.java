@@ -79,4 +79,6 @@ public interface ApricotCanvas {
     void selectAllElements();
     
     String getDetailLevel();
+    
+    SelectedElementsBuffer getSelectedElementsBuffer();
 }

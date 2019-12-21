@@ -16,6 +16,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -34,6 +35,7 @@ import za.co.apricotdb.ui.handler.ApricotViewHandler;
 import za.co.apricotdb.ui.handler.CanvasScaleHandler;
 import za.co.apricotdb.ui.handler.CompareSnapshotsHandler;
 import za.co.apricotdb.ui.handler.EntityAlignHandler;
+import za.co.apricotdb.ui.handler.EntityFilterHandler;
 import za.co.apricotdb.ui.handler.ExcelReportHandler;
 import za.co.apricotdb.ui.handler.GenerateScriptHandler;
 import za.co.apricotdb.ui.handler.ProjectExplorerContextMenuHandler;
@@ -125,6 +127,9 @@ public class MainAppController {
     
     @Autowired
     EntityAlignHandler alignHandler;
+    
+    @Autowired
+    EntityFilterHandler filterHandler;
 
     @FXML
     AnchorPane mainPane;
@@ -223,6 +228,9 @@ public class MainAppController {
     MenuItem menuMinWidth;
     @FXML
     MenuItem menuSameWidth;
+    
+    @FXML
+    TextField filterField;
 
     public void init() {
         parentWindow.init(this);
@@ -588,5 +596,15 @@ public class MainAppController {
     
     public MenuItem getMenuSameWidth() {
         return menuSameWidth;
+    }
+    
+    @FXML
+    public void filterOn(ActionEvent event) {
+        filterHandler.setupEntityFilter(filterField.getText());
+    }
+    
+    @FXML
+    public void filterReset(ActionEvent event) {
+
     }
 }

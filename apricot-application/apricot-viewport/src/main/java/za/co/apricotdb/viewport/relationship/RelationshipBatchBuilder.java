@@ -10,6 +10,8 @@ import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
 import javafx.geometry.Side;
+import za.co.apricotdb.viewport.canvas.ApricotCanvas;
+import za.co.apricotdb.viewport.canvas.SelectedElementsBuffer;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 import za.co.apricotdb.viewport.entity.shape.DefaultEntityShape;
 import za.co.apricotdb.viewport.relationship.shape.RelationshipTopology;
@@ -33,20 +35,25 @@ public class RelationshipBatchBuilder {
     }
 
     /**
-     * Draw/re-draw the relationships for the given entities and the detailLevel.
+     * Rebuild relationships, using the buffer of the currently
      */
-    public void buildRelationships(List<ApricotEntity> entities, String detailLevel) {
+    public void buildRelationships(ApricotCanvas canvas) {
         Set<ApricotEntity> relatedEntities = new HashSet<>();
         Set<ApricotRelationship> relatedRelationships = new HashSet<>();
-        getRelatedObjects(entities, relatedEntities, relatedRelationships);
-        
-        buildRelationships(new ArrayList<ApricotEntity>(relatedEntities), new ArrayList<ApricotRelationship>(relatedRelationships), detailLevel);
+        SelectedElementsBuffer buffer = canvas.getSelectedElementsBuffer();
+        buffer.getRelatedSelectedObjects(relatedEntities, relatedRelationships);
+
+        buildRelationships(new ArrayList<ApricotEntity>(relatedEntities),
+                new ArrayList<ApricotRelationship>(relatedRelationships), canvas.getDetailLevel());
+
     }
-    
+
     /**
-     * Draw/re-draw the relationships for the given entities, relationships and the detailLevel.
+     * Draw/re-draw the relationships for the given entities, relationships and the
+     * detailLevel.
      */
-    public void buildRelationships(List<ApricotEntity> entities, List<ApricotRelationship> relationships, String detailLevel) {
+    public void buildRelationships(List<ApricotEntity> entities, List<ApricotRelationship> relationships,
+            String detailLevel) {
         for (ApricotEntity entity : entities) {
             if (entity.getEntityShape() != null) {
                 if (entity.getEntityShape() instanceof DefaultEntityShape) {
@@ -136,38 +143,6 @@ public class RelationshipBatchBuilder {
 
         for (ApricotRelationship r : relationships) {
             r.buildShape();
-        }
-    }
-
-    /**
-     * Collect all related entities and relationships, eligible for the redrawing on
-     * the canvas.
-     */
-    private void getRelatedObjects(List<ApricotEntity> entities, Set<ApricotEntity> relatedEntities,
-            Set<ApricotRelationship> relatedRelationships) {
-
-        relatedEntities.clear();
-        relatedRelationships.clear();
-
-        for (ApricotEntity e : entities) {
-            findRelatedEntities(e, relatedEntities);
-            relatedEntities.add(e);
-        }
-
-        for (ApricotEntity e : relatedEntities) {
-            relatedRelationships.addAll(e.getPrimaryLinks());
-            relatedRelationships.addAll(e.getForeignLinks());
-        }
-    }
-
-    private void findRelatedEntities(ApricotEntity e, Set<ApricotEntity> relatedEntities) {
-        // primary links
-        for (ApricotRelationship r : e.getPrimaryLinks()) {
-            relatedEntities.add(r.getChild());
-        }
-        // foreign links
-        for (ApricotRelationship r : e.getForeignLinks()) {
-            relatedEntities.add(r.getParent());
         }
     }
 }

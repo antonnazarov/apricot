@@ -1,5 +1,6 @@
 package za.co.apricotdb.ui;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Window;
+import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.ui.handler.ProjectExplorerItem;
 
 /**
@@ -35,6 +37,7 @@ public class ParentWindow {
     private Pane mainAppPane;
     private Application application;
     private MainAppController controller;
+    private List<ApricotTable> filterTables = new ArrayList<>();
 
     public void init(MainAppController controller) {
         this.controller = controller;
@@ -130,6 +133,10 @@ public class ParentWindow {
     public void setApplication(Application application) {
         this.application = application;
     }
+    
+    public List<ApricotTable> getFilterTables() {
+        return filterTables;
+    }    
 
     /**
      * Initialize the menu items and buttons depending on the empty/non empty
