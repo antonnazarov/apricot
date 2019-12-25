@@ -64,6 +64,9 @@ public final class ApricotEntityImpl implements ApricotEntity {
                 canvas.sendToFront(this);
                 makePrimaryRelationshipsSelected();
                 break;
+            case GRAYED:
+                entityShape.setGrayed();
+                break;
             default:
                 break;
             }

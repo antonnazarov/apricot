@@ -69,7 +69,7 @@ public class ApricotCanvasHandler {
      * provided skin.
      */
     @Transactional
-    public void populateCanvas(ApricotSnapshot snapshot, ApricotView view, ApricotCanvas canvas) {
+    public List<ApricotTable> populateCanvas(ApricotSnapshot snapshot, ApricotView view, ApricotCanvas canvas) {
         ApricotView v = viewHandler.readApricotView(view);
         // clean the canvas first
         canvas.cleanCanvas();
@@ -89,6 +89,8 @@ public class ApricotCanvasHandler {
             runAllocationAfterDelay(canvas, v, 0, ElementType.ENTITY).play();
             runAllocationAfterDelay(canvas, v, 0.8, ElementType.RELATIONSHIP).play();
         }
+        
+        return tables;
     }
 
     /**

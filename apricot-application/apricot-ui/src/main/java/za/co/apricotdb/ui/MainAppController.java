@@ -121,13 +121,13 @@ public class MainAppController {
 
     @Autowired
     CompareSnapshotsHandler compareSnapshotsHandler;
-    
+
     @Autowired
     ApricotClipboardHandler clipboardHandler;
-    
+
     @Autowired
     EntityAlignHandler alignHandler;
-    
+
     @Autowired
     EntityFilterHandler filterHandler;
 
@@ -145,7 +145,7 @@ public class MainAppController {
 
     @FXML
     ComboBox<String> scale;
-    
+
     @FXML
     SplitPane splitPane;
 
@@ -228,14 +228,14 @@ public class MainAppController {
     MenuItem menuMinWidth;
     @FXML
     MenuItem menuSameWidth;
-    
+
     @FXML
     TextField filterField;
 
     public void init() {
         parentWindow.init(this);
         parentWindow.setParentPane(mainPane);
-        
+
         selTabHandler.initTabPane(viewsTabPane, scale);
 
         projectsTreeView.setOnContextMenuRequested(e -> {
@@ -270,6 +270,8 @@ public class MainAppController {
                 tbSearch, tbAlignLeft, tbAlignRight, tbAlignTop, tbAlignBottom, tbSameWidth, tbMinimizeWidth,
                 tbAllocateEntities, tbResetAllocation, tbExcelReport, tbInsertScript, tbDeleteScript, tbDropScript,
                 tbReverseEngineering);
+
+        filterField.setText("*");
     }
 
     public void save(ActionEvent event) {
@@ -504,18 +506,18 @@ public class MainAppController {
     public void refresh(ActionEvent event) {
         snapshotHandler.syncronizeSnapshot(false);
     }
-    
+
     @FXML
     public void copy(ActionEvent event) {
         clipboardHandler.copySelectedToClipboard();
         menuPaste.setDisable(false);
     }
-    
+
     @FXML
     public void paste(ActionEvent event) {
         clipboardHandler.pasteSelectedFromClipboard();
     }
-    
+
     @FXML
     public void selectAll(ActionEvent event) {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
@@ -523,12 +525,12 @@ public class MainAppController {
             canvas.selectAllElements();
         }
     }
-    
+
     @FXML
     public void alignLeft(ActionEvent event) {
         alignHandler.alignSelectedEntities(Side.LEFT);
     }
-    
+
     @FXML
     public void alignRight(ActionEvent event) {
         alignHandler.alignSelectedEntities(Side.RIGHT);
@@ -548,12 +550,12 @@ public class MainAppController {
     public void minWidth(ActionEvent event) {
         alignHandler.alignEntitySize(true);
     }
-    
+
     @FXML
     public void sameWidth(ActionEvent event) {
         alignHandler.alignEntitySize(false);
     }
-    
+
     public TabPane getViewsTabPane() {
         return viewsTabPane;
     }
@@ -569,23 +571,23 @@ public class MainAppController {
     public MenuItem getMenuUndo() {
         return menuUndo;
     }
-    
+
     public MenuItem getMenuCopy() {
         return menuCopy;
     }
-    
+
     public MenuItem getMenuLeft() {
         return menuLeft;
     }
-    
+
     public MenuItem getMenuRight() {
         return menuRight;
     }
-    
+
     public MenuItem getMenuTop() {
         return menuTop;
     }
-    
+
     public MenuItem getMenuBottom() {
         return menuBottom;
     }
@@ -593,18 +595,19 @@ public class MainAppController {
     public MenuItem getMenuMinWidth() {
         return menuMinWidth;
     }
-    
+
     public MenuItem getMenuSameWidth() {
         return menuSameWidth;
     }
-    
+
     @FXML
     public void filterOn(ActionEvent event) {
         filterHandler.setupEntityFilter(filterField.getText());
     }
-    
+
     @FXML
     public void filterReset(ActionEvent event) {
-
+        filterHandler.resetEntityFilter();
+        filterField.setText("*");
     }
 }

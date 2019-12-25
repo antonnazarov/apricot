@@ -24,7 +24,7 @@ import za.co.apricotdb.viewport.relationship.ApricotRelationship;
  * @since 27/11/2018
  */
 public abstract class DefaultEntityShape extends ApricotEntityShape {
-    
+
     public static final double VERTICAL_PRIMARY_ENDPOINT_CORRECTION = 12;
     public static final double VERTICAL_NON_PRIMARY_ENDPOINT_CORRECTION = -3;
 
@@ -44,7 +44,7 @@ public abstract class DefaultEntityShape extends ApricotEntityShape {
     protected final GridPane primaryPanel;
     protected final GridPane nonPrimaryPanel;
     private final Map<String, Text> fieldsMapping = new HashMap<>();
-    
+
     private final NonIdentifyingStack leftStack = new NonIdentifyingStack(this, Side.LEFT);
     private final NonIdentifyingStack rightStack = new NonIdentifyingStack(this, Side.RIGHT);
     private final IdentifyingStack topStack = new IdentifyingStack(this);
@@ -68,12 +68,12 @@ public abstract class DefaultEntityShape extends ApricotEntityShape {
         }
         return text;
     }
-    
+
     @Override
     public double getFieldLocalY(String name) {
         double localY = 0;
         Text field = getFieldByName(name);
-        
+
         if (nonPrimaryPanel.getChildren().contains(field)) {
             localY = field.getLayoutY() + nonPrimaryPanel.getLayoutY() + VERTICAL_NON_PRIMARY_ENDPOINT_CORRECTION;
         } else {
@@ -112,14 +112,14 @@ public abstract class DefaultEntityShape extends ApricotEntityShape {
     public IdentifyingStack getTopStack() {
         return topStack;
     }
-    
+
     @Override
     public void resetAllStacks() {
         leftStack.clear();
         rightStack.clear();
         topStack.clear();
     }
-    
+
     @Override
     public Point2D getStackRelationshipStart(ApricotRelationship relationship) {
         Point2D ret = null;
@@ -130,10 +130,10 @@ public abstract class DefaultEntityShape extends ApricotEntityShape {
         if (ret == null) {
             ret = topStack.getRelationshipStart(relationship);
         }
-        
+
         return ret;
     }
-    
+
     @Override
     public Point2D getStackRelationshipEnd(ApricotRelationship relationship) {
         Point2D ret = null;
@@ -144,7 +144,25 @@ public abstract class DefaultEntityShape extends ApricotEntityShape {
         if (ret == null) {
             ret = topStack.getRelationshipEnd(relationship);
         }
-        
+
         return ret;
+    }
+
+    protected void setTextColor(Color color, boolean markFk) {
+        colorPanelText(primaryPanel, color, markFk);
+        colorPanelText(nonPrimaryPanel, color, markFk);
+    }
+
+    private void colorPanelText(GridPane panel, Color color, boolean markFk) {
+        for (Node n : panel.getChildren()) {
+            if (n instanceof Text) {
+                if (markFk && n.getUserData() != null && n.getUserData() instanceof Boolean
+                        && (Boolean) n.getUserData()) {
+                    ((Text) n).setFill(Color.BLUE);
+                } else {
+                    ((Text) n).setFill(color);
+                }
+            }
+        }
     }
 }

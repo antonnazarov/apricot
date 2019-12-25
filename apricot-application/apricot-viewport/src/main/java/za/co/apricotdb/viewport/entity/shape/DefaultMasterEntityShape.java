@@ -20,20 +20,8 @@ public class DefaultMasterEntityShape extends DefaultEntityShape {
 
     @Override
     public void setDefault() {
-        primaryPanel.setPadding(STANDARD_PANEL_INSETS);
-        nonPrimaryPanel.setPadding(STANDARD_PANEL_INSETS);
-
-        BorderStroke primaryBs = new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY,
-                new BorderWidths(STANDARD_BORDER_WIDTH));
-        BorderStroke nonPrimaryBs = new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY,
-                new BorderWidths(0, STANDARD_BORDER_WIDTH, STANDARD_BORDER_WIDTH, STANDARD_BORDER_WIDTH), Insets.EMPTY);
-        Border b = new Border(primaryBs);
-        primaryPanel.setBorder(b);
-        b = new Border(nonPrimaryBs);
-        nonPrimaryPanel.setBorder(b);
-        
-        primaryPanel.setBackground(MASTER_PANEL_BACKGROUND);
-        nonPrimaryPanel.setBackground(MASTER_PANEL_BACKGROUND);
+        setDefault(Color.BLACK);
+        setTextColor(Color.BLACK, true);
     }
 
     @Override
@@ -49,20 +37,41 @@ public class DefaultMasterEntityShape extends DefaultEntityShape {
         primaryPanel.setBorder(b);
         b = new Border(nonPrimaryBs);
         nonPrimaryPanel.setBorder(b);
-        
+
         primaryPanel.setBackground(MASTER_PANEL_BACKGROUND);
         nonPrimaryPanel.setBackground(MASTER_PANEL_BACKGROUND);
+        
+        setTextColor(Color.BLACK, true);
     }
 
     @Override
     public void setGrayed() {
-        throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose
-                                                                       // Tools | Templates.
+        setDefault(Color.LIGHTGREY);
+        setTextColor(Color.LIGHTGREY, false);
     }
 
     @Override
     public void setHidden() {
         throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose
                                                                        // Tools | Templates.
+    }
+
+    private void setDefault(Color color) {
+        primaryPanel.setPadding(STANDARD_PANEL_INSETS);
+        nonPrimaryPanel.setPadding(STANDARD_PANEL_INSETS);
+
+        BorderStroke primaryBs = new BorderStroke(color, BorderStrokeStyle.SOLID, CornerRadii.EMPTY,
+                new BorderWidths(STANDARD_BORDER_WIDTH));
+        BorderStroke nonPrimaryBs = new BorderStroke(color, BorderStrokeStyle.SOLID, CornerRadii.EMPTY,
+                new BorderWidths(0, STANDARD_BORDER_WIDTH, STANDARD_BORDER_WIDTH, STANDARD_BORDER_WIDTH), Insets.EMPTY);
+        Border b = new Border(primaryBs);
+        primaryPanel.setBorder(b);
+        b = new Border(nonPrimaryBs);
+        nonPrimaryPanel.setBorder(b);
+
+        primaryPanel.setBackground(MASTER_PANEL_BACKGROUND);
+        nonPrimaryPanel.setBackground(MASTER_PANEL_BACKGROUND);
+
+        header.setFill(color);
     }
 }

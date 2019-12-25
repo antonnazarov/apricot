@@ -45,9 +45,18 @@ public class TreeViewHandler {
 
     @Autowired
     ApricotViewHandler viewHandler;
+    
+    @Autowired
+    EntityFilterHandler filterHandler;
 
     public void populate(ApricotProject project, ApricotSnapshot snapshot) {
-        List<ApricotTable> tables = tableManager.getTablesForSnapshot(snapshot);
+        List<ApricotTable> tables = new ArrayList<>();
+        if (filterHandler.isFilterOn()) {
+            tables = filterHandler.getFilterTables();
+        } else {
+            tables = tableManager.getTablesForSnapshot(snapshot);
+        }
+
         TreeItem<ProjectExplorerItem> root = new TreeItem<>(buildItemNode(project.getName(), ItemType.PROJECT, true));
         root.getChildren().addAll(getTables(tables));
         root.setExpanded(true);
@@ -81,9 +90,6 @@ public class TreeViewHandler {
      */
     public void markEntitiesIncludedIntoView(ApricotView view) {
         deselectProjectExplorerItems();
-        if (view.getName().equals(ApricotView.MAIN_VIEW)) {
-            return;
-        }
 
         ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
 
