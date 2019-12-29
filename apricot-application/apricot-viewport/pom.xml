@@ -13,4 +13,12 @@
     <artifactId>apricot-viewport</artifactId>
     <packaging>jar</packaging>
     <name>apricot-viewport</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>za.co.apricot</groupId>
+            <artifactId>apricot-support</artifactId>
+            <version>2.1</version>
+        </dependency>
+    </dependencies>
 </project>

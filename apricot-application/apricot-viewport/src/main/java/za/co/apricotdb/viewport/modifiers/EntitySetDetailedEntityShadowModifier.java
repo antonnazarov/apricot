@@ -1,5 +1,7 @@
 package za.co.apricotdb.viewport.modifiers;
 
+import org.springframework.stereotype.Component;
+
 import javafx.scene.Node;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.GridPane;
@@ -9,6 +11,7 @@ import za.co.apricotdb.viewport.canvas.ApricotShape;
 import za.co.apricotdb.viewport.canvas.ElementStatus;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
 
+@Component
 public class EntitySetDetailedEntityShadowModifier implements ElementVisualModifier {
 
     @Override

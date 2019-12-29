@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.scene.Node;
+import za.co.apricotdb.support.util.SpringContext;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ElementStatus;
 import za.co.apricotdb.viewport.canvas.ElementType;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
 import za.co.apricotdb.viewport.entity.shape.DefaultEntityShape;
 import za.co.apricotdb.viewport.entity.shape.EntityShapeBuilder;
+import za.co.apricotdb.viewport.modifiers.EntitySetDetailedEntityShadowModifier;
 import za.co.apricotdb.viewport.notification.EntityStatusChangedEvent;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 
@@ -30,6 +32,7 @@ public final class ApricotEntityImpl implements ApricotEntity {
     private List<ApricotRelationship> primaryLinks = new ArrayList<>();
     private List<ApricotRelationship> foreignLinks = new ArrayList<>();
     private ApricotCanvas canvas;
+    private EntitySetDetailedEntityShadowModifier shadowModifier;
 
     /**
      * Construct a new instance of the ApricotEntity.
@@ -41,6 +44,8 @@ public final class ApricotEntityImpl implements ApricotEntity {
         this.slave = slave;
         this.shapeBuilder = shapeBuilder;
         this.canvas = canvas;
+        
+        shadowModifier = SpringContext.getBean(EntitySetDetailedEntityShadowModifier.class);
     }
 
     @Override
@@ -70,6 +75,7 @@ public final class ApricotEntityImpl implements ApricotEntity {
             default:
                 break;
             }
+            shadowModifier.modify(entityShape);
 
             // notify the UI- side about the status was just changed
             canvas.publishEvent(new EntityStatusChangedEvent(canvas));
