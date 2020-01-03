@@ -2,6 +2,7 @@ package za.co.apricotdb.viewport.relationship.shape;
 
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
 import za.co.apricotdb.viewport.canvas.ApricotElement;
@@ -72,8 +73,17 @@ public abstract class ApricotRelationshipShape extends Group implements ApricotS
 
     @Override
     public void setGrayed() {
-        // TODO Auto-generated method stub
+        if (path != null) {
+            path.setStrokeWidth(RELATIONSHIP_DEFAULT_STROKE_WIDTH);
+            path.setStroke(Color.LIGHTGRAY);
+        }
 
+        if (startElement != null) {
+            setGroupStroke(startElement, RELATIONSHIP_DEFAULT_STROKE_WIDTH);
+        }
+        if (endElement != null) {
+            setGroupStroke(endElement, RELATIONSHIP_DEFAULT_STROKE_WIDTH);
+        }
     }
 
     @Override

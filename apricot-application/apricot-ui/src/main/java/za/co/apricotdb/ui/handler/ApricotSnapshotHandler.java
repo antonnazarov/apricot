@@ -44,6 +44,7 @@ import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ElementStatus;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
+import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 
 @Component
 public class ApricotSnapshotHandler {
@@ -195,16 +196,20 @@ public class ApricotSnapshotHandler {
         List<ApricotTable> tables = canvasHandler.populateCanvas(snapshot, tabInfo.getView(), tabInfo.getCanvas());
 
         if (filterHandler.isFilterOn()) {
+            List<ApricotEntity> filteredEntities = new ArrayList<>(); // the tables which were filtered out
             ApricotCanvas canvas = tabInfo.getCanvas();
             List<ApricotTable> filterTables = filterHandler.getFilterTables();
             for (ApricotTable t : tables) {
                 if (!filterTables.contains(t)) {
                     ApricotEntity entity = canvas.findEntityByName(t.getName());
                     if (entity != null) {
+                        filteredEntities.add(entity);
                         entity.setElementStatus(ElementStatus.GRAYED);
                     }
                 }
             }
+
+            setRelationshipsStatusToGray(filteredEntities);
         }
     }
 
@@ -217,5 +222,18 @@ public class ApricotSnapshotHandler {
         }
 
         return alert;
+    }
+
+    /**
+     * Set status to GRAYED for the relationships between the entities filtered out.
+     */
+    private void setRelationshipsStatusToGray(List<ApricotEntity> filteredEntities) {
+        for (ApricotEntity entity : filteredEntities) {
+            for (ApricotRelationship r : entity.getPrimaryLinks()) {
+                if (filteredEntities.contains(r.getChild())) {
+                    r.setElementStatus(ElementStatus.GRAYED);
+                }
+            }
+        }
     }
 }
