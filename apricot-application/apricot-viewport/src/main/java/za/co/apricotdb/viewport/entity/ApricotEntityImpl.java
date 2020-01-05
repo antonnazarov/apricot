@@ -44,7 +44,7 @@ public final class ApricotEntityImpl implements ApricotEntity {
         this.slave = slave;
         this.shapeBuilder = shapeBuilder;
         this.canvas = canvas;
-        
+
         shadowModifier = SpringContext.getBean(EntitySetDetailedEntityShadowModifier.class);
     }
 
@@ -71,6 +71,7 @@ public final class ApricotEntityImpl implements ApricotEntity {
                 break;
             case GRAYED:
                 entityShape.setGrayed();
+                makeAllStacksGrayed();
                 break;
             default:
                 break;
@@ -98,6 +99,14 @@ public final class ApricotEntityImpl implements ApricotEntity {
             ((DefaultEntityShape) entityShape).getLeftStack().setSelected();
             ((DefaultEntityShape) entityShape).getRightStack().setSelected();
             ((DefaultEntityShape) entityShape).getTopStack().setSelected();
+        }
+    }
+
+    private void makeAllStacksGrayed() {
+        if (entityShape instanceof DefaultEntityShape) {
+            ((DefaultEntityShape) entityShape).getLeftStack().setGrayed();
+            ((DefaultEntityShape) entityShape).getRightStack().setGrayed();
+            ((DefaultEntityShape) entityShape).getTopStack().setGrayed();
         }
     }
 

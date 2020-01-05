@@ -14,8 +14,10 @@ public class RelationshipOnMousePressedEventHandler implements EventHandler<Mous
         if (event.getSource() instanceof ApricotRelationshipShape && event.getButton() == MouseButton.PRIMARY) {
             ApricotRelationshipShape shape = (ApricotRelationshipShape) event.getSource();
             ApricotElement relationship = shape.getElement();
-            relationship.setElementStatus(ElementStatus.SELECTED);
-            
+            if (relationship.getElementStatus() != ElementStatus.GRAYED) {
+                relationship.setElementStatus(ElementStatus.SELECTED);
+            }
+
             event.consume();
         }
     }

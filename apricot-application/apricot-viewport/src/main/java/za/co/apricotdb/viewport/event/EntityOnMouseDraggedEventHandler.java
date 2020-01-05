@@ -44,38 +44,40 @@ public class EntityOnMouseDraggedEventHandler implements EventHandler<MouseEvent
         if (event.getSource() instanceof ApricotEntityShape && event.getButton() == MouseButton.PRIMARY) {
             ApricotEntityShape entityShape = (ApricotEntityShape) event.getSource();
             if (tableName.equals(entityShape.getId())) {
+                if (entityShape.getElement().getElementStatus() != ElementStatus.GRAYED) {
 
-                if (entityShape.getUserData() != null && entityShape.getUserData() instanceof DragInitPosition) {
-                    DragInitPosition pos = (DragInitPosition) entityShape.getUserData();
+                    if (entityShape.getUserData() != null && entityShape.getUserData() instanceof DragInitPosition) {
+                        DragInitPosition pos = (DragInitPosition) entityShape.getUserData();
 
-                    double offsetX = (event.getSceneX() - pos.getOrgSceneX()) / canvas.getScale();
-                    double offsetY = (event.getSceneY() - pos.getOrgSceneY()) / canvas.getScale();
-                    double newTranslateX = pos.getOrgTranslateX() + offsetX;
-                    double newTranslateY = pos.getOrgTranslateY() + offsetY;
+                        double offsetX = (event.getSceneX() - pos.getOrgSceneX()) / canvas.getScale();
+                        double offsetY = (event.getSceneY() - pos.getOrgSceneY()) / canvas.getScale();
+                        double newTranslateX = pos.getOrgTranslateX() + offsetX;
+                        double newTranslateY = pos.getOrgTranslateY() + offsetY;
 
-                    Scene scene = ((Pane) canvas).getScene();
-                    VBox b = (VBox) entityShape;
-                    switch (pos.getDraggingType()) {
-                    case ENTITY_POSITION_DRAGGING:
-                        groupHandler.setEntityTranslatePosition(canvas, newTranslateX, newTranslateY,
-                                ElementStatus.SELECTED);
-                        relationshipBuilder.buildRelationships(canvas);
-                        scene.setCursor(Cursor.HAND);
+                        Scene scene = ((Pane) canvas).getScene();
+                        VBox b = (VBox) entityShape;
+                        switch (pos.getDraggingType()) {
+                        case ENTITY_POSITION_DRAGGING:
+                            groupHandler.setEntityTranslatePosition(canvas, newTranslateX, newTranslateY,
+                                    ElementStatus.SELECTED);
+                            relationshipBuilder.buildRelationships(canvas);
+                            scene.setCursor(Cursor.HAND);
 
-                        break;
-                    case ENTITY_HORIZONTAL_DRAGGING:
-                        setNewWidth(b, pos, offsetX);
-                        relationshipBuilder.buildRelationships(canvas);
-                        scene.setCursor(Cursor.E_RESIZE);
+                            break;
+                        case ENTITY_HORIZONTAL_DRAGGING:
+                            setNewWidth(b, pos, offsetX);
+                            relationshipBuilder.buildRelationships(canvas);
+                            scene.setCursor(Cursor.E_RESIZE);
 
-                        break;
-                    default:
-                        break;
+                            break;
+                        default:
+                            break;
+                        }
+
+                        canvas.publishEvent(new CanvasChangedEvent(canvas));
+
+                        event.consume();
                     }
-
-                    canvas.publishEvent(new CanvasChangedEvent(canvas));
-
-                    event.consume();
                 }
             }
         }

@@ -124,9 +124,11 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
     }
 
     @Override
-    public void changeAllElementsStatus(ElementStatus status) {
+    public void changeAllElementsStatus(ElementStatus status, boolean ignoreFilteredStatus) {
         for (ApricotElement e : elements) {
-            e.setElementStatus(status);
+            if (ignoreFilteredStatus || e.getElementStatus() != ElementStatus.GRAYED) {
+                e.setElementStatus(status);
+            }
         }
     }
 
@@ -163,11 +165,11 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
             if (e.getElementType() == ElementType.ENTITY) {
                 ApricotEntity entity = (ApricotEntity) e;
                 entities.add(entity);
-                
+
             }
         }
-        
-      relationshipsBuilder.buildRelationships(entities, relationships, detailLevel);
+
+        relationshipsBuilder.buildRelationships(entities, relationships, detailLevel);
     }
 
     @Override
@@ -339,7 +341,7 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
             elm.setElementStatus(ElementStatus.SELECTED);
         }
     }
-    
+
     @Override
     public String getDetailLevel() {
         return detailLevel;

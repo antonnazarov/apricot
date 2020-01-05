@@ -32,7 +32,7 @@ public interface ApricotCanvas {
 
     void sendToFront(ApricotElement entity);
 
-    void changeAllElementsStatus(ElementStatus status);
+    void changeAllElementsStatus(ElementStatus status, boolean ignoreFilteredStatus);
 
     List<ApricotElement> getElements();
 

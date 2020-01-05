@@ -186,7 +186,7 @@ public class ApricotCanvasHandler {
         ApricotEntity entity = tabInfo.getCanvas().findEntityByName(tableName);
         if (entity != null) {
             if (deselectOthers) {
-                tabInfo.getCanvas().changeAllElementsStatus(ElementStatus.DEFAULT);
+                tabInfo.getCanvas().changeAllElementsStatus(ElementStatus.DEFAULT, false);
             }
             entity.setElementStatus(ElementStatus.SELECTED);
         }
@@ -199,7 +199,7 @@ public class ApricotCanvasHandler {
 
     public void makeEntitiesSelected(ApricotCanvas canvas, List<String> tables, boolean deselectOthers) {
         if (canvas != null && tables.size() > 0 && deselectOthers) {
-            canvas.changeAllElementsStatus(ElementStatus.DEFAULT);
+            canvas.changeAllElementsStatus(ElementStatus.DEFAULT, false);
         }
         for (ApricotElement e : canvas.getElements()) {
             if (e.getElementType() == ElementType.ENTITY) {

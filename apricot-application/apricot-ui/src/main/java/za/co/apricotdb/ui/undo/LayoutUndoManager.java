@@ -153,7 +153,7 @@ public class LayoutUndoManager {
     }
 
     private void selectCanvasElements(ApricotCanvas canvas, List<String> elementNames) {
-        canvas.changeAllElementsStatus(ElementStatus.DEFAULT);
+        canvas.changeAllElementsStatus(ElementStatus.DEFAULT, false);
 
         for (String s : elementNames) {
             String[] splt = s.split("->");

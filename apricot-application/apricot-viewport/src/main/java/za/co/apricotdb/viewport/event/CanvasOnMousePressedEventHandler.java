@@ -43,15 +43,15 @@ public class CanvasOnMousePressedEventHandler implements EventHandler<MouseEvent
             ApricotCanvas canvas = (ApricotCanvas) event.getSource();
 
             if (event.getButton() == MouseButton.PRIMARY) {
-                canvas.changeAllElementsStatus(ElementStatus.DEFAULT);
+                canvas.changeAllElementsStatus(ElementStatus.DEFAULT, false);
                 selectNearestRelationship(canvas, event);
 
                 Pane pane = (Pane) canvas;
                 Scene scene = pane.getScene();
                 scene.setCursor(Cursor.NW_RESIZE);
 
-                Rectangle lasso = createLasso(event);
                 Map<String, Object> ud = getUserData(pane);
+                Rectangle lasso = createLasso(event);
                 ud.put("lasso", lasso);
                 pane.getChildren().add(lasso);
 
@@ -131,12 +131,11 @@ public class CanvasOnMousePressedEventHandler implements EventHandler<MouseEvent
 
             List<LineSegment> sgmts = topologyManager.getSegments(path);
             for (LineSegment ls : sgmts) {
-                if (topologyManager.intersects(ls, spot)) {
+                if (topologyManager.intersects(ls, spot) && r.getElementStatus() != ElementStatus.GRAYED) {
                     r.setElementStatus(ElementStatus.SELECTED);
                     break;
                 }
             }
         }
-
     }
 }

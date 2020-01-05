@@ -36,11 +36,17 @@ public class EntityOnMousePressedEventHandler implements EventHandler<MouseEvent
             ApricotEntityShape entityShape = (ApricotEntityShape) event.getSource();
             ApricotElement entity = entityShape.getElement();
 
+            //  check if the element is filtered out
+            if (entity.getElementStatus() == ElementStatus.GRAYED) {
+                event.consume();
+                return;
+            }
+            
             if (event.getButton() == MouseButton.PRIMARY) {
                 DraggingType type = getDraggingType(entityShape, event.getX(), event.getY());
                 registerEntityOriginalPosition(entityShape, event.getSceneX(), event.getSceneY(), type);
                 if (!event.isControlDown()) {
-                    canvas.changeAllElementsStatus(ElementStatus.DEFAULT);
+                    canvas.changeAllElementsStatus(ElementStatus.DEFAULT, false);
                     entity.setElementStatus(ElementStatus.SELECTED);
                 } else {
                     entity.setElementStatus(ElementStatus.SELECTED);
@@ -54,7 +60,7 @@ public class EntityOnMousePressedEventHandler implements EventHandler<MouseEvent
             } else if (event.getButton() == MouseButton.SECONDARY) {
                 // handle the context menu
                 if (entity.getElementStatus() == ElementStatus.DEFAULT) {
-                    canvas.changeAllElementsStatus(ElementStatus.DEFAULT);
+                    canvas.changeAllElementsStatus(ElementStatus.DEFAULT, false);
                     entity.setElementStatus(ElementStatus.SELECTED);
                 }
 
