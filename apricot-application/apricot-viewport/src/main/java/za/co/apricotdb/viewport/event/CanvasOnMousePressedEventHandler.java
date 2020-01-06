@@ -91,6 +91,11 @@ public class CanvasOnMousePressedEventHandler implements EventHandler<MouseEvent
 
         return ret;
     }
+    
+    public static void removeLasso(Pane pane) {
+        Map<String, Object> ud = getUserData(pane);
+        ud.remove("lasso");
+    }
 
     @SuppressWarnings("unchecked")
     public static Map<String, Bounds> getBounds(Pane pane) {

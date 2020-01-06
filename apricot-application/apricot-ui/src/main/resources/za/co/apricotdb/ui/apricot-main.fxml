@@ -25,7 +25,7 @@
          <children>
             <HBox id="mainBox">
                <children>
-                  <MenuBar id="mainMenu" prefHeight="35.0" prefWidth="292.0">
+                  <MenuBar id="mainMenu" prefHeight="35.0">
                     <menus>
                       <Menu id="menuProject" mnemonicParsing="false" text="Project">
                         <items>

@@ -49,6 +49,7 @@ import za.co.apricotdb.ui.toolbar.ToolbarHolder;
 import za.co.apricotdb.ui.undo.ApricotUndoManager;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
+import za.co.apricotdb.viewport.canvas.ElementStatus;
 
 /**
  * This controller serves the main application form apricot-main.fxml.
@@ -522,7 +523,7 @@ public class MainAppController {
     public void selectAll(ActionEvent event) {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
         if (canvas != null) {
-            canvas.selectAllElements();
+            canvas.changeAllElementsStatus(ElementStatus.SELECTED, false);
         }
     }
 
