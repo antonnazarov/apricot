@@ -67,7 +67,7 @@ public class ApplicationInitializer {
 
     @Autowired
     ApricotUndoManager undoManager;
-
+    
     @Transactional
     public void initializeDefault() {
         ApricotProject currentProject = projectManager.findCurrentProject();
@@ -95,6 +95,10 @@ public class ApplicationInitializer {
 
     @Transactional
     public void initialize(ApricotProject project, ApricotSnapshot snapshot) {
+        // clear the current filter
+        parentWindow.getFilterTables().clear();
+        parentWindow.getFilterField().setText("*");
+                
         // remember the current project
         parentWindow.getApplicationData().setCurrentProject(project);
 

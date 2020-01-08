@@ -44,7 +44,9 @@ import za.co.apricotdb.ui.handler.ReverseEngineHandler;
 import za.co.apricotdb.ui.handler.SelectViewTabHandler;
 import za.co.apricotdb.ui.handler.TabInfoObject;
 import za.co.apricotdb.ui.handler.TabViewHandler;
+import za.co.apricotdb.ui.toolbar.TbAddFilterHandler;
 import za.co.apricotdb.ui.toolbar.TbButton;
+import za.co.apricotdb.ui.toolbar.TbSetFilterHandler;
 import za.co.apricotdb.ui.toolbar.ToolbarHolder;
 import za.co.apricotdb.ui.undo.ApricotUndoManager;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
@@ -131,6 +133,12 @@ public class MainAppController {
 
     @Autowired
     EntityFilterHandler filterHandler;
+    
+    @Autowired
+    TbSetFilterHandler tbSetFilterHandler;
+    
+    @Autowired
+    TbAddFilterHandler tbAddFilterHandler;
 
     @FXML
     AnchorPane mainPane;
@@ -207,6 +215,12 @@ public class MainAppController {
     Button tbDropScript;
     @FXML
     Button tbReverseEngineering;
+    
+    //  filter
+    @FXML
+    Button tbSetFilter;
+    @FXML
+    Button tbAddFilter;
 
     // menu items
     @FXML
@@ -272,7 +286,10 @@ public class MainAppController {
                 tbAllocateEntities, tbResetAllocation, tbExcelReport, tbInsertScript, tbDeleteScript, tbDropScript,
                 tbReverseEngineering);
 
+        
         filterField.setText("*");
+        tbSetFilterHandler.initButton(tbSetFilter);
+        tbAddFilterHandler.initButton(tbAddFilter);
     }
 
     public void save(ActionEvent event) {
@@ -605,10 +622,19 @@ public class MainAppController {
     public void filterOn(ActionEvent event) {
         filterHandler.setupEntityFilter(filterField.getText());
     }
+    
+    @FXML
+    public void filterAdd(ActionEvent event) {
+        
+    }
 
     @FXML
     public void filterReset(ActionEvent event) {
         filterHandler.resetEntityFilter();
         filterField.setText("*");
+    }
+    
+    public TextField getFilterField() {
+        return filterField;
     }
 }

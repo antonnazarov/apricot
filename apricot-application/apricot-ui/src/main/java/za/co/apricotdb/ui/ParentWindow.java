@@ -14,6 +14,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -136,7 +137,11 @@ public class ParentWindow {
     
     public List<ApricotTable> getFilterTables() {
         return filterTables;
-    }    
+    }
+    
+    public TextField getFilterField() {
+        return controller.getFilterField();
+    }
 
     /**
      * Initialize the menu items and buttons depending on the empty/non empty

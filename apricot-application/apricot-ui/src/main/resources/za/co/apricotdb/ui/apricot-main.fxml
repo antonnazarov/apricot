@@ -164,8 +164,9 @@
                         <HBox prefHeight="22.0" prefWidth="270.0" spacing="5.0" VBox.vgrow="NEVER">
                            <children>
                               <TextField fx:id="filterField" prefHeight="25.0" prefWidth="203.0" HBox.hgrow="ALWAYS" />
-                              <Button mnemonicParsing="false" onAction="#filterOn" prefHeight="26.0" prefWidth="26.0" text="S" HBox.hgrow="NEVER" />
-                              <Button mnemonicParsing="false" onAction="#filterReset" prefHeight="26.0" prefWidth="26.0" text="R" HBox.hgrow="NEVER" />
+                              <Button fx:id="tbSetFilter" mnemonicParsing="false" onAction="#filterOn" prefHeight="26.0" prefWidth="26.0" text="S" HBox.hgrow="NEVER" />
+                              <Button fx:id="tbAddFilter" layoutX="181.0" layoutY="13.0" mnemonicParsing="false" onAction="#filterAdd" prefHeight="26.0" prefWidth="26.0" text="+" />
+                              <Button fx:id="thResetFilter" mnemonicParsing="false" onAction="#filterReset" prefHeight="26.0" prefWidth="26.0" text="R" HBox.hgrow="NEVER" />
                            </children>
                            <padding>
                               <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
