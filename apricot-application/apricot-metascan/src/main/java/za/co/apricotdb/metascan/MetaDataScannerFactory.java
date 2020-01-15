@@ -5,6 +5,8 @@ import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.metascan.db2.DB2Scanner;
 import za.co.apricotdb.metascan.db2.DB2UrlBuilder;
+import za.co.apricotdb.metascan.db2luw.DB2LuwScanner;
+import za.co.apricotdb.metascan.db2luw.DB2LuwUrlBuilder;
 import za.co.apricotdb.metascan.h2.H2Scanner;
 import za.co.apricotdb.metascan.h2.H2UrlBuilder;
 import za.co.apricotdb.metascan.mysql.MySqlScanner;
@@ -61,12 +63,18 @@ public class MetaDataScannerFactory {
     @Autowired
     DB2UrlBuilder db2UrlBuilder;
 
+    @Autowired
+    DB2LuwScanner db2luwScanner;
+
+    @Autowired
+    DB2LuwUrlBuilder db2luwUrlBuilder;
+    
     /**
      * Recognize the appropriate scanner.
      */
-    public MetaDataScanner getScanner(String url) {
+    public MetaDataScanner getScanner(ApricotTargetDatabase targetDb) {
         MetaDataScanner scanner = null;
-        switch (getTargetDatabase(url)) {
+        switch (targetDb) {
         case MSSQLServer:
             scanner = sqlServerScanner;
             break;
@@ -84,6 +92,9 @@ public class MetaDataScannerFactory {
             break;
         case DB2:
             scanner = db2Scanner;
+            break;
+        case DB2_LUW:
+            scanner = db2luwScanner;
             break;
         }
 
@@ -125,6 +136,8 @@ public class MetaDataScannerFactory {
             return mySqlUrlBuilder;
         case DB2:
             return db2UrlBuilder;
+        case DB2_LUW:
+            return db2luwUrlBuilder;
         }
 
         return null;

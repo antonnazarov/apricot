@@ -193,7 +193,7 @@ public class ReverseEngineHandler {
     }
 
     private void openDatabaseConnectionForm(ApricotProject project) throws IOException {
-        ApricotTargetDatabase targetDatabase = ApricotTargetDatabase.valueOf(project.getTargetDatabase());
+        ApricotTargetDatabase targetDatabase = ApricotTargetDatabase.parse(project.getTargetDatabase());
         DatabaseConnectionModel model = databaseConnectionModelBuilder.buildModel(project);
 
         Pane window = null;
@@ -217,7 +217,11 @@ public class ReverseEngineHandler {
             window = initFormController(model);
             break;
         case DB2:
-            title = "Connect to DB2 database";
+            title = "Connect to DB2 (legacy) database";
+            window = initFormController(model);
+            break;
+        case DB2_LUW:
+            title = "Connect to DB2 (LUW) database";
             window = initFormController(model);
             break;
         case H2:

@@ -145,7 +145,7 @@ public class ConnectionH2Controller {
 
         String driverClass = urlBuilder.getDriverClass();
         String url = urlBuilder.getUrl(getH2DbName(fileName.getText()));
-        MetaData metaData = scanner.scan(driverClass, url, schema.getText(), userName.getText(), password.getText(),
+        MetaData metaData = scanner.scan(ApricotTargetDatabase.H2, driverClass, url, schema.getText(), userName.getText(), password.getText(),
                 snapshotManager.getDefaultSnapshot());
         String[] blackList = blackListHandler.getBlackListTables(projectManager.findCurrentProject());
         try {

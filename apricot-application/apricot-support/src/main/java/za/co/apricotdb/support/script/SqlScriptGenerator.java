@@ -49,7 +49,7 @@ public class SqlScriptGenerator {
 
     public void init() {
         ApricotProject project = projectManager.findCurrentProject();
-        ApricotTargetDatabase dbType = ApricotTargetDatabase.valueOf(project.getTargetDatabase());
+        ApricotTargetDatabase dbType = ApricotTargetDatabase.parse(project.getTargetDatabase());
         sqlSyntax = SqlSyntaxFactory.getSqlSyntax(dbType);
     }
 
