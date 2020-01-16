@@ -111,7 +111,7 @@ public class EditProjectController {
                 projectDatabase.getItems().add(d.getDatabaseName());
             }
         }
-        
+
         for (ERDNotation n : ERDNotation.values()) {
             erdNotation.getItems().add(n.getDefinition());
         }

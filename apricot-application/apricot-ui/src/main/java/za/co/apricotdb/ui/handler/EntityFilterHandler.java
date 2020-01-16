@@ -1,5 +1,6 @@
 package za.co.apricotdb.ui.handler;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,12 @@ public class EntityFilterHandler {
     @Autowired
     ApricotSnapshotHandler snapshotHandler;
 
+    @Autowired
+    ApricotCanvasHandler canvasHandler;
+
+    @Autowired
+    ObjectAllocationHandler allocationHandler;
+
     /**
      * Set up the entity filter, using the case insensitive search string.
      */
@@ -56,7 +63,9 @@ public class EntityFilterHandler {
             return;
         }
 
-        List<ApricotTable> filterResult = tableManager.findTablesByName(search);
+        String s = convert(search);
+
+        List<ApricotTable> filterResult = tableManager.findTablesByName(s);
 
         if (filterResult.size() == 0) {
             Alert alert = alertDecorator.getAlert("Entity Filter",
@@ -70,6 +79,27 @@ public class EntityFilterHandler {
             parentWindow.getFilterTables().clear();
             parentWindow.getFilterTables().addAll(filterResult);
             snapshotHandler.syncronizeSnapshot(true);
+
+            positionOnCanvas(getEntitiesAsString(filterResult));
+        }
+    }
+
+    /**
+     * Add results of the subsequent search to the existing filter.
+     */
+    public void addToEntityFilter(String search) {
+        // if the filter is empty, start the creation of the filter from scratch
+        if (parentWindow.getFilterTables().isEmpty()) {
+            setupEntityFilter(search);
+            return;
+        }
+
+        String s = convert(search);
+        List<ApricotTable> filterResult = tableManager.findTablesByName(s);
+        if (!filterResult.isEmpty()) {
+            parentWindow.getFilterTables().addAll(filterResult);
+            snapshotHandler.syncronizeSnapshot(true);
+            positionOnCanvas(getEntitiesAsString(filterResult));
         }
     }
 
@@ -87,5 +117,35 @@ public class EntityFilterHandler {
 
     public List<ApricotTable> getFilterTables() {
         return parentWindow.getFilterTables();
+    }
+
+    private String convert(String search) {
+        String ret = null;
+
+        ret = search.trim();
+        if (ret.startsWith("*")) {
+            ret = ret.replaceFirst("\\*", "%");
+        }
+
+        if (ret.endsWith("*")) {
+            ret = ret.substring(0, ret.length() - 1);
+            ret += "%";
+        }
+
+        return ret;
+    }
+
+    private void positionOnCanvas(List<String> entities) {
+        canvasHandler.makeEntitiesSelected(entities, true);
+        allocationHandler.scrollToSelected(canvasHandler.getCurrentViewTabInfo());
+    }
+
+    private List<String> getEntitiesAsString(List<ApricotTable> tables) {
+        List<String> ret = new ArrayList<>();
+        tables.forEach(table -> {
+            ret.add(table.getName());
+        });
+
+        return ret;
     }
 }

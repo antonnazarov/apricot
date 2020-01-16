@@ -46,7 +46,7 @@ public class AlertMessageDecorator {
         return alert;
     }
 
-    public boolean requestYesNoOption(String title, String text, String yesText) {
+    public boolean requestYesNoOption(String title, String text, String yesText, AlertType type) {
         ButtonType yes = new ButtonType(yesText, ButtonData.OK_DONE);
         ButtonType no = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
         Alert alert = new Alert(AlertType.WARNING, null, yes, no);
@@ -59,5 +59,9 @@ public class AlertMessageDecorator {
         } else {
             return false;
         }
+    }
+
+    public boolean requestYesNoOption(String title, String text, String yesText) {
+        return requestYesNoOption(title, text, yesText, AlertType.WARNING);
     }
 }

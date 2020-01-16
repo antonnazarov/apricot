@@ -46,6 +46,7 @@ import za.co.apricotdb.ui.handler.TabInfoObject;
 import za.co.apricotdb.ui.handler.TabViewHandler;
 import za.co.apricotdb.ui.toolbar.TbAddFilterHandler;
 import za.co.apricotdb.ui.toolbar.TbButton;
+import za.co.apricotdb.ui.toolbar.TbResetFilterHandler;
 import za.co.apricotdb.ui.toolbar.TbSetFilterHandler;
 import za.co.apricotdb.ui.toolbar.ToolbarHolder;
 import za.co.apricotdb.ui.undo.ApricotUndoManager;
@@ -139,6 +140,9 @@ public class MainAppController {
     
     @Autowired
     TbAddFilterHandler tbAddFilterHandler;
+    
+    @Autowired
+    TbResetFilterHandler tbResetFilterHandler;
 
     @FXML
     AnchorPane mainPane;
@@ -221,6 +225,8 @@ public class MainAppController {
     Button tbSetFilter;
     @FXML
     Button tbAddFilter;
+    @FXML
+    Button tbResetFilter;
 
     // menu items
     @FXML
@@ -290,6 +296,7 @@ public class MainAppController {
         filterField.setText("*");
         tbSetFilterHandler.initButton(tbSetFilter);
         tbAddFilterHandler.initButton(tbAddFilter);
+        tbResetFilterHandler.initButton(tbResetFilter);
     }
 
     public void save(ActionEvent event) {
@@ -625,7 +632,7 @@ public class MainAppController {
     
     @FXML
     public void filterAdd(ActionEvent event) {
-        
+        filterHandler.addToEntityFilter(filterField.getText());
     }
 
     @FXML

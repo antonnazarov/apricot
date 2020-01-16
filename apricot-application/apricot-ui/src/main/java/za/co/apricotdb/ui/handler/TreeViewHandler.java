@@ -45,7 +45,7 @@ public class TreeViewHandler {
 
     @Autowired
     ApricotViewHandler viewHandler;
-    
+
     @Autowired
     EntityFilterHandler filterHandler;
 
@@ -57,7 +57,9 @@ public class TreeViewHandler {
             tables = tableManager.getTablesForSnapshot(snapshot);
         }
 
-        TreeItem<ProjectExplorerItem> root = new TreeItem<>(buildItemNode(project.getName(), ItemType.PROJECT, true));
+        StringBuilder projectItemText = new StringBuilder(project.getName()).append(" (")
+                .append(project.getTargetDatabase()).append(")");
+        TreeItem<ProjectExplorerItem> root = new TreeItem<>(buildItemNode(projectItemText.toString(), ItemType.PROJECT, true));
         root.getChildren().addAll(getTables(tables));
         root.setExpanded(true);
         TreeView<ProjectExplorerItem> tw = getTreeView();
