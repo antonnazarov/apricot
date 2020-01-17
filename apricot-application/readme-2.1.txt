@@ -2,7 +2,8 @@
 Apricot DB, Release 2.1, date: 
 ------------------------------------------
 
-?????
+* The entities filter has been implemented;
+* Migrated to Spring Boot 2.2.2
 
 This version of "Apricot DB" provides the Reverse Engineering of the following databases:
 Oracle;
@@ -10,6 +11,7 @@ SQL Server;
 MySQL;
 PostgreSQL;
 DB2;
+DB2 LUW;
 H2
 
 ----------------------------
