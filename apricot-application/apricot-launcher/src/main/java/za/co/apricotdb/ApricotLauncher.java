@@ -30,6 +30,7 @@ public class ApricotLauncher {
             Class.forName("org.h2.Driver");
         } catch (ClassNotFoundException e) {
             System.out.println("ERROR: unable to intialize the DB driver");
+            e.printStackTrace();
             System.exit(1);
         }
 

@@ -2,8 +2,9 @@
 Apricot DB, Release 2.1, date: 
 ------------------------------------------
 
-* The entities filter has been implemented;
-* Migrated to Spring Boot 2.2.2
+* New functionality: the entities filter has been implemented;
+* Migrated to Spring Boot 2.2.2;
+* jdk-13.0.2
 
 This version of "Apricot DB" provides the Reverse Engineering of the following databases:
 Oracle;
