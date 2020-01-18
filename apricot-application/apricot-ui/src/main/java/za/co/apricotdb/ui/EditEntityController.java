@@ -159,7 +159,7 @@ public class EditEntityController {
             }
         };
         columnName.setCellFactory(editCellFactory);
-        
+
         primaryKey.setCellValueFactory(e -> e.getValue().getPrimaryKey());
         primaryKey.setCellFactory(CheckBoxTableCell.forTableColumn(i -> model.getColumns().get(i).getPrimaryKey()));
 
@@ -206,14 +206,12 @@ public class EditEntityController {
             ApricotConstraintData cd = constraintsTable.getSelectionModel().getSelectedItem();
             if (cd.getConstraintType().getValue().equals(ConstraintType.PRIMARY_KEY.name())
                     || cd.getConstraintType().getValue().equals(ConstraintType.FOREIGN_KEY.name())) {
-                editConstraintButton.setDisable(true);
                 deleteConstraintButton.setDisable(true);
             } else {
-                editConstraintButton.setDisable(false);
                 deleteConstraintButton.setDisable(false);
-                if (e.getClickCount() == 2) {
-                    editConstraint(null);
-                }
+            }
+            if (e.getClickCount() == 2) {
+                editConstraint(null);
             }
         });
     }
@@ -369,7 +367,7 @@ public class EditEntityController {
     @FXML
     public void newConstraint(ActionEvent event) {
         try {
-            constraintHandler.openConstraintEditorForm(true, null, model, constraintsTable);
+            constraintHandler.openConstraintEditorForm(true, null, model, constraintsTable, true);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -378,12 +376,13 @@ public class EditEntityController {
     @FXML
     public void editConstraint(ActionEvent event) {
         ApricotConstraintData cd = constraintsTable.getSelectionModel().getSelectedItem();
+        boolean editableFields = true;
         if (cd.getConstraintType().getValue().equals(ConstraintType.PRIMARY_KEY.name())
                 || cd.getConstraintType().getValue().equals(ConstraintType.FOREIGN_KEY.name())) {
-            return;
+            editableFields = false;
         }
         try {
-            constraintHandler.openConstraintEditorForm(false, cd, model, constraintsTable);
+            constraintHandler.openConstraintEditorForm(false, cd, model, constraintsTable, editableFields);
         } catch (IOException e) {
             e.printStackTrace();
         }

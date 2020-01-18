@@ -44,12 +44,14 @@ public class CanvasOnMouseDraggedEventHandler implements EventHandler<MouseEvent
                 Bounds lassoBounds = lasso.getBoundsInParent();
                 Map<String, Bounds> bounds = CanvasOnMousePressedEventHandler.getBounds(pane);
 
-                canvas.changeAllElementsStatus(ElementStatus.DEFAULT);
+                canvas.changeAllElementsStatus(ElementStatus.DEFAULT, false);
 
                 for (String table : bounds.keySet()) {
                     if (lassoBounds.intersects(bounds.get(table))) {
                         ApricotEntity entity = canvas.findEntityByName(table);
-                        entity.setElementStatus(ElementStatus.SELECTED);
+                        if (entity.getElementStatus() != ElementStatus.GRAYED) {
+                            entity.setElementStatus(ElementStatus.SELECTED);
+                        }
                     }
                 }
 

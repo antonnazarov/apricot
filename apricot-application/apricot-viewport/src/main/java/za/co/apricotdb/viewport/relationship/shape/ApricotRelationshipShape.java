@@ -2,6 +2,7 @@ package za.co.apricotdb.viewport.relationship.shape;
 
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
 import za.co.apricotdb.viewport.canvas.ApricotElement;
@@ -38,13 +39,14 @@ public abstract class ApricotRelationshipShape extends Group implements ApricotS
     public void setDefault() {
         if (path != null) {
             path.setStrokeWidth(RELATIONSHIP_DEFAULT_STROKE_WIDTH);
+            path.setStroke(Color.BLACK);
         }
 
         if (startElement != null) {
-            setGroupStroke(startElement, RELATIONSHIP_DEFAULT_STROKE_WIDTH);
+            setGroupStroke(startElement, RELATIONSHIP_DEFAULT_STROKE_WIDTH, Color.BLACK);
         }
         if (endElement != null) {
-            setGroupStroke(endElement, RELATIONSHIP_DEFAULT_STROKE_WIDTH);
+            setGroupStroke(endElement, RELATIONSHIP_DEFAULT_STROKE_WIDTH, Color.BLACK);
         }
     }
 
@@ -52,28 +54,39 @@ public abstract class ApricotRelationshipShape extends Group implements ApricotS
     public void setSelected() {
         if (path != null) {
             path.setStrokeWidth(RELATIONSHIP_SELECTED_STROKE_WIDTH);
+            path.setStroke(Color.BLACK);
         }
 
         if (startElement != null) {
-            setGroupStroke(startElement, RELATIONSHIP_SELECTED_STROKE_WIDTH);
+            setGroupStroke(startElement, RELATIONSHIP_SELECTED_STROKE_WIDTH, Color.BLACK);
         }
         if (endElement != null) {
-            setGroupStroke(endElement, RELATIONSHIP_SELECTED_STROKE_WIDTH);
+            setGroupStroke(endElement, RELATIONSHIP_SELECTED_STROKE_WIDTH, Color.BLACK);
         }
     }
 
-    private void setGroupStroke(Group element, double strokeWidth) {
+    private void setGroupStroke(Group element, double strokeWidth, Color color) {
         for (Node n : element.getChildren()) {
             if (n instanceof Shape) {
                 ((Shape) n).setStrokeWidth(strokeWidth);
+                ((Shape) n).setStroke(color);
             }
         }
     }
 
     @Override
     public void setGrayed() {
-        // TODO Auto-generated method stub
+        if (path != null) {
+            path.setStrokeWidth(RELATIONSHIP_DEFAULT_STROKE_WIDTH);
+            path.setStroke(Color.LIGHTGRAY);
+        }
 
+        if (startElement != null) {
+            setGroupStroke(startElement, RELATIONSHIP_DEFAULT_STROKE_WIDTH, Color.LIGHTGRAY);
+        }
+        if (endElement != null) {
+            setGroupStroke(endElement, RELATIONSHIP_DEFAULT_STROKE_WIDTH, Color.LIGHTGRAY);
+        }
     }
 
     @Override

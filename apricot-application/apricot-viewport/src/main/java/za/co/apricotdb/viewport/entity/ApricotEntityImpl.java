@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.scene.Node;
+import za.co.apricotdb.support.util.SpringContext;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ElementStatus;
 import za.co.apricotdb.viewport.canvas.ElementType;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
 import za.co.apricotdb.viewport.entity.shape.DefaultEntityShape;
 import za.co.apricotdb.viewport.entity.shape.EntityShapeBuilder;
+import za.co.apricotdb.viewport.modifiers.EntitySetDetailedEntityShadowModifier;
 import za.co.apricotdb.viewport.notification.EntityStatusChangedEvent;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 
@@ -25,11 +27,12 @@ public final class ApricotEntityImpl implements ApricotEntity {
     private final List<FieldDetail> details;
     private final boolean slave;
     private final EntityShapeBuilder shapeBuilder;
-    private ElementStatus status = ElementStatus.DEFAULT;
+    private ElementStatus status = ElementStatus.HIDDEN;
     private ApricotEntityShape entityShape;
     private List<ApricotRelationship> primaryLinks = new ArrayList<>();
     private List<ApricotRelationship> foreignLinks = new ArrayList<>();
     private ApricotCanvas canvas;
+    private EntitySetDetailedEntityShadowModifier shadowModifier;
 
     /**
      * Construct a new instance of the ApricotEntity.
@@ -41,6 +44,8 @@ public final class ApricotEntityImpl implements ApricotEntity {
         this.slave = slave;
         this.shapeBuilder = shapeBuilder;
         this.canvas = canvas;
+
+        shadowModifier = SpringContext.getBean(EntitySetDetailedEntityShadowModifier.class);
     }
 
     @Override
@@ -50,24 +55,32 @@ public final class ApricotEntityImpl implements ApricotEntity {
 
     @Override
     public void setElementStatus(ElementStatus status) {
-        this.status = status;
+        // only change the status if the given one is different from the current one
+        if (this.status != status) {
+            this.status = status;
 
-        switch (status) {
-        case DEFAULT:
-            entityShape.setDefault();
-            makePrimaryRelationshipsDefault();
-            break;
-        case SELECTED:
-            entityShape.setSelected();
-            canvas.sendToFront(this);
-            makePrimaryRelationshipsSelected();
-            break;
-        default:
-            break;
+            switch (status) {
+            case DEFAULT:
+                entityShape.setDefault();
+                makePrimaryRelationshipsDefault();
+                break;
+            case SELECTED:
+                entityShape.setSelected();
+                canvas.sendToFront(this);
+                makePrimaryRelationshipsSelected();
+                break;
+            case GRAYED:
+                entityShape.setGrayed();
+                makeAllStacksGrayed();
+                break;
+            default:
+                break;
+            }
+            shadowModifier.modify(entityShape);
+
+            // notify the UI- side about the status was just changed
+            canvas.publishEvent(new EntityStatusChangedEvent(canvas));
         }
-        
-        //  notify the UI- side about the status was just changed 
-        canvas.publishEvent(new EntityStatusChangedEvent(canvas));
     }
 
     private void makePrimaryRelationshipsDefault() {
@@ -86,6 +99,14 @@ public final class ApricotEntityImpl implements ApricotEntity {
             ((DefaultEntityShape) entityShape).getLeftStack().setSelected();
             ((DefaultEntityShape) entityShape).getRightStack().setSelected();
             ((DefaultEntityShape) entityShape).getTopStack().setSelected();
+        }
+    }
+
+    private void makeAllStacksGrayed() {
+        if (entityShape instanceof DefaultEntityShape) {
+            ((DefaultEntityShape) entityShape).getLeftStack().setGrayed();
+            ((DefaultEntityShape) entityShape).getRightStack().setGrayed();
+            ((DefaultEntityShape) entityShape).getTopStack().setGrayed();
         }
     }
 

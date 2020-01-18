@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import javafx.beans.property.SimpleListProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableView;
@@ -47,13 +48,19 @@ public class EditConstraintController {
 
     @FXML
     ListView<ApricotColumnData> selectedColumnsList;
+    
+    @FXML
+    Button selectBtn;
+    
+    @FXML
+    Button deselectBtn;
 
     private EditConstraintModel model;
     private TableView<ApricotConstraintData> constraintsTable;
     private EditEntityModel editEntityModel;
 
     public void init(EditConstraintModel model, TableView<ApricotConstraintData> constraintsTable,
-            EditEntityModel editEntityModel) {
+            EditEntityModel editEntityModel, boolean editableFields) {
         this.model = model;
         this.constraintsTable = constraintsTable;
         this.editEntityModel = editEntityModel;
@@ -65,22 +72,34 @@ public class EditConstraintController {
 
         allColumnsList.itemsProperty().bind(new SimpleListProperty<ApricotColumnData>(model.getAllColumns()));
         selectedColumnsList.itemsProperty().bind(new SimpleListProperty<ApricotColumnData>(model.getSelectedColumns()));
-        allColumnsList.setOnMouseClicked(e -> {
-            if (e.getClickCount() == 2) {
-                selectColumn(null);
-            }
-        });
-        selectedColumnsList.setOnMouseClicked(e -> {
-            if (e.getClickCount() == 2) {
-                deselectColumn(null);
-            }
-        });
 
         setCellFactory(allColumnsList);
         setCellFactory(selectedColumnsList);
 
-        constraintType.getItems().addAll(ConstraintType.UNIQUE_INDEX.name(), ConstraintType.NON_UNIQUE_INDEX.name(),
-                ConstraintType.UNIQUE.name());
+        //  the fields included into PK or FK have to be not ediable 
+        if (!editableFields) {
+            allColumnsList.setDisable(true);
+            selectedColumnsList.setDisable(true);
+            constraintType.setDisable(true);
+            selectBtn.setDisable(true);
+            deselectBtn.setDisable(true);
+            
+            constraintType.getItems().addAll(ConstraintType.PRIMARY_KEY.name(), ConstraintType.FOREIGN_KEY.name());
+        } else {
+            constraintType.getItems().addAll(ConstraintType.UNIQUE_INDEX.name(), ConstraintType.NON_UNIQUE_INDEX.name(),
+                    ConstraintType.UNIQUE.name());
+            
+            allColumnsList.setOnMouseClicked(e -> {
+                if (e.getClickCount() == 2) {
+                    selectColumn(null);
+                }
+            });
+            selectedColumnsList.setOnMouseClicked(e -> {
+                if (e.getClickCount() == 2) {
+                    deselectColumn(null);
+                }
+            });
+        }
     }
 
     private void setCellFactory(ListView<ApricotColumnData> list) {

@@ -69,7 +69,7 @@ public class ApricotCanvasHandler {
      * provided skin.
      */
     @Transactional
-    public void populateCanvas(ApricotSnapshot snapshot, ApricotView view, ApricotCanvas canvas) {
+    public List<ApricotTable> populateCanvas(ApricotSnapshot snapshot, ApricotView view, ApricotCanvas canvas) {
         ApricotView v = viewHandler.readApricotView(view);
         // clean the canvas first
         canvas.cleanCanvas();
@@ -89,6 +89,8 @@ public class ApricotCanvasHandler {
             runAllocationAfterDelay(canvas, v, 0, ElementType.ENTITY).play();
             runAllocationAfterDelay(canvas, v, 0.8, ElementType.RELATIONSHIP).play();
         }
+        
+        return tables;
     }
 
     /**
@@ -184,7 +186,7 @@ public class ApricotCanvasHandler {
         ApricotEntity entity = tabInfo.getCanvas().findEntityByName(tableName);
         if (entity != null) {
             if (deselectOthers) {
-                tabInfo.getCanvas().changeAllElementsStatus(ElementStatus.DEFAULT);
+                tabInfo.getCanvas().changeAllElementsStatus(ElementStatus.DEFAULT, false);
             }
             entity.setElementStatus(ElementStatus.SELECTED);
         }
@@ -197,7 +199,7 @@ public class ApricotCanvasHandler {
 
     public void makeEntitiesSelected(ApricotCanvas canvas, List<String> tables, boolean deselectOthers) {
         if (canvas != null && tables.size() > 0 && deselectOthers) {
-            canvas.changeAllElementsStatus(ElementStatus.DEFAULT);
+            canvas.changeAllElementsStatus(ElementStatus.DEFAULT, false);
         }
         for (ApricotElement e : canvas.getElements()) {
             if (e.getElementType() == ElementType.ENTITY) {

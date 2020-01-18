@@ -62,10 +62,10 @@ public class ProjectExplorerItem extends HBox {
     public void setIncluded(boolean included) {
         this.included = included;
         if (included) {
-            label.setStyle("-fx-font-weight: bold;");
+            label.setStyle("-fx-text-fill: blue;");
             img.setImage(new Image(getClass().getResourceAsStream("table-small-black.jpg")));
         } else {
-            label.setStyle("-fx-font-weight: normal;");
+            label.setStyle("-fx-text-fill: black;");
             img.setImage(new Image(getClass().getResourceAsStream("table-small-gray.jpg")));
         }
     }

@@ -91,6 +91,7 @@ public class DefaultEntityShapeBuilder implements EntityShapeBuilder {
 
                 if (fd.getConstraints() != null && fd.getConstraints().contains("FK")) {
                     field.setFill(Color.BLUE);
+                    field.setUserData(Boolean.valueOf(true));
                 }
 
                 fPanel.add(field, 0, cnt);

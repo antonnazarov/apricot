@@ -41,6 +41,10 @@ import za.co.apricotdb.ui.model.EditSnapshotModelBuilder;
 import za.co.apricotdb.ui.model.NewSnapshotModelBuilder;
 import za.co.apricotdb.ui.model.SnapshotFormModel;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
+import za.co.apricotdb.viewport.canvas.ApricotCanvas;
+import za.co.apricotdb.viewport.canvas.ElementStatus;
+import za.co.apricotdb.viewport.entity.ApricotEntity;
+import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 
 @Component
 public class ApricotSnapshotHandler {
@@ -74,6 +78,9 @@ public class ApricotSnapshotHandler {
 
     @Autowired
     ViewManager viewManager;
+
+    @Autowired
+    EntityFilterHandler filterHandler;
 
     public void createDefaultSnapshot(ApricotProject project) {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
@@ -163,6 +170,7 @@ public class ApricotSnapshotHandler {
      */
     @Transactional
     public void syncronizeSnapshot(boolean synchAllViews) {
+        TabInfoObject currentTab = canvasHandler.getCurrentViewTabInfo();
         if (synchAllViews) {
             TabPane tp = parentWindow.getProjectTabPane();
             for (Tab tab : tp.getTabs()) {
@@ -172,12 +180,12 @@ public class ApricotSnapshotHandler {
                 }
             }
         } else {
-            TabInfoObject tabInfo = canvasHandler.getCurrentViewTabInfo();
-            if (tabInfo != null) {
-                synchronizeViewTab(tabInfo);
-                treeViewHandler.markEntitiesIncludedIntoView(tabInfo.getView());
-            }
+            synchronizeViewTab(currentTab);
         }
+
+        treeViewHandler.populate(projectManager.findCurrentProject(), snapshotManager.getDefaultSnapshot());
+        treeViewHandler.markEntitiesIncludedIntoView(currentTab.getView());
+        treeViewHandler.sortEntitiesByView();
     }
 
     private void synchronizeViewTab(TabInfoObject tabInfo) {
@@ -185,8 +193,24 @@ public class ApricotSnapshotHandler {
         ApricotView view = viewManager.findViewById(tabInfo.getView().getId());
         tabInfo.setView(view);
         ApricotSnapshot snapshot = tabInfo.getSnapshot();
-        treeViewHandler.populate(snapshot.getProject(), snapshot);
-        canvasHandler.populateCanvas(snapshot, tabInfo.getView(), tabInfo.getCanvas());
+        List<ApricotTable> tables = canvasHandler.populateCanvas(snapshot, tabInfo.getView(), tabInfo.getCanvas());
+
+        if (filterHandler.isFilterOn()) {
+            List<ApricotEntity> filteredEntities = new ArrayList<>(); // the tables which were filtered out
+            ApricotCanvas canvas = tabInfo.getCanvas();
+            List<ApricotTable> filterTables = filterHandler.getFilterTables();
+            for (ApricotTable t : tables) {
+                if (!filterTables.contains(t)) {
+                    ApricotEntity entity = canvas.findEntityByName(t.getName());
+                    if (entity != null) {
+                        filteredEntities.add(entity);
+                        entity.setElementStatus(ElementStatus.GRAYED);
+                    }
+                }
+            }
+
+            setRelationshipsStatusToGray(filteredEntities);
+        }
     }
 
     private Alert getAlert(AlertType alertType, String text) {
@@ -198,5 +222,18 @@ public class ApricotSnapshotHandler {
         }
 
         return alert;
+    }
+
+    /**
+     * Set status to GRAYED for the relationships between the entities filtered out.
+     */
+    private void setRelationshipsStatusToGray(List<ApricotEntity> filteredEntities) {
+        for (ApricotEntity entity : filteredEntities) {
+            for (ApricotRelationship r : entity.getPrimaryLinks()) {
+                if (filteredEntities.contains(r.getChild())) {
+                    r.setElementStatus(ElementStatus.GRAYED);
+                }
+            }
+        }
     }
 }

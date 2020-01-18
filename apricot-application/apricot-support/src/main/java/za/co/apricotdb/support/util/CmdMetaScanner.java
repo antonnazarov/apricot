@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import za.co.apricotdb.metascan.ApricotTargetDatabase;
 import za.co.apricotdb.metascan.MetaDataScanner;
 import za.co.apricotdb.metascan.MetaDataScannerFactory;
 import za.co.apricotdb.persistence.data.DataSaver;
@@ -55,7 +56,7 @@ public class CmdMetaScanner implements CommandLineRunner {
                 String password = props.getProperty("password");
                 String snapshot = props.getProperty("snapshot");
 
-                MetaDataScanner scanner = scannerFactory.getScanner(url);
+                MetaDataScanner scanner = scannerFactory.getScanner(ApricotTargetDatabase.MSSQLServer);
                 if (scanner == null) {
                     System.out.println("Unable to find scanner for url=[" + url + "]");
                     return;
@@ -63,7 +64,7 @@ public class CmdMetaScanner implements CommandLineRunner {
 
                 System.out.println("Scanning the database for the following parameters: driver=[" + driver + "], url=["
                         + url + "], user=[" + user + "], password=[" + password + "], snapshot=[" + snapshot + "]");
-                MetaData result = scanner.scan(driver, url, user, schema, password, getSnapshot(Long.parseLong(snapshot)));
+                MetaData result = scanner.scan(ApricotTargetDatabase.MSSQLServer, driver, url, user, schema, password, getSnapshot(Long.parseLong(snapshot)));
                 System.out.println("The scanned results:");
                 System.out.println(result);
 

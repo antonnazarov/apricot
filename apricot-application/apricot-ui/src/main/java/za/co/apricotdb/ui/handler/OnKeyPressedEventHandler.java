@@ -12,6 +12,7 @@ import javafx.scene.input.KeyEvent;
 import za.co.apricotdb.ui.MainAppController;
 import za.co.apricotdb.ui.undo.ApricotUndoManager;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
+import za.co.apricotdb.viewport.canvas.ElementStatus;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 
 /**
@@ -70,7 +71,7 @@ public class OnKeyPressedEventHandler implements EventHandler<KeyEvent> {
         case A:
             if (event.isControlDown()) {
                 // select all
-                canvas.selectAllElements();
+                canvas.changeAllElementsStatus(ElementStatus.SELECTED, false);
             }
             break;
         case S:

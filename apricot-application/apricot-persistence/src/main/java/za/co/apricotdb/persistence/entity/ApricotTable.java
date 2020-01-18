@@ -27,6 +27,7 @@ import javax.persistence.Table;
 @NamedQuery(name = "ApricotTable.getTablesByName", query = "SELECT at FROM ApricotTable at WHERE at.name IN (:tables) AND at.snapshot = :snapshot")
 @NamedQuery(name = "ApricotTable.getTablesBySnapshot", query = "SELECT at FROM ApricotTable at WHERE at.snapshot = :snapshot ORDER BY LOWER(at.name)")
 @NamedQuery(name = "ApricotTable.getTableByName", query = "SELECT at FROM ApricotTable at WHERE at.name = :name AND at.snapshot = :snapshot")
+@NamedQuery(name = "ApricotTable.findTablesByName", query = "SELECT at FROM ApricotTable at WHERE lower(at.name) like lower(:search) AND at.snapshot = :snapshot")
 public class ApricotTable implements Serializable {
 
     private static final long serialVersionUID = 7279471522618380758L;

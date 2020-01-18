@@ -30,8 +30,11 @@ public class DatabaseConnectionModelBuilder {
     MetaDataScannerFactory scannerFactory;
 
     public DatabaseConnectionModel buildModel(ApricotProject project) {
-        DatabaseConnectionModel model = new DatabaseConnectionModel(
-                ApricotTargetDatabase.valueOf(project.getTargetDatabase()));
+        ApricotTargetDatabase targetDb = ApricotTargetDatabase.parse(project.getTargetDatabase());
+        if (targetDb == null) {
+            throw new IllegalArgumentException("Unable to parse the database type=[" + project.getTargetDatabase() + "]");
+        }
+        DatabaseConnectionModel model = new DatabaseConnectionModel(targetDb);
 
         List<String> servers = new ArrayList<>();
         for (ApricotProject p : projectManager.getAllProjects()) {

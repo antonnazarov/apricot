@@ -1,5 +1,6 @@
 package za.co.apricotdb.ui;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,11 +14,13 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Window;
+import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.ui.handler.ProjectExplorerItem;
 
 /**
@@ -34,22 +37,19 @@ public class ParentWindow {
 
     private Pane mainAppPane;
     private Application application;
+    private MainAppController controller;
+    private List<ApricotTable> filterTables = new ArrayList<>();
+
+    public void init(MainAppController controller) {
+        this.controller = controller;
+    }
 
     public void setParentPane(Pane mainAppPane) {
         this.mainAppPane = mainAppPane;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public TreeView<ProjectExplorerItem> getProjectTreeView() {
-        TreeView<ProjectExplorerItem> ret = null;
-
-        List<Node> l = getCenterNode().getItems();
-
-        if (l != null && l.size() == 2 && l.get(0) instanceof TreeView) {
-            ret = (TreeView) l.get(0);
-        }
-
-        return ret;
+        return controller.projectsTreeView;
     }
 
     public TabPane getProjectTabPane() {
@@ -122,17 +122,25 @@ public class ParentWindow {
     public Pane getMainAppPane() {
         return mainAppPane;
     }
-    
+
     public Window getWindow() {
         return mainAppPane.getScene().getWindow();
     }
-    
+
     public Application getApplication() {
         return application;
     }
 
     public void setApplication(Application application) {
         this.application = application;
+    }
+    
+    public List<ApricotTable> getFilterTables() {
+        return filterTables;
+    }
+    
+    public TextField getFilterField() {
+        return controller.getFilterField();
     }
 
     /**

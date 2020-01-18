@@ -194,7 +194,7 @@ public class ConnectionSqlServerController {
         this.snapshot = snapshotManager.getDefaultSnapshot();
         this.project = projectManager.findCurrentProject();
 
-        MetaData metaData = scannerFactory.getScanner(url).scan(driverClass, url, schema.getValue(),
+        MetaData metaData = scannerFactory.getScanner(model.getTargetDb()).scan(model.getTargetDb(), driverClass, url, schema.getValue(),
                 user.getSelectionModel().getSelectedItem(), password.getText(), snapshot);
         String[] blackList = blackListHandler.getBlackListTables(project);
         try {

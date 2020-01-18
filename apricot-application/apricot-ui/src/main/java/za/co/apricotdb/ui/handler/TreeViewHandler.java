@@ -46,9 +46,20 @@ public class TreeViewHandler {
     @Autowired
     ApricotViewHandler viewHandler;
 
+    @Autowired
+    EntityFilterHandler filterHandler;
+
     public void populate(ApricotProject project, ApricotSnapshot snapshot) {
-        List<ApricotTable> tables = tableManager.getTablesForSnapshot(snapshot);
-        TreeItem<ProjectExplorerItem> root = new TreeItem<>(buildItemNode(project.getName(), ItemType.PROJECT, true));
+        List<ApricotTable> tables = new ArrayList<>();
+        if (filterHandler.isFilterOn()) {
+            tables = filterHandler.getFilterTables();
+        } else {
+            tables = tableManager.getTablesForSnapshot(snapshot);
+        }
+
+        StringBuilder projectItemText = new StringBuilder(project.getName()).append(" (")
+                .append(project.getTargetDatabase()).append(")");
+        TreeItem<ProjectExplorerItem> root = new TreeItem<>(buildItemNode(projectItemText.toString(), ItemType.PROJECT, true));
         root.getChildren().addAll(getTables(tables));
         root.setExpanded(true);
         TreeView<ProjectExplorerItem> tw = getTreeView();
@@ -81,9 +92,6 @@ public class TreeViewHandler {
      */
     public void markEntitiesIncludedIntoView(ApricotView view) {
         deselectProjectExplorerItems();
-        if (view.getName().equals(ApricotView.MAIN_VIEW)) {
-            return;
-        }
 
         ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
 
@@ -96,6 +104,27 @@ public class TreeViewHandler {
                 item.getValue().setIncluded(true);
             }
         }
+    }
+
+    /**
+     * Sort entities in the Project Explorer list to show the entities, included
+     * into the current view first, and then other entities, not included into the
+     * view.
+     */
+    public void sortEntitiesByView() {
+        TreeView<ProjectExplorerItem> tw = getTreeView();
+        TreeItem<ProjectExplorerItem> root = tw.getRoot();
+        List<TreeItem<ProjectExplorerItem>> entities = root.getChildren();
+
+        entities.sort((TreeItem<ProjectExplorerItem> e1, TreeItem<ProjectExplorerItem> e2) -> {
+            if (e1.getValue().isIncluded() && !e2.getValue().isIncluded()) {
+                return -1;
+            } else if (!e1.getValue().isIncluded() && e2.getValue().isIncluded()) {
+                return 1;
+            }
+
+            return e1.getValue().getItemName().compareTo(e2.getValue().getItemName());
+        });
     }
 
     public void deselectProjectExplorerItems() {

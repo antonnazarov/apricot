@@ -7,6 +7,8 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Configuration;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -22,8 +24,10 @@ public class ApricotMainApp extends Application {
 
     private ConfigurableApplicationContext context;
     private Pane rootNode;
+    private MainAppController controller; 
 
     ApplicationInitializer initializer;
+     
 
     @Override
     public void init() throws Exception {
@@ -34,7 +38,7 @@ public class ApricotMainApp extends Application {
         loader.setControllerFactory(context::getBean);
         rootNode = loader.load();
 
-        MainAppController controller = loader.<MainAppController>getController();
+        controller = loader.<MainAppController>getController();
         controller.init();
         System.out.println("ApricotMainApp: the main app controller was instantiated: " + controller.toString());
     }
@@ -43,6 +47,7 @@ public class ApricotMainApp extends Application {
     public void start(Stage primaryStage) throws Exception {
         ParentWindow pw = context.getBean(ParentWindow.class);
         pw.setParentPane(rootNode);
+        pw.init(controller);
         pw.setApplication(this);
         primaryStage.setOnShown(event -> {
             initializer.initializeDefault();
@@ -52,6 +57,19 @@ public class ApricotMainApp extends Application {
         primaryStage.setTitle("Apricot DB");
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("favicon-32x32.png")));
         primaryStage.setMaximized(true);
+        
+        primaryStage.showingProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    double ratio = 350.0/rootNode.getWidth();
+                    controller.splitPane.setDividerPositions(ratio);
+                    observable.removeListener(this);
+                }
+            }
+        });        
+
+        
         primaryStage.show();
 
         // handling key pressed in the main scene

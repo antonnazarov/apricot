@@ -21,6 +21,7 @@ import za.co.apricotdb.persistence.entity.ApricotTable;
 public class ApricotConstraintData implements Serializable {
 
     private static final long serialVersionUID = 5624231358883188078L;
+    private static final int COLUMNS_LIST_LENGTH = 45;
 
     private SimpleStringProperty constraintType = new SimpleStringProperty();
     private SimpleStringProperty constraintName = new SimpleStringProperty();
@@ -30,6 +31,7 @@ public class ApricotConstraintData implements Serializable {
     private ApricotTable table;
     private ApricotConstraint constraint;
     private boolean edited;
+    private String parentName; // use this field to store the parent entity name of the FK constraint
 
     public SimpleStringProperty getConstraintType() {
         return constraintType;
@@ -64,7 +66,12 @@ public class ApricotConstraintData implements Serializable {
             sb.append(cd.getName().getValue());
         }
 
-        String res = WordUtils.wrap(sb.toString(), 45);
+        if (parentName != null) {
+            sb.append(" (parent: ").append(parentName).append(")");
+        }
+
+        String res = WordUtils.wrap(sb.toString(), COLUMNS_LIST_LENGTH);
+
         return res;
     }
 
@@ -114,6 +121,10 @@ public class ApricotConstraintData implements Serializable {
 
     public void setEdited(boolean edited) {
         this.edited = edited;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
     }
 
     @Override

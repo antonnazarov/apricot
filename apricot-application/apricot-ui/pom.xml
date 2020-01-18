@@ -7,7 +7,7 @@
     <parent>
         <groupId>za.co.apricot</groupId>
         <artifactId>apricotdb</artifactId>
-        <version>2.0</version>
+        <version>2.1</version>
     </parent>
     <artifactId>apricot-ui</artifactId>
     <packaging>jar</packaging>
@@ -17,22 +17,22 @@
         <dependency>
             <groupId>za.co.apricot</groupId>
             <artifactId>apricot-persistence</artifactId>
-            <version>2.0</version>
+            <version>2.1</version>
         </dependency>
         <dependency>
             <groupId>za.co.apricot</groupId>
             <artifactId>apricot-metascan</artifactId>
-            <version>2.0</version>
+            <version>2.1</version>
         </dependency>
         <dependency>
             <groupId>za.co.apricot</groupId>
             <artifactId>apricot-viewport</artifactId>
-            <version>2.0</version>
+            <version>2.1</version>
         </dependency>
         <dependency>
             <groupId>za.co.apricot</groupId>
             <artifactId>apricot-support</artifactId>
-            <version>2.0</version>
+            <version>2.1</version>
         </dependency>
     </dependencies>
 

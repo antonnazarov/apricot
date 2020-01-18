@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
+import za.co.apricotdb.viewport.canvas.ElementStatus;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
 
 /**
@@ -31,19 +32,21 @@ public class EntityOnMouseMovedEventHandler implements EventHandler<MouseEvent> 
         if (event.getSource() instanceof ApricotEntityShape) {
             ApricotEntityShape entityShape = (ApricotEntityShape) event.getSource();
             if (tableName.equals(entityShape.getId())) {
-                Pane pane = (Pane) canvas;
-                Scene scene = pane.getScene();
+                if (entityShape.getElement().getElementStatus() != ElementStatus.GRAYED) {
+                    Pane pane = (Pane) canvas;
+                    Scene scene = pane.getScene();
 
-                switch (EntityOnMousePressedEventHandler.getDraggingType(entityShape, event.getX(), event.getY())) {
-                case ENTITY_HORIZONTAL_DRAGGING:
-                    scene.setCursor(Cursor.E_RESIZE);
-                    break;
-                default:
-                    scene.setCursor(Cursor.HAND);
-                    break;
+                    switch (EntityOnMousePressedEventHandler.getDraggingType(entityShape, event.getX(), event.getY())) {
+                    case ENTITY_HORIZONTAL_DRAGGING:
+                        scene.setCursor(Cursor.E_RESIZE);
+                        break;
+                    default:
+                        scene.setCursor(Cursor.HAND);
+                        break;
+                    }
+
+                    event.consume();
                 }
-
-                event.consume();
             }
         }
     }

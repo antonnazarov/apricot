@@ -13,8 +13,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -33,6 +35,7 @@ import za.co.apricotdb.ui.handler.ApricotViewHandler;
 import za.co.apricotdb.ui.handler.CanvasScaleHandler;
 import za.co.apricotdb.ui.handler.CompareSnapshotsHandler;
 import za.co.apricotdb.ui.handler.EntityAlignHandler;
+import za.co.apricotdb.ui.handler.EntityFilterHandler;
 import za.co.apricotdb.ui.handler.ExcelReportHandler;
 import za.co.apricotdb.ui.handler.GenerateScriptHandler;
 import za.co.apricotdb.ui.handler.ProjectExplorerContextMenuHandler;
@@ -41,11 +44,15 @@ import za.co.apricotdb.ui.handler.ReverseEngineHandler;
 import za.co.apricotdb.ui.handler.SelectViewTabHandler;
 import za.co.apricotdb.ui.handler.TabInfoObject;
 import za.co.apricotdb.ui.handler.TabViewHandler;
+import za.co.apricotdb.ui.toolbar.TbAddFilterHandler;
 import za.co.apricotdb.ui.toolbar.TbButton;
+import za.co.apricotdb.ui.toolbar.TbResetFilterHandler;
+import za.co.apricotdb.ui.toolbar.TbSetFilterHandler;
 import za.co.apricotdb.ui.toolbar.ToolbarHolder;
 import za.co.apricotdb.ui.undo.ApricotUndoManager;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
+import za.co.apricotdb.viewport.canvas.ElementStatus;
 
 /**
  * This controller serves the main application form apricot-main.fxml.
@@ -118,12 +125,24 @@ public class MainAppController {
 
     @Autowired
     CompareSnapshotsHandler compareSnapshotsHandler;
-    
+
     @Autowired
     ApricotClipboardHandler clipboardHandler;
-    
+
     @Autowired
     EntityAlignHandler alignHandler;
+
+    @Autowired
+    EntityFilterHandler filterHandler;
+    
+    @Autowired
+    TbSetFilterHandler tbSetFilterHandler;
+    
+    @Autowired
+    TbAddFilterHandler tbAddFilterHandler;
+    
+    @Autowired
+    TbResetFilterHandler tbResetFilterHandler;
 
     @FXML
     AnchorPane mainPane;
@@ -139,6 +158,9 @@ public class MainAppController {
 
     @FXML
     ComboBox<String> scale;
+
+    @FXML
+    SplitPane splitPane;
 
     // tool bar
     @FXML
@@ -197,6 +219,14 @@ public class MainAppController {
     Button tbDropScript;
     @FXML
     Button tbReverseEngineering;
+    
+    //  filter
+    @FXML
+    Button tbSetFilter;
+    @FXML
+    Button tbAddFilter;
+    @FXML
+    Button tbResetFilter;
 
     // menu items
     @FXML
@@ -220,7 +250,11 @@ public class MainAppController {
     @FXML
     MenuItem menuSameWidth;
 
+    @FXML
+    TextField filterField;
+
     public void init() {
+        parentWindow.init(this);
         parentWindow.setParentPane(mainPane);
 
         selTabHandler.initTabPane(viewsTabPane, scale);
@@ -257,6 +291,12 @@ public class MainAppController {
                 tbSearch, tbAlignLeft, tbAlignRight, tbAlignTop, tbAlignBottom, tbSameWidth, tbMinimizeWidth,
                 tbAllocateEntities, tbResetAllocation, tbExcelReport, tbInsertScript, tbDeleteScript, tbDropScript,
                 tbReverseEngineering);
+
+        
+        filterField.setText("*");
+        tbSetFilterHandler.initButton(tbSetFilter);
+        tbAddFilterHandler.initButton(tbAddFilter);
+        tbResetFilterHandler.initButton(tbResetFilter);
     }
 
     public void save(ActionEvent event) {
@@ -491,31 +531,31 @@ public class MainAppController {
     public void refresh(ActionEvent event) {
         snapshotHandler.syncronizeSnapshot(false);
     }
-    
+
     @FXML
     public void copy(ActionEvent event) {
         clipboardHandler.copySelectedToClipboard();
         menuPaste.setDisable(false);
     }
-    
+
     @FXML
     public void paste(ActionEvent event) {
         clipboardHandler.pasteSelectedFromClipboard();
     }
-    
+
     @FXML
     public void selectAll(ActionEvent event) {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
         if (canvas != null) {
-            canvas.selectAllElements();
+            canvas.changeAllElementsStatus(ElementStatus.SELECTED, false);
         }
     }
-    
+
     @FXML
     public void alignLeft(ActionEvent event) {
         alignHandler.alignSelectedEntities(Side.LEFT);
     }
-    
+
     @FXML
     public void alignRight(ActionEvent event) {
         alignHandler.alignSelectedEntities(Side.RIGHT);
@@ -535,12 +575,12 @@ public class MainAppController {
     public void minWidth(ActionEvent event) {
         alignHandler.alignEntitySize(true);
     }
-    
+
     @FXML
     public void sameWidth(ActionEvent event) {
         alignHandler.alignEntitySize(false);
     }
-    
+
     public TabPane getViewsTabPane() {
         return viewsTabPane;
     }
@@ -556,23 +596,23 @@ public class MainAppController {
     public MenuItem getMenuUndo() {
         return menuUndo;
     }
-    
+
     public MenuItem getMenuCopy() {
         return menuCopy;
     }
-    
+
     public MenuItem getMenuLeft() {
         return menuLeft;
     }
-    
+
     public MenuItem getMenuRight() {
         return menuRight;
     }
-    
+
     public MenuItem getMenuTop() {
         return menuTop;
     }
-    
+
     public MenuItem getMenuBottom() {
         return menuBottom;
     }
@@ -580,8 +620,28 @@ public class MainAppController {
     public MenuItem getMenuMinWidth() {
         return menuMinWidth;
     }
-    
+
     public MenuItem getMenuSameWidth() {
         return menuSameWidth;
+    }
+
+    @FXML
+    public void filterOn(ActionEvent event) {
+        filterHandler.setupEntityFilter(filterField.getText());
+    }
+    
+    @FXML
+    public void filterAdd(ActionEvent event) {
+        filterHandler.addToEntityFilter(filterField.getText());
+    }
+
+    @FXML
+    public void filterReset(ActionEvent event) {
+        filterHandler.resetEntityFilter();
+        filterField.setText("*");
+    }
+    
+    public TextField getFilterField() {
+        return filterField;
     }
 }

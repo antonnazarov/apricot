@@ -29,7 +29,9 @@ public class GrayedLabelCell extends TableCell<ApricotConstraintData, String> {
             if (constraint.getConstraintType().getValue().equals(ConstraintType.PRIMARY_KEY.name())
                     || constraint.getConstraintType().getValue().equals(ConstraintType.FOREIGN_KEY.name())) {
 
-                label.setStyle("-fx-text-fill:  silver;");
+                label.setStyle("-fx-text-fill: blue;");
+            } else {
+                label.setStyle("-fx-text-fill: black;");
             }
         }
     }

@@ -22,7 +22,7 @@ import za.co.apricotdb.persistence.entity.ApricotTable;
  */
 public interface MetaDataScanner {
 
-    MetaData scan(String driverClassName, String url, String userName, String schema, String password,
+    MetaData scan(ApricotTargetDatabase targetDb, String driverClassName, String url, String userName, String schema, String password,
             ApricotSnapshot snapshot);
 
     Map<String, ApricotTable> getTables(JdbcOperations jdbc, ApricotSnapshot snapshot, String schema);

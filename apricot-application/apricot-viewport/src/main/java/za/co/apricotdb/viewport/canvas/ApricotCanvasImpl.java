@@ -9,19 +9,15 @@ import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 
 import javafx.geometry.Bounds;
-import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
 import za.co.apricotdb.viewport.align.OrderManager;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
-import za.co.apricotdb.viewport.entity.shape.DefaultEntityShape;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
-import za.co.apricotdb.viewport.relationship.RelationshipType;
+import za.co.apricotdb.viewport.relationship.RelationshipBatchBuilder;
 import za.co.apricotdb.viewport.relationship.shape.ApricotRelationshipShape;
-import za.co.apricotdb.viewport.relationship.shape.RelationshipTopology;
-import za.co.apricotdb.viewport.relationship.shape.RelationshipTopologyImpl;
 
 /**
  * The basic implementation of the Apricot- canvas.
@@ -34,19 +30,21 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
     private final List<ApricotElement> elements = new ArrayList<>();
     private final Map<String, ApricotEntity> entities = new HashMap<>();
     private final List<ApricotRelationship> relationships = new ArrayList<>();
-    private final RelationshipTopology topology = new RelationshipTopologyImpl();
     private final ApplicationEventPublisher applicationEventPublisher;
     private String detailLevel;
     private String erdNotation;
     private boolean canvasChanged;
     private ScrollPane scroll;
     private double scale = 1;
+    private final RelationshipBatchBuilder relationshipsBuilder = new RelationshipBatchBuilder();
+    private SelectedElementsBuffer selectedElementsBuffer;
 
     public ApricotCanvasImpl(ApplicationEventPublisher applicationEventPublisher, String detailLevel,
             String erdNotation) {
         this.applicationEventPublisher = applicationEventPublisher;
         this.detailLevel = detailLevel;
         this.erdNotation = erdNotation;
+        this.selectedElementsBuffer = new SelectedElementsBuffer(this);
     }
 
     /**
@@ -126,9 +124,11 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
     }
 
     @Override
-    public void changeAllElementsStatus(ElementStatus status) {
+    public void changeAllElementsStatus(ElementStatus status, boolean ignoreFilteredStatus) {
         for (ApricotElement e : elements) {
-            e.setElementStatus(status);
+            if (ignoreFilteredStatus || e.getElementStatus() != ElementStatus.GRAYED) {
+                e.setElementStatus(status);
+            }
         }
     }
 
@@ -160,99 +160,16 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
      */
     @Override
     public void buildRelationships() {
+        List<ApricotEntity> entities = new ArrayList<>();
         for (ApricotElement e : elements) {
             if (e.getElementType() == ElementType.ENTITY) {
                 ApricotEntity entity = (ApricotEntity) e;
-                if (entity.getEntityShape() != null) {
-                    if (entity.getEntityShape() instanceof DefaultEntityShape) {
-                        DefaultEntityShape entityShape = (DefaultEntityShape) entity.getEntityShape();
-                        entityShape.resetAllStacks();
-                        entityShape.getEntityGroup().getChildren().remove(entityShape.getLeftStack());
-                        entityShape.getEntityGroup().getChildren().remove(entityShape.getRightStack());
-                        entityShape.getEntityGroup().getChildren().remove(entityShape.getTopStack());
+                entities.add(entity);
 
-                        for (ApricotRelationship r : entity.getPrimaryLinks()) {
-                            Side side = topology.getRelationshipSide(r, true);
-                            switch (side) {
-                            case LEFT:
-                                entityShape.getLeftStack().addRelationship(r);
-                                break;
-                            case RIGHT:
-                                entityShape.getRightStack().addRelationship(r);
-                                break;
-                            case TOP:
-                                entityShape.getTopStack().addRelationship(r);
-                                break;
-                            default:
-                                break;
-                            }
-                        }
-
-                        // the simplified view requires
-                        if (detailLevel.equals("SIMPLE")) {
-                            for (ApricotRelationship r : entity.getForeignLinks()) {
-                                Side side = topology.getRelationshipSide(r, false);
-                                switch (side) {
-                                case LEFT:
-                                    entityShape.getLeftStack().addChildRelationship(r);
-                                    break;
-                                case RIGHT:
-                                    entityShape.getRightStack().addChildRelationship(r);
-                                    break;
-                                case TOP:
-                                    entityShape.getTopStack().addChildRelationship(r);
-                                    break;
-                                default:
-                                    break;
-                                }
-                            }
-                        } else {
-                            // check if the normal and extended views have the primary and foreign key
-                            // in the same time
-                            for (ApricotRelationship r : entity.getForeignLinks()) {
-                                if (r.getRelationshipType() == RelationshipType.IDENTIFYING) {
-                                    Side side = topology.getRelationshipSide(r, false);
-                                    switch (side) {
-                                    case LEFT:
-                                        if (entityShape.getLeftStack().getPrimaryLinkSize() > 0) {
-                                            entityShape.getLeftStack().addChildRelationship(r);
-                                        }
-                                        break;
-                                    case RIGHT:
-                                        if (entityShape.getRightStack().getPrimaryLinkSize() > 0) {
-                                            entityShape.getRightStack().addChildRelationship(r);
-                                        }
-                                        break;
-                                    case TOP:
-                                        break;
-
-                                    default:
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-
-                        if (entityShape.getLeftStack().hasRelationships()) {
-                            entityShape.getLeftStack().build();
-                            entityShape.getEntityGroup().getChildren().add(entityShape.getLeftStack());
-                        }
-                        if (entityShape.getRightStack().hasRelationships()) {
-                            entityShape.getRightStack().build();
-                            entityShape.getEntityGroup().getChildren().add(entityShape.getRightStack());
-                        }
-                        if (entityShape.getTopStack().hasRelationships()) {
-                            entityShape.getTopStack().build();
-                            entityShape.getEntityGroup().getChildren().add(entityShape.getTopStack());
-                        }
-                    }
-                }
             }
         }
 
-        for (ApricotRelationship r : relationships) {
-            r.buildShape();
-        }
+        relationshipsBuilder.buildRelationships(entities, relationships, detailLevel);
     }
 
     @Override
@@ -418,10 +335,12 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
     }
 
     @Override
-    public void selectAllElements() {
-        List<ApricotElement> elements = getElements();
-        for (ApricotElement elm : elements) {
-            elm.setElementStatus(ElementStatus.SELECTED);
-        }
+    public String getDetailLevel() {
+        return detailLevel;
+    }
+
+    @Override
+    public SelectedElementsBuffer getSelectedElementsBuffer() {
+        return selectedElementsBuffer;
     }
 }

@@ -32,7 +32,7 @@ public interface ApricotCanvas {
 
     void sendToFront(ApricotElement entity);
 
-    void changeAllElementsStatus(ElementStatus status);
+    void changeAllElementsStatus(ElementStatus status, boolean ignoreFilteredStatus);
 
     List<ApricotElement> getElements();
 
@@ -76,5 +76,7 @@ public interface ApricotCanvas {
     
     double getScale();
     
-    void selectAllElements();
+    String getDetailLevel();
+    
+    SelectedElementsBuffer getSelectedElementsBuffer();
 }

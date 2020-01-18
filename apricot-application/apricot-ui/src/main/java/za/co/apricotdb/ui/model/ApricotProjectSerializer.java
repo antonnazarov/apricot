@@ -15,6 +15,7 @@ import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotProjectParameter;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotView;
+import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.handler.ApricotSnapshotHandler;
 import za.co.apricotdb.ui.handler.ApricotViewHandler;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
@@ -30,7 +31,7 @@ public class ApricotProjectSerializer {
 
     @Autowired
     ApricotViewHandler viewHandler;
-    
+
     @Autowired
     AlertMessageDecorator alertDecorator;
 
@@ -48,6 +49,7 @@ public class ApricotProjectSerializer {
     }
 
     @Transactional
+    @ApricotErrorLogger(title = "Unable to save the Project", text = "Unable to save the edited Apricot Project information.")
     public ApricotProject serializeEditedProject(ProjectFormModel model) {
         ApricotProject project = projectManager.getProject(model.getProjectId());
         project.setName(model.getProjectName());

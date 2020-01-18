@@ -14,6 +14,7 @@ import za.co.apricotdb.viewport.event.GroupOperationHandler;
 import za.co.apricotdb.viewport.modifiers.ElementVisualModifier;
 import za.co.apricotdb.viewport.modifiers.EntitySetDetailedEntityShadowModifier;
 import za.co.apricotdb.viewport.modifiers.SetEntityEventsModifier;
+import za.co.apricotdb.viewport.relationship.RelationshipBatchBuilder;
 
 /**
  * The basic implementation of EntityBuilder interface.
@@ -31,10 +32,11 @@ public class DefaultEntityBuilder implements EntityBuilder {
 
         GroupOperationHandler groupHandler = new GroupOperationHandler();
         AlignCommand aligner = new CanvasSizeAjustor(canvas);
+        RelationshipBatchBuilder relationshipBuilder = new RelationshipBatchBuilder();
 
         // collect all necessary modifiers
         ElementVisualModifier[] modifiers = new ElementVisualModifier[] { new EntitySetDetailedEntityShadowModifier(),
-                new SetEntityEventsModifier(canvas, groupHandler, aligner) };
+                new SetEntityEventsModifier(canvas, groupHandler, aligner, relationshipBuilder) };
 
         if (detailLevel.equals("DEFAULT")) {
             shapeBuilder = new DefaultEntityShapeBuilder(modifiers);

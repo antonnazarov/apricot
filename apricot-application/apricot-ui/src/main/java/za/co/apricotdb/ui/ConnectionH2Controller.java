@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -85,7 +86,7 @@ public class ConnectionH2Controller {
         Properties props = parametersHandler.getLatestConnectionProperties(projectManager.findCurrentProject());
         if (props != null) {
             String sFileName = props.getProperty(ProjectParameterManager.CONNECTION_SERVER);
-            if (sFileName != null) {
+            if (StringUtils.isNotEmpty(sFileName) && doesFileExist(sFileName, false)) {
                 fileName.setText(sFileName);
             }
             String sSchema = props.getProperty(ProjectParameterManager.CONNECTION_SCHEMA);
@@ -104,7 +105,8 @@ public class ConnectionH2Controller {
         String outputDir = null;
         ApricotProjectParameter param = parameterManager.getParameterByName(projectManager.findCurrentProject(),
                 ProjectParameterManager.H2DB_FILE_DEFAULT_DIR);
-        if (param != null) {
+
+        if (param != null && StringUtils.isNotEmpty(param.getValue()) && doesFileExist(param.getValue(), true)) {
             outputDir = param.getValue();
         } else {
             outputDir = System.getProperty("user.dir");
@@ -133,9 +135,17 @@ public class ConnectionH2Controller {
             return;
         }
 
+        if (!doesFileExist(fileName.getText(), false)) {
+            Alert alert = alertDecorator.getErrorAlert("Reverse H2 DB",
+                    "Unable to find the file: " + fileName.getText());
+            alert.showAndWait();
+
+            return;
+        }
+
         String driverClass = urlBuilder.getDriverClass();
         String url = urlBuilder.getUrl(getH2DbName(fileName.getText()));
-        MetaData metaData = scanner.scan(driverClass, url, schema.getText(), userName.getText(), password.getText(),
+        MetaData metaData = scanner.scan(ApricotTargetDatabase.H2, driverClass, url, schema.getText(), userName.getText(), password.getText(),
                 snapshotManager.getDefaultSnapshot());
         String[] blackList = blackListHandler.getBlackListTables(projectManager.findCurrentProject());
         try {
@@ -181,7 +191,7 @@ public class ConnectionH2Controller {
 
         return params;
     }
-    
+
     private String composeReverseEngineeringParameters() {
         StringBuilder sb = new StringBuilder();
 
@@ -191,5 +201,10 @@ public class ConnectionH2Controller {
         sb.append("User: ").append(userName.getText()).append("\n");
 
         return sb.toString();
+    }
+
+    private boolean doesFileExist(String filePath, boolean isDirectory) {
+        File f = new File(filePath);
+        return f.exists() && (f.isDirectory() == isDirectory);
     }
 }

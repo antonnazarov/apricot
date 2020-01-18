@@ -23,10 +23,9 @@ public abstract class MetaDataScannerBase implements MetaDataScanner {
     MetaDataScannerFactory scannerFactory;
 
     @Override
-    public MetaData scan(String driverClassName, String url, String schema, String userName, String password,
+    public MetaData scan(ApricotTargetDatabase targetDb, String driverClassName, String url, String schema, String userName, String password,
             ApricotSnapshot snapshot) {
         if (StringUtils.isEmpty(schema)) {
-            ApricotTargetDatabase targetDb = scannerFactory.getTargetDatabase(url);
             String defSchema = scannerFactory.getDefaultSchema(url, userName, targetDb);
             if (StringUtils.isEmpty(defSchema)) {
                 schema = null;

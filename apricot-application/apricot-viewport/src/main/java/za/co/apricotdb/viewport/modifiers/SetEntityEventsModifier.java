@@ -13,6 +13,7 @@ import za.co.apricotdb.viewport.event.EntityOnMousePressedEventHandler;
 import za.co.apricotdb.viewport.event.EntityOnMouseReleasedEventHandler;
 import za.co.apricotdb.viewport.event.EventOnMouseExitedEventHandler;
 import za.co.apricotdb.viewport.event.GroupOperationHandler;
+import za.co.apricotdb.viewport.relationship.RelationshipBatchBuilder;
 
 /**
  * Initialize entity events.
@@ -25,12 +26,14 @@ public class SetEntityEventsModifier implements ElementVisualModifier {
     private ApricotCanvas canvas = null;
     private GroupOperationHandler groupHandler = null;
     private AlignCommand aligner = null;
+    private RelationshipBatchBuilder relationshipBuilder = null;
 
     public SetEntityEventsModifier(ApricotCanvas canvas, GroupOperationHandler groupHandler, 
-            AlignCommand aligner) {
+            AlignCommand aligner, RelationshipBatchBuilder relationshipBuilder) {
         this.canvas = canvas;
         this.groupHandler = groupHandler;
         this.aligner = aligner;
+        this.relationshipBuilder = relationshipBuilder;
     }
 
     @Override
@@ -42,7 +45,7 @@ public class SetEntityEventsModifier implements ElementVisualModifier {
 
             entityShape.setOnMousePressed(new EntityOnMousePressedEventHandler(tableName, canvas));
             entityShape.setOnMouseReleased(new EntityOnMouseReleasedEventHandler(tableName, canvas, aligner, groupHandler));
-            entityShape.setOnMouseDragged(new EntityOnMouseDraggedEventHandler(tableName, canvas, groupHandler));
+            entityShape.setOnMouseDragged(new EntityOnMouseDraggedEventHandler(tableName, canvas, groupHandler, relationshipBuilder));
             entityShape.setOnMouseMoved(new EntityOnMouseMovedEventHandler(tableName, canvas));
             entityShape.setOnMouseEntered(new EntityOnMouseEnteredEventHandler(tableName, canvas));
             entityShape.setOnMouseExited(new EventOnMouseExitedEventHandler(tableName, canvas));

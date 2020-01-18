@@ -7,15 +7,34 @@ package za.co.apricotdb.metascan;
  * @since 05/02/2019
  */
 public enum ApricotTargetDatabase {
-    MSSQLServer(true), Oracle(true), MySQL(true), PostrgeSQL(true), DB2(true), H2(true);
+    MSSQLServer("MSSQLServer", true), Oracle("Oracle", true), MySQL("MySQL", true), PostrgeSQL("PostgreSQL", true),
+    DB2("DB2 (legacy)", true), DB2_LUW("DB2 (LUW)", true), H2("H2", true);
 
     private boolean supported;
+    private String databaseName;
 
-    ApricotTargetDatabase(boolean supported) {
+    ApricotTargetDatabase(String databaseName, boolean supported) {
+        this.databaseName = databaseName;
         this.supported = supported;
+    }
+
+    public String getDatabaseName() {
+        return databaseName;
     }
 
     public boolean isSupported() {
         return supported;
+    }
+
+    public static ApricotTargetDatabase parse(String name) {
+        ApricotTargetDatabase ret = null;
+        for (ApricotTargetDatabase tb : ApricotTargetDatabase.values()) {
+            if (name.equals(tb.getDatabaseName())) {
+                ret = tb;
+                break;
+            }
+        }
+
+        return ret;
     }
 }

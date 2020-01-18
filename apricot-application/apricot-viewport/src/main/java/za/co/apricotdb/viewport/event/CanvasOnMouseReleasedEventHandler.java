@@ -27,6 +27,7 @@ public class CanvasOnMouseReleasedEventHandler implements EventHandler<MouseEven
             
             Rectangle lasso = CanvasOnMousePressedEventHandler.getLasso(pane);
             pane.getChildren().remove(lasso);
+            CanvasOnMousePressedEventHandler.removeLasso(pane);
             
             event.consume();
         }

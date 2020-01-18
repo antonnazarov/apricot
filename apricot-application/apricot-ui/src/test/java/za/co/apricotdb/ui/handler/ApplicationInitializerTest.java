@@ -19,6 +19,7 @@ import com.isp.lpt.JfxTestRunner;
 
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.HBox;
@@ -85,6 +86,7 @@ public class ApplicationInitializerTest {
         when(vh.getAllViews(any(ApricotProject.class))).thenReturn(ws);
         ptv = new TreeView<>();
         when(pw.getProjectTreeView()).thenReturn(ptv);
+        when(pw.getFilterField()).thenReturn(new TextField());
 
         appInitializer = new ApplicationInitializer();
         appInitializer.projectManager = pm;
