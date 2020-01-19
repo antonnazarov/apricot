@@ -8,7 +8,7 @@ package za.co.apricotdb.metascan;
  */
 public enum ApricotTargetDatabase {
     MSSQLServer("MSSQLServer", true), Oracle("Oracle", true), MySQL("MySQL", true), PostrgeSQL("PostgreSQL", true),
-    DB2("DB2 (legacy)", true), DB2_LUW("DB2 (LUW)", true), H2("H2", true);
+    DB2("DB2", true), DB2_LUW("DB2 (LUW)", true), H2("H2", true);
 
     private boolean supported;
     private String databaseName;
@@ -33,6 +33,11 @@ public enum ApricotTargetDatabase {
                 ret = tb;
                 break;
             }
+        }
+
+        // if can't parse the database name, use the default one - SQLServer
+        if (ret == null) {
+            ret = ApricotTargetDatabase.MSSQLServer;
         }
 
         return ret;
