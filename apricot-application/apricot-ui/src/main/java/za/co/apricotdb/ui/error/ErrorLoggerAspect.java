@@ -54,9 +54,9 @@ public class ErrorLoggerAspect {
             } catch (Throwable t) {
                 StringBuffer text = new StringBuffer(l.text());
                 if (StringUtils.isNotEmpty(l.text())) {
-                    text.append("\n");
+                    text.append("\n\n");
                 }
-                text.append("Error: ").append(t.getMessage());
+                text.append(t.getMessage());
 
                 if (alertHandler.requestYesNoOption(l.title(), text.toString(), "View the error details",
                         AlertType.ERROR)) {

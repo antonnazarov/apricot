@@ -28,6 +28,7 @@ import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.ui.EditProjectController;
 import za.co.apricotdb.ui.OpenProjectController;
 import za.co.apricotdb.ui.ParentWindow;
+import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.model.EditProjectModelBuilder;
 import za.co.apricotdb.ui.model.NewProjectModelBuilder;
 import za.co.apricotdb.ui.model.ProjectFormModel;
@@ -58,6 +59,7 @@ public class ApricotProjectHandler {
     @Autowired
     AlertMessageDecorator alertDecorator;
     
+    @ApricotErrorLogger(title = "Unable to open the Projects list")
     public void createOpenProjectForm(Pane mainPane)
             throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-project-open.fxml"));
