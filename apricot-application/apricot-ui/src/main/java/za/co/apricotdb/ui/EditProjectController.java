@@ -14,7 +14,6 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import za.co.apricotdb.metascan.ApricotTargetDatabase;
 import za.co.apricotdb.persistence.data.ProjectManager;
-import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ERDNotation;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
 import za.co.apricotdb.ui.handler.BlackListHandler;
@@ -76,21 +75,7 @@ public class EditProjectController {
         model.setProjectDatabase(projectDatabase.getSelectionModel().getSelectedItem());
         model.setErdNotation(ERDNotation.parseNotation(erdNotation.getSelectionModel().getSelectedItem()));
 
-        if (!projectSerializer.validate(model)) {
-            return;
-        }
-
-        ApricotProject project = null;
-        if (isCreateNew) {
-            project = projectSerializer.serializeNewProject(model);
-        } else {
-            project = projectSerializer.serializeEditedProject(model);
-        }
-
-        applicationInitializer.initializeForProject(project);
-        if (isCreateNew) {
-            projectManager.setProjectCurrent(project);
-        }
+        projectSerializer.serializeProject(model, isCreateNew);
 
         getStage().close();
     }

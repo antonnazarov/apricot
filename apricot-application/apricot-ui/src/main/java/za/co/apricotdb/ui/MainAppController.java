@@ -134,13 +134,13 @@ public class MainAppController {
 
     @Autowired
     EntityFilterHandler filterHandler;
-    
+
     @Autowired
     TbSetFilterHandler tbSetFilterHandler;
-    
+
     @Autowired
     TbAddFilterHandler tbAddFilterHandler;
-    
+
     @Autowired
     TbResetFilterHandler tbResetFilterHandler;
 
@@ -219,8 +219,8 @@ public class MainAppController {
     Button tbDropScript;
     @FXML
     Button tbReverseEngineering;
-    
-    //  filter
+
+    // filter
     @FXML
     Button tbSetFilter;
     @FXML
@@ -292,7 +292,6 @@ public class MainAppController {
                 tbAllocateEntities, tbResetAllocation, tbExcelReport, tbInsertScript, tbDeleteScript, tbDropScript,
                 tbReverseEngineering);
 
-        
         filterField.setText("*");
         tbSetFilterHandler.initButton(tbSetFilter);
         tbAddFilterHandler.initButton(tbAddFilter);
@@ -455,9 +454,7 @@ public class MainAppController {
      */
     @FXML
     public void deleteProject(ActionEvent event) {
-        if (projectHandler.deleteCurrentProject()) {
-            applicationInitializer.initializeDefault();
-        }
+        projectHandler.deleteProject();
     }
 
     /**
@@ -629,7 +626,7 @@ public class MainAppController {
     public void filterOn(ActionEvent event) {
         filterHandler.setupEntityFilter(filterField.getText());
     }
-    
+
     @FXML
     public void filterAdd(ActionEvent event) {
         filterHandler.addToEntityFilter(filterField.getText());
@@ -640,7 +637,7 @@ public class MainAppController {
         filterHandler.resetEntityFilter();
         filterField.setText("*");
     }
-    
+
     public TextField getFilterField() {
         return filterField;
     }

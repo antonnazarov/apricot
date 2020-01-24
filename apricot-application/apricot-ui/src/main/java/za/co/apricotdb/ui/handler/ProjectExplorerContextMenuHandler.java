@@ -137,9 +137,7 @@ public class ProjectExplorerContextMenuHandler {
     public MenuItem buildDeleteProjectItem() {
         MenuItem item = new MenuItem("Delete Project");
         item.setOnAction(e -> {
-            if (projectHandler.deleteCurrentProject()) {
-                applicationInitializer.initializeDefault();
-            }
+            projectHandler.deleteProject();
         });
 
         return item;

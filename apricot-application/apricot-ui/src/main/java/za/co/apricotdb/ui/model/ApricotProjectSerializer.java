@@ -16,6 +16,7 @@ import za.co.apricotdb.persistence.entity.ApricotProjectParameter;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
+import za.co.apricotdb.ui.handler.ApplicationInitializer;
 import za.co.apricotdb.ui.handler.ApricotSnapshotHandler;
 import za.co.apricotdb.ui.handler.ApricotViewHandler;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
@@ -34,6 +35,9 @@ public class ApricotProjectSerializer {
 
     @Autowired
     AlertMessageDecorator alertDecorator;
+    
+    @Autowired
+    ApplicationInitializer applicationInitializer;
 
     @Transactional
     public ApricotProject serializeNewProject(ProjectFormModel model) {
@@ -49,7 +53,6 @@ public class ApricotProjectSerializer {
     }
 
     @Transactional
-    @ApricotErrorLogger(title = "Unable to save the Project", text = "Unable to save the edited Apricot Project information.")
     public ApricotProject serializeEditedProject(ProjectFormModel model) {
         ApricotProject project = projectManager.getProject(model.getProjectId());
         project.setName(model.getProjectName());
@@ -58,6 +61,25 @@ public class ApricotProjectSerializer {
         project.setErdNotation(model.getErdNotation());
 
         return projectManager.saveApricotProject(project);
+    }
+    
+    @ApricotErrorLogger(title = "Unable to save the Project")
+    public void serializeProject(ProjectFormModel model, boolean isCreateNew) {
+        if (!validate(model)) {
+            return;
+        }
+        
+        ApricotProject project = null;
+        if (isCreateNew) {
+            project = serializeNewProject(model);
+        } else {
+            project = serializeEditedProject(model);
+        }
+
+        applicationInitializer.initializeForProject(project);
+        if (isCreateNew) {
+            projectManager.setProjectCurrent(project);
+        }
     }
 
     public boolean validate(ProjectFormModel model) {

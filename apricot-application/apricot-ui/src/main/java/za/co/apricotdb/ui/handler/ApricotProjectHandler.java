@@ -17,6 +17,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -43,25 +44,27 @@ public class ApricotProjectHandler {
 
     @Resource
     ApplicationContext context;
-    
+
     @Autowired
     NewProjectModelBuilder newProjectModelBuilder;
-    
+
     @Autowired
     EditProjectModelBuilder editProjectModelBuilder;
-    
+
     @Autowired
     ParentWindow parentWindow;
-    
+
     @Autowired
     ProjectManager projectManager;
-    
+
     @Autowired
     AlertMessageDecorator alertDecorator;
-    
-    @ApricotErrorLogger(title = "Unable to open the Projects list")
-    public void createOpenProjectForm(Pane mainPane)
-            throws Exception {
+
+    @Autowired
+    ApplicationInitializer applicationInitializer;
+
+    @ApricotErrorLogger(title = "Unable to open the list of projects")
+    public void createOpenProjectForm(Pane mainPane) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-project-open.fxml"));
         loader.setControllerFactory(context::getBean);
         Pane window = loader.load();
@@ -87,7 +90,8 @@ public class ApricotProjectHandler {
 
         dialog.show();
     }
-    
+
+    @ApricotErrorLogger(title = "Unable to create the Edit Project forms")
     public void createEditProjectForm(boolean isCreateNew, Pane mainAppPane) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-project-editor.fxml"));
         loader.setControllerFactory(context::getBean);
@@ -95,7 +99,7 @@ public class ApricotProjectHandler {
 
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
-        
+
         ProjectFormModel model = null;
         if (isCreateNew) {
             dialog.setTitle("Create Project");
@@ -105,7 +109,7 @@ public class ApricotProjectHandler {
             parentWindow.setParentPane(mainAppPane);
             model = editProjectModelBuilder.buildModel(parentWindow.getApplicationData().getCurrentProject());
         }
-        
+
         dialog.getIcons().add(new Image(getClass().getResourceAsStream("project-2-s1.JPG")));
 
         Scene openProjectScene = new Scene(window);
@@ -124,11 +128,11 @@ public class ApricotProjectHandler {
 
         dialog.show();
     }
-    
+
     @Transactional
     public boolean deleteCurrentProject() {
         ApricotProject project = projectManager.findCurrentProject();
-        
+
         ButtonType yes = new ButtonType("Delete", ButtonData.OK_DONE);
         ButtonType no = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
         Alert alert = new Alert(AlertType.WARNING, null, yes, no);
@@ -143,10 +147,24 @@ public class ApricotProjectHandler {
             if (prj != null && prj.size() > 0) {
                 projectManager.setProjectCurrent(prj.get(0));
             }
-            
+
             return true;
         }
-        
+
         return false;
+    }
+
+    @ApricotErrorLogger(title = "Unable to delete the current Project")
+    public void deleteProject() {
+        if (deleteCurrentProject()) {
+            applicationInitializer.initializeDefault();
+        }
+    }
+
+    @ApricotErrorLogger(title = "Unable to open the selected Project")
+    public void openProject(TableView<ApricotProject> projectsList) {
+        ApricotProject selectedProject = projectsList.getSelectionModel().getSelectedItem();
+        projectManager.setProjectCurrent(selectedProject);
+        applicationInitializer.initializeDefault();
     }
 }

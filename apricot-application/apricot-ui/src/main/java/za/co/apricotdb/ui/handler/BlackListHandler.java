@@ -24,6 +24,7 @@ import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotProjectParameter;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.ui.BlackListEditController;
+import za.co.apricotdb.ui.error.ApricotErrorLogger;
 
 /**
  * All operations required for Black List have been supported by this component.
@@ -87,6 +88,7 @@ public class BlackListHandler {
     /**
      * Open the form of editing of the black list.
      */
+    @ApricotErrorLogger(title = "Unable to open the Black List editor")
     public void openEditBlackListForm(TextArea blackList) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-blacklist-editor.fxml"));
         loader.setControllerFactory(context::getBean);
