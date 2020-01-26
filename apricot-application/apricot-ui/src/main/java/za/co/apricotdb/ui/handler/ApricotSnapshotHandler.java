@@ -37,6 +37,7 @@ import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.EditSnapshotController;
 import za.co.apricotdb.ui.ParentWindow;
+import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.model.EditSnapshotModelBuilder;
 import za.co.apricotdb.ui.model.NewSnapshotModelBuilder;
 import za.co.apricotdb.ui.model.SnapshotFormModel;
@@ -168,8 +169,13 @@ public class ApricotSnapshotHandler {
      * Re-draw all the views for the current (default) snapshot together with the
      * tree view representation of the data
      */
-    @Transactional
+    @ApricotErrorLogger(title="Unable to synchronize the Snapshot")
     public void syncronizeSnapshot(boolean synchAllViews) {
+        syncSnapshotTransactional(synchAllViews);
+    }
+    
+    @Transactional
+    private void syncSnapshotTransactional(boolean synchAllViews) {
         TabInfoObject currentTab = canvasHandler.getCurrentViewTabInfo();
         if (synchAllViews) {
             TabPane tp = parentWindow.getProjectTabPane();
