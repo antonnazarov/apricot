@@ -51,6 +51,7 @@ public class BlackListHandler {
         return ret;
     }
     
+    @ApricotErrorLogger(title = "Unable to retrieve the black list tables")
     public String[] getBlackListTables(ApricotProject project) {
         String[] ret = new String[] {};
         String blackList = getBlackListAsString(project);

@@ -19,6 +19,7 @@ import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
+import za.co.apricotdb.ui.handler.ApricotSnapshotHandler;
 import za.co.apricotdb.ui.model.ApricotSnapshotSerializer;
 import za.co.apricotdb.ui.model.SnapshotFormModel;
 
@@ -39,6 +40,9 @@ public class EditSnapshotController {
 
     @Autowired
     ApplicationInitializer applicationInitializer;
+    
+    @Autowired
+    ApricotSnapshotHandler snapshotHandler;
 
     @FXML
     TextField snapshotName;
@@ -116,8 +120,7 @@ public class EditSnapshotController {
             }
         }
 
-        if (snapshotSerializer.serializeSnapshot(model)) {
-            applicationInitializer.initializeForProject(projectManager.findCurrentProject());
+        if (snapshotHandler.serializeSnapshot(model)) {
             getStage().close();
         }
     }

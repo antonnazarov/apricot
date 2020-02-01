@@ -22,8 +22,8 @@ import za.co.apricotdb.persistence.entity.ApricotTable;
  */
 public interface MetaDataScanner {
 
-    MetaData scan(ApricotTargetDatabase targetDb, String driverClassName, String url, String userName, String schema, String password,
-            ApricotSnapshot snapshot);
+    MetaData scan(ApricotTargetDatabase targetDb, String driverClassName, String url, String schema, String userName,
+            String password, ApricotSnapshot snapshot);
 
     Map<String, ApricotTable> getTables(JdbcOperations jdbc, ApricotSnapshot snapshot, String schema);
 
@@ -31,7 +31,8 @@ public interface MetaDataScanner {
 
     Map<String, ApricotConstraint> getConstraints(JdbcOperations jdbc, Map<String, ApricotTable> tables, String schema);
 
-    List<ApricotRelationship> getRelationships(JdbcOperations jdbc, Map<String, ApricotConstraint> constraints, String schema);
+    List<ApricotRelationship> getRelationships(JdbcOperations jdbc, Map<String, ApricotConstraint> constraints,
+            String schema);
 
     static JdbcOperations getTargetJdbcOperations(String driverClassName, String url, String userName,
             String password) {

@@ -1,13 +1,8 @@
 package za.co.apricotdb.ui;
 
-import java.io.IOException;
 import java.util.Properties;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcOperations;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import javafx.event.ActionEvent;
@@ -21,7 +16,6 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import za.co.apricotdb.metascan.ApricotTargetDatabase;
-import za.co.apricotdb.metascan.MetaDataScanner;
 import za.co.apricotdb.metascan.MetaDataScannerFactory;
 import za.co.apricotdb.persistence.data.MetaData;
 import za.co.apricotdb.persistence.data.ProjectManager;
@@ -110,64 +104,19 @@ public class ConnectionSqlServerController {
         if (model.getTargetDb() == ApricotTargetDatabase.Oracle) {
             serviceLabel.setText("SID:");
             schema.setDisable(true);
-            //  the schema and user name are the same for the Oracle database
+            // the schema and user name are the same for the Oracle database
             schema.valueProperty().bind(user.valueProperty());
         }
     }
 
     @FXML
-    public boolean testConnection(ActionEvent event) {
-        Alert alert = null;
-        try {
-            testConnection(server.getSelectionModel().getSelectedItem(), port.getSelectionModel().getSelectedItem(),
-                    database.getSelectionModel().getSelectedItem(), user.getSelectionModel().getSelectedItem(),
-                    password.getText(), model.getTargetDb());
-            alert = getAlert(AlertType.INFORMATION, "The connection was successfully established");
-            alert.showAndWait();
-        } catch (Exception e) {
-            alert = getAlert(AlertType.ERROR, e.getMessage());
-            alert.showAndWait();
-            return false;
-        }
-
-        return true;
-    }
-
-    private void testConnection(String server, String port, String database, String user, String password,
-            ApricotTargetDatabase targetDb) throws Exception {
-
-        String driverClass = scannerFactory.getDriverClass(targetDb);
-        String url = scannerFactory.getUrl(targetDb, server, port, database);
-
-        try {
-            JdbcOperations op = MetaDataScanner.getTargetJdbcOperations(driverClass, url, user, password);
-            RowMapper<String> rowMapper = (rs, rowNum) -> {
-                return "Connection test";
-            };
-            op.query(scannerFactory.getTestSQL(targetDb), rowMapper);
-
-            // Success! Save the connection parameters in the project- parameter
-            Properties params = getConnectionParameters();
-            parametersHandler.saveConnectionParameters(params);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception("Unable to connect to the database server:\n" + WordUtils.wrap(e.getMessage(), 60));
-        }
-    }
-
-    private Properties getConnectionParameters() {
-        Properties params = new Properties();
-
-        params.setProperty(ProjectParameterManager.CONNECTION_SERVER, server.getSelectionModel().getSelectedItem());
-        params.setProperty(ProjectParameterManager.CONNECTION_PORT, port.getSelectionModel().getSelectedItem());
-        params.setProperty(ProjectParameterManager.CONNECTION_DATABASE, database.getSelectionModel().getSelectedItem());
-        if (StringUtils.isNotEmpty(schema.getSelectionModel().getSelectedItem())) {
-            params.setProperty(ProjectParameterManager.CONNECTION_SCHEMA, schema.getSelectionModel().getSelectedItem());
-        }
-        params.setProperty(ProjectParameterManager.CONNECTION_USER, user.getSelectionModel().getSelectedItem());
-        params.setProperty(ProjectParameterManager.CONNECTION_PASSWORD, StringEncoder.encode(password.getText()));
-
-        return params;
+    public void testConnection(ActionEvent event) {
+        reverseEngineHandler.testConnection(server.getSelectionModel().getSelectedItem(),
+                port.getSelectionModel().getSelectedItem(), database.getSelectionModel().getSelectedItem(),
+                schema.getSelectionModel().getSelectedItem(), user.getSelectionModel().getSelectedItem(),
+                password.getText(), model.getTargetDb());
+        Alert alert = getAlert(AlertType.INFORMATION, "The connection was successfully established");
+        alert.showAndWait();
     }
 
     @FXML
@@ -178,31 +127,21 @@ public class ConnectionSqlServerController {
     @FXML
     public void forward(ActionEvent event) {
         // check the connection firstly
-        try {
-            testConnection(server.getSelectionModel().getSelectedItem(), port.getSelectionModel().getSelectedItem(),
-                    database.getSelectionModel().getSelectedItem(), user.getSelectionModel().getSelectedItem(),
-                    password.getText(), model.getTargetDb());
-        } catch (Exception e) {
-            Alert alert = getAlert(AlertType.ERROR, e.getMessage());
-            alert.showAndWait();
-            return;
-        }
+        reverseEngineHandler.testConnection(server.getSelectionModel().getSelectedItem(),
+                port.getSelectionModel().getSelectedItem(), database.getSelectionModel().getSelectedItem(),
+                schema.getSelectionModel().getSelectedItem(), user.getSelectionModel().getSelectedItem(),
+                password.getText(), model.getTargetDb());
 
         String driverClass = scannerFactory.getDriverClass(model.getTargetDb());
         String url = scannerFactory.getUrl(model.getTargetDb(), server.getSelectionModel().getSelectedItem(),
                 port.getSelectionModel().getSelectedItem(), database.getSelectionModel().getSelectedItem());
-        this.snapshot = snapshotManager.getDefaultSnapshot();
-        this.project = projectManager.findCurrentProject();
 
-        MetaData metaData = scannerFactory.getScanner(model.getTargetDb()).scan(model.getTargetDb(), driverClass, url, schema.getValue(),
+        MetaData metaData = reverseEngineHandler.getMetaData(model.getTargetDb(), driverClass, url, schema.getValue(),
                 user.getSelectionModel().getSelectedItem(), password.getText(), snapshot);
         String[] blackList = blackListHandler.getBlackListTables(project);
-        try {
-            getStage().close();
-            reverseEngineHandler.openScanResultForm(metaData, blackList, composeReverseEngineeringParameters());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        
+        getStage().close();
+        reverseEngineHandler.openScanResultForm(metaData, blackList, composeReverseEngineeringParameters());
     }
 
     @FXML

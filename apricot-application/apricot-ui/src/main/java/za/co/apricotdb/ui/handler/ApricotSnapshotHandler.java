@@ -38,6 +38,7 @@ import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.EditSnapshotController;
 import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
+import za.co.apricotdb.ui.model.ApricotSnapshotSerializer;
 import za.co.apricotdb.ui.model.EditSnapshotModelBuilder;
 import za.co.apricotdb.ui.model.NewSnapshotModelBuilder;
 import za.co.apricotdb.ui.model.SnapshotFormModel;
@@ -82,7 +83,14 @@ public class ApricotSnapshotHandler {
 
     @Autowired
     EntityFilterHandler filterHandler;
+    
+    @Autowired
+    ApricotSnapshotSerializer snapshotSerializer;
+    
+    @Autowired
+    ApplicationInitializer applicationInitializer;
 
+    @ApricotErrorLogger(title = "Unable to create the default (empty) snapshot")
     public void createDefaultSnapshot(ApricotProject project) {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         ApricotSnapshot snapshot = new ApricotSnapshot("Initial snapshot, created " + df.format(new java.util.Date()),
@@ -94,6 +102,7 @@ public class ApricotSnapshotHandler {
     /**
      * Create the snapshot editing form for a new or existing snapshot.
      */
+    @ApricotErrorLogger(title = "Create new Snapshot: unable to create the form")
     public void createEditSnapshotForm(boolean isCreateNew, Pane mainAppPane) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-snapshot-editor.fxml"));
         loader.setControllerFactory(context::getBean);
@@ -130,6 +139,7 @@ public class ApricotSnapshotHandler {
         dialog.show();
     }
 
+    @ApricotErrorLogger(title = "Unable to delete the current snapshot")
     public boolean deleteSnapshot() {
         ApricotProject project = projectManager.findCurrentProject();
         List<ApricotSnapshot> snaps = snapshotManager.getAllSnapshots(project);
@@ -172,6 +182,17 @@ public class ApricotSnapshotHandler {
     @ApricotErrorLogger(title="Unable to synchronize the Snapshot")
     public void syncronizeSnapshot(boolean synchAllViews) {
         syncSnapshotTransactional(synchAllViews);
+    }
+    
+    @ApricotErrorLogger(title = "Unable to save the current Snapshot")
+    public boolean serializeSnapshot(SnapshotFormModel model) {
+        if (snapshotSerializer.serializeSnapshot(model)) {
+            applicationInitializer.initializeForProject(projectManager.findCurrentProject());
+            
+            return true;
+        }
+        
+        return false;
     }
     
     @Transactional

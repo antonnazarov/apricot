@@ -7,14 +7,18 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.jdbc.core.JdbcOperations;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import javafx.event.EventHandler;
@@ -31,9 +35,12 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import za.co.apricotdb.metascan.ApricotTargetDatabase;
+import za.co.apricotdb.metascan.MetaDataScanner;
+import za.co.apricotdb.metascan.MetaDataScannerFactory;
 import za.co.apricotdb.persistence.data.DataSaver;
 import za.co.apricotdb.persistence.data.MetaData;
 import za.co.apricotdb.persistence.data.ProjectManager;
+import za.co.apricotdb.persistence.data.ProjectParameterManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.TableManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
@@ -43,9 +50,11 @@ import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.ui.ConnectionH2Controller;
 import za.co.apricotdb.ui.ConnectionSqlServerController;
 import za.co.apricotdb.ui.ReversedTablesController;
+import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.model.DatabaseConnectionModel;
 import za.co.apricotdb.ui.model.DatabaseConnectionModelBuilder;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
+import za.co.apricotdb.ui.util.StringEncoder;
 
 /**
  * This component is responsible for reverse engineering operation.
@@ -80,6 +89,13 @@ public class ReverseEngineHandler {
     @Autowired
     DataSaver dataSaver;
 
+    @Autowired
+    MetaDataScannerFactory scannerFactory;
+
+    @Autowired
+    SqlServerParametersHandler parametersHandler;
+
+    @ApricotErrorLogger(title = "Unable to start the Reverse Engineering process")
     public boolean startReverseEngineering() {
         ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
         List<ApricotTable> tables = tableManager.getTablesForSnapshot(snapshot);
@@ -101,11 +117,17 @@ public class ReverseEngineHandler {
         return false;
     }
 
-    public void openScanResultForm(MetaData metaData, String[] blackList, String reverseEngineeringParameters)
-            throws IOException {
+    @ApricotErrorLogger(title = "Unable to open the result of the scan process")
+    public void openScanResultForm(MetaData metaData, String[] blackList, String reverseEngineeringParameters) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-re-tables-list.fxml"));
         loader.setControllerFactory(context::getBean);
-        Pane window = loader.load();
+        Pane window = null;
+        try {
+            window = loader.load();
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+
         ReversedTablesController controller = loader.<ReversedTablesController>getController();
         controller.init(metaData, blackList, reverseEngineeringParameters);
 
@@ -119,6 +141,7 @@ public class ReverseEngineHandler {
         dialog.show();
     }
 
+    @ApricotErrorLogger(title = "Unable to save the reversed objects in the current Snapshot")
     public boolean saveReversedObjects(List<ApricotTable> included, List<ApricotTable> excluded,
             List<ApricotRelationship> relationships, String reverseEngineeringParameters) {
         Map<ApricotTable, ApricotTable> extraExclude = consistencyHandler.getFullConsistentExclude(excluded,
@@ -168,6 +191,49 @@ public class ReverseEngineHandler {
         setSnapshotReverseResultComment(reverseEngineeringParameters);
 
         return true;
+    }
+
+    @ApricotErrorLogger(title = "Unable to scan the database meta data")
+    public MetaData getMetaData(ApricotTargetDatabase dbType, String driverClass, String url, String schema,
+            String user, String password, ApricotSnapshot snapshot) {
+        MetaDataScanner scanner = scannerFactory.getScanner(dbType);
+        MetaData metaData = scanner.scan(dbType, driverClass, url, schema, user, password, snapshot);
+
+        return metaData;
+    }
+
+    @ApricotErrorLogger(title = "Unable to establish connection to the database", stop = true)
+    public void testConnection(String server, String port, String database, String schema, String user, String password,
+            ApricotTargetDatabase targetDb) {
+
+        String driverClass = scannerFactory.getDriverClass(targetDb);
+        String url = scannerFactory.getUrl(targetDb, server, port, database);
+
+        JdbcOperations op = MetaDataScanner.getTargetJdbcOperations(driverClass, url, user, password);
+        RowMapper<String> rowMapper = (rs, rowNum) -> {
+            return "Connection test";
+        };
+        op.query(scannerFactory.getTestSQL(targetDb), rowMapper);
+
+        // Success! Save the connection parameters in the project- parameter
+        Properties params = getConnectionParameters(server, port, database, schema, user, password);
+        parametersHandler.saveConnectionParameters(params);
+    }
+
+    private Properties getConnectionParameters(String server, String port, String database, String schema, String user,
+            String password) {
+        Properties params = new Properties();
+
+        params.setProperty(ProjectParameterManager.CONNECTION_SERVER, server);
+        params.setProperty(ProjectParameterManager.CONNECTION_PORT, port);
+        params.setProperty(ProjectParameterManager.CONNECTION_DATABASE, database);
+        if (StringUtils.isNotEmpty(schema)) {
+            params.setProperty(ProjectParameterManager.CONNECTION_SCHEMA, schema);
+        }
+        params.setProperty(ProjectParameterManager.CONNECTION_USER, user);
+        params.setProperty(ProjectParameterManager.CONNECTION_PASSWORD, StringEncoder.encode(password));
+
+        return params;
     }
 
     private String getMessageForExtraExclude(Map<ApricotTable, ApricotTable> extraExclude) {

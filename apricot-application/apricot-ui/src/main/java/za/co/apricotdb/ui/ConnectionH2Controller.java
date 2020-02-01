@@ -1,7 +1,6 @@
 package za.co.apricotdb.ui;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
@@ -23,7 +22,9 @@ import za.co.apricotdb.persistence.data.MetaData;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.ProjectParameterManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
+import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotProjectParameter;
+import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.ui.handler.BlackListHandler;
 import za.co.apricotdb.ui.handler.ReverseEngineHandler;
 import za.co.apricotdb.ui.handler.SqlServerParametersHandler;
@@ -82,7 +83,13 @@ public class ConnectionH2Controller {
     @FXML
     PasswordField password;
 
+    private ApricotSnapshot snapshot;
+    private ApricotProject project;
+
     public void init(DatabaseConnectionModel model) {
+        project = projectManager.findCurrentProject();
+        snapshot = snapshotManager.getDefaultSnapshot();
+
         Properties props = parametersHandler.getLatestConnectionProperties(projectManager.findCurrentProject());
         if (props != null) {
             String sFileName = props.getProperty(ProjectParameterManager.CONNECTION_SERVER);
@@ -145,20 +152,16 @@ public class ConnectionH2Controller {
 
         String driverClass = urlBuilder.getDriverClass();
         String url = urlBuilder.getUrl(getH2DbName(fileName.getText()));
-        MetaData metaData = scanner.scan(ApricotTargetDatabase.H2, driverClass, url, schema.getText(), userName.getText(), password.getText(),
-                snapshotManager.getDefaultSnapshot());
-        String[] blackList = blackListHandler.getBlackListTables(projectManager.findCurrentProject());
-        try {
-            getStage().close();
-            reverseEngineHandler.openScanResultForm(metaData, blackList, composeReverseEngineeringParameters());
+        MetaData metaData = reverseEngineHandler.getMetaData(ApricotTargetDatabase.H2, driverClass, url,
+                schema.getText(), userName.getText(), password.getText(), snapshot);
+        String[] blackList = blackListHandler.getBlackListTables(project);
 
-            // save the parameters filed in the form
-            Properties params = getConnectionParameters();
-            parametersHandler.saveConnectionParameters(params);
+        getStage().close();
+        reverseEngineHandler.openScanResultForm(metaData, blackList, composeReverseEngineeringParameters());
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // save the parameters filed in the form
+        Properties params = getConnectionParameters();
+        parametersHandler.saveConnectionParameters(params);
     }
 
     @FXML

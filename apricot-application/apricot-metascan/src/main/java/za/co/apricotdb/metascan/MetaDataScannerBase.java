@@ -16,15 +16,15 @@ import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 
 public abstract class MetaDataScannerBase implements MetaDataScanner {
-    
+
     public static final int DATA_TYPE_LENGTH = 25;
-    
+
     @Autowired
     MetaDataScannerFactory scannerFactory;
 
     @Override
-    public MetaData scan(ApricotTargetDatabase targetDb, String driverClassName, String url, String schema, String userName, String password,
-            ApricotSnapshot snapshot) {
+    public MetaData scan(ApricotTargetDatabase targetDb, String driverClassName, String url, String schema,
+            String userName, String password, ApricotSnapshot snapshot) {
         if (StringUtils.isEmpty(schema)) {
             String defSchema = scannerFactory.getDefaultSchema(url, userName, targetDb);
             if (StringUtils.isEmpty(defSchema)) {
@@ -33,7 +33,7 @@ public abstract class MetaDataScannerBase implements MetaDataScanner {
                 schema = defSchema;
             }
         }
-        
+
         JdbcOperations jdbc = MetaDataScanner.getTargetJdbcOperations(driverClassName, url, userName, password);
 
         Map<String, ApricotTable> tables = getTables(jdbc, snapshot, schema);
@@ -47,7 +47,7 @@ public abstract class MetaDataScannerBase implements MetaDataScanner {
 
         return ret;
     }
-    
+
     protected String getDataType(String dataType) {
         String ret = dataType;
         if (dataType.length() > DATA_TYPE_LENGTH) {
@@ -60,7 +60,7 @@ public abstract class MetaDataScannerBase implements MetaDataScanner {
                 }
             }
         }
-        
+
         return ret;
     }
 }
