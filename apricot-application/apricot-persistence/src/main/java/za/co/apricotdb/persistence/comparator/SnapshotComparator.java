@@ -36,9 +36,7 @@ public class SnapshotComparator implements ApricotObjectComparator<ApricotSnapsh
     public SnapshotDifference compare(ApricotSnapshot source, ApricotSnapshot target) {
         SnapshotDifference diff = new SnapshotDifference(source, target);
         compareTables(diff);
-        // diff.getRelationshipDiffs().addAll(relationshipComparator.compare(source,
-        // target, diff.getTableDiffs()));
-
+        
         if (diff.isDifferent()) {
             sortTablesByDiffType(diff.getTableDiffs());
         }

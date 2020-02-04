@@ -28,6 +28,7 @@ import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.ui.CompareSnapshotsController;
+import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
 /**
@@ -54,6 +55,7 @@ public class CompareSnapshotsHandler {
     @Autowired
     SnapshotComparator snapshotComparator;
 
+    @ApricotErrorLogger(title = "Unable to open the Compare Snapshots form")
     public void openCompareSnapshotsForm() throws IOException {
         if (!validate()) {
             return;
