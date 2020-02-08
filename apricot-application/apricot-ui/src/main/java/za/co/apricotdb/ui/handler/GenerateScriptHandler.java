@@ -42,6 +42,7 @@ import za.co.apricotdb.ui.DBScriptType;
 import za.co.apricotdb.ui.ScriptGenerateController;
 import za.co.apricotdb.ui.ScriptGenerateController.ScriptSource;
 import za.co.apricotdb.ui.ScriptGenerateController.ScriptTarget;
+import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.ui.util.ApricotTableUtils;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
@@ -270,6 +271,7 @@ public class GenerateScriptHandler {
         return ret;
     }
 
+    @ApricotErrorLogger(title = "Unable to save the generated script to file")
     public boolean saveToFile(String operationName, String script, Window window) {
         ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
 

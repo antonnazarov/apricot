@@ -68,7 +68,7 @@ public class CompareScriptHandler {
         try {
             createGenerateScriptForm(differences);
         } catch (IOException ex) {
-            ex.printStackTrace();
+            throw new IllegalStateException(ex);
         }
     }
 

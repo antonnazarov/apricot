@@ -17,6 +17,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import za.co.apricotdb.ui.SyntaxEditorController;
+import za.co.apricotdb.ui.error.ApricotErrorLogger;
 
 /**
  * The Syntax Editor related business logic.
@@ -30,6 +31,7 @@ public class SyntaxEditorHandler {
     @Resource
     ApplicationContext context;
 
+    @ApricotErrorLogger(title = "Unable to create the script editing form")
     public void createSyntaxEditorForm(String script, String formHeader) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-syntax-editor.fxml"));
         loader.setControllerFactory(context::getBean);
