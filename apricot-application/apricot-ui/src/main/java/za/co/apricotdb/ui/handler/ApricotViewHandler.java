@@ -36,6 +36,7 @@ import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.persistence.entity.LayoutObjectType;
 import za.co.apricotdb.persistence.entity.ViewDetailLevel;
 import za.co.apricotdb.ui.ViewFormController;
+import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.model.EditViewModelBuilder;
 import za.co.apricotdb.ui.model.NewViewModelBuilder;
 import za.co.apricotdb.ui.model.ViewFormModel;
@@ -126,6 +127,7 @@ public class ApricotViewHandler {
         }
     }
 
+    @ApricotErrorLogger(title = "Unable to create the View editor form")
     public void createViewEditor(TabPane viewsTabPane, ApricotView view, Tab tab) throws Exception {
         
         //  check if this is not the "Main View"
