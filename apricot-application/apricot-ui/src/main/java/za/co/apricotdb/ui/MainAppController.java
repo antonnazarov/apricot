@@ -38,6 +38,7 @@ import za.co.apricotdb.ui.handler.EntityAlignHandler;
 import za.co.apricotdb.ui.handler.EntityFilterHandler;
 import za.co.apricotdb.ui.handler.ExcelReportHandler;
 import za.co.apricotdb.ui.handler.GenerateScriptHandler;
+import za.co.apricotdb.ui.handler.NonTransactionalPort;
 import za.co.apricotdb.ui.handler.ProjectExplorerContextMenuHandler;
 import za.co.apricotdb.ui.handler.ProjectExplorerItem;
 import za.co.apricotdb.ui.handler.ReverseEngineHandler;
@@ -143,6 +144,9 @@ public class MainAppController {
 
     @Autowired
     TbResetFilterHandler tbResetFilterHandler;
+
+    @Autowired
+    NonTransactionalPort port;
 
     @FXML
     AnchorPane mainPane;
@@ -406,7 +410,7 @@ public class MainAppController {
                 return;
             }
             snapshotManager.setDefaultSnapshot(snapshot);
-            applicationInitializer.initialize(snapshot.getProject(), snapshot);
+            port.initialize(snapshot.getProject(), snapshot);
         }
     }
 

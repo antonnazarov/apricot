@@ -13,6 +13,7 @@ import za.co.apricotdb.persistence.data.TableManager;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ApricotView;
+import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.handler.ApricotViewHandler;
 import za.co.apricotdb.ui.handler.TabInfoObject;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
@@ -74,6 +75,7 @@ public class NewViewModelBuilder {
         return ret;
     }
 
+    @ApricotErrorLogger(title = "Unable to get available tables in the Snapshot")
     public List<String> getAvailableTablesFromSnapshotAndSelected(List<String> snapTables,
             List<String> selectedTables) {
         List<String> ret = new ArrayList<>(snapTables);

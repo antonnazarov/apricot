@@ -99,6 +99,7 @@ public class ApricotViewHandler {
     /**
      * Find all tables of the given snapshot, which have associated Layout Object.
      */
+    @ApricotErrorLogger(title = "Unable to retrieve tables for the selected view")
     public List<ApricotTable> getTablesForView(ApricotSnapshot snapshot, ApricotView view) {
         List<ApricotTable> ret = new ArrayList<>();
 
@@ -212,6 +213,7 @@ public class ApricotViewHandler {
         return tab;
     }
 
+    @ApricotErrorLogger(title = "Unable to get View by name")
     public ApricotView getViewByName(ApricotProject project, String name) {
         ApricotView ret = null;
 

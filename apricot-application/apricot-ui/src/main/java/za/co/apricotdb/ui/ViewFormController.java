@@ -13,7 +13,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -22,10 +21,8 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ApricotView;
-import za.co.apricotdb.ui.handler.ApricotCanvasHandler;
 import za.co.apricotdb.ui.handler.ApricotViewHandler;
-import za.co.apricotdb.ui.handler.TreeViewHandler;
-import za.co.apricotdb.ui.model.ApricotViewSerializer;
+import za.co.apricotdb.ui.handler.NonTransactionalViewHandler;
 import za.co.apricotdb.ui.model.NewViewModelBuilder;
 import za.co.apricotdb.ui.model.ViewFormModel;
 import za.co.apricotdb.ui.util.TextLimiter;
@@ -41,19 +38,13 @@ import za.co.apricotdb.ui.util.TextLimiter;
 public class ViewFormController {
 
     @Autowired
-    ApricotViewSerializer viewSerializer;
-
-    @Autowired
     ApricotViewHandler viewHandler;
 
     @Autowired
     NewViewModelBuilder newViewModelBuilder;
 
     @Autowired
-    ApricotCanvasHandler canvasHandler;
-
-    @Autowired
-    TreeViewHandler treeViewHandler;
+    NonTransactionalViewHandler ntViewHandler;
 
     @FXML
     TextField viewName;
@@ -139,26 +130,7 @@ public class ViewFormController {
     @FXML
     public void save(ActionEvent event) {
         setModelValues();
-
-        if (!viewSerializer.validate(model)) {
-            return;
-        }
-
-        ApricotView view = viewSerializer.serializeView(model);
-
-        if (model.isNewView()) {
-            Tab tab = viewHandler.createViewTab(model.getSnapshot(), view, viewsTabPane);
-            viewsTabPane.getSelectionModel().select(tab);
-        } else {
-            model.getTab().setText(viewName.getText());
-            if (model.getTabInfo() != null) {
-                model.getTabInfo().setView(view);
-                canvasHandler.populateCanvas(model.getSnapshot(), view, model.getTabInfo().getCanvas());
-                treeViewHandler.markEntitiesIncludedIntoView(view);
-                treeViewHandler.sortEntitiesByView();
-            }
-        }
-
+        ntViewHandler.saveView(model, viewsTabPane, viewName.getText());
         stage.close();
     }
 
