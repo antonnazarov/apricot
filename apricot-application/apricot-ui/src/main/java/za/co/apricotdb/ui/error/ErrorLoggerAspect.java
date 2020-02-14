@@ -52,20 +52,26 @@ public class ErrorLoggerAspect {
             try {
                 proceed = joinPoint.proceed();
             } catch (Throwable t) {
-                StringBuffer text = new StringBuffer(l.text());
-                if (StringUtils.isNotEmpty(l.text())) {
-                    text.append("\n\n");
-                }
-                text.append(t.getMessage());
+                if (!hasErrorHandledParent(t, signature.getDeclaringTypeName(), method.getName())) {
+                    StringBuffer text = new StringBuffer(l.text());
+                    if (StringUtils.isNotEmpty(l.text())) {
+                        text.append("\n\n");
+                    }
+                    text.append(t.getMessage());
 
-                if (alertHandler.requestYesNoOption(l.title(), text.toString(), "View the error details",
-                        AlertType.ERROR)) {
-                    // show the stacktrace
-                    try {
-                        String stacktrace = ExceptionUtils.getStackTrace(t);
-                        formController.openForm(stacktrace);
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
+                    if (alertHandler.requestYesNoOption(l.title(), text.toString(), "View the error details",
+                            AlertType.ERROR)) {
+                        // show the stack trace
+                        try {
+                            String stacktrace = l.title() + "\n\n" +
+                                    "---> The simplified stack trace:\n" + 
+                                    getSimplifiedStackTrace(t) + "\n" +
+                                    "---> The full stack trace:\n" +
+                                    ExceptionUtils.getStackTrace(t);
+                            formController.openForm(stacktrace);
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
                     }
                 }
 
@@ -79,5 +85,60 @@ public class ErrorLoggerAspect {
         }
 
         return proceed;
+    }
+
+    private boolean hasErrorHandledParent(Throwable t, String entryClassName, String entryMethodName) {
+
+        StackTraceElement[] elms = t.getStackTrace();
+        boolean entryClassPassed = false;
+        for (StackTraceElement elm : elms) {
+            String className = elm.getClassName();
+            if (isApricotSpecificClass(className)) {
+                boolean isErrorHandlingAnnotated = false;
+                try {
+                    Class<?> clazz = Class.forName(elm.getClassName());
+                    Method[] mtds = clazz.getMethods();
+                    for (Method m : mtds) {
+                        if (m.getName().equals(elm.getMethodName())) {
+                            if (m.getAnnotation(ApricotErrorLogger.class) != null) {
+                                isErrorHandlingAnnotated = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (entryClassPassed && isErrorHandlingAnnotated) {
+                        return true;
+                    }
+
+                    if (elm.getClassName().equals(entryClassName) && elm.getMethodName().equals(entryMethodName)) {
+                        entryClassPassed = true;
+                    }
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private boolean isApricotSpecificClass(String className) {
+        return className.startsWith("za.co.apricotdb") && !className.contains("ErrorLoggerAspect")
+                && !className.contains("CGLIB");
+    }
+
+    private String getSimplifiedStackTrace(Throwable t) {
+        StringBuilder sb = new StringBuilder();
+
+        StackTraceElement[] elms = t.getStackTrace();
+        for (StackTraceElement elm : elms) {
+            if (isApricotSpecificClass(elm.getClassName())) {
+                sb.append(elm.getClassName()).append(".").append(elm.getMethodName()).append("(")
+                        .append(elm.getClassName()).append(":").append(elm.getLineNumber()).append(")\n");
+            }
+        }
+
+        return sb.toString();
     }
 }

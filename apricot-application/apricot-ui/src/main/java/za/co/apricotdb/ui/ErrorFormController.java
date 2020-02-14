@@ -10,7 +10,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
-import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -47,7 +46,6 @@ public class ErrorFormController {
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setTitle("The error details");
-        //  dialog.getIcons().add(new Image(getClass().getResourceAsStream("table-1-s1.jpg")));
 
         Scene scene = new Scene(window);
         dialog.setScene(scene);

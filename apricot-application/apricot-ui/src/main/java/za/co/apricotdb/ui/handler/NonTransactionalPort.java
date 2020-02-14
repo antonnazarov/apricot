@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javafx.scene.control.TreeItem;
+import za.co.apricotdb.persistence.data.ProjectManager;
+import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.ui.comparator.CompareScriptGenerator;
@@ -32,6 +34,12 @@ public class NonTransactionalPort {
     @Autowired
     ApplicationInitializer applicationInitializer;
 
+    @Autowired
+    SnapshotManager snapshotManager;
+
+    @Autowired
+    ProjectManager projectManager;
+
     @ApricotErrorLogger(title = "Unable to compare the selected Snapshots")
     public TreeItem<CompareSnapshotRow> compare(String sourceSnapshot, String targetSnapshot, boolean diffOnly) {
         return compareSnapshotHandler.compare(sourceSnapshot, targetSnapshot, diffOnly);
@@ -45,5 +53,15 @@ public class NonTransactionalPort {
     @ApricotErrorLogger(title = "Unable to initialize the application")
     public void initialize(ApricotProject project, ApricotSnapshot snapshot) {
         applicationInitializer.initialize(project, snapshot);
+    }
+
+    @ApricotErrorLogger(title = "Unable to set the default Snapshot")
+    public void setDefaultSnapshot(String snapshotName) {
+        ApricotSnapshot snapshot = snapshotManager.getSnapshotByName(projectManager.findCurrentProject(), snapshotName);
+        if (snapshot == null) {
+            return;
+        }
+        snapshotManager.setDefaultSnapshot(snapshot);
+        initialize(snapshot.getProject(), snapshot);
     }
 }

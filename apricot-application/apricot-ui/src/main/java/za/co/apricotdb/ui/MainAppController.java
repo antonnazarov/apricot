@@ -21,7 +21,6 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import za.co.apricotdb.persistence.data.SnapshotManager;
-import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
 import za.co.apricotdb.ui.handler.ApricotAboutHandler;
@@ -402,15 +401,7 @@ public class MainAppController {
             snapshotCombo.setUserData("reset");
         } else {
             snapshotCombo.setUserData("snapshotCombo.selectSnapshot");
-
-            String snapshotSelected = snapshotCombo.getSelectionModel().getSelectedItem();
-            ApricotSnapshot snapshot = snapshotManager
-                    .getSnapshotByName(parentWindow.getApplicationData().getCurrentProject(), snapshotSelected);
-            if (snapshot == null) {
-                return;
-            }
-            snapshotManager.setDefaultSnapshot(snapshot);
-            port.initialize(snapshot.getProject(), snapshot);
+            port.setDefaultSnapshot(snapshotCombo.getSelectionModel().getSelectedItem());
         }
     }
 
