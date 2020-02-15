@@ -1,6 +1,5 @@
 package za.co.apricotdb.ui.toolbar;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import za.co.apricotdb.ui.handler.ApricotCanvasHandler;
-import za.co.apricotdb.ui.handler.ApricotEntityHandler;
+import za.co.apricotdb.ui.handler.NonTransactionalPort;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 
 /**
@@ -23,10 +22,10 @@ import za.co.apricotdb.viewport.entity.ApricotEntity;
 public class TbEditEntityHandler extends TbButtonHandlerState {
 
     @Autowired
-    ApricotEntityHandler entityHandler;
+    ApricotCanvasHandler canvasHandler;
 
     @Autowired
-    ApricotCanvasHandler canvasHandler;
+    NonTransactionalPort port;
 
     @Override
     public void initButton(Button btn) {
@@ -36,13 +35,9 @@ public class TbEditEntityHandler extends TbButtonHandlerState {
             @Override
             public void handle(ActionEvent event) {
                 if (isEnabled()) {
-                    try {
-                        String entityName = getSelectedEntityName();
-                        if (entityName != null) {
-                            entityHandler.openEntityEditorForm(false, entityName);
-                        }
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
+                    String entityName = getSelectedEntityName();
+                    if (entityName != null) {
+                        port.openEntityEditorForm(false, entityName);
                     }
                 }
             }

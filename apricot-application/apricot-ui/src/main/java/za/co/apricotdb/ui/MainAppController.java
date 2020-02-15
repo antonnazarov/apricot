@@ -26,7 +26,6 @@ import za.co.apricotdb.ui.handler.ApplicationInitializer;
 import za.co.apricotdb.ui.handler.ApricotAboutHandler;
 import za.co.apricotdb.ui.handler.ApricotCanvasHandler;
 import za.co.apricotdb.ui.handler.ApricotClipboardHandler;
-import za.co.apricotdb.ui.handler.ApricotEntityHandler;
 import za.co.apricotdb.ui.handler.ApricotProjectHandler;
 import za.co.apricotdb.ui.handler.ApricotRelationshipHandler;
 import za.co.apricotdb.ui.handler.ApricotSnapshotHandler;
@@ -88,9 +87,6 @@ public class MainAppController {
     ReverseEngineHandler reverseEngineHandler;
 
     @Autowired
-    ApricotEntityHandler entityHandler;
-
-    @Autowired
     ApricotRelationshipHandler relationshipHandler;
 
     @Autowired
@@ -146,7 +142,7 @@ public class MainAppController {
 
     @Autowired
     NonTransactionalPort port;
-
+    
     @FXML
     AnchorPane mainPane;
 
@@ -456,11 +452,7 @@ public class MainAppController {
      * Start a process of creation of the new entity.
      */
     public void newEntity(ActionEvent event) {
-        try {
-            entityHandler.openEntityEditorForm(true, null);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        port.openEntityEditorForm(true, null);
     }
 
     @FXML

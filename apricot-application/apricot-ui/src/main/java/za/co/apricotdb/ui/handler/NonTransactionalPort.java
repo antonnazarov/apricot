@@ -8,8 +8,10 @@ import org.springframework.stereotype.Component;
 import javafx.scene.control.TreeItem;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
+import za.co.apricotdb.persistence.data.ViewManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
+import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.comparator.CompareScriptGenerator;
 import za.co.apricotdb.ui.comparator.CompareSnapshotRow;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
@@ -39,6 +41,12 @@ public class NonTransactionalPort {
 
     @Autowired
     ProjectManager projectManager;
+    
+    @Autowired
+    ViewManager viewManager;
+    
+    @Autowired
+    ApricotEntityHandler entityHandler;
 
     @ApricotErrorLogger(title = "Unable to compare the selected Snapshots")
     public TreeItem<CompareSnapshotRow> compare(String sourceSnapshot, String targetSnapshot, boolean diffOnly) {
@@ -63,5 +71,15 @@ public class NonTransactionalPort {
         }
         snapshotManager.setDefaultSnapshot(snapshot);
         initialize(snapshot.getProject(), snapshot);
+    }
+    
+    @ApricotErrorLogger(title="Unable to delete the view")
+    public void removeView(ApricotView view) {
+        viewManager.removeView(view);
+    }
+    
+    @ApricotErrorLogger(title="Unable to open the Entity editor form")
+    public void openEntityEditorForm(boolean newEntity, String tableName) {
+        entityHandler.openEntityEditorForm(newEntity, tableName);
     }
 }

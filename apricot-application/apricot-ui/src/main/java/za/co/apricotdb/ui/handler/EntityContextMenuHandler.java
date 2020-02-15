@@ -32,9 +32,6 @@ public class EntityContextMenuHandler {
     ApricotCanvasHandler canvasHandler;
 
     @Autowired
-    ApricotEntityHandler entityHandler;
-
-    @Autowired
     DeleteSelectedHandler deleteSelectedHandler;
 
     @Autowired
@@ -63,10 +60,13 @@ public class EntityContextMenuHandler {
 
     @Autowired
     ApricotClipboardHandler clipboardHandler;
-    
+
     @Autowired
     MainAppController appController;
-    
+
+    @Autowired
+    NonTransactionalPort port;
+
     public void createEntityContextMenu(ApricotEntity entity, double x, double y) {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
         ApricotView view = canvasHandler.getCurrentView();
@@ -114,11 +114,7 @@ public class EntityContextMenuHandler {
     public MenuItem buildEditEntityItem(String entity) {
         MenuItem item = new MenuItem("Edit <Enter>");
         item.setOnAction(e -> {
-            try {
-                entityHandler.openEntityEditorForm(false, entity);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            port.openEntityEditorForm(false, entity);
         });
 
         return item;
@@ -163,7 +159,7 @@ public class EntityContextMenuHandler {
     public MenuItem buildRemoveFromViewItem(List<String> entities) {
         MenuItem item = new MenuItem("Remove from View");
         item.setOnAction(e -> {
-            appController.save(null);  //  save the current layout
+            appController.save(null); // save the current layout
             TabInfoObject tabInfo = canvasHandler.getCurrentViewTabInfo();
             viewSerializer.deleteEntitiesFromView(entities, tabInfo);
             snapshotHandler.syncronizeSnapshot(false);
@@ -175,7 +171,7 @@ public class EntityContextMenuHandler {
     public MenuItem buildAddToViewItem(List<String> entities) {
         MenuItem item = new MenuItem("Add to View");
         item.setOnAction(e -> {
-            appController.save(null);  //  save the current layout
+            appController.save(null); // save the current layout
             TabInfoObject tabInfo = canvasHandler.getCurrentViewTabInfo();
             viewSerializer.addEntitiesToView(entities, tabInfo);
             snapshotHandler.syncronizeSnapshot(false);

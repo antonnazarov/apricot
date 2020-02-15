@@ -1,7 +1,5 @@
 package za.co.apricotdb.ui.handler;
 
-import java.io.IOException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,9 +29,6 @@ public class CanvasContextMenuHandler {
     ApricotCanvasHandler canvasHandler;
 
     @Autowired
-    ApricotEntityHandler entityHandler;
-
-    @Autowired
     ViewManager viewManager;
 
     @Autowired
@@ -56,6 +51,9 @@ public class CanvasContextMenuHandler {
 
     @Autowired
     ResetViewHandler resetViewHandler;
+    
+    @Autowired
+    NonTransactionalPort port;
 
     public void createCanvasContextMenu(ApricotCanvas canvas, double x, double y) {
         ApricotView view = canvasHandler.getCurrentView();
@@ -73,11 +71,7 @@ public class CanvasContextMenuHandler {
 
         MenuItem newEntity = new MenuItem("New Entity");
         newEntity.setOnAction(e -> {
-            try {
-                entityHandler.openEntityEditorForm(true, null);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            port.openEntityEditorForm(true, null);
         });
 
         MenuItem refreshCanvas = new MenuItem("Refresh <F5>");

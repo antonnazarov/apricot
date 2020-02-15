@@ -103,10 +103,16 @@ public class ApricotEntityHandler {
     ObjectAllocationHandler allocationHandler;
 
     @Transactional
-    public void openEntityEditorForm(boolean newEntity, String tableName) throws IOException {
+    public void openEntityEditorForm(boolean newEntity, String tableName) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-entity-editor.fxml"));
         loader.setControllerFactory(context::getBean);
-        Pane window = loader.load();
+
+        Pane window = null;
+        try {
+            window = loader.load();
+        } catch (IOException ex) {
+            new IllegalStateException(ex);
+        }
 
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);

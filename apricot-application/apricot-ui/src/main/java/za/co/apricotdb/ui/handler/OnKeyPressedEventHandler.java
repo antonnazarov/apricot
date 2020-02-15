@@ -1,6 +1,5 @@
 package za.co.apricotdb.ui.handler;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +30,6 @@ public class OnKeyPressedEventHandler implements EventHandler<KeyEvent> {
     ApricotCanvasHandler canvasHandler;
 
     @Autowired
-    ApricotEntityHandler entityHandler;
-
-    @Autowired
     MainAppController appController;
 
     @Autowired
@@ -50,6 +46,9 @@ public class OnKeyPressedEventHandler implements EventHandler<KeyEvent> {
 
     @Autowired
     ResetViewHandler resetViewHandler;
+    
+    @Autowired
+    NonTransactionalPort port;
 
     @Override
     public void handle(KeyEvent event) {
@@ -61,11 +60,7 @@ public class OnKeyPressedEventHandler implements EventHandler<KeyEvent> {
         case ENTER:
             List<ApricotEntity> ent = canvas.getSelectedEntities();
             if (ent.size() == 1) {
-                try {
-                    entityHandler.openEntityEditorForm(false, ent.get(0).getTableName());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                port.openEntityEditorForm(false, ent.get(0).getTableName());
             }
             break;
         case A:
