@@ -142,7 +142,7 @@ public class MainAppController {
 
     @Autowired
     NonTransactionalPort port;
-    
+
     @FXML
     AnchorPane mainPane;
 
@@ -323,11 +323,7 @@ public class MainAppController {
     }
 
     public void newRelationship(ActionEvent event) {
-        try {
-            relationshipHandler.openRelationshipEditorForm(viewsTabPane);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        port.openRelationshipEditorForm(viewsTabPane);
     }
 
     /**

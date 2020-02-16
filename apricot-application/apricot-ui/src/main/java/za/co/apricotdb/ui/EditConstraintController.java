@@ -170,7 +170,6 @@ public class EditConstraintController {
         constraintsTable.getSelectionModel().select(constraintData);
         editEntityModel.setEdited(true);
         getStage().close();
-
     }
 
     private Stage getStage() {

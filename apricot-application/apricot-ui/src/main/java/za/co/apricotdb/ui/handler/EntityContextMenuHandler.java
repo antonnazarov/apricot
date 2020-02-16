@@ -1,6 +1,5 @@
 package za.co.apricotdb.ui.handler;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -242,11 +241,7 @@ public class EntityContextMenuHandler {
             item = new MenuItem("New relationship");
         }
         item.setOnAction(e -> {
-            try {
-                relationshipHandler.openRelationshipEditorForm(parentWindow.getProjectTabPane());
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            port.openRelationshipEditorForm(parentWindow.getProjectTabPane());
         });
 
         return item;

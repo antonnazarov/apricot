@@ -16,6 +16,7 @@ import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ConstraintType;
 import za.co.apricotdb.ui.EditRelationshipController;
+import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.handler.ApricotEntityHandler;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
@@ -41,6 +42,7 @@ public class ApricotRelationshipValidator {
     @Autowired
     ApricotEntityHandler entityHandler;
 
+    @ApricotErrorLogger(title = "Unable to check the consistency of the Primary Key")
     public boolean checkPrimaryKey(EditRelationshipModel model) {
         ApricotTable table = model.getParentTable();
         ApricotConstraint pk = entityHandler.getPrimaryKey(table);
