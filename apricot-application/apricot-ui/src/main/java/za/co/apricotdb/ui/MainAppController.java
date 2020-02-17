@@ -14,7 +14,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeView;
@@ -41,7 +40,6 @@ import za.co.apricotdb.ui.handler.ProjectExplorerContextMenuHandler;
 import za.co.apricotdb.ui.handler.ProjectExplorerItem;
 import za.co.apricotdb.ui.handler.ReverseEngineHandler;
 import za.co.apricotdb.ui.handler.SelectViewTabHandler;
-import za.co.apricotdb.ui.handler.TabInfoObject;
 import za.co.apricotdb.ui.handler.TabViewHandler;
 import za.co.apricotdb.ui.toolbar.TbAddFilterHandler;
 import za.co.apricotdb.ui.toolbar.TbButton;
@@ -255,6 +253,7 @@ public class MainAppController {
     public void init() {
         parentWindow.init(this);
         parentWindow.setParentPane(mainPane);
+        parentWindow.setViewsTabPane(viewsTabPane);
 
         selTabHandler.initTabPane(viewsTabPane, scale);
 
@@ -298,17 +297,8 @@ public class MainAppController {
     }
 
     public void save(ActionEvent event) {
-        for (Tab t : viewsTabPane.getTabs()) {
-            if (t.getUserData() instanceof TabInfoObject) {
-                TabInfoObject o = (TabInfoObject) t.getUserData();
-                // save only changed canvas
-                if (o.getCanvas().isCanvasChanged()) {
-                    tabViewHandler.saveCanvasAllocationMap(o);
-                    t.setStyle("-fx-font-weight: normal;");
-                    o.getCanvas().setCanvasChanged(false);
-                }
-            }
-        }
+        canvasHandler.saveEditedCanvases();
+        
         tbHolder.disable(TbButton.tbSave);
         menuSave.setDisable(true);
         parentWindow.getApplicationData().setLayoutEdited(false);
@@ -453,7 +443,7 @@ public class MainAppController {
 
     @FXML
     public void createExcelReport(ActionEvent event) {
-        excelReportHandler.createExcelReport(mainPane.getScene().getWindow());
+        port.createExcelReport(mainPane.getScene().getWindow());
     }
 
     @FXML

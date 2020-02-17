@@ -10,6 +10,7 @@ import za.co.apricotdb.persistence.data.RelationshipManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.TableManager;
 import za.co.apricotdb.ui.MainAppController;
+import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.undo.ApricotUndoManager;
 import za.co.apricotdb.ui.undo.UndoType;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
@@ -56,6 +57,7 @@ public class DeleteSelectedHandler {
     @Autowired
     MainAppController appController;
 
+    @ApricotErrorLogger(title = "Unable to delete the selected Entities/Relationship")
     public void deleteSelected() {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
         List<ApricotEntity> entities = canvas.getSelectedEntities();
@@ -99,6 +101,7 @@ public class DeleteSelectedHandler {
         }
     }
 
+    @ApricotErrorLogger(title = "Unable to delete the selected Entities/Relationship")
     public void deleteEntities(List<String> entities) {
         StringBuilder sb = new StringBuilder();
         sb.append("The following Entity(s) will be deleted:\n");

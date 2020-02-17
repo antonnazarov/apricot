@@ -24,6 +24,7 @@ import za.co.apricotdb.persistence.entity.ViewDetailLevel;
 import za.co.apricotdb.support.excel.TableWrapper;
 import za.co.apricotdb.support.excel.TableWrapper.ReportRow;
 import za.co.apricotdb.ui.ParentWindow;
+import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.viewport.align.AlignCommand;
 import za.co.apricotdb.viewport.align.CanvasSizeAjustor;
 import za.co.apricotdb.viewport.align.SimpleGridEntityAllocator;
@@ -223,6 +224,21 @@ public class ApricotCanvasHandler {
             tables.add(r.getChild().getTableName());
         }
         makeEntitiesSelected(canvas, tables, false);
+    }
+    
+    @ApricotErrorLogger(title = "Unable to save the edited canvases")
+    public void saveEditedCanvases() {
+        for (Tab t : parentWindow.getViewsTabPane().getTabs()) {
+            if (t.getUserData() instanceof TabInfoObject) {
+                TabInfoObject o = (TabInfoObject) t.getUserData();
+                // save only changed canvas
+                if (o.getCanvas().isCanvasChanged()) {
+                    tabViewHandler.saveCanvasAllocationMap(o);
+                    t.setStyle("-fx-font-weight: normal;");
+                    o.getCanvas().setCanvasChanged(false);
+                }
+            }
+        }
     }
 
     private za.co.apricotdb.viewport.relationship.ApricotRelationship convertRelationship(ApricotRelationship r,

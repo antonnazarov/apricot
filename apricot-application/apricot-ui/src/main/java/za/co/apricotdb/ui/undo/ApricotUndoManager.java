@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.UndoSnapshotManager;
 import za.co.apricotdb.ui.MainAppController;
 import za.co.apricotdb.ui.ParentWindow;
+import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.toolbar.TbUndoHandler;
 
 /**
@@ -46,6 +47,7 @@ public class ApricotUndoManager {
     /**
      * Perform the UNDO operation.
      */
+    @ApricotErrorLogger(title = "Unable to undo the last operation")
     public void undo() {
         if (getUndoBuffer().size() > 0) {
             UndoChunk chunk = getUndoBuffer().removeFirst();

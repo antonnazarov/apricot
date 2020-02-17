@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
+import javafx.stage.Window;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.ViewManager;
@@ -62,6 +63,9 @@ public class NonTransactionalPort {
     @Autowired
     ApricotRelationshipHandler relationshipHandler;
 
+    @Autowired
+    ExcelReportHandler excelReportHandler;
+    
     @ApricotErrorLogger(title = "Unable to compare the selected Snapshots")
     public TreeItem<CompareSnapshotRow> compare(String sourceSnapshot, String targetSnapshot, boolean diffOnly) {
         return compareSnapshotHandler.compare(sourceSnapshot, targetSnapshot, diffOnly);
@@ -136,5 +140,10 @@ public class NonTransactionalPort {
     @ApricotErrorLogger(title = "Unable to handle the Foreign Key")
     public void handleForeignKeyChanged(EditRelationshipModel model, String key, String value) {
         relationshipHandler.handleForeignKeyChanged(model, key, value);
+    }
+
+    @ApricotErrorLogger(title = "Unable to create the Excel Report")
+    public void createExcelReport(Window window) {
+        excelReportHandler.createExcelReport(window);
     }
 }

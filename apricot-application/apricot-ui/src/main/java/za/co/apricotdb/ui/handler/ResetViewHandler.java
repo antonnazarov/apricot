@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ObjectLayoutManager;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.MainAppController;
+import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.viewport.align.AlignCommand;
 import za.co.apricotdb.viewport.align.SimpleGridEntityAllocator;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
@@ -44,6 +45,7 @@ public class ResetViewHandler {
     @Autowired
     CanvasScaleHandler scaleHandler;
 
+    @ApricotErrorLogger(title = "Unable to reset the Entities allocation")
     public void resetView(boolean synchronize) {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
         ApricotView view = canvasHandler.getCurrentView();

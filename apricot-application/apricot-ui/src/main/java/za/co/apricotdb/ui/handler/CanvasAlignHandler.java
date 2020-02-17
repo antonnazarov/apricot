@@ -5,6 +5,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.ui.MainAppController;
+import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.viewport.align.island.CoreRelationshipsAllocator;
 import za.co.apricotdb.viewport.align.island.EntityIsland;
 import za.co.apricotdb.viewport.align.island.EntityIslandBundle;
@@ -53,6 +54,7 @@ public class CanvasAlignHandler {
     @Autowired
     CanvasScaleHandler scaleHandler;
 
+    @ApricotErrorLogger(title = "Unable to align the Entities on the canvas")
     public void alignCanvasIslands() {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
         resetViewHandler.resetView(false);

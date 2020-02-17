@@ -93,6 +93,7 @@ public class GenerateScriptHandler {
     @Autowired
     SyntaxEditorHandler syntaxEditorHandler;
 
+    @ApricotErrorLogger(title = "Unable to create the script generation form")
     public void createGenerateScriptForm(DBScriptType scriptType) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-generate-script.fxml"));
         loader.setControllerFactory(context::getBean);

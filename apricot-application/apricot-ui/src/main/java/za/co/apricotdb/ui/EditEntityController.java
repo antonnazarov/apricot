@@ -39,7 +39,6 @@ import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.entity.ApricotApplicationParameter;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ConstraintType;
-import za.co.apricotdb.ui.handler.ApricotConstraintHandler;
 import za.co.apricotdb.ui.handler.NonTransactionalPort;
 import za.co.apricotdb.ui.model.ApricotColumnData;
 import za.co.apricotdb.ui.model.ApricotConstraintData;
