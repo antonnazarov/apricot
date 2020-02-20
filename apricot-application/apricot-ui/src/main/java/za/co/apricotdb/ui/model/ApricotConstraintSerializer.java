@@ -59,7 +59,7 @@ public class ApricotConstraintSerializer {
             constraint.setName(cd.getConstraintNameAsString());
 
             if (!cd.getConstraintTypeAsString().equals(ConstraintType.PRIMARY_KEY.name())
-                    && cd.getConstraintTypeAsString().equals(ConstraintType.FOREIGN_KEY.name())) {
+                    && !cd.getConstraintTypeAsString().equals(ConstraintType.FOREIGN_KEY.name())) {
                 constraint.setType(ConstraintType.valueOf(cd.getConstraintTypeAsString()));
                 constraint.setTable(model.getTable());
                 serializeConstraintColumns(constraint, cd, model);
