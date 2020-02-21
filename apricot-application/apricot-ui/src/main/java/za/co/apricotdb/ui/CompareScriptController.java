@@ -3,6 +3,7 @@ package za.co.apricotdb.ui;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -74,7 +75,14 @@ public class CompareScriptController {
 
     @FXML
     public void generate(ActionEvent event) {
-        String scriptText = port.generate(differences, schema.getValue());
+        String shma = schema.getValue();
+        if (shma != null) {
+            shma = shma.trim();
+        }
+        if (StringUtils.containsWhitespace(shma) || StringUtils.isEmpty(shma)) {
+            shma = null;
+        }
+        String scriptText = port.generate(differences, shma);
         switch (getScriptTarget()) {
         case FILE:
             generateScriptHandler.saveToFile("the Snapshots alignment", scriptText, mainPane.getScene().getWindow());

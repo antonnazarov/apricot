@@ -17,6 +17,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import za.co.apricotdb.persistence.data.SnapshotManager;
@@ -291,6 +292,12 @@ public class MainAppController {
                 tbReverseEngineering);
 
         filterField.setText("*");
+        filterField.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                filterAdd(null);
+            }
+        });
+
         tbSetFilterHandler.initButton(tbSetFilter);
         tbAddFilterHandler.initButton(tbAddFilter);
         tbResetFilterHandler.initButton(tbResetFilter);
@@ -298,7 +305,7 @@ public class MainAppController {
 
     public void save(ActionEvent event) {
         canvasHandler.saveEditedCanvases();
-        
+
         tbHolder.disable(TbButton.tbSave);
         menuSave.setDisable(true);
         parentWindow.getApplicationData().setLayoutEdited(false);

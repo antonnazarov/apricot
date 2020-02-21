@@ -123,7 +123,7 @@ public class TreeViewHandler {
                 return 1;
             }
 
-            return e1.getValue().getItemName().compareTo(e2.getValue().getItemName());
+            return e1.getValue().getItemName().toLowerCase().compareTo(e2.getValue().getItemName().toLowerCase());
         });
     }
 

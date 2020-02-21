@@ -88,7 +88,7 @@ public class ApricotCanvasHandler {
             runAlignerAfterDelay(canvas, v, 0.1).play();
         } else {
             runAllocationAfterDelay(canvas, v, 0, ElementType.ENTITY).play();
-            runAllocationAfterDelay(canvas, v, 0.8, ElementType.RELATIONSHIP).play();
+            runAllocationAfterDelay(canvas, v, 2.0, ElementType.RELATIONSHIP).play();
         }
         
         return tables;

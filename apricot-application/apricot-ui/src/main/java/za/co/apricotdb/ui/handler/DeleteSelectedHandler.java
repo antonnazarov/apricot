@@ -27,6 +27,8 @@ import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 @Component
 public class DeleteSelectedHandler {
 
+    private static final int ELEMENTS_IN_DELETE_LIST = 15;
+
     @Autowired
     ApricotCanvasHandler canvasHandler;
 
@@ -84,9 +86,16 @@ public class DeleteSelectedHandler {
     private void deleteRelationships(List<ApricotRelationship> relationships) {
         StringBuilder sb = new StringBuilder();
         sb.append("The following Relationship(s) will be deleted:\n");
+        int elmCount = 0;
         for (ApricotRelationship r : relationships) {
+            if (elmCount == ELEMENTS_IN_DELETE_LIST) {
+                sb.append("...").append(relationships.size()-ELEMENTS_IN_DELETE_LIST).append(" more ...");
+                break;
+            }
+
             sb.append(" * ").append(r.getParent().getTableName()).append("->").append(r.getChild().getTableName())
                     .append("\n");
+            elmCount++;
         }
         if (alert.requestYesNoOption("Delete Relationship(s)", sb.toString(), "Delete")) {
             appController.save(null);
@@ -105,8 +114,15 @@ public class DeleteSelectedHandler {
     public void deleteEntities(List<String> entities) {
         StringBuilder sb = new StringBuilder();
         sb.append("The following Entity(s) will be deleted:\n");
+        int elmCount = 0;
         for (String e : entities) {
-            sb.append("*").append(e).append("\n");
+            if (elmCount == ELEMENTS_IN_DELETE_LIST) {
+                sb.append("... ").append(entities.size()-ELEMENTS_IN_DELETE_LIST).append(" more ...").append("\n");
+                break;
+            }
+
+            sb.append("* ").append(e).append("\n");
+            elmCount++;
         }
         if (alert.requestYesNoOption("Delete Entity(s)", sb.toString(), "Delete")) {
             appController.save(null);
