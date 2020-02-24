@@ -3,7 +3,7 @@ package za.co.apricotdb.viewport.entity;
 import java.util.List;
 
 import za.co.apricotdb.viewport.align.AlignCommand;
-import za.co.apricotdb.viewport.align.CanvasSizeAjustor;
+import za.co.apricotdb.viewport.align.CanvasSizeAdjustor;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ElementStatus;
 import za.co.apricotdb.viewport.entity.shape.DefaultEntityShapeBuilder;
@@ -31,7 +31,7 @@ public class DefaultEntityBuilder implements EntityBuilder {
         this.canvas = canvas;
 
         GroupOperationHandler groupHandler = new GroupOperationHandler();
-        AlignCommand aligner = new CanvasSizeAjustor(canvas);
+        AlignCommand aligner = new CanvasSizeAdjustor(canvas);
         RelationshipBatchBuilder relationshipBuilder = new RelationshipBatchBuilder();
 
         // collect all necessary modifiers

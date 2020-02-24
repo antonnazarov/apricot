@@ -26,7 +26,7 @@ import za.co.apricotdb.support.excel.TableWrapper.ReportRow;
 import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.viewport.align.AlignCommand;
-import za.co.apricotdb.viewport.align.CanvasSizeAjustor;
+import za.co.apricotdb.viewport.align.CanvasSizeAdjustor;
 import za.co.apricotdb.viewport.align.SimpleGridEntityAllocator;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ApricotElement;
@@ -295,13 +295,13 @@ public class ApricotCanvasHandler {
             CanvasAllocationMap map = tabViewHandler.readCanvasAllocationMap(view);
             canvas.applyAllocationMap(map, elementType);
 
-            AlignCommand aligner = new CanvasSizeAjustor(canvas);
+            AlignCommand aligner = new CanvasSizeAdjustor(canvas);
             aligner.align();
         });
 
         return transition;
     }
-
+    
     private List<FieldDetail> getFieldDetails(ApricotTable table, List<ApricotRelationship> relationships) {
         List<FieldDetail> ret = new ArrayList<>();
         TableWrapper wrapper = new TableWrapper(table, relationships);
