@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -88,6 +89,9 @@ public class ConnectionSqlServerController {
     @FXML
     Label serviceLabel;
 
+    @FXML
+    CheckBox useWindowsUserFlag;
+
     private DatabaseConnectionModel model;
     private ApricotSnapshot snapshot;
     private ApricotProject project;
@@ -107,6 +111,10 @@ public class ConnectionSqlServerController {
             // the schema and user name are the same for the Oracle database
             schema.valueProperty().bind(user.valueProperty());
         }
+
+        if (model.getTargetDb() == ApricotTargetDatabase.MSSQLServer) {
+            useWindowsUserFlag.setVisible(true);
+        }
     }
 
     @FXML
@@ -114,7 +122,7 @@ public class ConnectionSqlServerController {
         reverseEngineHandler.testConnection(server.getSelectionModel().getSelectedItem(),
                 port.getSelectionModel().getSelectedItem(), database.getSelectionModel().getSelectedItem(),
                 schema.getSelectionModel().getSelectedItem(), user.getSelectionModel().getSelectedItem(),
-                password.getText(), model.getTargetDb());
+                password.getText(), model.getTargetDb(), useWindowsUserFlag.isSelected());
         Alert alert = getAlert(AlertType.INFORMATION, "The connection was successfully established");
         alert.showAndWait();
     }
@@ -130,16 +138,17 @@ public class ConnectionSqlServerController {
         reverseEngineHandler.testConnection(server.getSelectionModel().getSelectedItem(),
                 port.getSelectionModel().getSelectedItem(), database.getSelectionModel().getSelectedItem(),
                 schema.getSelectionModel().getSelectedItem(), user.getSelectionModel().getSelectedItem(),
-                password.getText(), model.getTargetDb());
+                password.getText(), model.getTargetDb(), useWindowsUserFlag.isSelected());
 
         String driverClass = scannerFactory.getDriverClass(model.getTargetDb());
         String url = scannerFactory.getUrl(model.getTargetDb(), server.getSelectionModel().getSelectedItem(),
-                port.getSelectionModel().getSelectedItem(), database.getSelectionModel().getSelectedItem());
+                port.getSelectionModel().getSelectedItem(), database.getSelectionModel().getSelectedItem(),
+                useWindowsUserFlag.isSelected());
 
         MetaData metaData = reverseEngineHandler.getMetaData(model.getTargetDb(), driverClass, url, schema.getValue(),
                 user.getSelectionModel().getSelectedItem(), password.getText(), snapshot);
         String[] blackList = blackListHandler.getBlackListTables(project);
-        
+
         getStage().close();
         reverseEngineHandler.openScanResultForm(metaData, blackList, composeReverseEngineeringParameters());
     }
@@ -153,6 +162,18 @@ public class ConnectionSqlServerController {
     @FXML
     public void userSelected(ActionEvent event) {
         password.setText(model.getPassword(user.getSelectionModel().getSelectedItem()));
+    }
+
+    @FXML
+    public void useWindowsUser(ActionEvent event) {
+        if (useWindowsUserFlag.isSelected()) {
+            // switch to the user authentication
+            user.setDisable(true);
+            password.setDisable(true);
+        } else {
+            user.setDisable(false);
+            password.setDisable(false);
+        }
     }
 
     private void applyModel(DatabaseConnectionModel model) {

@@ -28,7 +28,7 @@ public class MySqlUrlBuilder implements DatabaseUrlBuilder {
     }
 
     @Override
-    public String getUrl(String server, String port, String database) {
+    public String getUrl(String server, String port, String database, boolean integratedSecurity) {
         // jdbc:mysql://<server>:<port3306>/<database>
         StringBuilder sb = new StringBuilder("jdbc:mysql://").append(server).append(":").append(port).append("/")
                 .append(database);

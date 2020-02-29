@@ -84,12 +84,12 @@ public class EntityContextMenuHandler {
                     contextMenu.getItems().addAll(buildEditEntityItem(entity.getTableName()), buildCopyItem(),
                             buildDeleteEntityItem(), buildRemoveFromViewItem(getNames(selected)),
                             buildSelectInListItem(getNames(selected)),
-                            buildSelectRelatedEntitiesItem(entity.getTableName()), new SeparatorMenuItem(),
+                            buildSelectRelatedEntitiesItem(getNames(selected)), new SeparatorMenuItem(),
                             buildRelationshipItem(true));
                 } else {
                     contextMenu.getItems().addAll(buildEditEntityItem(entity.getTableName()), buildCopyItem(),
                             buildDeleteEntityItem(), buildSelectInListItem(getNames(selected)),
-                            buildSelectRelatedEntitiesItem(entity.getTableName()), new SeparatorMenuItem(),
+                            buildSelectRelatedEntitiesItem(getNames(selected)), new SeparatorMenuItem(),
                             buildRelationshipItem(true));
                 }
             } else if (selected.size() > 1) {
@@ -97,11 +97,14 @@ public class EntityContextMenuHandler {
                 if (!view.getName().equals(ApricotView.MAIN_VIEW)) {
                     contextMenu.getItems().addAll(buildCopyItem(), buildDeleteEntityItem(),
                             buildRemoveFromViewItem(getNames(selected)), buildSelectInListItem(getNames(selected)),
+                            buildSelectRelatedEntitiesItem(getNames(selected)),
                             new SeparatorMenuItem(), buildSameSizeWidthItem(), buildMinimizeWidthItem(),
                             buildAlignLeftItem(), buildAlignRightItem(), buildAlignUpItem(), buildAlignDownItem());
                 } else {
                     contextMenu.getItems().addAll(buildCopyItem(), buildDeleteEntityItem(),
-                            buildSelectInListItem(getNames(selected)), new SeparatorMenuItem(),
+                            buildSelectInListItem(getNames(selected)),
+                            buildSelectRelatedEntitiesItem(getNames(selected)),
+                            new SeparatorMenuItem(),
                             buildSameSizeWidthItem(), buildMinimizeWidthItem(), buildAlignLeftItem(),
                             buildAlignRightItem(), buildAlignUpItem(), buildAlignDownItem());
                 }
@@ -266,10 +269,10 @@ public class EntityContextMenuHandler {
         return item;
     }
 
-    public MenuItem buildSelectRelatedEntitiesItem(String entity) {
+    public MenuItem buildSelectRelatedEntitiesItem(List<String> entities) {
         MenuItem item = new MenuItem("Select related Entities");
         item.setOnAction(e -> {
-            canvasHandler.makeRelatedEntitiesSelected(entity);
+            canvasHandler.makeRelatedEntitiesSelected(entities);
             allocationHandler.scrollToSelected(canvasHandler.getCurrentViewTabInfo());
         });
 

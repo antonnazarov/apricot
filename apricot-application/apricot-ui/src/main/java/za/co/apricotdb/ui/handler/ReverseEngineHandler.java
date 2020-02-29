@@ -204,10 +204,10 @@ public class ReverseEngineHandler {
 
     @ApricotErrorLogger(title = "Unable to establish connection to the database", stop = true)
     public void testConnection(String server, String port, String database, String schema, String user, String password,
-            ApricotTargetDatabase targetDb) {
+            ApricotTargetDatabase targetDb, boolean integratedSecurity) {
 
         String driverClass = scannerFactory.getDriverClass(targetDb);
-        String url = scannerFactory.getUrl(targetDb, server, port, database);
+        String url = scannerFactory.getUrl(targetDb, server, port, database, integratedSecurity);
 
         JdbcOperations op = MetaDataScanner.getTargetJdbcOperations(driverClass, url, user, password);
         RowMapper<String> rowMapper = (rs, rowNum) -> {
@@ -231,7 +231,9 @@ public class ReverseEngineHandler {
             params.setProperty(ProjectParameterManager.CONNECTION_SCHEMA, schema);
         }
         params.setProperty(ProjectParameterManager.CONNECTION_USER, user);
-        params.setProperty(ProjectParameterManager.CONNECTION_PASSWORD, StringEncoder.encode(password));
+        if (StringUtils.isNotEmpty(password)) {
+            params.setProperty(ProjectParameterManager.CONNECTION_PASSWORD, StringEncoder.encode(password));
+        }
 
         return params;
     }

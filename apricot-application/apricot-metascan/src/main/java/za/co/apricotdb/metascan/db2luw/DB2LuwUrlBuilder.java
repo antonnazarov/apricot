@@ -25,7 +25,7 @@ public class DB2LuwUrlBuilder implements DatabaseUrlBuilder {
     }
 
     @Override
-    public String getUrl(String server, String port, String database) {
+    public String getUrl(String server, String port, String database, boolean integratedSecurity) {
         // jdbc:db2://host:50001/schema
         StringBuilder sb = new StringBuilder("jdbc:db2://").append(server).append(":").append(port).append("/")
                 .append(database);

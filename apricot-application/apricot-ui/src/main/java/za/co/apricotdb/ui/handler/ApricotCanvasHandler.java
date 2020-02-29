@@ -2,8 +2,10 @@ package za.co.apricotdb.ui.handler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -90,7 +92,7 @@ public class ApricotCanvasHandler {
             runAllocationAfterDelay(canvas, v, 0, ElementType.ENTITY).play();
             runAllocationAfterDelay(canvas, v, 2.0, ElementType.RELATIONSHIP).play();
         }
-        
+
         return tables;
     }
 
@@ -212,20 +214,27 @@ public class ApricotCanvasHandler {
         }
     }
 
-    public void makeRelatedEntitiesSelected(String tableName) {
-        List<String> tables = new ArrayList<>();
-        tables.add(tableName);
+    /**
+     * Select tables, related to the given list.
+     */
+    @ApricotErrorLogger(title = "Unable to select the related Entities")
+    public void makeRelatedEntitiesSelected(List<String> tables) {
+        Set<String> selectTbl = new HashSet<>();
+        selectTbl.addAll(tables);
         ApricotCanvas canvas = getSelectedCanvas();
-        ApricotEntity entity = canvas.findEntityByName(tableName);
-        for (za.co.apricotdb.viewport.relationship.ApricotRelationship r : entity.getForeignLinks()) {
-            tables.add(r.getParent().getTableName());
+        for (String tableName : tables) {
+            ApricotEntity entity = canvas.findEntityByName(tableName);
+            for (za.co.apricotdb.viewport.relationship.ApricotRelationship r : entity.getForeignLinks()) {
+                selectTbl.add(r.getParent().getTableName());
+            }
+            for (za.co.apricotdb.viewport.relationship.ApricotRelationship r : entity.getPrimaryLinks()) {
+                selectTbl.add(r.getChild().getTableName());
+            }
         }
-        for (za.co.apricotdb.viewport.relationship.ApricotRelationship r : entity.getPrimaryLinks()) {
-            tables.add(r.getChild().getTableName());
-        }
-        makeEntitiesSelected(canvas, tables, false);
+        
+        makeEntitiesSelected(canvas, new ArrayList<>(selectTbl), false);
     }
-    
+
     @ApricotErrorLogger(title = "Unable to save the edited canvases")
     public void saveEditedCanvases() {
         for (Tab t : parentWindow.getViewsTabPane().getTabs()) {
@@ -301,7 +310,7 @@ public class ApricotCanvasHandler {
 
         return transition;
     }
-    
+
     private List<FieldDetail> getFieldDetails(ApricotTable table, List<ApricotRelationship> relationships) {
         List<FieldDetail> ret = new ArrayList<>();
         TableWrapper wrapper = new TableWrapper(table, relationships);

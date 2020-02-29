@@ -14,7 +14,7 @@ import za.co.apricotdb.metascan.DatabaseUrlBuilder;
 public class H2UrlBuilder implements DatabaseUrlBuilder {
 
     @Override
-    public String getUrl(String server, String port, String service) {
+    public String getUrl(String server, String port, String service, boolean integratedSecurity) {
         return getUrl(server);
     }
 
