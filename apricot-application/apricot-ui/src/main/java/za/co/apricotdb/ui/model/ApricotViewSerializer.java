@@ -21,11 +21,15 @@ import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.persistence.entity.LayoutObjectType;
 import za.co.apricotdb.persistence.entity.ViewDetailLevel;
 import za.co.apricotdb.ui.handler.ApricotViewHandler;
+import za.co.apricotdb.ui.handler.ObjectAllocationHandler;
 import za.co.apricotdb.ui.handler.TabInfoObject;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
 @Component
 public class ApricotViewSerializer {
+    
+    private static final double BIAS_X = 40;
+    private static final double BIAS_Y = 40;
 
     @Autowired
     ViewManager viewManager;
@@ -38,7 +42,10 @@ public class ApricotViewSerializer {
 
     @Autowired
     AlertMessageDecorator alertDecorator;
-
+    
+    @Autowired
+    ObjectAllocationHandler allocHandler;
+    
     public boolean validate(ViewFormModel model) {
         if (!validateName(model)) {
             Alert alert = getAlert("Please enter a unique name of the view");
@@ -133,16 +140,13 @@ public class ApricotViewSerializer {
 
     @Transactional
     public void addEntitiesToView(List<String> entities, TabInfoObject tabInfo) {
-        List<String> original = getOriginalViewTables(tabInfo);
-
-        List<String> renewed = new ArrayList<>(original);
-        for (String ent : entities) {
-            if (!original.contains(ent)) {
-                renewed.add(ent);
-            }
+        double biasX = 0;
+        double biasY = 0;
+        for (String tableName : entities) {
+            allocHandler.centerEntityOnView(tabInfo, tableName, biasX, biasY);
+            biasX += BIAS_X;
+            biasY += BIAS_Y;
         }
-
-        handleNewTables(original, renewed, tabInfo);
     }
 
     @Transactional

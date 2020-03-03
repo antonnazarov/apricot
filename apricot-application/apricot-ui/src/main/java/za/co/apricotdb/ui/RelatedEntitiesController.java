@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javafx.collections.FXCollections;
@@ -15,6 +16,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import za.co.apricotdb.ui.handler.ApricotViewHandler;
 
 /**
  * This controller is a background of the form: apricot-related-entities.fxml
@@ -24,6 +26,9 @@ import javafx.stage.Stage;
  */
 @Component
 public class RelatedEntitiesController {
+    
+    @Autowired
+    ApricotViewHandler viewHandler;
 
     @FXML
     Pane mainPane;
@@ -64,10 +69,14 @@ public class RelatedEntitiesController {
 
     @FXML
     public void addToView() {
+        List<String> addEntities = new ArrayList<>();
         for (RelatedEntityRow r : reversedTables.getItems()) {
-            System.out.println(r.getEntityName() + "   " + r.getAddToView().isSelected());
-            getStage().close();
+            if (r.getAddToView().isSelected()) {
+                addEntities.add(r.getEntityName());
+            }
         }
+        viewHandler.addEntityToView(addEntities);
+        getStage().close();
     }
 
     @FXML

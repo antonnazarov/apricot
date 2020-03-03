@@ -260,5 +260,6 @@ public class ApricotViewHandler {
         TabInfoObject tabInfo = canvasHandler.getCurrentViewTabInfo();
         viewSerializer.addEntitiesToView(entities, tabInfo);
         snapshotHandler.syncronizeSnapshot(false);
+        canvasHandler.makeEntitiesSelected(entities, true);
     }
 }
