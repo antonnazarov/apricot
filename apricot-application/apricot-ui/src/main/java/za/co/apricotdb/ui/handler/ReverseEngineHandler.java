@@ -230,7 +230,9 @@ public class ReverseEngineHandler {
         if (StringUtils.isNotEmpty(schema)) {
             params.setProperty(ProjectParameterManager.CONNECTION_SCHEMA, schema);
         }
-        params.setProperty(ProjectParameterManager.CONNECTION_USER, user);
+        if (StringUtils.isNotEmpty(user)) {
+            params.setProperty(ProjectParameterManager.CONNECTION_USER, user);
+        }
         if (StringUtils.isNotEmpty(password)) {
             params.setProperty(ProjectParameterManager.CONNECTION_PASSWORD, StringEncoder.encode(password));
         }
