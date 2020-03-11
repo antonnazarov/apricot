@@ -8,6 +8,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.davidmoten.text.utils.WordWrap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,17 +58,16 @@ public class ErrorLoggerAspect {
                     if (StringUtils.isNotEmpty(l.text())) {
                         text.append("\n\n");
                     }
-                    text.append(t.getMessage());
+                    
+                    text.append(wrapText(t.getMessage()));
 
                     if (alertHandler.requestYesNoOption(l.title(), text.toString(), "View the error details",
                             AlertType.ERROR)) {
                         // show the stack trace
                         try {
-                            String stacktrace = l.title() + "\n\n" +
-                                    "---> The simplified stack trace:\n" + 
-                                    getSimplifiedStackTrace(t) + "\n" +
-                                    "---> The full stack trace:\n" +
-                                    ExceptionUtils.getStackTrace(t);
+                            String stacktrace = l.title() + "\n\n" + "---> The simplified stack trace:\n"
+                                    + getSimplifiedStackTrace(t) + "\n" + "---> The full stack trace:\n"
+                                    + ExceptionUtils.getStackTrace(t);
                             formController.openForm(stacktrace);
                         } catch (Exception ex) {
                             ex.printStackTrace();
@@ -140,5 +140,10 @@ public class ErrorLoggerAspect {
         }
 
         return sb.toString();
+    }
+
+    private String wrapText(String text) {
+        return WordWrap.from(text).maxWidth(60).insertHyphens(true) // true is the default
+                .wrap();
     }
 }
