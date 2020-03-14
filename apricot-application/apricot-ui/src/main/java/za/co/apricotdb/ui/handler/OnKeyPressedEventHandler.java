@@ -49,6 +49,9 @@ public class OnKeyPressedEventHandler implements EventHandler<KeyEvent> {
     
     @Autowired
     NonTransactionalPort port;
+    
+    @Autowired
+    QuickViewHandler quickViewHandler;
 
     @Override
     public void handle(KeyEvent event) {
@@ -125,6 +128,10 @@ public class OnKeyPressedEventHandler implements EventHandler<KeyEvent> {
                 resetViewHandler.resetView(true);
             }
             break;
+        case Q:
+            if (event.isControlDown()) {
+                quickViewHandler.createQuickView();
+            }
         default:
             break;
         }

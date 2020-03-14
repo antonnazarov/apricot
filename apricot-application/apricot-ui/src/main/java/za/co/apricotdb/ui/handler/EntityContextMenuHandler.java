@@ -70,12 +70,15 @@ public class EntityContextMenuHandler {
     @Autowired
     ApricotViewHandler viewHandler;
 
+    @Autowired
+    QuickViewHandler quickViewHandler;
+
     @ApricotErrorLogger(title = "Unable to create the Entity context menu")
     public void createEntityContextMenu(ApricotEntity entity, double x, double y) {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
         ApricotView view = canvasHandler.getCurrentView();
-
         List<ApricotEntity> selected = canvas.getSelectedEntities();
+
         if (selected.size() != 0) {
             ContextMenu contextMenu = new ContextMenu();
             if (selected.size() == 1) {
@@ -97,21 +100,22 @@ public class EntityContextMenuHandler {
                 if (!view.getName().equals(ApricotView.MAIN_VIEW)) {
                     contextMenu.getItems().addAll(buildCopyItem(), buildDeleteEntityItem(),
                             buildRemoveFromViewItem(getNames(selected)), buildSelectInListItem(getNames(selected)),
-                            buildSelectRelatedEntitiesItem(getNames(selected)),
-                            new SeparatorMenuItem(), buildSameSizeWidthItem(), buildMinimizeWidthItem(),
-                            buildAlignLeftItem(), buildAlignRightItem(), buildAlignUpItem(), buildAlignDownItem());
+                            buildSelectRelatedEntitiesItem(getNames(selected)), new SeparatorMenuItem(),
+                            buildSameSizeWidthItem(), buildMinimizeWidthItem(), buildAlignLeftItem(),
+                            buildAlignRightItem(), buildAlignUpItem(), buildAlignDownItem());
                 } else {
                     contextMenu.getItems().addAll(buildCopyItem(), buildDeleteEntityItem(),
                             buildSelectInListItem(getNames(selected)),
-                            buildSelectRelatedEntitiesItem(getNames(selected)),
-                            new SeparatorMenuItem(),
+                            buildSelectRelatedEntitiesItem(getNames(selected)), new SeparatorMenuItem(),
                             buildSameSizeWidthItem(), buildMinimizeWidthItem(), buildAlignLeftItem(),
                             buildAlignRightItem(), buildAlignUpItem(), buildAlignDownItem());
                 }
+
                 if (selected.size() == 2) {
                     contextMenu.getItems().addAll(new SeparatorMenuItem(), buildRelationshipItem(false));
                 }
             }
+            contextMenu.getItems().addAll(new SeparatorMenuItem(), buildQuickViewItem());
 
             contextMenu.setAutoHide(true);
             contextMenu.show(parentWindow.getWindow(), x, y);
@@ -274,6 +278,15 @@ public class EntityContextMenuHandler {
         item.setOnAction(e -> {
             canvasHandler.makeRelatedEntitiesSelected(entities);
             allocationHandler.scrollToSelected(canvasHandler.getCurrentViewTabInfo());
+        });
+
+        return item;
+    }
+
+    public MenuItem buildQuickViewItem() {
+        MenuItem item = new MenuItem("Quick View <Ctrl+Q>");
+        item.setOnAction(e -> {
+            quickViewHandler.createQuickView();
         });
 
         return item;

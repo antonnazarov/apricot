@@ -58,8 +58,10 @@ public class ErrorLoggerAspect {
                     if (StringUtils.isNotEmpty(l.text())) {
                         text.append("\n\n");
                     }
-                    
-                    text.append(wrapText(t.getMessage()));
+
+                    if (t.getMessage() != null) {
+                        text.append(wrapText(t.getMessage()));
+                    }
 
                     if (alertHandler.requestYesNoOption(l.title(), text.toString(), "View the error details",
                             AlertType.ERROR)) {
