@@ -13,7 +13,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import za.co.apricotdb.ui.handler.ApricotRelationshipHandler;
+import za.co.apricotdb.ui.handler.NonTransactionalPort;
 import za.co.apricotdb.ui.model.EditRelationshipModel;
 import za.co.apricotdb.ui.model.EditRelationshipModelBuilder;
 import za.co.apricotdb.ui.model.ParentChildKeyHolder;
@@ -37,7 +37,7 @@ public class EditRelationshipController {
     EditRelationshipModelBuilder modelBuilder;
 
     @Autowired
-    ApricotRelationshipHandler relationshipHandler;
+    NonTransactionalPort port;
 
     @FXML
     Pane mainPane;
@@ -121,7 +121,7 @@ public class EditRelationshipController {
 
     @FXML
     public void swap(ActionEvent event) {
-        relationshipHandler.swapEntities(this);
+        port.swapEntities(this);
     }
 
     @FXML
@@ -131,7 +131,7 @@ public class EditRelationshipController {
 
     @FXML
     public void save(ActionEvent event) {
-        if (relationshipHandler.saveRelationship(this)) {
+        if (port.saveRelationship(this)) {
             getStage().close();
         }
     }
@@ -141,7 +141,7 @@ public class EditRelationshipController {
     public void foreignKeyEdited(ActionEvent event) {
         ComboBox<String> source = (ComboBox<String>) event.getSource();
 
-        relationshipHandler.handleForeignKeyChanged(model, source.getId(), source.getValue());
+        port.handleForeignKeyChanged(model, source.getId(), source.getValue());
     }
 
     @FXML

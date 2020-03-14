@@ -3,6 +3,7 @@ package za.co.apricotdb.ui;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,9 +14,9 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import za.co.apricotdb.ui.comparator.CompareScriptGenerator;
 import za.co.apricotdb.ui.comparator.CompareSnapshotRow;
 import za.co.apricotdb.ui.handler.GenerateScriptHandler;
+import za.co.apricotdb.ui.handler.NonTransactionalPort;
 import za.co.apricotdb.ui.handler.SyntaxEditorHandler;
 
 /**
@@ -34,8 +35,8 @@ public class CompareScriptController {
     SyntaxEditorHandler syntaxEditorHandler;
 
     @Autowired
-    CompareScriptGenerator compareScriptGenerator;
-
+    NonTransactionalPort port;
+    
     @FXML
     Pane mainPane;
 
@@ -74,10 +75,17 @@ public class CompareScriptController {
 
     @FXML
     public void generate(ActionEvent event) {
-        String scriptText = compareScriptGenerator.generate(differences, schema.getValue());
+        String shma = schema.getValue();
+        if (shma != null) {
+            shma = shma.trim();
+        }
+        if (StringUtils.containsWhitespace(shma) || StringUtils.isEmpty(shma)) {
+            shma = null;
+        }
+        String scriptText = port.generate(differences, shma);
         switch (getScriptTarget()) {
         case FILE:
-            generateScriptHandler.saveToFile("Generate Alignment Script", scriptText, mainPane.getScene().getWindow());
+            generateScriptHandler.saveToFile("the Snapshots alignment", scriptText, mainPane.getScene().getWindow());
             break;
         case SQL_EDITOR:
             try {

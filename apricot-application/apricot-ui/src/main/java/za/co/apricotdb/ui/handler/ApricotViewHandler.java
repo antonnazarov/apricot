@@ -35,7 +35,10 @@ import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.persistence.entity.LayoutObjectType;
 import za.co.apricotdb.persistence.entity.ViewDetailLevel;
+import za.co.apricotdb.ui.MainAppController;
 import za.co.apricotdb.ui.ViewFormController;
+import za.co.apricotdb.ui.error.ApricotErrorLogger;
+import za.co.apricotdb.ui.model.ApricotViewSerializer;
 import za.co.apricotdb.ui.model.EditViewModelBuilder;
 import za.co.apricotdb.ui.model.NewViewModelBuilder;
 import za.co.apricotdb.ui.model.ViewFormModel;
@@ -85,9 +88,18 @@ public class ApricotViewHandler {
 
     @Autowired
     ApricotUndoManager undoManager;
-    
+
     @Autowired
     AlertMessageDecorator alertDecorator;
+
+    @Autowired
+    MainAppController appController;
+
+    @Autowired
+    ApricotViewSerializer viewSerializer;
+
+    @Autowired
+    ApricotSnapshotHandler snapshotHandler;
 
     public List<ApricotView> getAllViews(ApricotProject project) {
         checkGeneralView(project);
@@ -98,6 +110,7 @@ public class ApricotViewHandler {
     /**
      * Find all tables of the given snapshot, which have associated Layout Object.
      */
+    @ApricotErrorLogger(title = "Unable to retrieve tables for the selected view")
     public List<ApricotTable> getTablesForView(ApricotSnapshot snapshot, ApricotView view) {
         List<ApricotTable> ret = new ArrayList<>();
 
@@ -126,15 +139,16 @@ public class ApricotViewHandler {
         }
     }
 
+    @ApricotErrorLogger(title = "Unable to create the View editor form")
     public void createViewEditor(TabPane viewsTabPane, ApricotView view, Tab tab) throws Exception {
-        
-        //  check if this is not the "Main View"
+
+        // check if this is not the "Main View"
         if (view != null && view.isGeneral()) {
             Alert alert = alertDecorator.getAlert("Edit View", "You cannot edit the Main View", AlertType.WARNING);
             alert.showAndWait();
             return;
         }
-        
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-view-editor.fxml"));
         loader.setControllerFactory(context::getBean);
         Pane window = loader.load();
@@ -174,8 +188,8 @@ public class ApricotViewHandler {
      * included into view and the pattern view, which ApricotObjectLayout's will be
      * re-used.
      */
-    public List<ApricotObjectLayout> getObjectLayoutsFromReferenceView(List<String> viewTables, ApricotView referenceView,
-            ApricotSnapshot snapshot) {
+    public List<ApricotObjectLayout> getObjectLayoutsFromReferenceView(List<String> viewTables,
+            ApricotView referenceView, ApricotSnapshot snapshot) {
         List<ApricotObjectLayout> ret = new ArrayList<>();
 
         // scan through the view tables
@@ -210,6 +224,7 @@ public class ApricotViewHandler {
         return tab;
     }
 
+    @ApricotErrorLogger(title = "Unable to get View by name")
     public ApricotView getViewByName(ApricotProject project, String name) {
         ApricotView ret = null;
 
@@ -229,5 +244,22 @@ public class ApricotViewHandler {
         ApricotView v = new ApricotView(ApricotView.MAIN_VIEW, "The main view of the project", new java.util.Date(),
                 null, true, 0, project, new ArrayList<ApricotObjectLayout>(), true, ViewDetailLevel.DEFAULT);
         project.getViews().add(v);
+    }
+
+    @ApricotErrorLogger(title = "Unable to remove Entity(s) from the View")
+    public void removeEntitiesFromView(List<String> entities) {
+        appController.save(null); // save the current layout
+        TabInfoObject tabInfo = canvasHandler.getCurrentViewTabInfo();
+        viewSerializer.deleteEntitiesFromView(entities, tabInfo);
+        snapshotHandler.syncronizeSnapshot(false);
+    }
+
+    @ApricotErrorLogger(title = "Unable to add Entity(s) into the View")
+    public void addEntityToView(List<String> entities) {
+        appController.save(null); // save the current layout
+        TabInfoObject tabInfo = canvasHandler.getCurrentViewTabInfo();
+        viewSerializer.addEntitiesToView(entities, tabInfo);
+        snapshotHandler.syncronizeSnapshot(false);
+        canvasHandler.makeEntitiesSelected(entities, true);
     }
 }

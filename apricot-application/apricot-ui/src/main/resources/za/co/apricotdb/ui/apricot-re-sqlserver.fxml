@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
@@ -33,12 +34,27 @@
             <Label text="User:" GridPane.rowIndex="4" />
             <Label text="Password:" GridPane.rowIndex="5" />
             <ComboBox fx:id="server" editable="true" onAction="#serverSelected" prefHeight="25.0" prefWidth="315.0" GridPane.columnIndex="1" />
-            <ComboBox fx:id="port" editable="true" prefHeight="25.0" prefWidth="160.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <ComboBox fx:id="database" editable="true" prefHeight="25.0" prefWidth="315.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <ComboBox fx:id="user" editable="true" onAction="#userSelected" prefHeight="25.0" prefWidth="315.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <PasswordField fx:id="password" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <Label text="Schema:" GridPane.rowIndex="3" />
             <ComboBox fx:id="schema" editable="true" onAction="#userSelected" prefHeight="25.0" prefWidth="315.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <HBox prefHeight="100.0" prefWidth="200.0" spacing="14.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <ComboBox fx:id="port" editable="true" prefHeight="25.0" prefWidth="160.0" />
+                  <CheckBox fx:id="useWindowsUserFlag" mnemonicParsing="false" onAction="#useWindowsUser" text="Use Windows User" visible="false">
+                     <HBox.margin>
+                        <Insets top="4.0" />
+                     </HBox.margin>
+                  </CheckBox>
+               </children>
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin>
+               <padding>
+                  <Insets bottom="3.0" top="3.0" />
+               </padding>
+            </HBox>
          </children>
       </GridPane>
       <HBox alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="474.0" spacing="10.0">

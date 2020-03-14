@@ -39,6 +39,7 @@ public class ParentWindow {
     private Application application;
     private MainAppController controller;
     private List<ApricotTable> filterTables = new ArrayList<>();
+    private TabPane viewsTabPane;
 
     public void init(MainAppController controller) {
         this.controller = controller;
@@ -141,6 +142,14 @@ public class ParentWindow {
     
     public TextField getFilterField() {
         return controller.getFilterField();
+    }
+
+    public TabPane getViewsTabPane() {
+        return viewsTabPane;
+    }
+
+    public void setViewsTabPane(TabPane viewsTabPane) {
+        this.viewsTabPane = viewsTabPane;
     }
 
     /**

@@ -21,14 +21,14 @@ import za.co.apricotdb.viewport.relationship.shape.RelationshipShapeType;
  * @author Anton Nazarov
  * @since 14/12/2018
  */
-public class CanvasSizeAjustor implements AlignCommand {
+public class CanvasSizeAdjustor implements AlignCommand {
 
     public static final double DIAGRAM_PANEL_OFFSET = 10;
 
     private final GroupOperationHandler groupHandler = new GroupOperationHandler();
     private ApricotCanvas canvas = null;
 
-    public CanvasSizeAjustor(ApricotCanvas canvas) {
+    public CanvasSizeAdjustor(ApricotCanvas canvas) {
         this.canvas = canvas;
     }
 

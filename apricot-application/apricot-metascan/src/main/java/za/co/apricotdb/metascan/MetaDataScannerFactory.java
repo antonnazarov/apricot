@@ -68,7 +68,7 @@ public class MetaDataScannerFactory {
 
     @Autowired
     DB2LuwUrlBuilder db2luwUrlBuilder;
-    
+
     /**
      * Recognize the appropriate scanner.
      */
@@ -161,10 +161,11 @@ public class MetaDataScannerFactory {
         return null;
     }
 
-    public String getUrl(ApricotTargetDatabase targetDb, String server, String port, String database) {
+    public String getUrl(ApricotTargetDatabase targetDb, String server, String port, String database,
+            boolean integratedSecurity) {
         DatabaseUrlBuilder urlBuilder = getDatabaseUrlBuilder(targetDb);
         if (urlBuilder != null) {
-            return urlBuilder.getUrl(server, port, database);
+            return urlBuilder.getUrl(server, port, database, integratedSecurity);
         }
 
         return null;

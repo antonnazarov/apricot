@@ -1,6 +1,7 @@
 package za.co.apricotdb.ui.handler;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.ProjectParameterManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.TableManager;
+import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotProjectParameter;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
@@ -64,7 +66,8 @@ public class ExcelReportHandler {
         }
 
         String outputDir = null;
-        ApricotProjectParameter param = parameterManager.getParameterByName(projectManager.findCurrentProject(),
+        ApricotProject project = projectManager.findCurrentProject();
+        ApricotProjectParameter param = parameterManager.getParameterByName(project,
                 ProjectParameterManager.PROJECT_DEFAULT_OUTPUT_DIR);
         if (param != null) {
             outputDir = param.getValue();
@@ -74,7 +77,7 @@ public class ExcelReportHandler {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Create Excel Report");
         fileChooser.setInitialDirectory(new File(outputDir));
-        fileChooser.setInitialFileName("snap_" + snapshot.getName());
+        fileChooser.setInitialFileName(getFileName(project.getName()));
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("MS Excel files", "*.xlsx");
         fileChooser.getExtensionFilters().add(extFilter);
 
@@ -86,12 +89,20 @@ public class ExcelReportHandler {
                         "The Excel Report was successfully created in: " + file.getAbsolutePath(),
                         AlertType.INFORMATION);
                 alert.showAndWait();
-                parameterManager.saveParameter(projectManager.findCurrentProject(),
+                parameterManager.saveParameter(project,
                         ProjectParameterManager.PROJECT_DEFAULT_OUTPUT_DIR, file.getParent());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+    }
+    
+    private String getFileName(String projectName) {
+        StringBuilder sb = new StringBuilder();
+        SimpleDateFormat df = new SimpleDateFormat("yyyyddMM");
+        sb.append(df.format(new java.util.Date())).append("-").append(projectName);
+        
+        return sb.toString();
     }
 
     private boolean checkNonEmptySnapshot(ApricotSnapshot snapshot) {

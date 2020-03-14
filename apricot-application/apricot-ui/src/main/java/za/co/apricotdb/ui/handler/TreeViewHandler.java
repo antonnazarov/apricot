@@ -1,6 +1,5 @@
 package za.co.apricotdb.ui.handler;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,13 +40,13 @@ public class TreeViewHandler {
     TableManager tableManager;
 
     @Autowired
-    ApricotEntityHandler entityHandler;
-
-    @Autowired
     ApricotViewHandler viewHandler;
 
     @Autowired
     EntityFilterHandler filterHandler;
+
+    @Autowired
+    NonTransactionalPort port;
 
     public void populate(ApricotProject project, ApricotSnapshot snapshot) {
         List<ApricotTable> tables = new ArrayList<>();
@@ -59,7 +58,8 @@ public class TreeViewHandler {
 
         StringBuilder projectItemText = new StringBuilder(project.getName()).append(" (")
                 .append(project.getTargetDatabase()).append(")");
-        TreeItem<ProjectExplorerItem> root = new TreeItem<>(buildItemNode(projectItemText.toString(), ItemType.PROJECT, true));
+        TreeItem<ProjectExplorerItem> root = new TreeItem<>(
+                buildItemNode(projectItemText.toString(), ItemType.PROJECT, true));
         root.getChildren().addAll(getTables(tables));
         root.setExpanded(true);
         TreeView<ProjectExplorerItem> tw = getTreeView();
@@ -123,7 +123,7 @@ public class TreeViewHandler {
                 return 1;
             }
 
-            return e1.getValue().getItemName().compareTo(e2.getValue().getItemName());
+            return e1.getValue().getItemName().toLowerCase().compareTo(e2.getValue().getItemName().toLowerCase());
         });
     }
 
@@ -151,11 +151,7 @@ public class TreeViewHandler {
             ProjectExplorerItem pei = buildItemNode(t.getName(), ItemType.ENTITY, false);
             pei.setOnMouseClicked(e -> {
                 if (e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 2) {
-                    try {
-                        entityHandler.openEntityEditorForm(false, t.getName());
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
+                    port.openEntityEditorForm(false, t.getName());
                 }
             });
             TreeItem<ProjectExplorerItem> item = new TreeItem<>(pei);

@@ -1,7 +1,5 @@
 package za.co.apricotdb.ui.handler;
 
-import java.io.IOException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +14,7 @@ import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.persistence.entity.ViewDetailLevel;
 import za.co.apricotdb.ui.MainAppController;
 import za.co.apricotdb.ui.ParentWindow;
+import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 
 /**
@@ -29,9 +28,6 @@ public class CanvasContextMenuHandler {
 
     @Autowired
     ApricotCanvasHandler canvasHandler;
-
-    @Autowired
-    ApricotEntityHandler entityHandler;
 
     @Autowired
     ViewManager viewManager;
@@ -57,6 +53,10 @@ public class CanvasContextMenuHandler {
     @Autowired
     ResetViewHandler resetViewHandler;
 
+    @Autowired
+    NonTransactionalPort port;
+
+    @ApricotErrorLogger(title = "Unable to create the context menu")
     public void createCanvasContextMenu(ApricotCanvas canvas, double x, double y) {
         ApricotView view = canvasHandler.getCurrentView();
 
@@ -67,17 +67,13 @@ public class CanvasContextMenuHandler {
             try {
                 viewHandler.createViewEditor(tabPane, view, tabPane.getSelectionModel().getSelectedItem());
             } catch (Exception ex) {
-                ex.printStackTrace();
+                throw new RuntimeException(ex);
             }
         });
 
         MenuItem newEntity = new MenuItem("New Entity");
         newEntity.setOnAction(e -> {
-            try {
-                entityHandler.openEntityEditorForm(true, null);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            port.openEntityEditorForm(true, null);
         });
 
         MenuItem refreshCanvas = new MenuItem("Refresh <F5>");

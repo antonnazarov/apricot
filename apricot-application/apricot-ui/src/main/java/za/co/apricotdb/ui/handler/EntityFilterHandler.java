@@ -16,6 +16,7 @@ import za.co.apricotdb.persistence.data.TableManager;
 import za.co.apricotdb.persistence.data.ViewManager;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.ui.ParentWindow;
+import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
 /**
@@ -57,6 +58,7 @@ public class EntityFilterHandler {
     /**
      * Set up the entity filter, using the case insensitive search string.
      */
+    @ApricotErrorLogger(title = "Unable to set the Entity Filter")
     public void setupEntityFilter(String search) {
         if (search.equals("*") || StringUtils.isEmpty(search)) {
             resetEntityFilter();
@@ -87,6 +89,7 @@ public class EntityFilterHandler {
     /**
      * Add results of the subsequent search to the existing filter.
      */
+    @ApricotErrorLogger(title = "Unable to add to the Entity Filter")
     public void addToEntityFilter(String search) {
         // if the filter is empty, start the creation of the filter from scratch
         if (parentWindow.getFilterTables().isEmpty()) {
@@ -106,6 +109,7 @@ public class EntityFilterHandler {
     /**
      * Reset the Entity Filter.
      */
+    @ApricotErrorLogger(title = "Unable to reset the Entity Filter")
     public void resetEntityFilter() {
         parentWindow.getFilterTables().clear();
         snapshotHandler.syncronizeSnapshot(true);

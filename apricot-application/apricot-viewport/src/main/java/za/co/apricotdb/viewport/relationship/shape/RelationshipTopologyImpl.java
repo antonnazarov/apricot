@@ -2,7 +2,7 @@ package za.co.apricotdb.viewport.relationship.shape;
 
 import javafx.geometry.Side;
 import za.co.apricotdb.viewport.align.AlignCommand;
-import za.co.apricotdb.viewport.align.CanvasSizeAjustor;
+import za.co.apricotdb.viewport.align.CanvasSizeAdjustor;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
 import za.co.apricotdb.viewport.modifiers.ShapeModifierFactory;
@@ -23,7 +23,7 @@ public class RelationshipTopologyImpl implements RelationshipTopology {
     }
 
     private void init(ApricotCanvas canvas) {
-        AlignCommand aligner = new CanvasSizeAjustor(canvas);
+        AlignCommand aligner = new CanvasSizeAdjustor(canvas);
 
         PrimitivesBuilder primitivesBuilder = PrimitivesBuilder.instantiateBuilder(canvas);
         ShapeModifierFactory factory = ShapeModifierFactory.instantiateFactory(canvas);

@@ -25,6 +25,7 @@ import javafx.stage.Stage;
 import za.co.apricotdb.ui.CompareScriptController;
 import za.co.apricotdb.ui.comparator.CompareRowType;
 import za.co.apricotdb.ui.comparator.CompareSnapshotRow;
+import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
 /**
@@ -42,6 +43,7 @@ public class CompareScriptHandler {
     @Autowired
     AlertMessageDecorator alertDecorator;
 
+    @ApricotErrorLogger(title = "Unable to generate the align script")
     public void generateScript(TreeItem<CompareSnapshotRow> root) {
         if (!hasDifference(root)) {
             Alert alert = alertDecorator.getAlert("Compare Snapshot", "The selected Snapshots are equal",
@@ -66,7 +68,7 @@ public class CompareScriptHandler {
         try {
             createGenerateScriptForm(differences);
         } catch (IOException ex) {
-            ex.printStackTrace();
+            throw new IllegalStateException(ex);
         }
     }
 

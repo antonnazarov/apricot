@@ -15,7 +15,7 @@ import za.co.apricotdb.ui.MainAppController;
  * @since 21/09/2019
  */
 @Component
-public class TbCreateHandler extends TbButtonHandlerState {
+public class TbCreateScriptHandler extends TbButtonHandlerState {
 
     @Autowired
     MainAppController appController;

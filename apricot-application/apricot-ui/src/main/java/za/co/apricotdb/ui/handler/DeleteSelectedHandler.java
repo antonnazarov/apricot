@@ -10,6 +10,7 @@ import za.co.apricotdb.persistence.data.RelationshipManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.TableManager;
 import za.co.apricotdb.ui.MainAppController;
+import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.undo.ApricotUndoManager;
 import za.co.apricotdb.ui.undo.UndoType;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
@@ -25,6 +26,8 @@ import za.co.apricotdb.viewport.relationship.ApricotRelationship;
  */
 @Component
 public class DeleteSelectedHandler {
+
+    private static final int ELEMENTS_IN_DELETE_LIST = 15;
 
     @Autowired
     ApricotCanvasHandler canvasHandler;
@@ -56,6 +59,7 @@ public class DeleteSelectedHandler {
     @Autowired
     MainAppController appController;
 
+    @ApricotErrorLogger(title = "Unable to delete the selected Entities/Relationship")
     public void deleteSelected() {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
         List<ApricotEntity> entities = canvas.getSelectedEntities();
@@ -82,9 +86,16 @@ public class DeleteSelectedHandler {
     private void deleteRelationships(List<ApricotRelationship> relationships) {
         StringBuilder sb = new StringBuilder();
         sb.append("The following Relationship(s) will be deleted:\n");
+        int elmCount = 0;
         for (ApricotRelationship r : relationships) {
+            if (elmCount == ELEMENTS_IN_DELETE_LIST) {
+                sb.append("...").append(relationships.size()-ELEMENTS_IN_DELETE_LIST).append(" more ...");
+                break;
+            }
+
             sb.append(" * ").append(r.getParent().getTableName()).append("->").append(r.getChild().getTableName())
                     .append("\n");
+            elmCount++;
         }
         if (alert.requestYesNoOption("Delete Relationship(s)", sb.toString(), "Delete")) {
             appController.save(null);
@@ -99,11 +110,19 @@ public class DeleteSelectedHandler {
         }
     }
 
+    @ApricotErrorLogger(title = "Unable to delete the selected Entities/Relationship")
     public void deleteEntities(List<String> entities) {
         StringBuilder sb = new StringBuilder();
         sb.append("The following Entity(s) will be deleted:\n");
+        int elmCount = 0;
         for (String e : entities) {
-            sb.append("*").append(e).append("\n");
+            if (elmCount == ELEMENTS_IN_DELETE_LIST) {
+                sb.append("... ").append(entities.size()-ELEMENTS_IN_DELETE_LIST).append(" more ...").append("\n");
+                break;
+            }
+
+            sb.append("* ").append(e).append("\n");
+            elmCount++;
         }
         if (alert.requestYesNoOption("Delete Entity(s)", sb.toString(), "Delete")) {
             appController.save(null);

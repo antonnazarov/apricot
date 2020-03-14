@@ -32,7 +32,7 @@ public class ObjectAllocationHandler {
     /**
      * Center the Entity in the visible part of the screen.
      */
-    public void centerEntityOnView(TabInfoObject tabInfo, String tableName) {
+    public void centerEntityOnView(TabInfoObject tabInfo, String tableName, double biasX, double biasY) {
         ApricotCanvas canvas = tabInfo.getCanvas();
         double canvasWidth = ((Pane) canvas).getWidth();
         double canvasHeight = ((Pane) canvas).getHeight();
@@ -54,6 +54,9 @@ public class ObjectAllocationHandler {
         } else {
             layoutY = visibleHeight / 2;
         }
+        
+        layoutX += biasX;
+        layoutY += biasY;
 
         CanvasAllocationItem alloc = ApricotEntityShape.getAllocation(tableName, layoutX, layoutY, 0);
         CanvasAllocationMap map = new CanvasAllocationMap();

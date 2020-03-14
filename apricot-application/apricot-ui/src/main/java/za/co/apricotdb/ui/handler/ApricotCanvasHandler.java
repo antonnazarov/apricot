@@ -1,17 +1,31 @@
 package za.co.apricotdb.ui.handler;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import javax.annotation.Resource;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javafx.animation.PauseTransition;
+import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Tab;
+import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import za.co.apricotdb.persistence.data.RelationshipManager;
 import za.co.apricotdb.persistence.data.TableManager;
@@ -24,8 +38,10 @@ import za.co.apricotdb.persistence.entity.ViewDetailLevel;
 import za.co.apricotdb.support.excel.TableWrapper;
 import za.co.apricotdb.support.excel.TableWrapper.ReportRow;
 import za.co.apricotdb.ui.ParentWindow;
+import za.co.apricotdb.ui.RelatedEntitiesController;
+import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.viewport.align.AlignCommand;
-import za.co.apricotdb.viewport.align.CanvasSizeAjustor;
+import za.co.apricotdb.viewport.align.CanvasSizeAdjustor;
 import za.co.apricotdb.viewport.align.SimpleGridEntityAllocator;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ApricotElement;
@@ -48,6 +64,9 @@ import za.co.apricotdb.viewport.relationship.RelationshipType;
  */
 @Component
 public class ApricotCanvasHandler {
+
+    @Resource
+    ApplicationContext context;
 
     @Autowired
     TableManager tableManager;
@@ -87,9 +106,9 @@ public class ApricotCanvasHandler {
             runAlignerAfterDelay(canvas, v, 0.1).play();
         } else {
             runAllocationAfterDelay(canvas, v, 0, ElementType.ENTITY).play();
-            runAllocationAfterDelay(canvas, v, 0.8, ElementType.RELATIONSHIP).play();
+            runAllocationAfterDelay(canvas, v, 2.0, ElementType.RELATIONSHIP).play();
         }
-        
+
         return tables;
     }
 
@@ -211,18 +230,91 @@ public class ApricotCanvasHandler {
         }
     }
 
-    public void makeRelatedEntitiesSelected(String tableName) {
-        List<String> tables = new ArrayList<>();
-        tables.add(tableName);
+    /**
+     * Select tables, related to the given list.
+     */
+    @ApricotErrorLogger(title = "Unable to select the related Entities")
+    public void makeRelatedEntitiesSelected(List<String> tables) {
+        Set<String> selectTbl = new HashSet<>();
+        Set<String> absentTbl = new HashSet<>(); // the tables, which have bot been presented on the current view
+        selectTbl.addAll(tables);
         ApricotCanvas canvas = getSelectedCanvas();
-        ApricotEntity entity = canvas.findEntityByName(tableName);
-        for (za.co.apricotdb.viewport.relationship.ApricotRelationship r : entity.getForeignLinks()) {
-            tables.add(r.getParent().getTableName());
+        for (String tableName : tables) {
+            ApricotTable table = tableManager.getTableByName(tableName);
+            for (ApricotRelationship r : relationshipManager.getRelationshipsForTable(table)) {
+                String relTable = null;
+                if (r.getChild().getTable().equals(table)) {
+                    relTable = r.getParent().getTable().getName();
+                } else {
+                    relTable = r.getChild().getTable().getName();
+                }
+
+                if (canvas.findEntityByName(relTable) != null) {
+                    selectTbl.add(relTable);
+                } else {
+                    absentTbl.add(relTable);
+                }
+            }
         }
-        for (za.co.apricotdb.viewport.relationship.ApricotRelationship r : entity.getPrimaryLinks()) {
-            tables.add(r.getChild().getTableName());
+
+        makeEntitiesSelected(canvas, new ArrayList<>(selectTbl), false);
+
+        // if there are related tables, not presented on the current view, show the form
+        // with the list of such tables
+        if (!absentTbl.isEmpty()) {
+            createRelatedEntitiesForm(new ArrayList<>(absentTbl));
         }
-        makeEntitiesSelected(canvas, tables, false);
+    }
+
+    /**
+     * Show the pop-up window with the Related Entities.
+     */
+    @ApricotErrorLogger(title = "Unable to open the list of related Entities")
+    public void createRelatedEntitiesForm(List<String> relatedEntities) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-related-entities.fxml"));
+        loader.setControllerFactory(context::getBean);
+        Pane window = null;
+        try {
+            window = loader.load();
+        } catch (IOException ex) {
+            throw new IllegalArgumentException(ex);
+        }
+
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setTitle("Related Entities not in the View");
+        dialog.getIcons().add(new Image(getClass().getResourceAsStream("table-1-s1.jpg")));
+
+        Scene relatedEntitiesScene = new Scene(window);
+        dialog.setScene(relatedEntitiesScene);
+        relatedEntitiesScene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.ESCAPE) {
+                    dialog.close();
+                }
+            }
+        });
+
+        RelatedEntitiesController controller = loader.<RelatedEntitiesController>getController();
+        controller.init(relatedEntities);
+
+        dialog.show();
+    }
+
+    @ApricotErrorLogger(title = "Unable to save the edited canvases")
+    public void saveEditedCanvases() {
+        for (Tab t : parentWindow.getViewsTabPane().getTabs()) {
+            if (t.getUserData() instanceof TabInfoObject) {
+                TabInfoObject o = (TabInfoObject) t.getUserData();
+                // save only changed canvas
+                if (o.getCanvas().isCanvasChanged()) {
+                    tabViewHandler.saveCanvasAllocationMap(o);
+                    t.setStyle("-fx-font-weight: normal;");
+                    o.getCanvas().setCanvasChanged(false);
+                }
+            }
+        }
     }
 
     private za.co.apricotdb.viewport.relationship.ApricotRelationship convertRelationship(ApricotRelationship r,
@@ -279,7 +371,7 @@ public class ApricotCanvasHandler {
             CanvasAllocationMap map = tabViewHandler.readCanvasAllocationMap(view);
             canvas.applyAllocationMap(map, elementType);
 
-            AlignCommand aligner = new CanvasSizeAjustor(canvas);
+            AlignCommand aligner = new CanvasSizeAdjustor(canvas);
             aligner.align();
         });
 

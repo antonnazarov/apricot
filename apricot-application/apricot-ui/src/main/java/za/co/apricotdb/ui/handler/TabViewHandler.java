@@ -62,6 +62,9 @@ public class TabViewHandler {
     @Autowired
     RelationshipManager relationshipManager;
 
+    @Autowired
+    NonTransactionalPort port;
+
     /**
      * Build a new Tab and populate it with the initial data.
      */
@@ -220,7 +223,7 @@ public class TabViewHandler {
                 Optional<ButtonType> result = alert.showAndWait();
 
                 if (result.orElse(no) == yes) {
-                    viewManager.removeView(tabInfo.getView());
+                    port.removeView(tabInfo.getView());
                     tab.getTabPane().getTabs().remove(tab);
                 }
             }

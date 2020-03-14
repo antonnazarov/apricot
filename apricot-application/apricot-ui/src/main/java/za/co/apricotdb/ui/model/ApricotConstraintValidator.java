@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import javafx.scene.control.Alert;
 import za.co.apricotdb.persistence.data.ConstraintManager;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
+import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
 /**
@@ -24,6 +25,7 @@ public class ApricotConstraintValidator {
     @Autowired
     ConstraintManager constraintManager;
 
+    @ApricotErrorLogger(title = "Unable to validate the edited Constraint")
     public boolean validate(EditConstraintModel constraintModel, EditEntityModel editEntityModel) {
 
         if (!checkConstraintName(constraintModel, editEntityModel)) {

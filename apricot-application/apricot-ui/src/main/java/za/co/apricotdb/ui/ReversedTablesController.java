@@ -159,7 +159,7 @@ public class ReversedTablesController {
         return (Stage) mainPane.getScene().getWindow();
     }
 
-    private PauseTransition alignAfterDelay(double delay) {
+    public PauseTransition alignAfterDelay(double delay) {
         PauseTransition transition = new PauseTransition(Duration.seconds(delay));
         transition.setOnFinished(e -> {
             alignHandler.alignCanvasIslands();

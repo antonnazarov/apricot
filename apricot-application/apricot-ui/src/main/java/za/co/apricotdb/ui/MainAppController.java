@@ -14,20 +14,18 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import za.co.apricotdb.persistence.data.SnapshotManager;
-import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
 import za.co.apricotdb.ui.handler.ApricotAboutHandler;
 import za.co.apricotdb.ui.handler.ApricotCanvasHandler;
 import za.co.apricotdb.ui.handler.ApricotClipboardHandler;
-import za.co.apricotdb.ui.handler.ApricotEntityHandler;
 import za.co.apricotdb.ui.handler.ApricotProjectHandler;
 import za.co.apricotdb.ui.handler.ApricotRelationshipHandler;
 import za.co.apricotdb.ui.handler.ApricotSnapshotHandler;
@@ -38,11 +36,11 @@ import za.co.apricotdb.ui.handler.EntityAlignHandler;
 import za.co.apricotdb.ui.handler.EntityFilterHandler;
 import za.co.apricotdb.ui.handler.ExcelReportHandler;
 import za.co.apricotdb.ui.handler.GenerateScriptHandler;
+import za.co.apricotdb.ui.handler.NonTransactionalPort;
 import za.co.apricotdb.ui.handler.ProjectExplorerContextMenuHandler;
 import za.co.apricotdb.ui.handler.ProjectExplorerItem;
 import za.co.apricotdb.ui.handler.ReverseEngineHandler;
 import za.co.apricotdb.ui.handler.SelectViewTabHandler;
-import za.co.apricotdb.ui.handler.TabInfoObject;
 import za.co.apricotdb.ui.handler.TabViewHandler;
 import za.co.apricotdb.ui.toolbar.TbAddFilterHandler;
 import za.co.apricotdb.ui.toolbar.TbButton;
@@ -88,9 +86,6 @@ public class MainAppController {
     ReverseEngineHandler reverseEngineHandler;
 
     @Autowired
-    ApricotEntityHandler entityHandler;
-
-    @Autowired
     ApricotRelationshipHandler relationshipHandler;
 
     @Autowired
@@ -134,15 +129,18 @@ public class MainAppController {
 
     @Autowired
     EntityFilterHandler filterHandler;
-    
+
     @Autowired
     TbSetFilterHandler tbSetFilterHandler;
-    
+
     @Autowired
     TbAddFilterHandler tbAddFilterHandler;
-    
+
     @Autowired
     TbResetFilterHandler tbResetFilterHandler;
+
+    @Autowired
+    NonTransactionalPort port;
 
     @FXML
     AnchorPane mainPane;
@@ -219,8 +217,8 @@ public class MainAppController {
     Button tbDropScript;
     @FXML
     Button tbReverseEngineering;
-    
-    //  filter
+
+    // filter
     @FXML
     Button tbSetFilter;
     @FXML
@@ -256,6 +254,7 @@ public class MainAppController {
     public void init() {
         parentWindow.init(this);
         parentWindow.setParentPane(mainPane);
+        parentWindow.setViewsTabPane(viewsTabPane);
 
         selTabHandler.initTabPane(viewsTabPane, scale);
 
@@ -292,25 +291,21 @@ public class MainAppController {
                 tbAllocateEntities, tbResetAllocation, tbExcelReport, tbInsertScript, tbDeleteScript, tbDropScript,
                 tbReverseEngineering);
 
-        
         filterField.setText("*");
+        filterField.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                filterAdd(null);
+            }
+        });
+
         tbSetFilterHandler.initButton(tbSetFilter);
         tbAddFilterHandler.initButton(tbAddFilter);
         tbResetFilterHandler.initButton(tbResetFilter);
     }
 
     public void save(ActionEvent event) {
-        for (Tab t : viewsTabPane.getTabs()) {
-            if (t.getUserData() instanceof TabInfoObject) {
-                TabInfoObject o = (TabInfoObject) t.getUserData();
-                // save only changed canvas
-                if (o.getCanvas().isCanvasChanged()) {
-                    tabViewHandler.saveCanvasAllocationMap(o);
-                    t.setStyle("-fx-font-weight: normal;");
-                    o.getCanvas().setCanvasChanged(false);
-                }
-            }
-        }
+        canvasHandler.saveEditedCanvases();
+
         tbHolder.disable(TbButton.tbSave);
         menuSave.setDisable(true);
         parentWindow.getApplicationData().setLayoutEdited(false);
@@ -325,11 +320,7 @@ public class MainAppController {
     }
 
     public void newRelationship(ActionEvent event) {
-        try {
-            relationshipHandler.openRelationshipEditorForm(viewsTabPane);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        port.openRelationshipEditorForm(viewsTabPane);
     }
 
     /**
@@ -399,15 +390,7 @@ public class MainAppController {
             snapshotCombo.setUserData("reset");
         } else {
             snapshotCombo.setUserData("snapshotCombo.selectSnapshot");
-
-            String snapshotSelected = snapshotCombo.getSelectionModel().getSelectedItem();
-            ApricotSnapshot snapshot = snapshotManager
-                    .getSnapshotByName(parentWindow.getApplicationData().getCurrentProject(), snapshotSelected);
-            if (snapshot == null) {
-                return;
-            }
-            snapshotManager.setDefaultSnapshot(snapshot);
-            applicationInitializer.initialize(snapshot.getProject(), snapshot);
+            port.setDefaultSnapshot(snapshotCombo.getSelectionModel().getSelectedItem());
         }
     }
 
@@ -455,25 +438,19 @@ public class MainAppController {
      */
     @FXML
     public void deleteProject(ActionEvent event) {
-        if (projectHandler.deleteCurrentProject()) {
-            applicationInitializer.initializeDefault();
-        }
+        projectHandler.deleteProject();
     }
 
     /**
      * Start a process of creation of the new entity.
      */
     public void newEntity(ActionEvent event) {
-        try {
-            entityHandler.openEntityEditorForm(true, null);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        port.openEntityEditorForm(true, null);
     }
 
     @FXML
     public void createExcelReport(ActionEvent event) {
-        excelReportHandler.createExcelReport(mainPane.getScene().getWindow());
+        port.createExcelReport(mainPane.getScene().getWindow());
     }
 
     @FXML
@@ -629,7 +606,7 @@ public class MainAppController {
     public void filterOn(ActionEvent event) {
         filterHandler.setupEntityFilter(filterField.getText());
     }
-    
+
     @FXML
     public void filterAdd(ActionEvent event) {
         filterHandler.addToEntityFilter(filterField.getText());
@@ -640,7 +617,7 @@ public class MainAppController {
         filterHandler.resetEntityFilter();
         filterField.setText("*");
     }
-    
+
     public TextField getFilterField() {
         return filterField;
     }

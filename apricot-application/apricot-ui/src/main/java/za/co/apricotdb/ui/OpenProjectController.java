@@ -16,7 +16,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
-import za.co.apricotdb.ui.handler.ApplicationInitializer;
+import za.co.apricotdb.ui.handler.ApricotProjectHandler;
 
 /**
  * The controller for apricot-project-open.fxml form.
@@ -32,10 +32,10 @@ public class OpenProjectController {
     ProjectManager projectManager;
 
     @Autowired
-    ApplicationInitializer applicationInitializer;
-
-    @Autowired
     ParentWindow parentWindow;
+    
+    @Autowired
+    ApricotProjectHandler projectHandler;
 
     @FXML
     Pane mainPane;
@@ -65,10 +65,8 @@ public class OpenProjectController {
     @FXML
     public void openProject(ActionEvent event) {
         parentWindow.setParentPane(mainAppPane);
-        ApricotProject selectedProject = projectsList.getSelectionModel().getSelectedItem();
-        projectManager.setProjectCurrent(selectedProject);
-        applicationInitializer.initializeDefault();
-
+        projectHandler.openProject(projectsList);
+        
         getStage().close();
     }
 

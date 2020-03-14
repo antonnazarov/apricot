@@ -42,6 +42,7 @@ import za.co.apricotdb.ui.DBScriptType;
 import za.co.apricotdb.ui.ScriptGenerateController;
 import za.co.apricotdb.ui.ScriptGenerateController.ScriptSource;
 import za.co.apricotdb.ui.ScriptGenerateController.ScriptTarget;
+import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.ui.util.ApricotTableUtils;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
@@ -92,6 +93,7 @@ public class GenerateScriptHandler {
     @Autowired
     SyntaxEditorHandler syntaxEditorHandler;
 
+    @ApricotErrorLogger(title = "Unable to create the script generation form")
     public void createGenerateScriptForm(DBScriptType scriptType) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-generate-script.fxml"));
         loader.setControllerFactory(context::getBean);
@@ -270,6 +272,7 @@ public class GenerateScriptHandler {
         return ret;
     }
 
+    @ApricotErrorLogger(title = "Unable to save the generated script to file")
     public boolean saveToFile(String operationName, String script, Window window) {
         ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
 

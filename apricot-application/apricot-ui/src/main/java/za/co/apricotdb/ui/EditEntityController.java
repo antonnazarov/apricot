@@ -1,6 +1,5 @@
 package za.co.apricotdb.ui;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -40,8 +39,7 @@ import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.entity.ApricotApplicationParameter;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ConstraintType;
-import za.co.apricotdb.ui.handler.ApricotConstraintHandler;
-import za.co.apricotdb.ui.handler.ApricotEntityHandler;
+import za.co.apricotdb.ui.handler.NonTransactionalPort;
 import za.co.apricotdb.ui.model.ApricotColumnData;
 import za.co.apricotdb.ui.model.ApricotConstraintData;
 import za.co.apricotdb.ui.model.ApricotConstraintSerializer;
@@ -64,16 +62,13 @@ public class EditEntityController {
     ProjectManager projectManager;
 
     @Autowired
-    ApricotConstraintHandler constraintHandler;
-
-    @Autowired
     AlertMessageDecorator alertDecorator;
 
     @Autowired
     ApricotConstraintSerializer constraintSerializer;
 
     @Autowired
-    ApricotEntityHandler entityHandler;
+    NonTransactionalPort port;
 
     @FXML
     Pane mainPane;
@@ -366,11 +361,7 @@ public class EditEntityController {
 
     @FXML
     public void newConstraint(ActionEvent event) {
-        try {
-            constraintHandler.openConstraintEditorForm(true, null, model, constraintsTable, true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        port.openConstraintEditorForm(true, null, model, constraintsTable, true);
     }
 
     @FXML
@@ -381,11 +372,7 @@ public class EditEntityController {
                 || cd.getConstraintType().getValue().equals(ConstraintType.FOREIGN_KEY.name())) {
             editableFields = false;
         }
-        try {
-            constraintHandler.openConstraintEditorForm(false, cd, model, constraintsTable, editableFields);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        port.openConstraintEditorForm(false, cd, model, constraintsTable, editableFields);
     }
 
     @FXML
@@ -418,7 +405,7 @@ public class EditEntityController {
 
     @FXML
     public void save(ActionEvent event) {
-        if (entityHandler.saveEntity(model, entityName.getText(), this)) {
+        if (port.saveEntity(model, entityName.getText(), this)) {
             getStage().close();
         }
     }

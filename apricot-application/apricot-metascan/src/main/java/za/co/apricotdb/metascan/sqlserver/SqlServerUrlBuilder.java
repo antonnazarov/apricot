@@ -14,11 +14,14 @@ import za.co.apricotdb.metascan.DatabaseUrlBuilder;
 public class SqlServerUrlBuilder implements DatabaseUrlBuilder {
 
     @Override
-    public String getUrl(String server, String port, String database) {
+    public String getUrl(String server, String port, String database, boolean integratedSecurity) {
         // example of the SQLServer URL
         // jdbc:sqlserver://DST15404:1433;databaseName=apricot-tests
         StringBuilder sb = new StringBuilder("jdbc:sqlserver://").append(server).append(":").append(port).append(";")
                 .append("databaseName=").append(database);
+        if (integratedSecurity) {
+            sb.append(";integratedSecurity=true");
+        }
 
         return sb.toString();
     }
@@ -26,7 +29,7 @@ public class SqlServerUrlBuilder implements DatabaseUrlBuilder {
     public String getDriverClass() {
         return "com.microsoft.sqlserver.jdbc.SQLServerDriver";
     }
-    
+
     @Override
     public String getDefaultSchemaName(String url, String userName) {
         return "dbo";

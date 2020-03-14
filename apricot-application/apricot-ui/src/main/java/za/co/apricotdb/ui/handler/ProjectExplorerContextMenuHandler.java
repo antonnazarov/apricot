@@ -52,22 +52,24 @@ public class ProjectExplorerContextMenuHandler {
                         menu.getItems().addAll(entityMenuHandler.buildEditEntityItem(name),
                                 entityMenuHandler.buildDeleteEntityItem(items),
                                 entityMenuHandler.buildSelectOnCanvasItem(items),
-                                entityMenuHandler.buildSelectRelatedEntitiesItem(name));
+                                entityMenuHandler.buildSelectRelatedEntitiesItem(items));
                     } else {
                         menu.getItems().addAll(entityMenuHandler.buildEditEntityItem(name),
                                 entityMenuHandler.buildDeleteEntityItem(items),
                                 entityMenuHandler.buildRemoveFromViewItem(items),
                                 entityMenuHandler.buildSelectOnCanvasItem(items),
-                                entityMenuHandler.buildSelectRelatedEntitiesItem(name));
+                                entityMenuHandler.buildSelectRelatedEntitiesItem(items));
                     }
                 } else {
                     if (isMainView) {
                         menu.getItems().addAll(entityMenuHandler.buildDeleteEntityItem(items),
-                                entityMenuHandler.buildSelectOnCanvasItem(items));
+                                entityMenuHandler.buildSelectOnCanvasItem(items),
+                                entityMenuHandler.buildSelectRelatedEntitiesItem(items));
                     } else {
                         menu.getItems().addAll(entityMenuHandler.buildDeleteEntityItem(items),
                                 entityMenuHandler.buildRemoveFromViewItem(items),
-                                entityMenuHandler.buildSelectOnCanvasItem(items));
+                                entityMenuHandler.buildSelectOnCanvasItem(items),
+                                entityMenuHandler.buildSelectRelatedEntitiesItem(items));
                     }
                 }
             } else {
@@ -137,9 +139,7 @@ public class ProjectExplorerContextMenuHandler {
     public MenuItem buildDeleteProjectItem() {
         MenuItem item = new MenuItem("Delete Project");
         item.setOnAction(e -> {
-            if (projectHandler.deleteCurrentProject()) {
-                applicationInitializer.initializeDefault();
-            }
+            projectHandler.deleteProject();
         });
 
         return item;
