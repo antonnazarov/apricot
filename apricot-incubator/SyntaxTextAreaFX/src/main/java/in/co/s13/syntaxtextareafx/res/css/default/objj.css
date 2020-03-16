@@ -1,0 +1,12 @@
+.headers {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.sources {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.objj {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}

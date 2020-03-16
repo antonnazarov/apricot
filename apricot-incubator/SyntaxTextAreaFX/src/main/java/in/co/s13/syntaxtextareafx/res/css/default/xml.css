@@ -1,0 +1,64 @@
+.entity {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.character-reference {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.unallowed-chars {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.comment {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.doctype {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.cdata {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.processing-instruction {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.namespace {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.attribute-name {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.attribute-value {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.element-name {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.prolog {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.start-tag {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.end-tag {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.close-tag-outside-tag {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.xml {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}

@@ -1,0 +1,36 @@
+.line-comment {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.old-style-comment {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.string {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.preprocessor {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.keywords {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.types {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.special-constants {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.boolean {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.vbnet {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}

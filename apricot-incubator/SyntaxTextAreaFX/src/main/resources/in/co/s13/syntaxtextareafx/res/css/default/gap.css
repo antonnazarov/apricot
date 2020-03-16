@@ -1,0 +1,16 @@
+.character {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.keyword {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.decimal {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.gap {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}

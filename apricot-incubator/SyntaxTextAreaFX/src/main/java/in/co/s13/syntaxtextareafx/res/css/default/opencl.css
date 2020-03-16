@@ -1,0 +1,28 @@
+.keywords {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.data-types {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.global-functions {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.device-functions {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.device-casts {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.opencl-constants {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.opencl {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}

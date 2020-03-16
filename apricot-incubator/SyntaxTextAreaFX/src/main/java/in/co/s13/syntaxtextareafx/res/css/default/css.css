@@ -1,0 +1,88 @@
+.unicode-character-reference {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.selector-pseudo-elements {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.selector-pseudo-classes {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.at-rules {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.selector-id {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.selector-class {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.selector-tagname {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.hexadecimal-color {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.named-color {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.function {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.dimension {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.number {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.unicode-range {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.importance-modifier {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.property-names {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.known-property-values {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.style-block {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.punctuators {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.attribute-value-delimiters {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.operators {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.selector-grammar {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.css {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}

@@ -1,0 +1,56 @@
+.escaped-character {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.comment {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.character {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.string {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.integer {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.integer-hex {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.word {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.word-hex {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.real {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.boolean {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.special-var {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.keywords {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.top-level-types {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.sml {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}

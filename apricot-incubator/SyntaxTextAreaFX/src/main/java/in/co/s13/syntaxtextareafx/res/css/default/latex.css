@@ -1,0 +1,108 @@
+.comment {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.verbatim-env {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.R-block {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.lstinline-curly-brackets {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.lstinline-square-brackets {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.lstinline {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.verbatim-inline {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.verbatim {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.common-commands {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.include {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.generic-command {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.specific-commands {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.special-char {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.curly-braces-pair {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.headings {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.math-command {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.math-spacing {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.math-brackets {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.math-super-sub-script {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.in-math {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.math-1 {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.math-2 {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.math-env {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.inline-math-1 {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.inline-math-2 {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.math {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.latex {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}

@@ -1,0 +1,60 @@
+.line-comment {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.old-style-comment {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.string {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.preprocessor {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.keywords {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.functions {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.operators {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.objects {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.constants {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.types {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.special-constants {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.boolean {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.numeric {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.asp-block {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.asp {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}

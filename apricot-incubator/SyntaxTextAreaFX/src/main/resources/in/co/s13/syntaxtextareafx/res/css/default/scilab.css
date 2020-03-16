@@ -1,0 +1,36 @@
+.line-comment {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.double-quoted-string {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.single-quoted-string {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.boolean {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.reserved-constant {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.keyword {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.floating-point-number {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.function {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.scilab {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}

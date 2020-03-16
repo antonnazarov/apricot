@@ -1,0 +1,48 @@
+.subst {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.nosubcomment {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.comment {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.flags-assignment {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.keyword-assignment {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.primary-assignment {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.secondary-assignment {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.dir-assignment {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.assignment-rhs {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.command {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.assignment {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.automake {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}

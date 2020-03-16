@@ -1,0 +1,88 @@
+.line-comment {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.block-comment {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.escaped-characters {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.macro-parameters {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.macros-b {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.macros-dollar {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.macros {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.indexing {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.file-attributes-b {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.file-attributes-dollar {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.file-attributes {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.generated-content {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.include {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.markup-inline {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.markup-block-b {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.markup-block-dollar {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.markup-block {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.sectioning {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.formatting {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.characters {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.keyword {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.texinfo {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}

@@ -1,0 +1,84 @@
+.line-comment {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.double-quoted-string {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.single-quoted-string {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.subshell {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.backtick-subshell {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.punctuator {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.function {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.redirection {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.here-doc {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.operator {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.short-parameter-expansion {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.parameter-expansion {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.variable {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.variable-definition {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.built-in-command-1 {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.for-command {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.built-in-command-2 {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.built-in-command {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.common-command {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.case {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.sh {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}

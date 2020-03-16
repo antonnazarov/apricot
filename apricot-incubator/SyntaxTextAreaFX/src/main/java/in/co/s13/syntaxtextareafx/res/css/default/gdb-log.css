@@ -1,0 +1,40 @@
+.optimized-out {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.incomplete-sequence {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.prompt {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.thread-action {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.thread-header {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.signal-handler-frame {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.crash-frame {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.frame {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.frame-ending {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.gdb-log {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}

@@ -1,0 +1,24 @@
+.datatype {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.boolean-literal {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.line-comment {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.reserved-words {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.builtin-functions {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.pig {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}

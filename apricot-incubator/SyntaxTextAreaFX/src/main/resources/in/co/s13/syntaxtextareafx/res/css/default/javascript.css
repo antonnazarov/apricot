@@ -1,0 +1,56 @@
+.escape {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.regex-bracketed {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.regex-simple {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.undefined-value {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.null-value {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.boolean {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.keywords {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.unofficial-keywords {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.types {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.functions {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.properties {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.constructors {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.future-words {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.js {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}

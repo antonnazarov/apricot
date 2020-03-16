@@ -1,0 +1,36 @@
+.double-quoted-string {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.single-quoted-string {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.operator {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.storage-type {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.boolean {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.keyword {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.command {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.builtin {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.imagej {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}

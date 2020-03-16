@@ -1,0 +1,16 @@
+.block-comment {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.line-comment {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.builtin {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.matlab {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}

@@ -1,0 +1,12 @@
+.skip-asterisk {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.inline-docs-body {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.inline-docs-section {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}

@@ -1,0 +1,24 @@
+.operator {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.variable {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.variable-assignment {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.string {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.comment {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.nsis {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}

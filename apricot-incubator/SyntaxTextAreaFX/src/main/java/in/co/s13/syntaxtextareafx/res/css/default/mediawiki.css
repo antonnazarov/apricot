@@ -1,0 +1,80 @@
+.double-emphasis {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.strong-emphasis {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.light-emphasis {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.signature {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.url {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.internal-link {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.external-link {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.line {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.list {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.glossary-term {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.glossary-definition {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.magic-word-1 {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.magic-word-2 {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.table {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.preformatted {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.redirect {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.title {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.template {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.mediawiki-syntax {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.mediawiki {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}

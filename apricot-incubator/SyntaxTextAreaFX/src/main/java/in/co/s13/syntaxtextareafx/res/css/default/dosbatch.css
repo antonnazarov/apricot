@@ -1,0 +1,20 @@
+.comment {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.string {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.keywords {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.commands {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.dosbatch {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}

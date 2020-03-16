@@ -1,0 +1,368 @@
+.m4-quoted {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.m4-quoted-shell {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.m4-function-call {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.m4-comment {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.NO-ARGS {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.ARG-M {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.ARG-S {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.TO-ARGS-M {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.TO-ARGS-S {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.TO-ARGS-MM {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.TO-ARGS-MS {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.TO-ARGS-SM {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.TO-ARGS-SS {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.TO-ARGS-MMM {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.TO-ARGS-MMS {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.TO-ARGS-MSS {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.TO-ARGS-SSM {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.TO-ARGS-SSS {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.TO-ARGS-MMMM {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.TO-ARGS-MMSS {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.TO-ARGS-MSSM {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.TO-ARGS-MSSS {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.TO-ARGS-MMMMM {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.TO-ARGS-MMMSS {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.TO-ARGS-MVARARGS {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.TO-ARGS-SVARARGS {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.ARGS-S {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.ARGS-M {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.ARGS-MM {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.ARGS-MS {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.ARGS-SM {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.ARGS-SS {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.ARGS-MMM {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.ARGS-MMS {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.ARGS-MSM {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.ARGS-MSS {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.ARGS-SSM {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.ARGS-SSS {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.ARGS-MMMM {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.ARGS-MMMS {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.ARGS-MMSS {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.ARGS-MSSM {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.ARGS-MSSS {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.ARGS-SSSS {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.ARGS-MMMMM {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.ARGS-MMMSS {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.ARGS-MMSSM {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.ARGS-MMSSS {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.ARGS-MMMMMM {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.ARGS-SMMMSS {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.ARGS-MVARARGS {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.ARGS-SVARARGS {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.ARGS-AS-CASE {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.func-m {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.func-s {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.func-mm {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.func-ms {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.func-ss {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.func-mmm {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.func-mms {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.func-msm {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.func-mss {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.func-mmmm {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.func-mmms {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.func-mmss {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.func-mssm {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.func-msss {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.func-ssss {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.func-mmmmm {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.func-mmmss {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.func-mmssm {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.func-mmsss {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.func-mmmmmm {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.func-smmmss {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.func-mvarargs {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.func-svarargs {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.func-as-case {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.m4-pure {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.shell-line-comment {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.m4 {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.m4-macros-noargs {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.m4-macros-optargs {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.ac-macros-noargs {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.ac-macros-noargs-2 {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.ac-macros-optargs {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.ac-macros-obsolete {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.am-macros-noargs {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.am-macros-optargs {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.am-macros-private {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.am-macros-obsolete {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.misc-macros-noargs {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.misc-macros-optargs {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}

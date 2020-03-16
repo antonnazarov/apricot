@@ -1,0 +1,88 @@
+.scalar {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.alias {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.tag {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.anchor {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.string {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.unquoted-string {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.inline-unquoted {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.inline-null {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.bool {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.inline-bool {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.inline-int {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.int {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.inline-float {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.float {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.comment {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.inline-sequence {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.inline-map {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.map {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.sequence {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.document {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.directive {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.yaml {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}

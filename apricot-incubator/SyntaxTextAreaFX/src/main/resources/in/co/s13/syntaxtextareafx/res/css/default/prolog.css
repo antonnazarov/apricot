@@ -1,0 +1,52 @@
+.line-comment {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.block-comment {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.close-comment-outside-comment {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.variable {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.operators {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.special-operators {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.escaped-character {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.string {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.string2 {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.number {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.arith {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.keyword {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.prolog {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}

@@ -1,0 +1,24 @@
+.line-comment {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.keyword {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.block {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.decimal {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.floating-point-number {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.fcl {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}

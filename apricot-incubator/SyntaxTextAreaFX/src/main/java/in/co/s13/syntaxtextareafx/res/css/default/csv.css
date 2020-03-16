@@ -1,0 +1,16 @@
+.decimal {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.floating-point {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.string {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.csv {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}

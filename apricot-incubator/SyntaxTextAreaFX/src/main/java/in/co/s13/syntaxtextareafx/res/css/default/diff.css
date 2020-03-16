@@ -1,0 +1,25 @@
+.diff {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.add {
+    -fx-fill:#2fc676;
+    -fx-background-color:#75cd9e;
+    -fx-font-weight: bold;
+}
+.rem {
+    -fx-fill:#ff7e7e;
+    -fx-background-color:#ffa1a1;
+    -fx-font-weight: bold;
+}
+.change {
+    -fx-fill:#7eafff;
+    -fx-background-color:#9cb8e7;
+    -fx-font-weight: bold;
+}
+.common{
+    -fx-fill:#800083;
+    -fx-background-color:#fea4ff;
+    -fx-font-weight: bold;
+
+}

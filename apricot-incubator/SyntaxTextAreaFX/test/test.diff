@@ -1,0 +1,402 @@
+--- output	2016-11-14 01:25:15.846250294 -0600
++++ run-out.log	2016-11-14 01:25:55.834072431 -0600
+@@ -1,16 +1,8 @@
+ 
+-Comp 2140  Assignment 2   Fall 2016
+-Keeping track of popular books in a doubly-linked list.
+-Model Solution
++Enter the input file name (.txt files only): 
+ 
+-
+-Enter the book lists file name (.txt files only): 
+-
+-
+-**********************************************
+-
+-Initial top-10 book list:
+-------------------------
++Initial top-5 book list 
++-----------------------
+ "No. 1 Ladies' Detective Agency" by Alexander McCall Smith
+ "The Man Who Mistook His Wife for a Hat" by Oliver Sacks
+ "Introduction to Algorithms" by Thomas Cormen, Charles Leiserson, Ronald Rivest, and Clifford Stein
+@@ -22,7 +14,7 @@
+ "Raiders of the Nile" by Steven Saylor
+ "The Girl on the Train" by Paula Hawkins
+ 
+-The Day's Commands
++The Day's commands
+ ------------------
+ Command: B "Alexander McCall Smith" "No. 1 Ladies' Detective Agency"
+ Command: Q "Karen Kucera Bate" "Tales of a Starving Actress"
+@@ -35,20 +27,18 @@
+ Command: Q "Jane Yolen" "Tales of Wonder"
+ Command: H "Dennis Lee" "Garbage Delight"
+ 
+-
+-        Top 10 Books
+-        ------------
+-        Rank = 2: "No. 1 Ladies' Detective Agency" by Alexander McCall Smith
+-        Rank = 2: "A Large Harmonium" by Sue Sorensen
+-        Rank = 1: "The Man Who Mistook His Wife for a Hat" by Oliver Sacks
+-        Rank = 1: "Introduction to Algorithms" by Thomas Cormen, Charles Leiserson, Ronald Rivest, and Clifford Stein
+-        Rank = 1: "Pride and Prejudice" by Jane Austen
+-        Rank = 1: "Neanderthal Man: In Search of Lost Genomes" by Svante Paabo
+-        Rank = 1: "Hill of Bones" by The Medieval Murderers
+-        Rank = 1: "Moby-Dick; or, The Whale" by Herman Melville
+-        Rank = 1: "Raiders of the Nile" by Steven Saylor
+-        Rank = 1: "The Girl on the Train" by Paula Hawkins
+-
++	Top 5 Books
++	-----------
++	Rank = 2 "A Large Harmonium" by Sue Sorensen
++	Rank = 2 "No. 1 Ladies' Detective Agency" by Alexander McCall Smith
++	Rank = 1 "The Man Who Mistook His Wife for a Hat" by Oliver Sacks
++	Rank = 1 "Introduction to Algorithms" by Thomas Cormen, Charles Leiserson, Ronald Rivest, and Clifford Stein
++	Rank = 1 "Pride and Prejudice" by Jane Austen
++	Rank = 1 "Neanderthal Man: In Search of Lost Genomes" by Svante Paabo
++	Rank = 1 "Hill of Bones" by The Medieval Murderers
++	Rank = 1 "Moby-Dick; or, The Whale" by Herman Melville
++	Rank = 1 "Raiders of the Nile" by Steven Saylor
++	Rank = 1 "The Girl on the Train" by Paula Hawkins
+ Command: B "Svante Paabo" "Neanderthal Man: In Search of Lost Genomes"
+ Command: Q "Jane Austen" "Pride and Prejudice"
+ Command: Q "Sue Sorensen" "A Large Harmonium"
+@@ -60,20 +50,18 @@
+ Command: B "Jane Austen" "Pride and Prejudice"
+ Command: Q "Steven Saylor" "Raiders of the Nile"
+ 
+-
+-        Top 10 Books
+-        ------------
+-        Rank = 5: "A Large Harmonium" by Sue Sorensen
+-        Rank = 3: "Pride and Prejudice" by Jane Austen
+-        Rank = 2: "No. 1 Ladies' Detective Agency" by Alexander McCall Smith
+-        Rank = 2: "Neanderthal Man: In Search of Lost Genomes" by Svante Paabo
+-        Rank = 2: "Abaddon's Gate" by James S. A. Covey
+-        Rank = 2: "The Girl on the Train" by Paula Hawkins
+-        Rank = 2: "Small Gods" by Terry Pratchett
+-        Rank = 2: "Raiders of the Nile" by Steven Saylor
+-        Rank = 1: "The Man Who Mistook His Wife for a Hat" by Oliver Sacks
+-        Rank = 1: "Introduction to Algorithms" by Thomas Cormen, Charles Leiserson, Ronald Rivest, and Clifford Stein
+-
++	Top 5 Books
++	-----------
++	Rank = 5 "A Large Harmonium" by Sue Sorensen
++	Rank = 3 "Pride and Prejudice" by Jane Austen
++	Rank = 2 "Raiders of the Nile" by Steven Saylor
++	Rank = 2 "Small Gods" by Terry Pratchett
++	Rank = 2 "The Girl on the Train" by Paula Hawkins
++	Rank = 2 "Abaddon's Gate" by James S. A. Covey
++	Rank = 2 "Neanderthal Man: In Search of Lost Genomes" by Svante Paabo
++	Rank = 2 "No. 1 Ladies' Detective Agency" by Alexander McCall Smith
++	Rank = 1 "The Man Who Mistook His Wife for a Hat" by Oliver Sacks
++	Rank = 1 "Introduction to Algorithms" by Thomas Cormen, Charles Leiserson, Ronald Rivest, and Clifford Stein
+ Command: Q "Philip Freeman" "Alexander the Great"
+ Command: H "James S. A. Covey" "Abaddon's Gate"
+ Command: B "Herman Melville" "Moby-Dick; or, The Whale"
+@@ -85,20 +73,18 @@
+ Command: Q "Herman Melville" "Moby-Dick; or, The Whale"
+ Command: B "Steven Saylor" "Raiders of the Nile"
+ 
+-
+-        Top 10 Books
+-        ------------
+-        Rank = 5: "A Large Harmonium" by Sue Sorensen
+-        Rank = 4: "Pride and Prejudice" by Jane Austen
+-        Rank = 3: "Abaddon's Gate" by James S. A. Covey
+-        Rank = 3: "Small Gods" by Terry Pratchett
+-        Rank = 3: "Moby-Dick; or, The Whale" by Herman Melville
+-        Rank = 3: "Raiders of the Nile" by Steven Saylor
+-        Rank = 2: "No. 1 Ladies' Detective Agency" by Alexander McCall Smith
+-        Rank = 2: "Neanderthal Man: In Search of Lost Genomes" by Svante Paabo
+-        Rank = 2: "The Girl on the Train" by Paula Hawkins
+-        Rank = 1: "The Man Who Mistook His Wife for a Hat" by Oliver Sacks
+-
++	Top 5 Books
++	-----------
++	Rank = 5 "A Large Harmonium" by Sue Sorensen
++	Rank = 4 "Pride and Prejudice" by Jane Austen
++	Rank = 3 "Raiders of the Nile" by Steven Saylor
++	Rank = 3 "Moby-Dick; or, The Whale" by Herman Melville
++	Rank = 3 "Small Gods" by Terry Pratchett
++	Rank = 3 "Abaddon's Gate" by James S. A. Covey
++	Rank = 2 "The Girl on the Train" by Paula Hawkins
++	Rank = 2 "Neanderthal Man: In Search of Lost Genomes" by Svante Paabo
++	Rank = 2 "No. 1 Ladies' Detective Agency" by Alexander McCall Smith
++	Rank = 1 "The Man Who Mistook His Wife for a Hat" by Oliver Sacks
+ Command: R "Svante Paabo" "Neanderthal Man: In Search of Lost Genomes"
+ Command: B "Becky Chambers" "The Long Way to a Small, Angry Planet"
+ Command: B "Robert Zurbin" "The Case for Mars"
+@@ -110,20 +96,18 @@
+ Command: B "Terry Pratchett" "Small Gods"
+ Command: B "Jeremy Clarkson" "Motorworld"
+ 
+-
+-        Top 10 Books
+-        ------------
+-        Rank = 5: "A Large Harmonium" by Sue Sorensen
+-        Rank = 4: "Pride and Prejudice" by Jane Austen
+-        Rank = 4: "Small Gods" by Terry Pratchett
+-        Rank = 3: "Abaddon's Gate" by James S. A. Covey
+-        Rank = 3: "Moby-Dick; or, The Whale" by Herman Melville
+-        Rank = 3: "Raiders of the Nile" by Steven Saylor
+-        Rank = 2: "No. 1 Ladies' Detective Agency" by Alexander McCall Smith
+-        Rank = 2: "Neanderthal Man: In Search of Lost Genomes" by Svante Paabo
+-        Rank = 2: "The Girl on the Train" by Paula Hawkins
+-        Rank = 2: "The Long Way to a Small, Angry Planet" by Becky Chambers
+-
++	Top 5 Books
++	-----------
++	Rank = 5 "A Large Harmonium" by Sue Sorensen
++	Rank = 4 "Small Gods" by Terry Pratchett
++	Rank = 4 "Pride and Prejudice" by Jane Austen
++	Rank = 3 "Raiders of the Nile" by Steven Saylor
++	Rank = 3 "Moby-Dick; or, The Whale" by Herman Melville
++	Rank = 3 "Abaddon's Gate" by James S. A. Covey
++	Rank = 2 "Motorworld" by Jeremy Clarkson
++	Rank = 2 "The Case for Mars" by Robert Zurbin
++	Rank = 2 "The Long Way to a Small, Angry Planet" by Becky Chambers
++	Rank = 2 "The Girl on the Train" by Paula Hawkins
+ Command: Q "James S. A. Covey" "Abaddon's Gate"
+ Command: Q "Joseph O'Rourke" "Computational Geometry in C"
+ Command: Q "Alexander McCall Smith" "No. 1 Ladies' Detective Agency"
+@@ -135,20 +119,18 @@
+ Command: A "Iain Pears" "An Instance of the Fingerpost"
+ Command: R "Steven Saylor" "Raiders of the Nile"
+ 
+-
+-        Top 10 Books
+-        ------------
+-        Rank = 5: "A Large Harmonium" by Sue Sorensen
+-        Rank = 5: "Pride and Prejudice" by Jane Austen
+-        Rank = 4: "Small Gods" by Terry Pratchett
+-        Rank = 4: "Abaddon's Gate" by James S. A. Covey
+-        Rank = 3: "Moby-Dick; or, The Whale" by Herman Melville
+-        Rank = 3: "Raiders of the Nile" by Steven Saylor
+-        Rank = 3: "No. 1 Ladies' Detective Agency" by Alexander McCall Smith
+-        Rank = 2: "Neanderthal Man: In Search of Lost Genomes" by Svante Paabo
+-        Rank = 2: "The Girl on the Train" by Paula Hawkins
+-        Rank = 2: "The Long Way to a Small, Angry Planet" by Becky Chambers
+-
++	Top 5 Books
++	-----------
++	Rank = 5 "Pride and Prejudice" by Jane Austen
++	Rank = 5 "A Large Harmonium" by Sue Sorensen
++	Rank = 4 "Abaddon's Gate" by James S. A. Covey
++	Rank = 4 "Small Gods" by Terry Pratchett
++	Rank = 3 "No. 1 Ladies' Detective Agency" by Alexander McCall Smith
++	Rank = 3 "Raiders of the Nile" by Steven Saylor
++	Rank = 3 "Moby-Dick; or, The Whale" by Herman Melville
++	Rank = 2 "The Complete Calvin and Hobbes" by Bill Waterson
++	Rank = 2 "Computational Geometry in C" by Joseph O'Rourke
++	Rank = 2 "Motorworld" by Jeremy Clarkson
+ Command: Q "Iain Pears" "An Instance of the Fingerpost"
+ Command: A "Eoin Colfer" "Artemis Fowl"
+ Command: A "Atul Gawande" "The Checklist Manifesto: How to Get Things Right"
+@@ -160,20 +142,18 @@
+ Command: Q "Herman Melville" "Moby-Dick; or, The Whale"
+ Command: Q "Paul Hiebert" "Sarah Binks"
+ 
+-
+-        Top 10 Books
+-        ------------
+-        Rank = 5: "A Large Harmonium" by Sue Sorensen
+-        Rank = 5: "Pride and Prejudice" by Jane Austen
+-        Rank = 5: "Abaddon's Gate" by James S. A. Covey
+-        Rank = 4: "Small Gods" by Terry Pratchett
+-        Rank = 4: "Moby-Dick; or, The Whale" by Herman Melville
+-        Rank = 3: "Raiders of the Nile" by Steven Saylor
+-        Rank = 3: "No. 1 Ladies' Detective Agency" by Alexander McCall Smith
+-        Rank = 3: "The Long Way to a Small, Angry Planet" by Becky Chambers
+-        Rank = 2: "Neanderthal Man: In Search of Lost Genomes" by Svante Paabo
+-        Rank = 2: "The Girl on the Train" by Paula Hawkins
+-
++	Top 5 Books
++	-----------
++	Rank = 5 "Abaddon's Gate" by James S. A. Covey
++	Rank = 5 "Pride and Prejudice" by Jane Austen
++	Rank = 5 "A Large Harmonium" by Sue Sorensen
++	Rank = 4 "Moby-Dick; or, The Whale" by Herman Melville
++	Rank = 4 "Small Gods" by Terry Pratchett
++	Rank = 3 "The Long Way to a Small, Angry Planet" by Becky Chambers
++	Rank = 3 "No. 1 Ladies' Detective Agency" by Alexander McCall Smith
++	Rank = 3 "Raiders of the Nile" by Steven Saylor
++	Rank = 2 "Sarah Binks" by Paul Hiebert
++	Rank = 2 "An Instance of the Fingerpost" by Iain Pears
+ Command: Q "Joseph O'Rourke" "Computational Geometry in C"
+ Command: B "Michael Pollan" "Food Rules: An Eater's Manual"
+ Command: Q "Alexander McCall Smith" "No. 1 Ladies' Detective Agency"
+@@ -185,20 +165,18 @@
+ Command: R  "Alexander McCall Smith" "No. 1 Ladies' Detective Agency"
+ Command: H "Naomi Novik" "Uprooted"
+ 
+-
+-        Top 10 Books
+-        ------------
+-        Rank = 5: "A Large Harmonium" by Sue Sorensen
+-        Rank = 5: "Pride and Prejudice" by Jane Austen
+-        Rank = 5: "Abaddon's Gate" by James S. A. Covey
+-        Rank = 5: "No. 1 Ladies' Detective Agency" by Alexander McCall Smith
+-        Rank = 5: "Small Gods" by Terry Pratchett
+-        Rank = 4: "Moby-Dick; or, The Whale" by Herman Melville
+-        Rank = 4: "Raiders of the Nile" by Steven Saylor
+-        Rank = 3: "The Long Way to a Small, Angry Planet" by Becky Chambers
+-        Rank = 3: "Computational Geometry in C" by Joseph O'Rourke
+-        Rank = 2: "Neanderthal Man: In Search of Lost Genomes" by Svante Paabo
+-
++	Top 5 Books
++	-----------
++	Rank = 5 "Small Gods" by Terry Pratchett
++	Rank = 5 "No. 1 Ladies' Detective Agency" by Alexander McCall Smith
++	Rank = 5 "Abaddon's Gate" by James S. A. Covey
++	Rank = 5 "Pride and Prejudice" by Jane Austen
++	Rank = 5 "A Large Harmonium" by Sue Sorensen
++	Rank = 4 "Raiders of the Nile" by Steven Saylor
++	Rank = 4 "Moby-Dick; or, The Whale" by Herman Melville
++	Rank = 3 "Computational Geometry in C" by Joseph O'Rourke
++	Rank = 3 "The Long Way to a Small, Angry Planet" by Becky Chambers
++	Rank = 2 "The Hitchhiker's Guide to the Galaxy" by Douglas Adams
+ Command: A "Don Marquis" "archy and mehitabel"
+ Command: Q "Terry Pratchett" "Small Gods"
+ Command: B "Douglas Adams" "The Hitchhiker's Guide to the Galaxy"
+@@ -210,20 +188,18 @@
+ Command: Q "Margaret Doody" "Aristotle Detective"
+ Command: R "Douglas Adams" "The Hitchhiker's Guide to the Galaxy"
+ 
+-
+-        Top 10 Books
+-        ------------
+-        Rank = 6: "Small Gods" by Terry Pratchett
+-        Rank = 5: "A Large Harmonium" by Sue Sorensen
+-        Rank = 5: "Pride and Prejudice" by Jane Austen
+-        Rank = 5: "Abaddon's Gate" by James S. A. Covey
+-        Rank = 5: "No. 1 Ladies' Detective Agency" by Alexander McCall Smith
+-        Rank = 4: "Moby-Dick; or, The Whale" by Herman Melville
+-        Rank = 4: "Raiders of the Nile" by Steven Saylor
+-        Rank = 3: "The Long Way to a Small, Angry Planet" by Becky Chambers
+-        Rank = 3: "Computational Geometry in C" by Joseph O'Rourke
+-        Rank = 3: "The Hitchhiker's Guide to the Galaxy" by Douglas Adams
+-
++	Top 5 Books
++	-----------
++	Rank = 6 "Small Gods" by Terry Pratchett
++	Rank = 5 "No. 1 Ladies' Detective Agency" by Alexander McCall Smith
++	Rank = 5 "Abaddon's Gate" by James S. A. Covey
++	Rank = 5 "Pride and Prejudice" by Jane Austen
++	Rank = 5 "A Large Harmonium" by Sue Sorensen
++	Rank = 4 "Raiders of the Nile" by Steven Saylor
++	Rank = 4 "Moby-Dick; or, The Whale" by Herman Melville
++	Rank = 3 "The Complete Calvin and Hobbes" by Bill Waterson
++	Rank = 3 "The Hitchhiker's Guide to the Galaxy" by Douglas Adams
++	Rank = 3 "Computational Geometry in C" by Joseph O'Rourke
+ Command: Q "Steven Saylor" "Raiders of the Nile"
+ Command: Q "Douglas Adams" "The Hitchhiker's Guide to the Galaxy"
+ Command: H "Steven Brust and Skyler White" "The Incrementalists"
+@@ -232,51 +208,61 @@
+ Command: H "Tom Reiss" "The Black Count"
+ Command: Q "Bill Waterson" "The Complete Calvin and Hobbes"
+ 
++	Top 5 Books
++	-----------
++	Rank = 6 "Small Gods" by Terry Pratchett
++	Rank = 5 "Raiders of the Nile" by Steven Saylor
++	Rank = 5 "No. 1 Ladies' Detective Agency" by Alexander McCall Smith
++	Rank = 5 "Abaddon's Gate" by James S. A. Covey
++	Rank = 5 "Pride and Prejudice" by Jane Austen
++	Rank = 5 "A Large Harmonium" by Sue Sorensen
++	Rank = 4 "The Complete Calvin and Hobbes" by Bill Waterson
++	Rank = 4 "The Hitchhiker's Guide to the Galaxy" by Douglas Adams
++	Rank = 4 "Moby-Dick; or, The Whale" by Herman Melville
++	Rank = 3 "Computational Geometry in C" by Joseph O'Rourke
++
+ 
+ Complete Book List (End of Day)
+ -------------------------------
+-Rank = 6: "Small Gods" by Terry Pratchett
+-Rank = 5: "A Large Harmonium" by Sue Sorensen
+-Rank = 5: "Pride and Prejudice" by Jane Austen
+-Rank = 5: "Abaddon's Gate" by James S. A. Covey
+-Rank = 5: "No. 1 Ladies' Detective Agency" by Alexander McCall Smith
+-Rank = 5: "Raiders of the Nile" by Steven Saylor
+-Rank = 4: "Moby-Dick; or, The Whale" by Herman Melville
+-Rank = 4: "The Hitchhiker's Guide to the Galaxy" by Douglas Adams
+-Rank = 4: "The Complete Calvin and Hobbes" by Bill Waterson
+-Rank = 3: "The Long Way to a Small, Angry Planet" by Becky Chambers
+-Rank = 3: "Computational Geometry in C" by Joseph O'Rourke
+-Rank = 2: "Neanderthal Man: In Search of Lost Genomes" by Svante Paabo
+-Rank = 2: "The Girl on the Train" by Paula Hawkins
+-Rank = 2: "The Case for Mars" by Robert Zurbin
+-Rank = 2: "Motorworld" by Jeremy Clarkson
+-Rank = 2: "An Instance of the Fingerpost" by Iain Pears
+-Rank = 2: "Sarah Binks" by Paul Hiebert
+-Rank = 2: "Aristotle Detective" by Margaret Doody
+-Rank = 2: "Vanity Fair" by William Makepeace Thackeray
+-Rank = 2: "The Black Count" by Tom Reiss
+-Rank = 1: "The Man Who Mistook His Wife for a Hat" by Oliver Sacks
+-Rank = 1: "Introduction to Algorithms" by Thomas Cormen, Charles Leiserson, Ronald Rivest, and Clifford Stein
+-Rank = 1: "Hill of Bones" by The Medieval Murderers
+-Rank = 1: "Tales of a Starving Actress" by Karen Kucera Bate
+-Rank = 1: "Tales of Wonder" by Jane Yolen
+-Rank = 1: "Garbage Delight" by Dennis Lee
+-Rank = 1: "Alexander the Great" by Philip Freeman
+-Rank = 1: "Rebel of the Sands" by Alwyn Hamilton
+-Rank = 1: "The Dragon and the Dry Goods Princess" by David Arnason
+-Rank = 1: "Artemis Fowl" by Eoin Colfer
+-Rank = 1: "The Checklist Manifesto: How to Get Things Right" by Atul Gawande
+-Rank = 1: "The Goblin Emperor" by Katherine Addison
+-Rank = 1: "Food Rules: An Eater's Manual" by Michael Pollan
+-Rank = 1: "The Code of the Woosters" by P. G. Wodehouse
+-Rank = 1: "Uprooted" by Naomi Novik
+-Rank = 1: "archy and mehitabel" by Don Marquis
+-Rank = 1: "Holes" by Louis Sachar
+-Rank = 1: "How Do Dinosaurs Say Good Night?" by Jane Yolen
+-Rank = 1: "Stardust" by Neil Gaiman
+-Rank = 1: "The Deep: The Extraordinary Creatures of the Abyss" by Claire Nouvian
+-Rank = 1: "The Incrementalists" by Steven Brust and Skyler White
+-Rank = 1: "Great Expectations" by Charles Dickens
+-
+-Program ends.
+-
++Rank = 6 "Small Gods" by Terry Pratchett
++Rank = 5 "Raiders of the Nile" by Steven Saylor
++Rank = 5 "No. 1 Ladies' Detective Agency" by Alexander McCall Smith
++Rank = 5 "Abaddon's Gate" by James S. A. Covey
++Rank = 5 "Pride and Prejudice" by Jane Austen
++Rank = 5 "A Large Harmonium" by Sue Sorensen
++Rank = 4 "The Complete Calvin and Hobbes" by Bill Waterson
++Rank = 4 "The Hitchhiker's Guide to the Galaxy" by Douglas Adams
++Rank = 4 "Moby-Dick; or, The Whale" by Herman Melville
++Rank = 3 "Computational Geometry in C" by Joseph O'Rourke
++Rank = 3 "The Long Way to a Small, Angry Planet" by Becky Chambers
++Rank = 2 "The Black Count" by Tom Reiss
++Rank = 2 "Vanity Fair" by William Makepeace Thackeray
++Rank = 2 "Aristotle Detective" by Margaret Doody
++Rank = 2 "Sarah Binks" by Paul Hiebert
++Rank = 2 "An Instance of the Fingerpost" by Iain Pears
++Rank = 2 "Motorworld" by Jeremy Clarkson
++Rank = 2 "The Case for Mars" by Robert Zurbin
++Rank = 2 "The Girl on the Train" by Paula Hawkins
++Rank = 2 "Neanderthal Man: In Search of Lost Genomes" by Svante Paabo
++Rank = 1 "The Man Who Mistook His Wife for a Hat" by Oliver Sacks
++Rank = 1 "Introduction to Algorithms" by Thomas Cormen, Charles Leiserson, Ronald Rivest, and Clifford Stein
++Rank = 1 "Hill of Bones" by The Medieval Murderers
++Rank = 1 "Tales of a Starving Actress" by Karen Kucera Bate
++Rank = 1 "Tales of Wonder" by Jane Yolen
++Rank = 1 "Garbage Delight" by Dennis Lee
++Rank = 1 "Alexander the Great" by Philip Freeman
++Rank = 1 "Rebel of the Sands" by Alwyn Hamilton
++Rank = 1 "The Dragon and the Dry Goods Princess" by David Arnason
++Rank = 1 "Artemis Fowl" by Eoin Colfer
++Rank = 1 "The Checklist Manifesto: How to Get Things Right" by Atul Gawande
++Rank = 1 "The Goblin Emperor" by Katherine Addison
++Rank = 1 "Food Rules: An Eater's Manual" by Michael Pollan
++Rank = 1 "The Code of the Woosters" by P. G. Wodehouse
++Rank = 1 "Uprooted" by Naomi Novik
++Rank = 1 "archy and mehitabel" by Don Marquis
++Rank = 1 "Holes" by Louis Sachar
++Rank = 1 "How Do Dinosaurs Say Good Night?" by Jane Yolen
++Rank = 1 "Stardust" by Neil Gaiman
++Rank = 1 "The Deep: The Extraordinary Creatures of the Abyss" by Claire Nouvian
++Rank = 1 "The Incrementalists" by Steven Brust and Skyler White
++Rank = 1 "Great Expectations" by Charles Dickens

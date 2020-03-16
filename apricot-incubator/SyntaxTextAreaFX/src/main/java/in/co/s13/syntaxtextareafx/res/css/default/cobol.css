@@ -1,0 +1,56 @@
+.line-comment {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.bad-ident {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.bad-long-line {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.bad-comment-line {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.variable {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.string-double-quote {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.string-single-quote {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.number {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.constant {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.keyword {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.section-name {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.division-name {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.call {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.cobol {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}

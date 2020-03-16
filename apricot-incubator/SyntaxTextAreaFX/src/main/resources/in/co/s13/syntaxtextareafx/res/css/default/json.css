@@ -1,0 +1,32 @@
+.array {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.object {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.string {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.decimal {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.float {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.catchall {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.value {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.json {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}

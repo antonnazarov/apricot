@@ -1,0 +1,36 @@
+.syntax {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.package {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.import {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.variable {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.string {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.keywords {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.types {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.boolean {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.proto {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}

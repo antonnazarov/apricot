@@ -1,0 +1,12 @@
+.variable {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.keyword {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.tcl {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}

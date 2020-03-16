@@ -1,0 +1,40 @@
+.line-comment {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.string {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.character {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.keywords {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.types {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.boolean {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.base-n-number {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.real {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.number {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.vhdl {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}

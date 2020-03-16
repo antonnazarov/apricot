@@ -1,0 +1,172 @@
+.perl {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.error {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.operator {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.plain-variable {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.special-variable {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.variable {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.in-pattern {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.in-pattern-curly-no-ve {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.in-pattern-curly {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.in-pattern-square-no-ve {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.in-pattern-square {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.in-pattern-round-no-ve {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.in-pattern-round {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.in-pattern-angle-no-ve {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.in-pattern-angle {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.simple-pattern {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.simple-pattern-no-ve {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.double-pattern {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.double-pattern-no-ve {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.single-quoted-string {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.double-quoted-string {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.word-list {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.regular-expression {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.system-command {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.match {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.substitution {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.transliteration {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.match-slashslash {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.here-doc-no-ve {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.here-doc {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.sub {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.file-descriptor {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.control {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.include-statement {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.keyword {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.builtin {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.asserted-comment {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.line-directive {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.in-pod {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.pod-escape {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.pod-heading {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.pod {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.data {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}

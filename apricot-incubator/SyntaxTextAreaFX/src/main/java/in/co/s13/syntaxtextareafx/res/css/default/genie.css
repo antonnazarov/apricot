@@ -1,0 +1,56 @@
+.multiline-string {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.double-quoted-string {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.single-quoted-string {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.regex {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.namespace {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.primitives {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.definitions {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.keywords {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.special-variables {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.null-value {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.boolean {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.numbers {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.builtins {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.genie {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}

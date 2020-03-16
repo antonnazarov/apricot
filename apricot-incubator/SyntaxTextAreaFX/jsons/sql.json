@@ -1,0 +1,731 @@
+{"language": {
+    "metadata": {"property": [
+        {
+            "name": "mimetypes",
+            "content": "text/x-sql"
+        },
+        {
+            "name": "globs",
+            "content": "*.sql"
+        },
+        {
+            "name": "line-comment-start",
+            "content": "--"
+        }
+    ]},
+    "_name": "SQL",
+    "_section": "Source",
+    "styles": {"style": [
+        {
+            "_name": "Comment",
+            "map-to": "def:comment",
+            "id": "comment"
+        },
+        {
+            "_name": "Floating Point",
+            "map-to": "def:floating-point",
+            "id": "floating-point"
+        },
+        {
+            "_name": "String",
+            "map-to": "def:string",
+            "id": "string"
+        },
+        {
+            "_name": "Keyword",
+            "map-to": "def:keyword",
+            "id": "keyword"
+        },
+        {
+            "_name": "Function",
+            "map-to": "def:function",
+            "id": "function"
+        },
+        {
+            "_name": "Decimal",
+            "map-to": "def:decimal",
+            "id": "decimal"
+        },
+        {
+            "_name": "Data Type",
+            "map-to": "def:type",
+            "id": "type"
+        },
+        {
+            "_name": "No idea what it is",
+            "map-to": "def:preprocessor",
+            "id": "some-thing"
+        }
+    ]},
+    "id": "sql",
+    "version": 2,
+    "definitions": {"context": [
+        {
+            "id": "oracle-built-in-datatypes",
+            "keyword": [
+                "N?VARCHAR2",
+                "NUMBER",
+                "LONG",
+                "DATE",
+                "TIMESTAMP",
+                "INTERVAL",
+                "(LONG[ \\t\\n]+)?RAW",
+                "U?ROWID",
+                "N?CHAR",
+                "(N?C|B)LOB",
+                "BFILE",
+                "BINARY_(FLOAT|DOUBLE)"
+            ],
+            "style-ref": "type"
+        },
+        {
+            "id": "ansi-datatypes",
+            "keyword": [
+                "(NATIONAL[ \\t\\n]+)?CHAR(ACTER)?([ \\t\\n]+VARYING)?",
+                "NCHAR([ \\t\\n]+VARYING)?",
+                "NUMERIC|DECIMAL",
+                "INTEGER|INT|SMALLINT",
+                "FLOAT|DOUBLE[ \\t\\n]+PRECISION|REAL"
+            ],
+            "style-ref": "type"
+        },
+        {
+            "id": "sql-ds-and-db2-datatypes",
+            "keyword": [
+                "CHARACTER",
+                "(LONG[ \\t\\n]+)?VARCHAR",
+                "DECIMAL",
+                "INTEGER|SMALLINT",
+                "FLOAT"
+            ],
+            "style-ref": "type"
+        },
+        {
+            "id": "oracle-supplied-types",
+            "keyword": [
+                "SYS\\.ANY(TYPE|DATA(SET)?)",
+                "XMLType",
+                "(HTTP|XDB|DB)?URIType",
+                "(MDSYS\\.)?SDO_((TOPO_)?GEOMETRY|GEORASTER)",
+                "ORDSYS\\.ORD(Audio|Doc|Image(Signature)?|Video)",
+                "SI_(StillImage|(Average|Positional)?Color|ColorHistogram|Texture|FeatureList)"
+            ],
+            "style-ref": "type"
+        },
+        {
+            "include": {"context": [
+                {"ref": "def:escape"},
+                {"ref": "def:line-continue"}
+            ]},
+            "class-disabled": "no-spell-check",
+            "start": "[NnQqUu]?(['`])",
+            "end": "\\%{1@start}",
+            "id": "text-literals",
+            "class": "string",
+            "style-ref": "string"
+        },
+        {
+            "match": "\\b[0-9]+\\b",
+            "id": "integer-literals",
+            "style-ref": "decimal"
+        },
+        {
+            "match": "(\\b[0-9]+(\\.[0-9]+)?|\\.[0-9]+)([Ee][\\+-]?[0-9]+)?\\b",
+            "id": "number-literals",
+            "style-ref": "floating-point"
+        },
+        {
+            "match": "\\b[0-9]+[ \\t]*([Kk]|[Mm]|[Gg]|[Tt])\\b",
+            "id": "size-clause",
+            "style-ref": "decimal"
+        },
+        {
+            "id": "unlimited",
+            "keyword": "UNLIMITED",
+            "style-ref": "decimal"
+        },
+        {
+            "id": null,
+            "keyword": null,
+            "style-ref": "decimal"
+        },
+        {
+            "include": {"context": {"ref": "def:in-line-comment"}},
+            "class-disabled": "no-spell-check",
+            "start": "/\\*",
+            "end": "\\*/",
+            "id": "block-comment",
+            "class": "comment",
+            "style-ref": "comment"
+        },
+        {
+            "include": {"context": {"ref": "def:in-line-comment"}},
+            "class-disabled": "no-spell-check",
+            "start": "--",
+            "id": "line-comment",
+            "class": "comment",
+            "style-ref": "comment",
+            "end-at-line-end": true
+        },
+        {
+            "id": "numeric-functions",
+            "keyword": [
+                "ABS",
+                "A(COS|SIN|TAN2?)",
+                "BITAND",
+                "CEIL",
+                "(COS|SIN|TAN)H?",
+                "EXP",
+                "FLOOR",
+                "LN",
+                "LOG",
+                "MOD",
+                "NANVL",
+                "POWER",
+                "REMAINDER",
+                "ROUND",
+                "SIGN",
+                "SQRT",
+                "TRUNC",
+                "WIDTH_BUCKET"
+            ],
+            "style-ref": "function"
+        },
+        {
+            "id": "character-functions-returning-character-values",
+            "keyword": [
+                "N?CHR",
+                "CONCAT",
+                "(NLS_)?(INITCAP|LOWER|UPPER)",
+                "(L|R)PAD",
+                "(L|R)?TRIM",
+                "NLSSORT",
+                "REGEXP_(REPLACE|SUBSTR)",
+                "REPLACE",
+                "SOUNDEX",
+                "SUBSTR",
+                "TRANSLATE",
+                "TREAT"
+            ],
+            "style-ref": "function"
+        },
+        {
+            "id": "nls-character-functions",
+            "keyword": [
+                "NLS_CHARSET_DECL_LEN",
+                "NLS_CHARSET_(ID|NAME)"
+            ],
+            "style-ref": "function"
+        },
+        {
+            "id": "character-functions-returning-number-values",
+            "keyword": [
+                "ASCII",
+                "INSTR",
+                "LENGTH",
+                "REGEXP_INSTR"
+            ],
+            "style-ref": "function"
+        },
+        {
+            "id": "datetime-functions",
+            "keyword": [
+                "ADD_MONTHS",
+                "CURRENT_(DATE|TIMESTAMP)",
+                "DBTIMEZONE",
+                "EXTRACT",
+                "FROM_TZ",
+                "(LAST|NEXT)_DAY",
+                "LOCALTIMESTAMP",
+                "MONTHS_BETWEEN",
+                "NEW_TIME",
+                "NUMTO(DS|YM)INTERVAL",
+                "ROUND",
+                "SESSIONTIMEZONE",
+                "SYS_EXTRACT_UTC",
+                "SYS(DATE|TIMESTAMP)",
+                "TO_CHAR",
+                "TO_(DS|YM)INTERVAL",
+                "TO_TIMESTAMP(_TZ)?",
+                "TRUNC",
+                "TZ_OFFSET"
+            ],
+            "style-ref": "function"
+        },
+        {
+            "id": "general-comparison-functions",
+            "keyword": [
+                "GREATEST",
+                "LEAST"
+            ],
+            "style-ref": "function"
+        },
+        {
+            "id": "conversion-functions",
+            "keyword": [
+                "ASCIISTR",
+                "BIN_TO_NUM",
+                "CAST",
+                "CHARTOROWID",
+                "(DE)?COMPOSE",
+                "CONVERT",
+                "HEXTORAW",
+                "NUMTO(DS|YM)INTERVAL",
+                "RAWTON?HEX",
+                "ROWIDTON?CHAR",
+                "SCN_TO_TIMESTAMP",
+                "TIMESTAMP_TO_SCN",
+                "TO_BINARY_(DOUBLE|FLOAT)",
+                "TO_N?(CHAR|CLOB)",
+                "TO_DATE",
+                "TO_(DS|YM)INTERVAL",
+                "TO_LOB",
+                "TO_(MULTI|SINGLE)_BYTE",
+                "TO_NUMBER",
+                "TRANSLATE",
+                "UNISTR"
+            ],
+            "style-ref": "function"
+        },
+        {
+            "id": "large-object-functions",
+            "keyword": [
+                "BFILENAME",
+                "EMPTY_(B|C)LOB"
+            ],
+            "style-ref": "function"
+        },
+        {
+            "id": "collection-functions",
+            "keyword": [
+                "CARDINALITY",
+                "COLLECT",
+                "POWERMULTISET(_BY_CARDINALITY)?"
+            ],
+            "style-ref": "function"
+        },
+        {
+            "id": "hierarchical-function",
+            "keyword": "SYS_CONNECT_BY_PATH",
+            "style-ref": "function"
+        },
+        {
+            "id": "data-mining-functions",
+            "keyword": [
+                "CLUSTER_(ID|PROBABILITY|SET)",
+                "FEATURE_(ID|SET|VALUE)",
+                "PREDICTION",
+                "PREDICTION_(COST|DETAILS|PROBABILITY|SET)"
+            ],
+            "style-ref": "function"
+        },
+        {
+            "id": "xml-functions",
+            "keyword": [
+                "(APPEND|INSERT)CHILDXML",
+                "(DELETE|UPDATE)XML",
+                "DEPTH",
+                "EXISTSNODE",
+                "EXTRACT(VALUE)?",
+                "INSERTXMLBEFORE",
+                "PATH",
+                "SYS_DBURIGEN",
+                "SYS_XML(AGG|GEN)",
+                "XML(AGG|CDATA|COLATTVAL|COMMENT|CONCAT|ELEMENT|FOREST|PARSE|PI|QUERY|ROOT|SEQUENCE|SERIALIZE|TABLE|TRANSFORM)"
+            ],
+            "style-ref": "function"
+        },
+        {
+            "id": "encoding-and-decoding-functions",
+            "keyword": [
+                "DECODE",
+                "DUMP",
+                "ORA_HASH",
+                "VSIZE"
+            ],
+            "style-ref": "function"
+        },
+        {
+            "id": "null-related-functions",
+            "keyword": [
+                "COALESCE",
+                "LNNVL",
+                "NULLIF",
+                "NVL2?"
+            ],
+            "style-ref": "function"
+        },
+        {
+            "id": "environment-and-identifier-functions",
+            "keyword": [
+                "SYS_CONTEXT",
+                "SYS_GUID",
+                "SYS_TYPEID",
+                "UID",
+                "USER",
+                "USERENV"
+            ],
+            "style-ref": "function"
+        },
+        {
+            "id": "aggregate-functions",
+            "keyword": [
+                "AVG",
+                "CORR(_(S|K))?",
+                "COUNT",
+                "COVAR_(POP|SAMP)",
+                "CUME_DIST",
+                "(DENSE|PERCENT)_RANK",
+                "FIRST|LAST",
+                "GROUP_ID",
+                "GROUPING(_ID)?",
+                "MAX|MIN",
+                "MEDIAN",
+                "PERCENTILE_(CONT|DISC)",
+                "RANK",
+                "REGR_(SLOPE|INTERCEPT|COUNT|R2|AVGX|AVGY|SXX|SYY|SXY)",
+                "STATS_((BINOMIAL|F|KS|MW|WSR)_TEST|CROSSTAB|MODE|ONE_WAY_ANOVA|T_TEST_(ONE|PAIRED|INDEPU?))",
+                "STDDEV|VARIANCE",
+                "(STDDEV|VAR)_(POP|SAMP)",
+                "SUM"
+            ],
+            "style-ref": "function"
+        },
+        {
+            "id": "analytic-functions",
+            "keyword": [
+                "AVG",
+                "CORR",
+                "COVAR_(POP|SAMP)",
+                "COUNT",
+                "CUME_DIST",
+                "(DENSE|PERCENT)_RANK",
+                "(FIRST|LAST)(_VALUE)?",
+                "LAG",
+                "LEAD",
+                "MAX|MIN",
+                "NTILE",
+                "PERCENTILE_(CONT|DISC)",
+                "RANK",
+                "RATIO_TO_REPORT",
+                "REGR_(SLOPE|INTERCEPT|COUNT|R2|AVGX|AVGY|SXX|SYY|SXY)",
+                "ROW_NUMBER",
+                "STDDEV|VARIANCE",
+                "(STDDEV|VAR)_(POP|SAMP)",
+                "SUM"
+            ],
+            "style-ref": "function"
+        },
+        {
+            "id": "object-reference-functions",
+            "keyword": [
+                "DEREF",
+                "MAKE_REF",
+                "REF",
+                "REFTOHEX",
+                "VALUE"
+            ],
+            "style-ref": "function"
+        },
+        {
+            "id": "model-functions",
+            "keyword": [
+                "CV",
+                "ITERATION_NUMBER",
+                "PRESENT(NN)?V",
+                "PREVIOUS"
+            ],
+            "style-ref": "function"
+        },
+        {
+            "id": "ansi-reserved-words",
+            "keyword": [
+                "ADD",
+                "ALL",
+                "ALTER",
+                "AND",
+                "ANY",
+                "AS",
+                "ASC",
+                "BETWEEN",
+                "BY",
+                "CASE",
+                "CHECK",
+                "CREATE",
+                "CROSS",
+                "CURRENT",
+                "DECIMAL",
+                "DEFAULT",
+                "DELETE",
+                "DISTINCT",
+                "DROP",
+                "ELSE",
+                "END",
+                "FLOAT",
+                "FOR",
+                "FROM",
+                "FULL",
+                "GRANT",
+                "GROUP",
+                "HAVING",
+                "IMMEDIATE",
+                "INNER",
+                "INSERT",
+                "INTEGER",
+                "INTERSECT",
+                "INTO",
+                "IN",
+                "IS",
+                "JOIN",
+                "LEFT",
+                "LEVEL",
+                "LIKE",
+                "NATURAL",
+                "NOT",
+                "OF",
+                "ON",
+                "OPTION",
+                "ORDER",
+                "OR",
+                "OUTER",
+                "PRIOR",
+                "PRIVILEGES",
+                "PUBLIC",
+                "REVOKE",
+                "RIGHT",
+                "ROWS",
+                "SELECT",
+                "SESSION",
+                "SET",
+                "SIZE",
+                "SMALLINT",
+                "TABLE",
+                "THEN",
+                "TO",
+                "UNION",
+                "UNIQUE",
+                "UPDATE",
+                "USING",
+                "VALUES",
+                "VIEW",
+                "WHEN",
+                "WITH"
+            ],
+            "style-ref": "keyword"
+        },
+        {
+            "id": "oracle-reserved-words",
+            "keyword": [
+                "ACCESS",
+                "AUDIT",
+                "CLUSTER",
+                "COMMENT",
+                "COMPRESS",
+                "CONNECT[ \\t]+BY",
+                "CUBE",
+                "EXCLUSIVE",
+                "EXISTS",
+                "FILE",
+                "GROUPING[ \\t]+SETS",
+                "IDENTIFIED",
+                "INCREMENT",
+                "INDEX",
+                "INITIAL",
+                "LOCK",
+                "MAXEXTENTS",
+                "MINUS",
+                "MLSLABEL",
+                "MODE",
+                "MODIFY",
+                "NOAUDIT",
+                "NOCOMPRESS",
+                "NOCYCLE",
+                "NOWAIT",
+                "OFFLINE",
+                "ONLINE",
+                "PCTFREE",
+                "RENAME",
+                "RESOURCE",
+                "ROLLUP",
+                "ROW",
+                "ROWNUM",
+                "SHARE",
+                "SIBLINGS",
+                "START[ \\t]+WITH",
+                "SUCCESSFUL",
+                "SYNONYM",
+                "TRIGGER",
+                "VALIDATE",
+                "WHERE"
+            ],
+            "style-ref": "keyword"
+        },
+        {
+            "prefix": "^[ \\t]*",
+            "id": "sql-statements",
+            "keyword": [
+                "ALTER[ \\t]+(CLUSTER|DATABASE|DIMENSION|DISKGROUP|FUNCTION|INDEX(TYPE)?|JAVA|MATERIALIZED[ \\t]+VIEW([ \\t]+LOG)?|OPERATOR|OUTLINE|PACKAGE|PROCEDURE|PROFILE|RESOURCE[ \\t]+COST|ROLE|ROLLBACK[ \\t]+SEGMENT|SEQUENCE|SESSION|SYSTEM|TABLE(SPACE)?|TRIGGER|TYPE|USER|VIEW)",
+                "ANALYZE",
+                "(DIS)?ASSOCIATE[ \\t]+STATISTICS",
+                "CALL",
+                "COMMIT([ \\t]+WORK)?",
+                "CREATE[ \\t]+(CLUSTER|CONTEXT|CONTROLFILE|DATABASE([ \\t]+LINK)?|DIMENSION|DIRECTORY|DISKGROUP|FUNCTION|INDEX(TYPE)?|JAVA|LIBRARY|MATERIALIZED[ \\t]+VIEW([ \\t]+LOG)?|OPERATOR|OUTLINE|PACKAGE([ \\t]+BODY)?|S?PFILE|PROCEDURE|PROFILE|RESTORE[ \\t]+POINT|ROLE|ROLLBACK[ \\t]+SEGMENT|SCHEMA|SEQUENCE|SYNONYM|TABLE(SPACE)?|TRIGGER|TYPE([ \\t]+BODY)?|USER|VIEW)",
+                "DROP[ \\t]+(CLUSTER|CONTEXT|DATABASE([ \\t]+LINK)?|DIMENSION|DIRECTORY|DISKGROUP|FUNCTION|INDEX(TYPE)?|JAVA|LIBRARY|MATERIALIZED[ \\t]+VIEW([ \\t]+LOG)?|OPERATOR|OUTLINE|PACKAGE|PROCEDURE|PROFILE|RESTORE[ \\t]+POINT|ROLE|ROLLBACK[ \\t]+SEGMENT|SEQUENCE|SYNONYM|TABLE(SPACE)?|TRIGGER|TYPE([ \\t]+BODY)?|USER|VIEW)",
+                "EXPLAIN[ \\t]+PLAN",
+                "FLASHBACK[ \\t]+(DATABASE|TABLE)",
+                "LOCK[ \\t]+TABLE",
+                "MERGE",
+                "PURGE",
+                "ROLLBACK",
+                "SAVEPOINT",
+                "SET[ \\t]+CONSTRAINTS?",
+                "SET[ \\t]+ROLE",
+                "SET[ \\t]+TRANSACTION",
+                "TRUNCATE"
+            ],
+            "style-ref": "keyword"
+        },
+        {
+            "id": "operators",
+            "keyword": [
+                "CONNECT_BY_ROOT",
+                "MULTISET[ \\t]+(EXCEPT|INTERSECT|UNION)"
+            ],
+            "style-ref": "keyword"
+        },
+        {
+            "id": "conditions",
+            "keyword": [
+                "SOME",
+                "IS[ \\t]+(NOT[ \\t]+)?(NAN|INFINITE)",
+                "IS[ \\t]+(NOT[ \\t]+)?NULL",
+                "(EQUALS|UNDER)_PATH",
+                "(NOT[ \\t]+)?IN",
+                "IS[ \\t]+(NOT[ \\t]+)?A[ \\t]+SET",
+                "IS[ \\t]+(NOT[ \\t]+)?EMPTY",
+                "IS[ \\t]+(NOT[ \\t]+)?OF([ \\t]+TYPE)?",
+                "IS[ \\t]+PRESENT",
+                "(NOT[ \\t]+)?LIKE(C|2|4)?",
+                "(NOT[ \\t]+)?MEMBER([ \\t]+OF)?",
+                "REGEXP_LIKE",
+                "(NOT[ \\t]+)?SUBMULTISET([ \\t]+OF)?"
+            ],
+            "style-ref": "keyword"
+        },
+        {
+            "match": "^[ \\t]*@",
+            "id": "sql-plus-at-sign",
+            "style-ref": "some-thing"
+        },
+        {
+            "match": "^[ \\t]*@@",
+            "id": "sql-plus-double-at-sign",
+            "style-ref": "some-thing"
+        },
+        {
+            "match": "^[ \\t]*/",
+            "id": "sql-plus-slash",
+            "style-ref": "some-thing"
+        },
+        {
+            "prefix": "^[ \\t]*",
+            "id": "sql-plus-commands",
+            "keyword": [
+                "ACC(EPT)?",
+                "A(PPEND)?",
+                "ARCHIVE[ \\t]LOG",
+                "ATTRIBUTE",
+                "BRE(AK)?",
+                "BTI(TLE)?",
+                "C(HANGE)?",
+                "CL(EAR)?",
+                "COL(UMN)?",
+                "COMP(UTE)?",
+                "CONN(ECT)?",
+                "COPY",
+                "DEF(INE)?",
+                "DEL",
+                "DESC(RIBE)?",
+                "DISC(ONNECT)?",
+                "ED(IT)?",
+                "EXEC(UTE)?",
+                "EXIT|QUIT",
+                "GET",
+                "HELP",
+                "HO(ST)?",
+                "I(NPUT)?",
+                "L(IST)?",
+                "PASSW(ORD)?",
+                "PAU(SE)?",
+                "PRI(NT)?",
+                "PRO(MPT)?",
+                "RECOVER",
+                "REM(ARK)?",
+                "REPF(OOTER)?",
+                "REPH(EADER)?",
+                "R(UN)?",
+                "SAV(E)?",
+                "SET[ \\t]+(APPI(NFO)?|ARRAY(SIZE)?|AUTO(COMMIT)?|AUTOP(RINT)?|AUTORECOVERY|AUTOT(RACE)?|BLO(CKTERMINATOR)?|CMDS(EP)?|COLSEP|COM(PATIBILITY)?|CON(CAT)?|COPYC(OMMIT)?|COPYTYPECHECK|DEF(INE)?|DESCRIBE|ECHO|EDITF(ILE)?|EMB(EDDED)?|ESC(APE)?|FEED(BACK)?|FLAGGER|FLU(SH)?|HEA(DING)?|HEADS(EP)?|INSTANCE|LIN(ESIZE)?|LOBOF(FSET)?|LOGSOURCE|LONG|LONGC(HUNKSIZE)?|MARK(UP)?|NEWP(AGE)?|NULL|NUMF(ORMAT)?|NUM(WIDTH)?|PAGES(IZE)?|PAU(SE)?|RECSEP|RECSEPCHAR|SERVEROUT(PUT)?|SHIFT(INOUT)?|SHOW(MODE)?|SQLBL(ANKLINES)?|SQLC(ASE)?|SQLCO(NTINUE)?|SQLN(UMBER)?|SQLPLUSCOMPAT(IBILITY)?|SQLPRE(FIX)?|SQLP(ROMPT)?|SQLT(ERMINATOR)?|SUF(FIX)?|TAB|TERM(OUT)?|TI(ME)?|TIMI(NG)?|TRIM(OUT)?|TRIMS(POOL)?|UND(ERLINE)?|VER(IFY)?|WRA(P)?)",
+                "SHO(W)?",
+                "SHUTDOWN",
+                "SPO(OL)?",
+                "STA(RT)?",
+                "STARTUP",
+                "STORE",
+                "TIMI(NG)?",
+                "TTI(TLE)?",
+                "UNDEF(INE)?",
+                "VAR(IABLE)?",
+                "WHENEVER[ \\t]+(OS|SQL)ERROR"
+            ],
+            "style-ref": "some-thing"
+        },
+        {
+            "include": {"context": [
+                {"ref": "oracle-built-in-datatypes"},
+                {"ref": "ansi-datatypes"},
+                {"ref": "sql-ds-and-db2-datatypes"},
+                {"ref": "oracle-supplied-types"},
+                {"ref": "text-literals"},
+                {"ref": "integer-literals"},
+                {"ref": "number-literals"},
+                {"ref": "size-clause"},
+                {"ref": "unlimited"},
+                {"ref": null},
+                {"ref": "block-comment"},
+                {"ref": "line-comment"},
+                {"ref": "numeric-functions"},
+                {"ref": "character-functions-returning-character-values"},
+                {"ref": "nls-character-functions"},
+                {"ref": "character-functions-returning-number-values"},
+                {"ref": "datetime-functions"},
+                {"ref": "general-comparison-functions"},
+                {"ref": "conversion-functions"},
+                {"ref": "large-object-functions"},
+                {"ref": "collection-functions"},
+                {"ref": "hierarchical-function"},
+                {"ref": "data-mining-functions"},
+                {"ref": "xml-functions"},
+                {"ref": "encoding-and-decoding-functions"},
+                {"ref": "null-related-functions"},
+                {"ref": "environment-and-identifier-functions"},
+                {"ref": "aggregate-functions"},
+                {"ref": "analytic-functions"},
+                {"ref": "object-reference-functions"},
+                {"ref": "model-functions"},
+                {"ref": "ansi-reserved-words"},
+                {"ref": "oracle-reserved-words"},
+                {"ref": "sql-statements"},
+                {"ref": "operators"},
+                {"ref": "conditions"},
+                {"ref": "sql-plus-at-sign"},
+                {"ref": "sql-plus-double-at-sign"},
+                {"ref": "sql-plus-slash"},
+                {"ref": "sql-plus-commands"}
+            ]},
+            "id": "sql",
+            "class": "no-spell-check"
+        }
+    ]},
+    "default-regex-options": {"case-sensitive": false}
+}}

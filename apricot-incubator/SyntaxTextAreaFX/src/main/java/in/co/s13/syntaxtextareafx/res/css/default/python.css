@@ -1,0 +1,120 @@
+.format {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.escaped-char {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.multiline-double-quoted-string {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.multiline-single-quoted-string {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.double-quoted-string {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.single-quoted-string {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.multiline-double-quoted-raw-string {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.multiline-single-quoted-raw-string {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.double-quoted-raw-string {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.single-quoted-raw-string {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.string-conversion {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.special-variables {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.boolean {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.complex {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.float {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.decimal {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.octal {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.hex {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.module-handler-from {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.module-handler {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.function-definition {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.class-definition {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.decorator {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.keywords {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.only-keywords-2x {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.builtin-constants {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.builtin-objects {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.builtin-functions {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.only-builtin-functions-2x {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.python {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}

@@ -1,0 +1,64 @@
+.directive {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.footnotes {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.link-target {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.comment {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.comment-single {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.title-adornment {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.bullet {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.enumerator {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.field {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.strong-emphasis {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.emphasis {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.link {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.substitution {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.literals {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.url {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.rst {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}

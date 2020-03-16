@@ -1,0 +1,160 @@
+.oracle-built-in-datatypes {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.ansi-datatypes {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.sql-ds-and-db2-datatypes {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.oracle-supplied-types {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.text-literals {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.integer-literals {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.number-literals {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.size-clause {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.unlimited {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.block-comment {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.line-comment {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.numeric-functions {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.character-functions-returning-character-values {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.nls-character-functions {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.character-functions-returning-number-values {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.datetime-functions {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.general-comparison-functions {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.conversion-functions {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.large-object-functions {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.collection-functions {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.hierarchical-function {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.data-mining-functions {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.xml-functions {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.encoding-and-decoding-functions {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.null-related-functions {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.environment-and-identifier-functions {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.aggregate-functions {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.analytic-functions {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.object-reference-functions {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.model-functions {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.ansi-reserved-words {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.oracle-reserved-words {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.sql-statements {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.operators {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.conditions {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.sql-plus-at-sign {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.sql-plus-double-at-sign {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.sql-plus-slash {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.sql-plus-commands {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.sql {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}

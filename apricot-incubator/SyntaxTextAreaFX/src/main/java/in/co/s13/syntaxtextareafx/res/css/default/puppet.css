@@ -1,0 +1,60 @@
+.keywords {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.keywords-inline {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.resources {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.objects {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.parameters {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.metaparameters {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.functions {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.values {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.variables {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.variables-with-brackets {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.global-variables {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.class-names {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.syntax {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.blocks {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.puppet {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}

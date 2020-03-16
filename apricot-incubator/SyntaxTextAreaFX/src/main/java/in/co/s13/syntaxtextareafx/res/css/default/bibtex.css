@@ -1,0 +1,12 @@
+.entry-type {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.field {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.bibtex {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}

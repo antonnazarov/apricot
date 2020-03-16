@@ -1,0 +1,60 @@
+.keywords {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.reserved-classes {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.assignment-operator {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.delimiters {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.special-constants {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.boolean {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.integer-number {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.floating-point {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.functions-base {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.functions-graphics {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.functions-grDevices {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.functions-methods {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.functions-stats {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.functions-utils {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.r {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}

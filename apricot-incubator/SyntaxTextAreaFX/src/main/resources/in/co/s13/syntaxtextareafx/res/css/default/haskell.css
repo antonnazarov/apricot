@@ -1,0 +1,64 @@
+.line-comment {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.block-comment {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.pragma {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.variable {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.type-or-constructor {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.symbol {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.keysymbol {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.string {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.char {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.float {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.hexadecimal {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.octal {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.decimal {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.keyword {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.body {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.haskell {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}

@@ -1,0 +1,32 @@
+.cuda-keywords {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.cuda-types {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.cudaglobal {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.kernel-call {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.cudaatom {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.cudadev {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.cuda-runtime {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.cuda {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}

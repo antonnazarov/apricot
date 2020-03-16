@@ -1,0 +1,40 @@
+.group {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.language {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.boolean {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.exec-parameter {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.encoding {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.number {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.standard-key {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.non-standard-key {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.key {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.nemo_action {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}

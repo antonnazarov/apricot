@@ -1,0 +1,104 @@
+.bash-line-comment {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.cpp-line-comment {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.c-block-comment {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.close-comment-outside-comment {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.escape {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.variable {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.array-operators {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.string-var {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.double-quoted-string {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.single-quoted-string {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.backtick-string {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.here-doc-string {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.now-doc-string {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.identifier {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.keywords {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.common-function {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.operators {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.type {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.null-value {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.boolean {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.float {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.decimal-number {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.octal-number {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.hexadecimal-number {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.php-block {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.php {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}

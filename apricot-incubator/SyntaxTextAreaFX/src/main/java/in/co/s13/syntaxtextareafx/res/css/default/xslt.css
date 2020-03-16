@@ -1,0 +1,20 @@
+.namespace {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.xslt-namespace {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.elements {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.xslt-tags {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.xslt {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}

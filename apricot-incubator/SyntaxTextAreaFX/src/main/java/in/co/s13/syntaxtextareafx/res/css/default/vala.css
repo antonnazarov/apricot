@@ -1,0 +1,64 @@
+.line-comment {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.multiline-comment {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.close-comment-outside-comment {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.multiline-double-quoted-string {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.multiline-string {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.multiline-string-templates {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.if0-comment {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.directive {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.at-identifier {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.keywords {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.primitives {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.attributes {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.null-value {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.boolean {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.type-declaration {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.vala {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}

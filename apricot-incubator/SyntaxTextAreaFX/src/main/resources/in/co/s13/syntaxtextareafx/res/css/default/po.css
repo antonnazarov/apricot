@@ -1,0 +1,20 @@
+.string {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.format {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.location {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.keyword {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.gettext-translation {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}

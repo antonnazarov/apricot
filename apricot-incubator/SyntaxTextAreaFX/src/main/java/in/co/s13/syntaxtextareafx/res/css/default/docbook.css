@@ -1,0 +1,24 @@
+.header-elements {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.formatting-elements {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.gui-elements {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.structural-elements {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.docbook-tags {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.docbook {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}

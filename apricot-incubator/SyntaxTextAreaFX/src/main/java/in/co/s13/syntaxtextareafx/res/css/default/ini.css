@@ -1,0 +1,44 @@
+.line-comment {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.group {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.non-standard-key {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.language {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.variable {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.boolean-value {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.single-quoted-string {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.double-quoted-string {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.integer {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.decimal-number {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.ini {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}

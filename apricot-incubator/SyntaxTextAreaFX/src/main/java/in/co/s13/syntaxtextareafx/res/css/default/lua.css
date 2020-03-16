@@ -1,0 +1,48 @@
+.lua-escape {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.label {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.string {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.multi-line-string {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.block-comment {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.line-comment {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.keywords {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.functions {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.lua-reserved {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.nil-value {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.boolean {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.lua {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}

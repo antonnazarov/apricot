@@ -1,0 +1,56 @@
+.string {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.character {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.number {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.boolean {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.math-constant {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.special-constant {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.operator {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.punctuation {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.keyword {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.external-command {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.builtin-function {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.module {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.type {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.julia {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}

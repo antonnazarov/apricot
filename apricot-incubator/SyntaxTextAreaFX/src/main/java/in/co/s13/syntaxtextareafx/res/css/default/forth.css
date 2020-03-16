@@ -1,0 +1,196 @@
+.keywords {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.ext-keywords {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.obsolete-ext-keywords {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.block-keywords {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.block-ext-keywords {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.double-keywords {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.double-ext-keywords {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.exception-keywords {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.exception-ext-keywords {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.facility-keywords {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.facility-ext-keywords {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.file-keywords {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.file-ext-keywords {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.floating-keywords {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.floating-ext-keywords {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.local-keywords {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.local-ext-keywords {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.memory-keywords {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.tools-keywords {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.tools-ext-keywords {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.obsolete-tools-ext-keywords {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.search-keywords {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.search-ext-keywords {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.string-keywords {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.comment-multiline {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.comment-single {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.character-single {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.word-core {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.string-core {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.parse-string-core {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.constant-core {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.variable-core {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.word-core-ext {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.string-core-ext {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.parse-string-core-ext {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.display-string-core-ext {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.variable-core-ext {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.constant-double {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.variable-double {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.constant-floating {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.variable-floating {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.variable-local-ext {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.word-tools {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.word-tools-ext {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.word-obs-tools-ext {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.number-single {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.number-double {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.number-float {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.ansforth94 {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}

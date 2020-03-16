@@ -1,0 +1,75 @@
+
+.char {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.externals {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.declarations {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.primitives {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.storageclass {
+    -fx-fill:#85144b;
+    -fx-font-weight: bold;
+}
+.scopedeclarations {
+    -fx-fill:#85144b;
+    -fx-font-weight: bold;
+}
+.flow {
+    -fx-fill:#85144b;
+    -fx-font-weight: bold;
+}
+.memory {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.future {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.nullvalue {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.boolean {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.numeric {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.java {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.semicolon {
+    -fx-font-weight: bold;
+}
+.paren {
+    -fx-fill: red;
+    -fx-font-weight: bold;
+}
+.bracket {
+    -fx-fill: darkgreen;
+    -fx-font-weight: bold;
+}
+.brace {
+    -fx-fill: teal;
+    -fx-font-weight: bold;
+}
+.comment {
+	-fx-fill: cadetblue;
+}
+.string {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}

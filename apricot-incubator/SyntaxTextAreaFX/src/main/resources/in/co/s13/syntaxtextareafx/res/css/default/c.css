@@ -1,0 +1,39 @@
+.keywords {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.operators {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.types {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.storage-class {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.boolean {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.common-defines {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.standard-streams {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.signals {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.comment {
+	-fx-fill: cadetblue;
+}
+.string {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}

@@ -1,8 +1,9 @@
 ------------------------------------------
-Apricot DB, Release 2.2 ??date??
+Apricot DB, Release 2.3, May 2020
 ------------------------------------------
 
 * features...
+....................................
 
 This version of "Apricot DB" provides the Reverse Engineering of the following databases:
 Oracle;

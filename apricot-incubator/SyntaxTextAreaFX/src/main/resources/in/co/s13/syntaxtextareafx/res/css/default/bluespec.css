@@ -1,0 +1,28 @@
+.system-task {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.annotation {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.import-bvi {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.keyword {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.type {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.standard-interface {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.comment {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}

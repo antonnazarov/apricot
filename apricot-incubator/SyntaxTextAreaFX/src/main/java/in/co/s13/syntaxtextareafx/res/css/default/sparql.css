@@ -1,0 +1,56 @@
+.var {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.booleans {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.a {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.operators {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.iri {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.qnames {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.keywords {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.functions {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.namespaces {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.datatypes {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.classes {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.predicates {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.individuals {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.sparql {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}

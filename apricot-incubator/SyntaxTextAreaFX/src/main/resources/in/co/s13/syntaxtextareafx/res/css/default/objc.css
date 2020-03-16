@@ -1,0 +1,103 @@
+.objc-header {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.objc-source {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.objc {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.printf {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.if0-comment {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.include {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.preprocessor {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.string {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.char {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.float {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.hexadecimal {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.invalid-hexadecimal {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.octal {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.invalid-octal {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.decimal {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.keywords {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.operators {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.types {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.storage-class {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.boolean {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.common-defines {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.standard-streams {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.signals {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.c {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.comment {
+	-fx-fill: cadetblue;
+}
+.string {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}

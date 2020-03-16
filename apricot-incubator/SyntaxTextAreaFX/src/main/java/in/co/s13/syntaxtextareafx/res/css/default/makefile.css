@@ -1,0 +1,40 @@
+.variable-1 {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.variable-2 {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.variable {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.sh-variable {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.string {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.assignment-rhs {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.command {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.directives {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.functions {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.makefile {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}

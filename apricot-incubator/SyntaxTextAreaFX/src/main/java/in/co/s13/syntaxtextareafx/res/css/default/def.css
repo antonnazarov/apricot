@@ -1,0 +1,64 @@
+.decimal {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.octal {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.hexadecimal {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.float {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.in-comment {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.shell-like-comment {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.c-like-comment {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.c-like-comment-multiline {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.c-like-close-comment-outside-comment {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.line-continue {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.in-line-comment {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.shebang {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.escape {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.string {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.single-quoted-string {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.def {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}

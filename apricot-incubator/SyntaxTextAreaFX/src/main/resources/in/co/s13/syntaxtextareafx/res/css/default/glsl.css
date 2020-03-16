@@ -1,0 +1,40 @@
+.preprocessor {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.common-macros {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.keywords {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.primitives {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.reserved-keywords-for-future-use {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.builtin-functions {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.builtin-variables {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.builtin-constants {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.builtin-uniform-states {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.glsl {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}

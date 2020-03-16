@@ -1,0 +1,80 @@
+.string {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.multiline-string {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.operators {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.character {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.character-error {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.symbol {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.block-comment {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.numeric {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.annotation {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.xmltag {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.literal-identifier {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.external {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.declaration {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.primitive-type {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.library-type {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.modifier {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.flow {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.memory {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.special {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.scala {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}

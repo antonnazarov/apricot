@@ -1,0 +1,12 @@
+.inline-R {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.R-block {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.sweave {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}

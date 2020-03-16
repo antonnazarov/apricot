@@ -1,0 +1,36 @@
+.entity {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.decl-element {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.quoted-value {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.NDATA {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.decl-entity {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.decl-attlist {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.decl-notation {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.error {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.dtd {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}

@@ -1,0 +1,88 @@
+.escape-seq {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.line-comment {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.multiline-comment {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.if0-comment {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.preprocessor {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.hex-number {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.octal-number {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.binary-number {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.label {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.if-false-comment {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.poly-variant {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.modpath {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.variant {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.string {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.character-constant {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.type-var {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.arraylit {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.decimal {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.boolean-constant {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.keysymbol {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.keywords {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.fsharp {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}

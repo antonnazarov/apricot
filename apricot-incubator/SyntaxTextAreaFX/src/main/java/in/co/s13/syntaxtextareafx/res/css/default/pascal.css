@@ -1,0 +1,68 @@
+.string {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}
+.line-comment {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.block-comment-1 {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.block-comment-2 {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.preprocessor-defines {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.general-format {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.functions-and-function-modifiers {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.boolean-bitwise-operators {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.math-operators {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.loop-flow-and-exceptions-keywords {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
+.type-class-and-object-keywords {
+    -fx-fill:#B10DC9;
+    -fx-font-weight: bold;
+}
+.builtin-types {
+    -fx-fill:#85144B;
+    -fx-font-weight: bold;
+}
+.builtin-functions {
+    -fx-fill:#FFFFFF;
+    -fx-font-weight: bold;
+}
+.builtin-values {
+    -fx-fill:#AAAAAA;
+    -fx-font-weight: bold;
+}
+.number {
+    -fx-fill:#111111;
+    -fx-font-weight: bold;
+}
+.hex-number {
+    -fx-fill:#001F3F;
+    -fx-font-weight: bold;
+}
+.pascal {
+    -fx-fill:#0074D9;
+    -fx-font-weight: bold;
+}

@@ -1,0 +1,36 @@
+.comment {
+    -fx-fill:#7FDBFF;
+    -fx-font-weight: bold;
+}
+.dtd {
+    -fx-fill:#39CCCC;
+    -fx-font-weight: bold;
+}
+.embedded-lang-hook {
+    -fx-fill:#3D9970;
+    -fx-font-weight: bold;
+}
+.headings {
+    -fx-fill:#2ECC40;
+    -fx-font-weight: bold;
+}
+.generic-tag {
+    -fx-fill:#01FF70;
+    -fx-font-weight: bold;
+}
+.style {
+    -fx-fill:#FFDC00;
+    -fx-font-weight: bold;
+}
+.script {
+    -fx-fill:#FF851B;
+    -fx-font-weight: bold;
+}
+.tag {
+    -fx-fill:#FF4136;
+    -fx-font-weight: bold;
+}
+.html {
+    -fx-fill:#F012BE;
+    -fx-font-weight: bold;
+}
