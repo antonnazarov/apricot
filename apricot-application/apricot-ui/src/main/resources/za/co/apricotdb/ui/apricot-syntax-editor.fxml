@@ -10,7 +10,7 @@
 
 <AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.SyntaxEditorController">
    <children>
-      <VBox fx:id="elementHolder" layoutX="7.0" layoutY="1.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="260.0" prefWidth="547.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox fx:id="elementHolder" layoutX="7.0" layoutY="1.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="260.0" prefWidth="547.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <TextArea fx:id="textEditor" prefHeight="599.0" prefWidth="600.0">
                <padding>
@@ -30,7 +30,7 @@
             </HBox>
          </children>
          <padding>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            <Insets left="5.0" right="5.0" top="5.0" />
          </padding>
       </VBox>
    </children>
