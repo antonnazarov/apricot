@@ -20,6 +20,7 @@ public class GsonTestRunner {
         
         DruidHolder dh = new DruidHolder("paap-swe");
         dh.getMasters().add(dmg);
+
         System.out.println(dh);
         System.out.println(gson.toJson(dh));
         

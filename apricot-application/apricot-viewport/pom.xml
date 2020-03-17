@@ -20,5 +20,11 @@
             <artifactId>apricot-support</artifactId>
             <version>2.3</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.fxmisc.richtext</groupId>
+            <artifactId>richtextfx</artifactId>
+            <version>0.10.4</version>
+        </dependency>
     </dependencies>
 </project>

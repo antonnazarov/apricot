@@ -4,6 +4,7 @@ public class DruidMaster {
 
     private String druidName;
     private int druidNum;
+    private DruidHolder holder;
 
     public DruidMaster(String druidName, int druidNum) {
         super();
@@ -17,6 +18,14 @@ public class DruidMaster {
 
     public int getDruidNum() {
         return druidNum;
+    }
+
+    public DruidHolder getHolder() {
+        return holder;
+    }
+
+    public void setHolder(DruidHolder holder) {
+        this.holder = holder;
     }
 
     @Override

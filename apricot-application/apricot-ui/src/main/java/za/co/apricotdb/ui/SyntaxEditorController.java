@@ -1,13 +1,15 @@
 package za.co.apricotdb.ui;
 
+import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import za.co.apricotdb.syntaxtext.SyntaxTextAreaFX;
 import za.co.apricotdb.ui.handler.GenerateScriptHandler;
 
 /**
@@ -24,14 +26,22 @@ public class SyntaxEditorController {
 
     @FXML
     Pane mainPane;
-
+    
     @FXML
-    TextArea textEditor;
+    VBox elementHolder; 
+
+    SyntaxTextAreaFX textEditor;
 
     private String operationName;
 
     public void init(String script, String operationName) {
+        textEditor = new SyntaxTextAreaFX();
+        textEditor.setPrefSize(600, 600);
+        textEditor.setStyle("-fx-border-color: lightgray; -fx-padding: 5;");
         textEditor.setText(script);
+        VirtualizedScrollPane<SyntaxTextAreaFX> scroll = new VirtualizedScrollPane<>(textEditor);
+        elementHolder.getChildren().remove(0);
+        elementHolder.getChildren().add(0, scroll);
         this.operationName = operationName;
     }
 
