@@ -90,6 +90,7 @@ public class ApricotView implements Serializable {
     @Column(name = "detail_level")
     private ViewDetailLevel detailLevel;
 
+    @NoExport
     @ManyToOne
     @JoinColumn(name = "project_id")
     private ApricotProject project;

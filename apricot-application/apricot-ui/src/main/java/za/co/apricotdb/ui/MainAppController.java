@@ -22,6 +22,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.entity.ApricotView;
+import za.co.apricotdb.support.export.ExportProjectProcessor;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
 import za.co.apricotdb.ui.handler.ApricotAboutHandler;
 import za.co.apricotdb.ui.handler.ApricotCanvasHandler;
@@ -141,6 +142,9 @@ public class MainAppController {
 
     @Autowired
     NonTransactionalPort port;
+    
+    @Autowired
+    ExportProjectProcessor exportProjectProcessor;
 
     @FXML
     AnchorPane mainPane;
@@ -556,6 +560,14 @@ public class MainAppController {
     @FXML
     public void sameWidth(ActionEvent event) {
         alignHandler.alignEntitySize(false);
+    }
+
+    /**
+     * Run the form of creation of the new project.
+     */
+    @FXML
+    public void exportProject(ActionEvent event) {
+        exportProjectProcessor.serializeProject();
     }
 
     public TabPane getViewsTabPane() {

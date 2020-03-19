@@ -32,7 +32,7 @@
                           <MenuItem mnemonicParsing="false" onAction="#newProject" text="New                     " />
                               <MenuItem id="menuOpen" mnemonicParsing="false" onAction="#openProject" text="Open" />
                               <MenuItem id="menuEdit" mnemonicParsing="false" onAction="#editProject" text="Edit" />
-                              <MenuItem disable="true" mnemonicParsing="false" text="Export" />
+                              <MenuItem mnemonicParsing="false" onAction="#exportProject" text="Export" />
                               <MenuItem disable="true" mnemonicParsing="false" text="Import" />
                               <MenuItem id="menuDelete" mnemonicParsing="false" onAction="#deleteProject" text="Delete" />
                         </items>

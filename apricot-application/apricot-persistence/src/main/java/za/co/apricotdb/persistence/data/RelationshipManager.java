@@ -12,6 +12,7 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
+import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
@@ -113,6 +114,14 @@ public class RelationshipManager {
         TypedQuery<ApricotRelationship> query = em.createNamedQuery("ApricotRelationship.findRelationshipsBySnapshot",
                 ApricotRelationship.class);
         query.setParameter("snapshot", snapshot);
+
+        return query.getResultList();
+    }
+    
+    public List<ApricotRelationship> findRelationshipsByProject(ApricotProject project) {
+        TypedQuery<ApricotRelationship> query = em.createNamedQuery("ApricotRelationship.findRelationshipsByProject",
+                ApricotRelationship.class);
+        query.setParameter("project", project);
 
         return query.getResultList();
     }

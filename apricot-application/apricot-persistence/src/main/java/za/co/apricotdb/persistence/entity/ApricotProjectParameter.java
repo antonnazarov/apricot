@@ -39,6 +39,7 @@ public class ApricotProjectParameter implements Serializable {
     @Column(name = "parameter_value")
     private String value;
     
+    @NoExport
     @ManyToOne
     @JoinColumn(name = "project_id")
     private ApricotProject project;

@@ -56,6 +56,7 @@ public class ApricotObjectLayout implements Serializable {
     @Column(name = "object_layout")
     private String objectLayout;
 
+    @NoExport
     @ManyToOne
     @JoinColumn(name = "view_id")
     private ApricotView view;

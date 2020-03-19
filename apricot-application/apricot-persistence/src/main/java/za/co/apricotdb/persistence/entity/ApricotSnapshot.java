@@ -70,6 +70,7 @@ public class ApricotSnapshot implements Serializable {
     @Column(name = "is_default")
     private boolean defaultSnapshot;
 
+    @NoExport
     @ManyToOne
     @JoinColumn(name = "project_id")
     private ApricotProject project;

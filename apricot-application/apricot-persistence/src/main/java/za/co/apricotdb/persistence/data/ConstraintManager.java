@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.persistence.entity.ApricotColumnConstraint;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
+import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.repository.ApricotColumnConstraintRepository;
 import za.co.apricotdb.persistence.repository.ApricotConstraintRepository;
@@ -107,7 +108,7 @@ public class ConstraintManager {
 
         return o.get();
     }
-    
+
     public void sortConstraints(List<ApricotConstraint> constraints) {
         constraints.sort((ApricotConstraint c1, ApricotConstraint c2) -> {
             if (c1.getType().getOrder() == c2.getType().getOrder()) {
@@ -120,5 +121,16 @@ public class ConstraintManager {
             }
             return c1.getType().getOrder() - c2.getType().getOrder();
         });
+    }
+
+    /**
+     * Read all associations for the given Project.
+     */
+    public List<ApricotColumnConstraint> getColumnConstraintsByProject(ApricotProject project) {
+        TypedQuery<ApricotColumnConstraint> query = em.createNamedQuery(
+                "ApricotColumnConstraint.getColumnConstraintByProject", ApricotColumnConstraint.class);
+        query.setParameter("project", project);
+
+        return query.getResultList();
     }
 }

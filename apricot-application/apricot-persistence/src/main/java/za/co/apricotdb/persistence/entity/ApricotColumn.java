@@ -41,7 +41,8 @@ public class ApricotColumn implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "column_id")
     private long id;
-
+    
+    @NoExport
     @ManyToOne
     @JoinColumn(name = "table_id")
     private ApricotTable table;

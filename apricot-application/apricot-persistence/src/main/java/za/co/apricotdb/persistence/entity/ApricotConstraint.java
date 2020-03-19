@@ -70,10 +70,12 @@ public class ApricotConstraint implements Serializable {
     @Enumerated(EnumType.STRING)
     private ConstraintType type;
 
+    @NoExport
     @ManyToOne
     @JoinColumn(name = "table_id")
     private ApricotTable table;
 
+    @NoExport
     @OneToMany(mappedBy = "constraint", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ApricotColumnConstraint> columns = new ArrayList<>();
 

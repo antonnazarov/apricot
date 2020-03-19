@@ -57,6 +57,7 @@ public class ApricotTable implements Serializable {
     @OneToMany(mappedBy = "table", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ApricotConstraint> constraints = new ArrayList<>();
 
+    @NoExport
     @ManyToOne
     @JoinColumn(name = "snapshot_id")
     private ApricotSnapshot snapshot;
