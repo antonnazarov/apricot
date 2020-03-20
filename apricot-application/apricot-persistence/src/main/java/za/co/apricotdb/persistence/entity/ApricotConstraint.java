@@ -38,6 +38,7 @@ public class ApricotConstraint implements Serializable {
 
     private static final long serialVersionUID = 3862015345366091286L;
 
+    @NoExport
     @Transient
     Logger logger = LoggerFactory.getLogger(ApricotConstraint.class);
 

@@ -22,7 +22,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.entity.ApricotView;
-import za.co.apricotdb.support.export.ExportProjectProcessor;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
 import za.co.apricotdb.ui.handler.ApricotAboutHandler;
 import za.co.apricotdb.ui.handler.ApricotCanvasHandler;
@@ -36,6 +35,7 @@ import za.co.apricotdb.ui.handler.CompareSnapshotsHandler;
 import za.co.apricotdb.ui.handler.EntityAlignHandler;
 import za.co.apricotdb.ui.handler.EntityFilterHandler;
 import za.co.apricotdb.ui.handler.ExcelReportHandler;
+import za.co.apricotdb.ui.handler.ExportProjectHandler;
 import za.co.apricotdb.ui.handler.GenerateScriptHandler;
 import za.co.apricotdb.ui.handler.NonTransactionalPort;
 import za.co.apricotdb.ui.handler.ProjectExplorerContextMenuHandler;
@@ -141,10 +141,10 @@ public class MainAppController {
     TbResetFilterHandler tbResetFilterHandler;
 
     @Autowired
-    NonTransactionalPort port;
-    
+    ExportProjectHandler exportHandler;
+
     @Autowired
-    ExportProjectProcessor exportProjectProcessor;
+    NonTransactionalPort port;
 
     @FXML
     AnchorPane mainPane;
@@ -567,7 +567,7 @@ public class MainAppController {
      */
     @FXML
     public void exportProject(ActionEvent event) {
-        exportProjectProcessor.serializeProject();
+        exportHandler.exportProject(mainPane.getScene().getWindow());
     }
 
     public TabPane getViewsTabPane() {

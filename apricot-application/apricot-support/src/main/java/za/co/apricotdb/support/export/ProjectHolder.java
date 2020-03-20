@@ -10,17 +10,8 @@ import java.util.List;
  */
 public class ProjectHolder {
 
-    private String jsonProject;
     private List<RelationshipHolder> relationships;
     private List<ConstraintColumnHolder> constraintColumns;
-
-    public String getJsonProject() {
-        return jsonProject;
-    }
-
-    public void setJsonProject(String jsonProject) {
-        this.jsonProject = jsonProject;
-    }
 
     public List<RelationshipHolder> getRelationships() {
         return relationships;
@@ -40,7 +31,6 @@ public class ProjectHolder {
 
     @Override
     public String toString() {
-        return "ProjectHolder [project=" + jsonProject + ", relationships=" + relationships + ", constraintColumns="
-                + constraintColumns + "]";
+        return "ProjectHolder [relationships=" + relationships + ", constraintColumns=" + constraintColumns + "]";
     }
 }

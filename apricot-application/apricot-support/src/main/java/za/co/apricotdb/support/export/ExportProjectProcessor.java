@@ -1,12 +1,7 @@
 package za.co.apricotdb.support.export;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-
 import javax.transaction.Transactional;
 
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +23,8 @@ import za.co.apricotdb.persistence.entity.ApricotProject;
 @Component
 public class ExportProjectProcessor {
 
-    Logger logger = LoggerFactory.getLogger(ExportProjectProcessor.class);
+    public static final String PROJECT_DIVIDER = "\n<-------------------------------------------------------->\n";
+    private Logger logger = LoggerFactory.getLogger(ExportProjectProcessor.class);
 
     @Autowired
     ProjectManager projectManager;
@@ -45,32 +41,24 @@ public class ExportProjectProcessor {
         Gson gson = initGson();
 
         ApricotProject project = projectManager.findCurrentProject();
-        String jsonProject = gson.toJson(project);
+        sb.append(gson.toJson(project)).append(PROJECT_DIVIDER);
 
         ProjectHolder ph = new ProjectHolder();
-        ph.setJsonProject(jsonProject);
         ph.setRelationships(relationshipSerializer.getRelationships(project));
         ph.setConstraintColumns(constraintColumnSerializer.getColumnConstraints(project));
-
         sb.append(gson.toJson(ph));
 
-        try {
-            File file = new File("C:/Anton Nazarov/tmp/project-export.txt");
-            FileUtils.write(file, sb.toString(), Charset.defaultCharset());
-        } catch (IOException e) {
-            logger.error(e.getMessage(), e);
-        }
-
-        logger.info("The serialized Project: " + project.getName() + "\n" + sb.toString());
+        logger.info("The Project " + project.getName() + " was successfully exported. Exported: " + sb.length()
+                + " symbols");
 
         return sb.toString();
     }
 
-    private Gson initGson() {
+    public static Gson initGson() {
         ExclusionStrategy strategy = new ApricotExclusionStrategy();
         GsonBuilder builder = new GsonBuilder();
         builder.setExclusionStrategies(strategy);
-        // builder.setPrettyPrinting();
+        builder.setPrettyPrinting();
 
         return builder.create();
     }
