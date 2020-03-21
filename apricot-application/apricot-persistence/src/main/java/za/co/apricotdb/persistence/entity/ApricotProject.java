@@ -78,6 +78,7 @@ public class ApricotProject implements Serializable {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ApricotSnapshot> snapshots = new ArrayList<>();
 
+    @NoExport
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ApricotProjectParameter> parameters = new ArrayList<>();
 

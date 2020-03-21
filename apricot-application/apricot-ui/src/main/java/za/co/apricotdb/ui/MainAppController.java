@@ -37,6 +37,7 @@ import za.co.apricotdb.ui.handler.EntityFilterHandler;
 import za.co.apricotdb.ui.handler.ExcelReportHandler;
 import za.co.apricotdb.ui.handler.ExportProjectHandler;
 import za.co.apricotdb.ui.handler.GenerateScriptHandler;
+import za.co.apricotdb.ui.handler.ImportProjectHandler;
 import za.co.apricotdb.ui.handler.NonTransactionalPort;
 import za.co.apricotdb.ui.handler.ProjectExplorerContextMenuHandler;
 import za.co.apricotdb.ui.handler.ProjectExplorerItem;
@@ -142,6 +143,9 @@ public class MainAppController {
 
     @Autowired
     ExportProjectHandler exportHandler;
+    
+    @Autowired
+    ImportProjectHandler importHandler;
 
     @Autowired
     NonTransactionalPort port;
@@ -562,14 +566,16 @@ public class MainAppController {
         alignHandler.alignEntitySize(false);
     }
 
-    /**
-     * Run the form of creation of the new project.
-     */
     @FXML
     public void exportProject(ActionEvent event) {
         exportHandler.exportProject(mainPane.getScene().getWindow());
     }
 
+    @FXML
+    public void importProject(ActionEvent event) {
+        importHandler.importProject(mainPane.getScene().getWindow());
+    }
+    
     public TabPane getViewsTabPane() {
         return viewsTabPane;
     }
