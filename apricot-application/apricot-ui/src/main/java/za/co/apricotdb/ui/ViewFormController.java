@@ -130,8 +130,9 @@ public class ViewFormController {
     @FXML
     public void save(ActionEvent event) {
         setModelValues();
-        ntViewHandler.saveView(model, viewsTabPane, viewName.getText());
-        stage.close();
+        if (ntViewHandler.saveView(model, viewsTabPane, viewName.getText())) {
+            stage.close();
+        }
     }
 
     private void setModelValues() {

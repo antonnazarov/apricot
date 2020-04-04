@@ -75,9 +75,9 @@ public class EditProjectController {
         model.setProjectDatabase(projectDatabase.getSelectionModel().getSelectedItem());
         model.setErdNotation(ERDNotation.parseNotation(erdNotation.getSelectionModel().getSelectedItem()));
 
-        projectSerializer.serializeProject(model, isCreateNew);
-
-        getStage().close();
+        if (projectSerializer.serializeProject(model, isCreateNew)) {
+            getStage().close();
+        }
     }
 
     @FXML

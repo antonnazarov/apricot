@@ -64,9 +64,9 @@ public class ApricotProjectSerializer {
     }
     
     @ApricotErrorLogger(title = "Unable to save the Project")
-    public void serializeProject(ProjectFormModel model, boolean isCreateNew) {
+    public boolean serializeProject(ProjectFormModel model, boolean isCreateNew) {
         if (!validate(model)) {
-            return;
+            return false;
         }
         
         ApricotProject project = null;
@@ -80,11 +80,13 @@ public class ApricotProjectSerializer {
         if (isCreateNew) {
             projectManager.setProjectCurrent(project);
         }
+        
+        return true;
     }
 
     public boolean validate(ProjectFormModel model) {
         if (!validateName(model)) {
-            Alert alert = getAlert("Please enter a unique and non empty name of the project");
+            Alert alert = getAlert("Please enter a name of the project");
             alert.showAndWait();
 
             return false;

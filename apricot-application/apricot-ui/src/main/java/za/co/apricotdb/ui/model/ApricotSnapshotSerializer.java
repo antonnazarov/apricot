@@ -49,7 +49,7 @@ public class ApricotSnapshotSerializer {
 
     public boolean validate(SnapshotFormModel model) {
         if (!validateName(model)) {
-            Alert alert = getAlert("Please enter a unique name of the snapshot");
+            Alert alert = getAlert("Please enter a name of the snapshot");
             alert.showAndWait();
 
             return false;

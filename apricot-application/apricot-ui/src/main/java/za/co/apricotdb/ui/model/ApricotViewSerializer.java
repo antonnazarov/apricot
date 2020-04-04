@@ -48,7 +48,7 @@ public class ApricotViewSerializer {
     
     public boolean validate(ViewFormModel model) {
         if (!validateName(model)) {
-            Alert alert = getAlert("Please enter a unique name of the view");
+            Alert alert = getAlert("Please enter a name of the view");
             alert.showAndWait();
 
             return false;

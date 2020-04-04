@@ -35,9 +35,9 @@ public class NonTransactionalViewHandler {
      * Save the added/edited view using the data of the model object.
      */
     @ApricotErrorLogger(title = "Unable to save view")
-    public void saveView(ViewFormModel model, TabPane viewsTabPane, String viewName) {
+    public boolean saveView(ViewFormModel model, TabPane viewsTabPane, String viewName) {
         if (!viewSerializer.validate(model)) {
-            return;
+            return false;
         }
 
         ApricotView view = viewSerializer.serializeView(model);
@@ -54,5 +54,7 @@ public class NonTransactionalViewHandler {
                 treeViewHandler.sortEntitiesByView();
             }
         }
+        
+        return true;
     }
 }

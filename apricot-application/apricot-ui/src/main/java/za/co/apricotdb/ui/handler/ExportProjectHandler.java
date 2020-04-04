@@ -85,7 +85,7 @@ public class ExportProjectHandler {
 
     private String getFileName(String projectName) {
         StringBuilder sb = new StringBuilder();
-        SimpleDateFormat df = new SimpleDateFormat("yyyyddMM");
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
         sb.append(df.format(new java.util.Date())).append("-").append(ApricotUtils.convertToFileName(projectName));
         sb.append(".txt");
 
