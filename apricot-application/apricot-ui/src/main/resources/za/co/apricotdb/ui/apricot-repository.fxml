@@ -2,35 +2,28 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TreeTableColumn?>
+<?import javafx.scene.control.TreeTableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="452.0" prefWidth="667.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="452.0" prefWidth="667.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.RepositoryController">
    <children>
       <VBox layoutX="154.0" layoutY="35.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <TabPane prefHeight="416.0" prefWidth="667.0" tabClosingPolicy="UNAVAILABLE">
-              <tabs>
-                <Tab text="Import from Repository">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                  </content>
-                </Tab>
-                <Tab text="Export to Repository">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                  </content>
-                </Tab>
-              </tabs>
-            </TabPane>
+            <TreeTableView prefHeight="416.0" prefWidth="667.0">
+              <columns>
+                <TreeTableColumn prefWidth="257.0" text="Local" />
+                <TreeTableColumn minWidth="0.0" prefWidth="124.0" text="C2" />
+                  <TreeTableColumn prefWidth="276.0" text="Repository" />
+              </columns>
+            </TreeTableView>
             <HBox alignment="CENTER_RIGHT" prefHeight="36.0" prefWidth="667.0" spacing="15.0">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="166.0" text="Configure Repository" />
-                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="110.0" text="Exit" />
+                  <Button mnemonicParsing="false" onAction="#configureRepository" prefHeight="25.0" prefWidth="140.0" text="Configure Repository" />
+                  <Button mnemonicParsing="false" onAction="#refresh" prefHeight="25.0" prefWidth="140.0" text="Refresh" />
+                  <Button layoutX="557.0" layoutY="16.0" mnemonicParsing="false" onAction="#exit" prefHeight="25.0" prefWidth="140.0" text="Exit" />
                </children>
                <padding>
                   <Insets right="10.0" />

@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="mainPane" prefHeight="640.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.MainAppController">
+<AnchorPane fx:id="mainPane" prefHeight="640.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.MainAppController">
    <children>
       <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -72,6 +72,7 @@
                                     <MenuItem mnemonicParsing="false" onAction="#generateDeleteScript" text="Generate &quot;Delete&quot; Script" />
                                 </items>
                               </Menu>
+                              <MenuItem mnemonicParsing="false" onAction="#repository" text="Repository" />
                               <MenuItem disable="true" mnemonicParsing="false" text="Print Diagram" />
                            </items>
                         </Menu>

@@ -41,6 +41,7 @@ import za.co.apricotdb.ui.handler.ImportProjectHandler;
 import za.co.apricotdb.ui.handler.NonTransactionalPort;
 import za.co.apricotdb.ui.handler.ProjectExplorerContextMenuHandler;
 import za.co.apricotdb.ui.handler.ProjectExplorerItem;
+import za.co.apricotdb.ui.handler.RepositoryHandler;
 import za.co.apricotdb.ui.handler.ReverseEngineHandler;
 import za.co.apricotdb.ui.handler.SelectViewTabHandler;
 import za.co.apricotdb.ui.handler.TabViewHandler;
@@ -149,6 +150,9 @@ public class MainAppController {
 
     @Autowired
     NonTransactionalPort port;
+    
+    @Autowired
+    RepositoryHandler repositoryHandler;
 
     @FXML
     AnchorPane mainPane;
@@ -459,6 +463,11 @@ public class MainAppController {
     @FXML
     public void createExcelReport(ActionEvent event) {
         port.createExcelReport(mainPane.getScene().getWindow());
+    }
+    
+    @FXML
+    public void repository(ActionEvent event) {
+        repositoryHandler.showRepositoryForm();
     }
 
     @FXML
