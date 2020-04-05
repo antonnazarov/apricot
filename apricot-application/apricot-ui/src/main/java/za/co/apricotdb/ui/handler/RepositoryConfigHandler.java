@@ -16,24 +16,25 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import za.co.apricotdb.ui.RepositoryController;
+import za.co.apricotdb.ui.RepositoryConfigController;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
 
 /**
- * The Repository related functionality is supported by this component.
+ * The business logic under the Repository Configuration functionality.
  * 
  * @author Anton Nazarov
- * @since 04/04/2020
+ * @since 05/04/2020
  */
 @Component
-public class RepositoryHandler {
+public class RepositoryConfigHandler {
 
     @Resource
     ApplicationContext context;
 
-    @ApricotErrorLogger(title = "Unable to create the Apricot Repository forms")
-    public void showRepositoryForm() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-repository.fxml"));
+    @ApricotErrorLogger(title = "Unable to create the Repository configuration forms")
+    public void showRepositoryConfigForm() {
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/za/co/apricotdb/ui/apricot-repository-config.fxml"));
         loader.setControllerFactory(context::getBean);
         Pane window = null;
         try {
@@ -44,7 +45,7 @@ public class RepositoryHandler {
 
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.setTitle("Apricot Repository Import/Export");
+        dialog.setTitle("Configure Repository");
         dialog.getIcons().add(new Image(getClass().getResourceAsStream("repository-small-s.png")));
 
         Scene openProjectScene = new Scene(window);
@@ -58,7 +59,7 @@ public class RepositoryHandler {
             }
         });
 
-        RepositoryController controller = loader.<RepositoryController>getController();
+        RepositoryConfigController controller = loader.<RepositoryConfigController>getController();
         controller.init();
 
         dialog.show();

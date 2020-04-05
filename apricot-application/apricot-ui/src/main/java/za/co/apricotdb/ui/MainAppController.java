@@ -47,6 +47,8 @@ import za.co.apricotdb.ui.handler.SelectViewTabHandler;
 import za.co.apricotdb.ui.handler.TabViewHandler;
 import za.co.apricotdb.ui.toolbar.TbAddFilterHandler;
 import za.co.apricotdb.ui.toolbar.TbButton;
+import za.co.apricotdb.ui.toolbar.TbQuickViewHandler;
+import za.co.apricotdb.ui.toolbar.TbRepositoryHandler;
 import za.co.apricotdb.ui.toolbar.TbResetFilterHandler;
 import za.co.apricotdb.ui.toolbar.TbSetFilterHandler;
 import za.co.apricotdb.ui.toolbar.ToolbarHolder;
@@ -143,16 +145,22 @@ public class MainAppController {
     TbResetFilterHandler tbResetFilterHandler;
 
     @Autowired
+    TbRepositoryHandler tbRepositoryHandler;
+
+    @Autowired
     ExportProjectHandler exportHandler;
-    
+
     @Autowired
     ImportProjectHandler importHandler;
 
     @Autowired
     NonTransactionalPort port;
-    
+
     @Autowired
     RepositoryHandler repositoryHandler;
+
+    @Autowired
+    TbQuickViewHandler tbQuickViewHandler;
 
     @FXML
     AnchorPane mainPane;
@@ -238,6 +246,14 @@ public class MainAppController {
     @FXML
     Button tbResetFilter;
 
+    // repository
+    @FXML
+    Button tbRepository;
+
+    // Quick View
+    @FXML
+    Button tbQuickView;
+
     // menu items
     @FXML
     MenuItem menuSave;
@@ -313,6 +329,8 @@ public class MainAppController {
         tbSetFilterHandler.initButton(tbSetFilter);
         tbAddFilterHandler.initButton(tbAddFilter);
         tbResetFilterHandler.initButton(tbResetFilter);
+        tbRepositoryHandler.initButton(tbRepository);
+        tbQuickViewHandler.initButton(tbQuickView);
     }
 
     public void save(ActionEvent event) {
@@ -464,7 +482,7 @@ public class MainAppController {
     public void createExcelReport(ActionEvent event) {
         port.createExcelReport(mainPane.getScene().getWindow());
     }
-    
+
     @FXML
     public void repository(ActionEvent event) {
         repositoryHandler.showRepositoryForm();
@@ -584,7 +602,7 @@ public class MainAppController {
     public void importProject(ActionEvent event) {
         importHandler.importProject(mainPane.getScene().getWindow());
     }
-    
+
     public TabPane getViewsTabPane() {
         return viewsTabPane;
     }
