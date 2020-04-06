@@ -32,4 +32,9 @@ public class ApplicationParameterManager {
         
         return null;
     }
+    
+    public void saveParameter(String name, String value) {
+        ApricotApplicationParameter param = new ApricotApplicationParameter(name, value);
+        em.persist(param);
+    }
 }
