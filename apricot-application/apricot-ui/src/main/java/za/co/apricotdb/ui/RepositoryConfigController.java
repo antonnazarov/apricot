@@ -16,6 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import za.co.apricotdb.persistence.data.ApplicationParameterManager;
 import za.co.apricotdb.persistence.entity.ApricotApplicationParameter;
+import za.co.apricotdb.ui.handler.RepositoryConfigHandler;
 import za.co.apricotdb.ui.model.RepositoryConfiguration;
 import za.co.apricotdb.ui.model.RepositoryConfigurationModel;
 import za.co.apricotdb.ui.util.GsonFactory;
@@ -33,6 +34,9 @@ public class RepositoryConfigController {
 
     @Autowired
     ApplicationParameterManager appParamManager;
+
+    @Autowired
+    RepositoryConfigHandler repositoryConfigHandler;
 
     @FXML
     Pane mainPane;
@@ -79,12 +83,23 @@ public class RepositoryConfigController {
 
     @FXML
     public void save() {
-        //
-        getStage().close();
+        if (repositoryConfigHandler.saveRepositoryConfig(model)) {
+            getStage().close();
+        }
     }
 
     @FXML
     public void checkRepository() {
+        repositoryConfigHandler.checkRemoteRepository(model);
+    }
+
+    @FXML
+    public void setUseProxyFlag() {
+        if (useProxy.isSelected()) {
+            proxyConfig.setDisable(false);
+        } else {
+            proxyConfig.setDisable(true);
+        }
     }
 
     /**
@@ -95,8 +110,8 @@ public class RepositoryConfigController {
         RepositoryConfiguration repoConfig = getRepositoryConfiguration(
                 appParamManager.getParameterByName(REPOSITORY_CONFIGURATION));
         model = new RepositoryConfigurationModel(repoConfig);
-        
-        //  set the bidirectional binding
+
+        // set the bidirectional binding
         Bindings.bindBidirectional(remoteUrl.textProperty(), model.remoteUrlProperty());
         Bindings.bindBidirectional(userName.textProperty(), model.userNameProperty());
         Bindings.bindBidirectional(password.textProperty(), model.passwordProperty());
@@ -106,7 +121,9 @@ public class RepositoryConfigController {
         Bindings.bindBidirectional(proxyHost.textProperty(), model.proxyHostProperty());
         Bindings.bindBidirectional(proxyPort.textProperty(), model.proxyPortProperty());
         Bindings.bindBidirectional(proxyUser.textProperty(), model.proxyUserProperty());
-        Bindings.bindBidirectional(proxyPort.textProperty(), model.proxyPortProperty());
+        Bindings.bindBidirectional(proxyPassword.textProperty(), model.proxyPasswordProperty());
+
+        setUseProxyFlag();
     }
 
     private RepositoryConfiguration getRepositoryConfiguration(ApricotApplicationParameter param) {

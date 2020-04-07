@@ -160,7 +160,7 @@ public class RepositoryConfigurationModel {
     }
 
     public StringProperty proxyUserProperty() {
-        return password;
+        return proxyUser;
     }
 
     // proxyPassword
@@ -176,7 +176,7 @@ public class RepositoryConfigurationModel {
         return proxyPassword;
     }
 
-    RepositoryConfiguration getRepositoryConfiguration() {
+    public RepositoryConfiguration getRepositoryConfiguration() {
         RepositoryConfiguration ret = new RepositoryConfiguration();
         ret.setRemoteUrl(getRemoteUrl());
         ret.setUserName(getUserName());

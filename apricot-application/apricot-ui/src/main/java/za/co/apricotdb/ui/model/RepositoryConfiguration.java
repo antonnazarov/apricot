@@ -103,7 +103,7 @@ public class RepositoryConfiguration implements Serializable {
     public void setProxyPassword(String proxyPassword) {
         this.proxyPassword = proxyPassword;
     }
-
+    
     @Override
     public String toString() {
         return "RepositoryConfiguration [remoteUrl=" + remoteUrl + ", userName=" + userName + ", password=" + password

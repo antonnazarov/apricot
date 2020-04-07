@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="265.0" prefWidth="499.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.RepositoryConfigController">
+<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="265.0" prefWidth="499.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.RepositoryConfigController">
    <children>
       <VBox layoutX="200.0" layoutY="63.0" prefHeight="236.0" prefWidth="499.0" AnchorPane.bottomAnchor="164.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -48,7 +48,7 @@
             </HBox>
             <HBox layoutX="10.0" layoutY="10.0" prefHeight="29.0" prefWidth="600.0" spacing="10.0">
                <children>
-                  <CheckBox fx:id="useProxy" mnemonicParsing="false" text="Use Proxy">
+                  <CheckBox fx:id="useProxy" mnemonicParsing="false" onAction="#setUseProxyFlag" text="Use Proxy">
                      <padding>
                         <Insets top="4.0" />
                      </padding>
