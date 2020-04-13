@@ -1,7 +1,12 @@
 package za.co.apricotdb.ui;
 
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import za.co.apricotdb.ui.handler.RelatedEntityAbsent;
 
 /**
  * This bean represents the related entity in form/controller:
@@ -12,20 +17,18 @@ import javafx.scene.control.CheckBox;
  */
 public class RelatedEntityRow {
 
-    private SimpleStringProperty entityName;
+    private SimpleObjectProperty<HBox> entity;
     private CheckBox addToView;
+    private RelatedEntityAbsent absentEntity;
 
-    public RelatedEntityRow(String entityName) {
-        this.entityName = new SimpleStringProperty(entityName);
+    public RelatedEntityRow(RelatedEntityAbsent absentEntity) {
+        this.entity = new SimpleObjectProperty<>(modelHBox(absentEntity));
         this.addToView = new CheckBox();
+        this.absentEntity = absentEntity;
     }
 
-    public String getEntityName() {
-        return entityName.get();
-    }
-
-    public void setEntityName(String entityName) {
-        this.entityName.set(entityName);
+    public HBox getEntity() {
+        return entity.get();
     }
 
     public CheckBox getAddToView() {
@@ -35,9 +38,42 @@ public class RelatedEntityRow {
     public void setAddToView(CheckBox addToView) {
         this.addToView = addToView;
     }
+    
+    public String getAbsentEntity() {
+        return absentEntity.getRelatedTable();
+    }
 
     @Override
     public String toString() {
-        return "RelatedEntityRow [entityName=" + entityName + ", addToViewFlag=" + addToView.isSelected() + "]";
+        return "RelatedEntityRow [entityName=" + absentEntity.getRelatedTable() + ", addToViewFlag="
+                + addToView.isSelected() + "]";
+    }
+
+    private HBox modelHBox(RelatedEntityAbsent absentEntity) {
+        HBox hbox = new HBox();
+        if (absentEntity.isChild()) {
+            hbox.getChildren().add(getImageView(true));
+        } else {
+            hbox.getChildren().add(getImageView(false));
+        }
+        hbox.getChildren().add(new Label(absentEntity.getRelatedTable()));
+        if (absentEntity.isParent()) {
+            hbox.getChildren().add(getImageView(true));
+        } else {
+            hbox.getChildren().add(getImageView(false));
+        }
+        hbox.setSpacing(4);
+        
+        return hbox;
+    }
+
+    private ImageView getImageView(boolean crowFoot) {
+        String img = "/za/co/apricotdb/ui/handler/empty-small.png";
+        if (crowFoot) {
+            img = "/za/co/apricotdb/ui/handler/crow-foot-small.png";
+        }
+        Image image = new Image(getClass().getResourceAsStream(img));
+
+        return new ImageView(image);
     }
 }

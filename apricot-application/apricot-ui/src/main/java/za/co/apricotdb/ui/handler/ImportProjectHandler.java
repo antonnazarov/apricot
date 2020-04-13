@@ -40,6 +40,9 @@ public class ImportProjectHandler {
 
     @Autowired
     ImportProjectProcessor importProcessor;
+    
+    @Autowired
+    ApplicationInitializer applicationInitializer;
 
     @ApricotErrorLogger(title = "Unable to Import Project")
     public void importProject(Window window) {
@@ -74,7 +77,8 @@ public class ImportProjectHandler {
                         + "\" already exists in the system. You can delete or rename the existing project and then try to import again");
                 alert.showAndWait();
             }
-            importProcessor.importProject(sProject);
+            
+            project = importProcessor.importProject(sProject);
 
             parameterManager.saveParameter(project, ProjectParameterManager.PROJECT_DEFAULT_OUTPUT_DIR,
                     file.getParent());
@@ -82,6 +86,11 @@ public class ImportProjectHandler {
             Alert alert = alertDecorator.getAlert("Import Project",
                     "The project \"" + importedProj.getName() + "\" was successfully imported", AlertType.INFORMATION);
             alert.showAndWait();
+            
+            //  the the just imported project as current
+            projectManager.setProjectCurrent(project);
+            applicationInitializer.initializeDefault();
+            
         } else {
             alertDecorator.getErrorAlert("Import File", "Unable to import the selected file");
         }

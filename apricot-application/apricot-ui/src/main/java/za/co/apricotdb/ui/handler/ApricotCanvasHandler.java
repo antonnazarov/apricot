@@ -236,15 +236,17 @@ public class ApricotCanvasHandler {
     @ApricotErrorLogger(title = "Unable to select the related Entities")
     public void makeRelatedEntitiesSelected(List<String> tables) {
         Set<String> selectTbl = new HashSet<>();
-        Set<String> absentTbl = new HashSet<>(); // the tables, which have bot been presented on the current view
+        Map<String, RelatedEntityAbsent> absentTbl = new HashMap<>(); // the tables, which have not been presented on the current view
         selectTbl.addAll(tables);
         ApricotCanvas canvas = getSelectedCanvas();
         for (String tableName : tables) {
             ApricotTable table = tableManager.getTableByName(tableName);
             for (ApricotRelationship r : relationshipManager.getRelationshipsForTable(table)) {
                 String relTable = null;
+                boolean isParent = false;
                 if (r.getChild().getTable().equals(table)) {
                     relTable = r.getParent().getTable().getName();
+                    isParent = true;
                 } else {
                     relTable = r.getChild().getTable().getName();
                 }
@@ -252,7 +254,16 @@ public class ApricotCanvasHandler {
                 if (canvas.findEntityByName(relTable) != null) {
                     selectTbl.add(relTable);
                 } else {
-                    absentTbl.add(relTable);
+                    RelatedEntityAbsent absent = absentTbl.get(relTable);
+                    if (absent == null) {
+                        absent = new RelatedEntityAbsent(relTable);
+                        absentTbl.put(relTable, absent);
+                    }
+                    if (isParent) {
+                        absent.setParent(true);
+                    } else {
+                        absent.setChild(true);
+                    }
                 }
             }
         }
@@ -262,7 +273,7 @@ public class ApricotCanvasHandler {
         // if there are related tables, not presented on the current view, show the form
         // with the list of such tables
         if (!absentTbl.isEmpty()) {
-            createRelatedEntitiesForm(new ArrayList<>(absentTbl));
+            createRelatedEntitiesForm(new ArrayList<>(absentTbl.values()));
         }
     }
 
@@ -270,7 +281,7 @@ public class ApricotCanvasHandler {
      * Show the pop-up window with the Related Entities.
      */
     @ApricotErrorLogger(title = "Unable to open the list of related Entities")
-    public void createRelatedEntitiesForm(List<String> relatedEntities) {
+    public void createRelatedEntitiesForm(List<RelatedEntityAbsent> relatedEntities) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-related-entities.fxml"));
         loader.setControllerFactory(context::getBean);
         Pane window = null;

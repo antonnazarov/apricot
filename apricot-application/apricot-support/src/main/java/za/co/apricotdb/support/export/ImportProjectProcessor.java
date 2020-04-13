@@ -51,7 +51,7 @@ public class ImportProjectProcessor {
     }
 
     @Transactional
-    public void importProject(String sProject) {
+    public ApricotProject importProject(String sProject) {
         String[] splt = parseProject(sProject);
 
         ApricotProject project = deserializeProject(sProject);
@@ -156,6 +156,8 @@ public class ImportProjectProcessor {
         }
 
         serializeProject(project, relationships, colConstraints);
+        
+        return project;
     }
 
     private String[] parseProject(String sProject) {
@@ -176,6 +178,5 @@ public class ImportProjectProcessor {
         for (ApricotColumnConstraint acc : colConstraints) {
             em.persist(acc);
         }
-
     }
 }

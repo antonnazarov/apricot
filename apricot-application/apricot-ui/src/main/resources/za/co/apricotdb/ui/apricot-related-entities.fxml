@@ -12,7 +12,7 @@
    <children>
       <VBox layoutX="34.0" layoutY="34.0" prefHeight="361.0" prefWidth="512.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <TableView fx:id="reversedTables" prefHeight="460.0" prefWidth="580.0">
+            <TableView fx:id="reversedTables" prefHeight="460.0" prefWidth="580.0" VBox.vgrow="ALWAYS">
                <columns>
                   <TableColumn fx:id="relatedEntity" editable="false" prefWidth="467.0" text="Related Entity" />
                   <TableColumn fx:id="addColumn" minWidth="0.0" prefWidth="102.0" text="Add" />

@@ -2,6 +2,7 @@ package za.co.apricotdb.ui;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,11 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import za.co.apricotdb.ui.handler.ApricotViewHandler;
+import za.co.apricotdb.ui.handler.RelatedEntityAbsent;
 
 /**
  * This controller is a background of the form: apricot-related-entities.fxml
@@ -26,7 +29,7 @@ import za.co.apricotdb.ui.handler.ApricotViewHandler;
  */
 @Component
 public class RelatedEntitiesController {
-    
+
     @Autowired
     ApricotViewHandler viewHandler;
 
@@ -37,7 +40,7 @@ public class RelatedEntitiesController {
     TableView<RelatedEntityRow> reversedTables;
 
     @FXML
-    TableColumn<RelatedEntityRow, String> relatedEntity;
+    TableColumn<RelatedEntityRow, HBox> relatedEntity;
 
     @FXML
     TableColumn<RelatedEntityRow, CheckBox> addColumn;
@@ -45,8 +48,8 @@ public class RelatedEntitiesController {
     /**
      * Initialize this controller.
      */
-    public void init(List<String> relatedEntities) {
-        relatedEntity.setCellValueFactory(new PropertyValueFactory<RelatedEntityRow, String>("entityName"));
+    public void init(List<RelatedEntityAbsent> relatedEntities) {
+        relatedEntity.setCellValueFactory(new PropertyValueFactory<RelatedEntityRow, HBox>("entity"));
         addColumn.setCellValueFactory(new PropertyValueFactory<RelatedEntityRow, CheckBox>("addToView"));
         addColumn.setStyle("-fx-alignment: CENTER;");
 
@@ -72,7 +75,7 @@ public class RelatedEntitiesController {
         List<String> addEntities = new ArrayList<>();
         for (RelatedEntityRow r : reversedTables.getItems()) {
             if (r.getAddToView().isSelected()) {
-                addEntities.add(r.getEntityName());
+                addEntities.add(r.getAbsentEntity());
             }
         }
         viewHandler.addEntityToView(addEntities);
@@ -91,11 +94,18 @@ public class RelatedEntitiesController {
     /**
      * Prepare the observable list of values.
      */
-    private ObservableList<RelatedEntityRow> getRows(List<String> entities) {
-        Collections.sort(entities);
+    private ObservableList<RelatedEntityRow> getRows(List<RelatedEntityAbsent> entities) {
+        // sort the absent entities alphabetically
+        Collections.sort(entities, new Comparator<RelatedEntityAbsent>() {
+            @Override
+            public int compare(RelatedEntityAbsent o1, RelatedEntityAbsent o2) {
+                return o1.getRelatedTable().compareTo(o2.getRelatedTable());
+            }
+        });
+
         List<RelatedEntityRow> rows = new ArrayList<>();
-        entities.forEach(entityName -> {
-            rows.add(new RelatedEntityRow(entityName));
+        entities.forEach(absentEntity -> {
+            rows.add(new RelatedEntityRow(absentEntity));
         });
 
         return FXCollections.observableArrayList(rows);
