@@ -4,13 +4,14 @@ import java.util.List;
 
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.entity.FieldDetail;
 import za.co.apricotdb.viewport.modifiers.ElementVisualModifier;
 
 public class SimpleEntityShapeBuilder extends DefaultEntityShapeBuilder {
 
-    public SimpleEntityShapeBuilder(ElementVisualModifier... modifiers) {
-        super(modifiers);
+    public SimpleEntityShapeBuilder(ApricotCanvas canvas, ElementVisualModifier... modifiers) {
+        super(canvas, modifiers);
     }
 
     @Override

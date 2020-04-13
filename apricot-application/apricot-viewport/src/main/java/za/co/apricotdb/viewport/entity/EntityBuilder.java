@@ -10,6 +10,7 @@ import java.util.List;
  */
 public interface EntityBuilder {
 
-    ApricotEntity buildEntity(String tableName, List<FieldDetail> details, boolean slave);
+    ApricotEntity buildEntity(String tableName, List<FieldDetail> details, boolean slave, boolean parentAbsent,
+            boolean childAbsent);
 
 }

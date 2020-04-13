@@ -29,4 +29,8 @@ public interface ApricotEntity extends ApricotElement {
     List<ApricotRelationship> getForeignLinks();
 
     void addLink(ApricotRelationship link, boolean primary);
+    
+    boolean isParentAbsent();
+    
+    boolean isChildAbsent();
 }

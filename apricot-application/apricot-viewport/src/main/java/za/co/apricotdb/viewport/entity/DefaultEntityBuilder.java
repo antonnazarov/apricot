@@ -39,17 +39,19 @@ public class DefaultEntityBuilder implements EntityBuilder {
                 new SetEntityEventsModifier(canvas, groupHandler, aligner, relationshipBuilder) };
 
         if (detailLevel.equals("DEFAULT")) {
-            shapeBuilder = new DefaultEntityShapeBuilder(modifiers);
+            shapeBuilder = new DefaultEntityShapeBuilder(canvas, modifiers);
         } else if (detailLevel.equals("SIMPLE")) {
-            shapeBuilder = new SimpleEntityShapeBuilder(modifiers);
+            shapeBuilder = new SimpleEntityShapeBuilder(canvas, modifiers);
         } else if (detailLevel.equals("EXTENDED")) {
-            shapeBuilder = new ExtendedEntityShapeBuilder(modifiers);
+            shapeBuilder = new ExtendedEntityShapeBuilder(canvas, modifiers);
         }
     }
 
     @Override
-    public ApricotEntity buildEntity(String tableName, List<FieldDetail> details, boolean slave) {
-        ApricotEntity entity = new ApricotEntityImpl(tableName, details, slave, shapeBuilder, canvas);
+    public ApricotEntity buildEntity(String tableName, List<FieldDetail> details, boolean slave, boolean parentAbsent,
+            boolean childAbsent) {
+        ApricotEntity entity = new ApricotEntityImpl(tableName, details, slave, shapeBuilder, canvas, parentAbsent,
+                childAbsent);
         entity.buildShape();
         entity.setElementStatus(ElementStatus.DEFAULT);
 

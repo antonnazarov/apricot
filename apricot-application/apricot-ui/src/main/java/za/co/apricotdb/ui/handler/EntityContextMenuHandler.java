@@ -73,6 +73,9 @@ public class EntityContextMenuHandler {
     @Autowired
     QuickViewHandler quickViewHandler;
 
+    @Autowired
+    RelatedEntitiesHandler relatedEntitiesHandler;
+
     @ApricotErrorLogger(title = "Unable to create the Entity context menu")
     public void createEntityContextMenu(ApricotEntity entity, double x, double y) {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
@@ -276,7 +279,7 @@ public class EntityContextMenuHandler {
     public MenuItem buildSelectRelatedEntitiesItem(List<String> entities) {
         MenuItem item = new MenuItem("Select related Entities");
         item.setOnAction(e -> {
-            canvasHandler.makeRelatedEntitiesSelected(entities);
+            relatedEntitiesHandler.makeRelatedEntitiesSelected(entities);
             allocationHandler.scrollToSelected(canvasHandler.getCurrentViewTabInfo());
         });
 

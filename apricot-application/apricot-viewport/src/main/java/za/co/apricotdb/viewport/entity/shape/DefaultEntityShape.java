@@ -40,7 +40,7 @@ public abstract class DefaultEntityShape extends ApricotEntityShape {
     public static final Background SLAVE_PANEL_BACKGROUND_NPK = new Background(
             new BackgroundFill(Color.WHITE, new CornerRadii(0, 0, 18, 18, false), Insets.EMPTY));
 
-    protected final Text header;
+    protected final EntityHeader header;
     protected final GridPane primaryPanel;
     protected final GridPane nonPrimaryPanel;
     private final Map<String, Text> fieldsMapping = new HashMap<>();
@@ -49,7 +49,7 @@ public abstract class DefaultEntityShape extends ApricotEntityShape {
     private final NonIdentifyingStack rightStack = new NonIdentifyingStack(this, Side.RIGHT);
     private final IdentifyingStack topStack = new IdentifyingStack(this);
 
-    public DefaultEntityShape(ApricotEntity entity, Text header, GridPane primaryPanel, GridPane nonPrimaryPanel) {
+    public DefaultEntityShape(ApricotEntity entity, EntityHeader header, GridPane primaryPanel, GridPane nonPrimaryPanel) {
         super(entity);
 
         this.header = header;
@@ -147,7 +147,12 @@ public abstract class DefaultEntityShape extends ApricotEntityShape {
 
         return ret;
     }
-
+    
+    @Override
+    public EntityHeader getEntityHeader() {
+        return header;
+    }
+    
     protected void setTextColor(Color color, boolean markFk) {
         colorPanelText(primaryPanel, color, markFk);
         colorPanelText(nonPrimaryPanel, color, markFk);

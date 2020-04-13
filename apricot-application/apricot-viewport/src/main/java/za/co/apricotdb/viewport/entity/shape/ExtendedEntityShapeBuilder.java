@@ -1,5 +1,6 @@
 package za.co.apricotdb.viewport.entity.shape;
 
+import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.entity.FieldDetail;
 import za.co.apricotdb.viewport.modifiers.ElementVisualModifier;
 
@@ -11,8 +12,8 @@ import za.co.apricotdb.viewport.modifiers.ElementVisualModifier;
  */
 public class ExtendedEntityShapeBuilder extends DefaultEntityShapeBuilder {
 
-    public ExtendedEntityShapeBuilder(ElementVisualModifier... modifiers) {
-        super(modifiers);
+    public ExtendedEntityShapeBuilder(ApricotCanvas canvas, ElementVisualModifier... modifiers) {
+        super(canvas, modifiers);
     }
 
     @Override

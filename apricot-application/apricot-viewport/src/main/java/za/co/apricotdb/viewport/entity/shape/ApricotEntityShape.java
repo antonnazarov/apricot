@@ -79,4 +79,6 @@ public abstract class ApricotEntityShape extends VBox implements ApricotShape {
             setWidth(width);
         }
     }
+    
+    public abstract EntityHeader getEntityHeader();
 }

@@ -8,12 +8,11 @@ import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 
 public class DefaultMasterEntityShape extends DefaultEntityShape {
 
-    public DefaultMasterEntityShape(ApricotEntity entity, Text header, GridPane primaryPanel,
+    public DefaultMasterEntityShape(ApricotEntity entity, EntityHeader header, GridPane primaryPanel,
             GridPane nonPrimaryPanel) {
         super(entity, header, primaryPanel, nonPrimaryPanel);
     }

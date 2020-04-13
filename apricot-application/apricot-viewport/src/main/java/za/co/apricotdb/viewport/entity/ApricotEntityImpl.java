@@ -33,17 +33,22 @@ public final class ApricotEntityImpl implements ApricotEntity {
     private List<ApricotRelationship> foreignLinks = new ArrayList<>();
     private ApricotCanvas canvas;
     private EntitySetDetailedEntityShadowModifier shadowModifier;
+    private boolean parentAbsent;
+    private boolean childAbsent;
 
     /**
      * Construct a new instance of the ApricotEntity.
      */
     public ApricotEntityImpl(String tableName, List<FieldDetail> details, boolean slave,
-            EntityShapeBuilder shapeBuilder, ApricotCanvas canvas) {
+            EntityShapeBuilder shapeBuilder, ApricotCanvas canvas, boolean parentAbsent,
+            boolean childAbsent) {
         this.tableName = tableName;
         this.details = details;
         this.slave = slave;
         this.shapeBuilder = shapeBuilder;
         this.canvas = canvas;
+        this.parentAbsent = parentAbsent;
+        this.childAbsent = childAbsent;
 
         shadowModifier = SpringContext.getBean(EntitySetDetailedEntityShadowModifier.class);
     }
@@ -202,5 +207,15 @@ public final class ApricotEntityImpl implements ApricotEntity {
     @Override
     public void resetShape() {
         entityShape = null;
+    }
+
+    @Override
+    public boolean isParentAbsent() {
+        return parentAbsent;
+    }
+
+    @Override
+    public boolean isChildAbsent() {
+        return childAbsent;
     }
 }

@@ -6,6 +6,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 import za.co.apricotdb.viewport.entity.FieldDetail;
 import za.co.apricotdb.viewport.modifiers.ElementVisualModifier;
@@ -22,8 +23,10 @@ public class DefaultEntityShapeBuilder implements EntityShapeBuilder {
     public static final double FIELDS_VERTICAL_GAP = 3;
 
     private final ElementVisualModifier[] modifiers;
+    private ApricotCanvas canvas;
 
-    public DefaultEntityShapeBuilder(ElementVisualModifier... modifiers) {
+    public DefaultEntityShapeBuilder(ApricotCanvas canvas, ElementVisualModifier... modifiers) {
+        this.canvas = canvas;
         this.modifiers = modifiers;
     }
 
@@ -32,12 +35,15 @@ public class DefaultEntityShapeBuilder implements EntityShapeBuilder {
 
         ApricotEntityShape shape = null;
 
+        EntityHeader header = new EntityHeader(entity.getTableName(), canvas);
+        header.setAbsentParent(entity.isParentAbsent());
+        header.setAbsentChild(entity.isChildAbsent());
         if (!entity.isSlave()) {
-            shape = new DefaultMasterEntityShape(entity, buildEntityHeader(entity.getTableName()),
-                    buildPrimaryKeyPanel(entity.getDetails()), buildNonPrimaryKeyPanel(entity.getDetails()));
+            shape = new DefaultMasterEntityShape(entity, header, buildPrimaryKeyPanel(entity.getDetails()),
+                    buildNonPrimaryKeyPanel(entity.getDetails()));
         } else {
-            shape = new DefaultSlaveEntityShape(entity, buildEntityHeader(entity.getTableName()),
-                    buildPrimaryKeyPanel(entity.getDetails()), buildNonPrimaryKeyPanel(entity.getDetails()));
+            shape = new DefaultSlaveEntityShape(entity, header, buildPrimaryKeyPanel(entity.getDetails()),
+                    buildNonPrimaryKeyPanel(entity.getDetails()));
         }
 
         shape.setId(entity.getTableName());
@@ -45,13 +51,6 @@ public class DefaultEntityShapeBuilder implements EntityShapeBuilder {
         applyModifiers(shape);
 
         return shape;
-    }
-
-    private Text buildEntityHeader(String tableName) {
-        Text header = new Text(tableName);
-        header.setFont(HEADER_FONT);
-
-        return header;
     }
 
     public GridPane buildPrimaryKeyPanel(List<FieldDetail> details) {
