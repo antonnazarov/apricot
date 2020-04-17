@@ -13,7 +13,7 @@ import za.co.apricotdb.ui.util.StringEncoder;
  * @since 07/04/2020
  */
 @Component
-public class ProxyHandler {
+public class ProxyService {
 
     public static final String HTTPS_PROXY_HOST_PROP = "https.proxyHost";
     public static final String HTTPS_PROXY_PORT_PROP = "https.proxyPort";

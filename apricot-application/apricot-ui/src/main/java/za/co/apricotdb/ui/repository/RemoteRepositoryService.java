@@ -23,12 +23,12 @@ import org.slf4j.LoggerFactory;
  * @since 07/04/2020
  */
 @Component
-public class RemoteRepositoryHandler {
+public class RemoteRepositoryService {
 
-    private static final Logger logger = LoggerFactory.getLogger(RemoteRepositoryHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(RemoteRepositoryService.class);
 
     @Autowired
-    ProxyHandler proxyHandler;
+    ProxyService proxyHandler;
 
     public void checkRemoteRepository(RepositoryConfiguration config) throws ApricotRepositoryException {
         Map<String, Ref> refs = getRemoteReferences(config);

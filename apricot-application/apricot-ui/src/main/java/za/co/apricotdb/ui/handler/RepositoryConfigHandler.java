@@ -28,7 +28,7 @@ import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.model.RepositoryConfiguration;
 import za.co.apricotdb.ui.model.RepositoryConfigurationModel;
 import za.co.apricotdb.ui.repository.ApricotRepositoryException;
-import za.co.apricotdb.ui.repository.RemoteRepositoryHandler;
+import za.co.apricotdb.ui.repository.RemoteRepositoryService;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.ui.util.GsonFactory;
 
@@ -51,7 +51,7 @@ public class RepositoryConfigHandler {
     ApplicationParameterManager appParamManager;
 
     @Autowired
-    RemoteRepositoryHandler remoteRepositoryHandler;
+    RemoteRepositoryService remoteRepositoryHandler;
 
     @ApricotErrorLogger(title = "Unable to create the Repository configuration forms")
     public void showRepositoryConfigForm() {

@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import za.co.apricotdb.ui.handler.RepositoryConfigHandler;
@@ -22,7 +24,19 @@ public class RepositoryController {
 
     @FXML
     Pane mainPane;
+    
+    @FXML
+    TreeTableView repositoryView;
+    
+    @FXML
+    TreeTableColumn localApricot;
 
+    @FXML
+    TreeTableColumn compareButtons;
+    
+    @FXML
+    TreeTableColumn remoteRepository;
+    
     @FXML
     public void configureRepository() {
         configHandler.showRepositoryConfigForm();
