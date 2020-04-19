@@ -1,5 +1,7 @@
 package za.co.apricotdb.ui;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -9,6 +11,9 @@ import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import za.co.apricotdb.ui.handler.RepositoryConfigHandler;
+import za.co.apricotdb.ui.repository.RepositoryCell;
+import za.co.apricotdb.ui.repository.RepositoryControl;
+import za.co.apricotdb.ui.repository.RepositoryRow;
 
 /**
  * This controller serves the form apricot-repository.fxml.
@@ -26,16 +31,16 @@ public class RepositoryController {
     Pane mainPane;
     
     @FXML
-    TreeTableView repositoryView;
+    TreeTableView<RepositoryRow> repositoryView;
     
     @FXML
-    TreeTableColumn localApricot;
+    TreeTableColumn<RepositoryRow, RepositoryCell> localApricot;
 
     @FXML
-    TreeTableColumn compareButtons;
+    TreeTableColumn<RepositoryRow, RepositoryControl> compareButtons;
     
     @FXML
-    TreeTableColumn remoteRepository;
+    TreeTableColumn<RepositoryRow, RepositoryCell> remoteRepository;
     
     @FXML
     public void configureRepository() {
@@ -52,8 +57,8 @@ public class RepositoryController {
         getStage().close();
     }
 
-    public void init() {
-
+    public void init(List<RepositoryRow> repoRows) {
+        
     }
 
     private Stage getStage() {

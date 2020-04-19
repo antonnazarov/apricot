@@ -1,6 +1,8 @@
 package za.co.apricotdb.ui.handler;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -18,6 +20,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import za.co.apricotdb.ui.RepositoryController;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
+import za.co.apricotdb.ui.repository.RepositoryRow;
+import za.co.apricotdb.ui.repository.RowType;
 
 /**
  * The Repository related functionality is supported by this component.
@@ -59,8 +63,25 @@ public class RepositoryHandler {
         });
 
         RepositoryController controller = loader.<RepositoryController>getController();
-        controller.init();
+        controller.init(generateTestRows());
 
         dialog.show();
+    }
+    
+    private List<RepositoryRow> generateTestRows() {
+        List<RepositoryRow> ret = new ArrayList<>();
+        
+        // import only
+        RepositoryRow rr = new RepositoryRow(RowType.PROJECT, false);
+        RepositoryCell
+        ret.add(rr);
+        
+        // export only
+        
+        // import and export
+        
+        //  equal projects
+        
+        return ret;
     }
 }
