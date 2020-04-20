@@ -18,10 +18,12 @@ public class RepositoryRow implements Serializable {
     private RepositoryCell remoteObject;
     private boolean equal;
     private RowType rowType;
+    private boolean includesSnapshots;
 
-    public RepositoryRow(RowType rowType, boolean equal) {
+    public RepositoryRow(RowType rowType, boolean equal, boolean includesSnapshots) {
         this.rowType = rowType;
         this.equal = equal;
+        this.includesSnapshots = includesSnapshots;
     }
 
     public RepositoryCell getLocalObject() {
@@ -55,16 +57,20 @@ public class RepositoryRow implements Serializable {
     public RowType getRowType() {
         return rowType;
     }
-    
+
     public String getObjectName() {
         if (localObject != null) {
             return localObject.getText().getText();
         }
-        
+
         if (remoteObject != null) {
             return remoteObject.getText().getText();
         }
-        
+
         return null;
+    }
+
+    public boolean includesSnapshots() {
+        return includesSnapshots;
     }
 }

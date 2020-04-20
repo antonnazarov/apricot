@@ -1,5 +1,6 @@
 package za.co.apricotdb.ui.repository;
 
+import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -15,30 +16,41 @@ public class RepositoryCell extends HBox {
 
     private ImageView image;
     private Text text;
-    RepositoryRow row;
+    private RepositoryRow row;
+    private String objectName;
 
-    public RepositoryCell(String text, boolean remote, RepositoryRow row) {
+    public RepositoryCell(String objectName, boolean remote, RepositoryRow row) {
         super();
 
-        this.text = new Text(text);
+        this.objectName = objectName;
+        this.text = new Text(objectName);
         this.row = row;
-        this.image = getImageView();
+        this.image = getObjectTypeImageView();
 
         setSpacing(4);
 
-        //  populate the horizontal box with the text and graphical definitions of the cell
-        if (text != null && !row.isEqual() && remote) {
+        // populate the horizontal box with the text and graphical definitions of the
+        // cell
+        if (row.getRowType() == RowType.PROJECT) {
+            getChildren().add(getPlaceholder());
+        } else {
+            getChildren().addAll(getPlaceholder(), getPlaceholder());
+        }
+
+        if (!row.includesSnapshots() && objectName != null && !row.isEqual() && remote) {
             getChildren().add(new ImageView(new Image(getClass().getResourceAsStream("import-27.png"))));
         }
 
         getChildren().add(this.image);
-        if (text != null) {
+        if (objectName != null) {
             getChildren().add(this.text);
 
-            if (!row.isEqual() && !remote) {
+            if (!row.includesSnapshots() && !row.isEqual() && !remote) {
                 getChildren().add(new ImageView(new Image(getClass().getResourceAsStream("export-27.png"))));
             }
         }
+        
+        setAlignment(Pos.CENTER_LEFT);
     }
 
     public ImageView getImage() {
@@ -53,11 +65,21 @@ public class RepositoryCell extends HBox {
         return text;
     }
 
-    private ImageView getImageView() {
-        ImageView ret = new ImageView(new Image(getClass().getResourceAsStream("does-not-exist-27.png")));
-        if (text != null) {
+    public boolean isEmpty() {
+        return text.getText() == null;
+    }
+
+    private ImageView getObjectTypeImageView() {
+        ImageView ret = new ImageView(new Image(getClass().getResourceAsStream("does-not-exist-grey-27.png")));
+        // ImageView ret = getPlaceholder();
+        if (objectName != null) {
             ret = new ImageView(new Image(getClass().getResourceAsStream(row.getRowType().getImageFile())));
         }
+
         return ret;
+    }
+
+    private ImageView getPlaceholder() {
+        return new ImageView(new Image(getClass().getResourceAsStream("placeholder-27.png")));
     }
 }

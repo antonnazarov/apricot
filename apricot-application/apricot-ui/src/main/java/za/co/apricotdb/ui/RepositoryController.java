@@ -72,6 +72,9 @@ public class RepositoryController {
      * Initialize the controller, using the model data.
      */
     public void init(RepositoryModel model) {
+        repositoryView.getStylesheets()
+                .add(getClass().getResource("/za/co/apricotdb/ui/apricot-tree-view-solid-grid.css").toExternalForm());
+
         localApricot.setCellValueFactory(new TreeItemPropertyValueFactory<>("localObject"));
         remoteRepository.setCellValueFactory(new TreeItemPropertyValueFactory<>("remoteObject"));
         compareButtons.setCellValueFactory(new TreeItemPropertyValueFactory<>("control"));
@@ -87,12 +90,9 @@ public class RepositoryController {
         TreeItem<RepositoryRow> currentProject = null;
         for (ModelRow mr : model.getRows()) {
             if (mr.getType() == RowType.PROJECT) {
-                // the current project has been changed
-                if (currentProject != null) {
-                    root.getChildren().add(currentProject);
-                }
                 currentProject = new TreeItem<>(
                         rowFactory.buildRow(mr.getType(), mr.isEqual(), mr.getLocalName(), mr.getRemoteName()));
+                root.getChildren().add(currentProject);
             } else {
                 if (currentProject != null) {
                     TreeItem<RepositoryRow> snap = new TreeItem<>(

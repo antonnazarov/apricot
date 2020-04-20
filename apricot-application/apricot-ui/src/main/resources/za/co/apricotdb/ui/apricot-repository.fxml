@@ -8,15 +8,15 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="452.0" prefWidth="828.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.RepositoryController">
+<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="452.0" prefWidth="828.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.RepositoryController">
    <children>
       <VBox layoutX="154.0" layoutY="35.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <TreeTableView fx:id="repositoryView" prefHeight="416.0" prefWidth="667.0" VBox.vgrow="ALWAYS">
               <columns>
-                <TreeTableColumn fx:id="localApricot" prefWidth="368.0" text="Local Apricot" />
-                <TreeTableColumn fx:id="compareButtons" minWidth="0.0" prefWidth="94.0" text="&lt;&gt;" />
-                  <TreeTableColumn fx:id="remoteRepository" prefWidth="368.0" text="Remote Repository" />
+                <TreeTableColumn fx:id="localApricot" editable="false" prefWidth="368.0" sortable="false" text="Local Apricot" />
+                <TreeTableColumn fx:id="compareButtons" editable="false" minWidth="0.0" prefWidth="57.0" resizable="false" sortable="false" text="&lt;&gt;" />
+                  <TreeTableColumn fx:id="remoteRepository" editable="false" prefWidth="405.0" sortable="false" text="Remote Repository" />
               </columns>
             </TreeTableView>
             <HBox alignment="CENTER_RIGHT" prefHeight="36.0" prefWidth="667.0" spacing="15.0">

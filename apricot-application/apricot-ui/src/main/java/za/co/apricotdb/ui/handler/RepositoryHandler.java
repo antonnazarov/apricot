@@ -113,6 +113,7 @@ public class RepositoryHandler {
         
         //  equal projects
         model.getRows().add(new ModelRow(RowType.PROJECT, true, "Equal Project", "Equal Project"));
+        model.getRows().add(new ModelRow(RowType.PROJECT, true, "This is second equal project", "This is second equal project"));
         
         return model;
     }

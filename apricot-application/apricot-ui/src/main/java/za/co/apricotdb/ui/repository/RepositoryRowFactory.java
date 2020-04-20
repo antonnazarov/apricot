@@ -20,7 +20,7 @@ public class RepositoryRowFactory {
             throw new IllegalArgumentException("the localName and remoteName can't be both null");
         }
 
-        RepositoryRow row = new RepositoryRow(type, equal);
+        RepositoryRow row = new RepositoryRow(type, equal, includesSnapshots(type, equal, localName, remoteName));
         RepositoryCell oLocal = new RepositoryCell(localName, false, row);
         RepositoryCell oRemote = new RepositoryCell(remoteName, true, row);
         RepositoryControl cntrl = new RepositoryControl();
@@ -30,5 +30,9 @@ public class RepositoryRowFactory {
         row.setControl(cntrl);
 
         return row;
+    }
+
+    private boolean includesSnapshots(RowType type, boolean equal, String localName, String remoteName) {
+        return (type == RowType.PROJECT && !equal && localName != null && remoteName != null);
     }
 }
