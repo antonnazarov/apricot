@@ -1,11 +1,10 @@
 package za.co.apricotdb.ui.handler;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +19,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import za.co.apricotdb.ui.RepositoryController;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
-import za.co.apricotdb.ui.repository.RepositoryRow;
+import za.co.apricotdb.ui.repository.ModelRow;
+import za.co.apricotdb.ui.repository.RepositoryModel;
+import za.co.apricotdb.ui.repository.RepositoryRowFactory;
 import za.co.apricotdb.ui.repository.RowType;
 
 /**
@@ -34,6 +35,9 @@ public class RepositoryHandler {
 
     @Resource
     ApplicationContext context;
+    
+    @Autowired
+    RepositoryRowFactory rowFactory;
 
     @ApricotErrorLogger(title = "Unable to create the Apricot Repository forms")
     public void showRepositoryForm() {
@@ -63,25 +67,53 @@ public class RepositoryHandler {
         });
 
         RepositoryController controller = loader.<RepositoryController>getController();
-        controller.init(generateTestRows());
+        controller.init(generateTestModel());
 
         dialog.show();
     }
     
-    private List<RepositoryRow> generateTestRows() {
-        List<RepositoryRow> ret = new ArrayList<>();
+    private RepositoryModel generateTestModel() {
+        RepositoryModel model = new RepositoryModel();
         
         // import only
-        RepositoryRow rr = new RepositoryRow(RowType.PROJECT, false);
-        RepositoryCell
-        ret.add(rr);
+        model.getRows().add(new ModelRow(RowType.PROJECT, false, null, "Test Project A"));
+        model.getRows().add(new ModelRow(RowType.PROJECT, false, null, "Test Project Imp"));
+        model.getRows().add(new ModelRow(RowType.PROJECT, false, null, "Test Project Imp 2"));
         
         // export only
+        model.getRows().add(new ModelRow(RowType.PROJECT, false, "Export Test Project X", null));
+        model.getRows().add(new ModelRow(RowType.PROJECT, false, "Export Test Project Y", null));
+        model.getRows().add(new ModelRow(RowType.PROJECT, false, "Test Project Exp Z", null));
+        model.getRows().add(new ModelRow(RowType.PROJECT, false, "Test Project Exp W", null));
         
         // import and export
+        model.getRows().add(new ModelRow(RowType.PROJECT, false, "IE Account PRJ", "IE Account PRJ"));
+        model.getRows().add(new ModelRow(RowType.SNAPSHOT, false, null, "IE Snapshot 1"));
+        model.getRows().add(new ModelRow(RowType.SNAPSHOT, false, null, "IE Snapshot 2"));
+        model.getRows().add(new ModelRow(RowType.SNAPSHOT, false, "My Snapshot to export", null));
+        model.getRows().add(new ModelRow(RowType.SNAPSHOT, false, "My Second Snapshot to export", null));
+        model.getRows().add(new ModelRow(RowType.SNAPSHOT, false, "My Third Snapshot to export", null));
+        model.getRows().add(new ModelRow(RowType.SNAPSHOT, false, "Snapshot with changes 1", "Snapshot with changes 1"));
+        model.getRows().add(new ModelRow(RowType.SNAPSHOT, false, "Snapshot with changes 2", "Snapshot with changes 2"));
+        model.getRows().add(new ModelRow(RowType.SNAPSHOT, false, "Snapshot with changes 3", "Snapshot with changes 3"));
+        model.getRows().add(new ModelRow(RowType.SNAPSHOT, false, "Snapshot with changes 4", "Snapshot with changes 4"));
+        model.getRows().add(new ModelRow(RowType.SNAPSHOT, true, "Equal Snapshot", "Equal Snapshot"));
+
+        model.getRows().add(new ModelRow(RowType.PROJECT, false, "IE Account PRJ2 ", "IE Account PRJ 2"));
+        model.getRows().add(new ModelRow(RowType.SNAPSHOT, false, null, "IE Snapshot 1"));
+        model.getRows().add(new ModelRow(RowType.SNAPSHOT, false, null, "IE Snapshot 2"));
+        model.getRows().add(new ModelRow(RowType.SNAPSHOT, false, "My Snapshot to export", null));
+        model.getRows().add(new ModelRow(RowType.SNAPSHOT, false, "My Second Snapshot to export", null));
+        model.getRows().add(new ModelRow(RowType.SNAPSHOT, false, "My Third Snapshot to export", null));
+        model.getRows().add(new ModelRow(RowType.SNAPSHOT, false, "Snapshot with changes 1", "Snapshot with changes 1"));
+        model.getRows().add(new ModelRow(RowType.SNAPSHOT, false, "Snapshot with changes 2", "Snapshot with changes 2"));
+        model.getRows().add(new ModelRow(RowType.SNAPSHOT, false, "Snapshot with changes 3", "Snapshot with changes 3"));
+        model.getRows().add(new ModelRow(RowType.SNAPSHOT, false, "Snapshot with changes 4", "Snapshot with changes 4"));
+        model.getRows().add(new ModelRow(RowType.SNAPSHOT, true, "Equal Snapshot", "Equal Snapshot"));
         
         //  equal projects
+        model.getRows().add(new ModelRow(RowType.PROJECT, true, "Equal Project", "Equal Project"));
         
-        return ret;
+        return model;
     }
 }

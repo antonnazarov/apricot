@@ -21,21 +21,22 @@ public class RepositoryCell extends HBox {
         super();
 
         this.text = new Text(text);
-        this.image = getImageView();
         this.row = row;
+        this.image = getImageView();
 
         setSpacing(4);
+
+        //  populate the horizontal box with the text and graphical definitions of the cell
+        if (text != null && !row.isEqual() && remote) {
+            getChildren().add(new ImageView(new Image(getClass().getResourceAsStream("import-27.png"))));
+        }
 
         getChildren().add(this.image);
         if (text != null) {
             getChildren().add(this.text);
 
-            if (!row.isEqual()) {
-                if (remote) {
-                    getChildren().add(new ImageView(new Image(getClass().getResourceAsStream("import-27.png"))));
-                } else {
-                    getChildren().add(new ImageView(new Image(getClass().getResourceAsStream("export-27.png"))));
-                }
+            if (!row.isEqual() && !remote) {
+                getChildren().add(new ImageView(new Image(getClass().getResourceAsStream("export-27.png"))));
             }
         }
     }

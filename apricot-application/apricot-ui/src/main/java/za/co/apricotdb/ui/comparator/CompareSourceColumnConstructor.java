@@ -107,7 +107,6 @@ public class CompareSourceColumnConstructor implements CompareColumnConstructor<
         tip.setFont(f);
 
         return tip;
-
     }
 
     private boolean emptySource(CompareSnapshotRow row) {

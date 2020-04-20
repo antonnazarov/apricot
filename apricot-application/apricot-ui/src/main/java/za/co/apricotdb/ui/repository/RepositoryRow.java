@@ -1,6 +1,6 @@
 package za.co.apricotdb.ui.repository;
 
-import javafx.beans.property.SimpleObjectProperty;
+import java.io.Serializable;
 
 /**
  * This bean represents a row of the left-buttons-right panel of Apricot
@@ -9,11 +9,13 @@ import javafx.beans.property.SimpleObjectProperty;
  * @author Anton Nazarov
  * @since 16/04/2020
  */
-public class RepositoryRow {
+public class RepositoryRow implements Serializable {
 
-    private SimpleObjectProperty<RepositoryCell> localObject;
-    private SimpleObjectProperty<RepositoryControl> control;
-    private SimpleObjectProperty<RepositoryCell> remoteObject;
+    private static final long serialVersionUID = -5780639025015648766L;
+
+    private RepositoryCell localObject;
+    private RepositoryControl control;
+    private RepositoryCell remoteObject;
     private boolean equal;
     private RowType rowType;
 
@@ -22,27 +24,27 @@ public class RepositoryRow {
         this.equal = equal;
     }
 
-    public SimpleObjectProperty<RepositoryCell> getLocalObject() {
+    public RepositoryCell getLocalObject() {
         return localObject;
     }
 
-    public void setLocalObject(SimpleObjectProperty<RepositoryCell> localObject) {
+    public void setLocalObject(RepositoryCell localObject) {
         this.localObject = localObject;
     }
 
-    public SimpleObjectProperty<RepositoryControl> getControl() {
+    public RepositoryControl getControl() {
         return control;
     }
 
-    public void setControl(SimpleObjectProperty<RepositoryControl> control) {
+    public void setControl(RepositoryControl control) {
         this.control = control;
     }
 
-    public SimpleObjectProperty<RepositoryCell> getRemoteObject() {
+    public RepositoryCell getRemoteObject() {
         return remoteObject;
     }
 
-    public void setRemoteObject(SimpleObjectProperty<RepositoryCell> remoteObject) {
+    public void setRemoteObject(RepositoryCell remoteObject) {
         this.remoteObject = remoteObject;
     }
 
@@ -50,15 +52,19 @@ public class RepositoryRow {
         return equal;
     }
 
-    public void setEqual(boolean equal) {
-        this.equal = equal;
-    }
-
     public RowType getRowType() {
         return rowType;
     }
-
-    public void setRowType(RowType rowType) {
-        this.rowType = rowType;
+    
+    public String getObjectName() {
+        if (localObject != null) {
+            return localObject.getText().getText();
+        }
+        
+        if (remoteObject != null) {
+            return remoteObject.getText().getText();
+        }
+        
+        return null;
     }
 }

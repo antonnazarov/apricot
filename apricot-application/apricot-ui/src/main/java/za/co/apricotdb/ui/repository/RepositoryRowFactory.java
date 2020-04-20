@@ -10,9 +10,25 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class RepositoryRowFactory {
-    
-    public RepositoryRow buildRow(RepositoryRowFactory) {
-        RepositoryRow 
-    }
 
+    /**
+     * Construct a new row, using the given minimal parameters.
+     */
+    public RepositoryRow buildRow(RowType type, boolean equal, String localName, String remoteName) {
+
+        if (localName == null && remoteName == null) {
+            throw new IllegalArgumentException("the localName and remoteName can't be both null");
+        }
+
+        RepositoryRow row = new RepositoryRow(type, equal);
+        RepositoryCell oLocal = new RepositoryCell(localName, false, row);
+        RepositoryCell oRemote = new RepositoryCell(remoteName, true, row);
+        RepositoryControl cntrl = new RepositoryControl();
+
+        row.setLocalObject(oLocal);
+        row.setRemoteObject(oRemote);
+        row.setControl(cntrl);
+
+        return row;
+    }
 }
