@@ -1,6 +1,8 @@
 package za.co.apricotdb.ui.repository;
 
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -15,7 +17,7 @@ import javafx.scene.text.Text;
 public class RepositoryCell extends HBox {
 
     private ImageView image;
-    private Text text;
+    private Label text;
     private RepositoryRow row;
     private String objectName;
 
@@ -23,7 +25,8 @@ public class RepositoryCell extends HBox {
         super();
 
         this.objectName = objectName;
-        this.text = new Text(objectName);
+        this.text = new Label(objectName);
+        this.text.setPrefWidth(300);
         this.row = row;
         this.image = getObjectTypeImageView();
 
@@ -38,7 +41,9 @@ public class RepositoryCell extends HBox {
         }
 
         if (!row.includesSnapshots() && objectName != null && !row.isEqual() && remote) {
-            getChildren().add(new ImageView(new Image(getClass().getResourceAsStream("import-27.png"))));
+            Button btn = new Button();
+            btn.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("import-27.png"))));
+            getChildren().add(btn);
         }
 
         getChildren().add(this.image);
@@ -46,7 +51,9 @@ public class RepositoryCell extends HBox {
             getChildren().add(this.text);
 
             if (!row.includesSnapshots() && !row.isEqual() && !remote) {
-                getChildren().add(new ImageView(new Image(getClass().getResourceAsStream("export-27.png"))));
+                Button btn = new Button();
+                btn.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("export-27.png"))));
+                getChildren().add(btn);
             }
         }
         
@@ -61,7 +68,7 @@ public class RepositoryCell extends HBox {
         this.image = image;
     }
 
-    public Text getText() {
+    public Label getText() {
         return text;
     }
 
