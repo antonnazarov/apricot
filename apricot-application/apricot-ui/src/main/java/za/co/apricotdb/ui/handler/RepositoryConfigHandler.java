@@ -23,6 +23,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import za.co.apricotdb.persistence.data.ApplicationParameterManager;
+import za.co.apricotdb.persistence.entity.ApricotApplicationParameter;
 import za.co.apricotdb.ui.RepositoryConfigController;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.model.RepositoryConfiguration;
@@ -41,6 +42,8 @@ import za.co.apricotdb.ui.util.GsonFactory;
 @Component
 public class RepositoryConfigHandler {
 
+    public static final String REPOSITORY_CONFIGURATION = "REPOSITORY_CONFIGURATION";
+
     @Resource
     ApplicationContext context;
 
@@ -54,7 +57,7 @@ public class RepositoryConfigHandler {
     RemoteRepositoryService remoteRepositoryHandler;
 
     @ApricotErrorLogger(title = "Unable to create the Repository configuration forms")
-    public void showRepositoryConfigForm() {
+    public void showRepositoryConfigForm(boolean showAndWait) {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/za/co/apricotdb/ui/apricot-repository-config.fxml"));
         loader.setControllerFactory(context::getBean);
@@ -84,7 +87,11 @@ public class RepositoryConfigHandler {
         RepositoryConfigController controller = loader.<RepositoryConfigController>getController();
         controller.init();
 
-        dialog.show();
+        if (showAndWait) {
+            dialog.showAndWait();
+        } else {
+            dialog.show();
+        }
     }
 
     @ApricotErrorLogger(title = "Unable to save the repository configuration")
@@ -108,7 +115,7 @@ public class RepositoryConfigHandler {
         RepositoryConfiguration cfg = model.getRepositoryConfiguration();
         Gson gson = GsonFactory.initGson();
         String sConfig = gson.toJson(cfg);
-        appParamManager.saveParameter(RepositoryConfigController.REPOSITORY_CONFIGURATION, sConfig);
+        appParamManager.saveParameter(REPOSITORY_CONFIGURATION, sConfig);
 
         return true;
     }
@@ -126,5 +133,23 @@ public class RepositoryConfigHandler {
         }
 
         alert.showAndWait();
+    }
+
+    /**
+     * Read the repo configuration from the Application Parameters.
+     */
+    public RepositoryConfiguration getRepositoryConfiguration() {
+        ApricotApplicationParameter param = appParamManager.getParameterByName(REPOSITORY_CONFIGURATION);
+        RepositoryConfiguration repoConfig = new RepositoryConfiguration();
+
+        if (param != null) {
+            String sCfg = param.getValue();
+            if (StringUtils.isNotEmpty(sCfg)) {
+                Gson gson = GsonFactory.initGson();
+                repoConfig = gson.fromJson(sCfg, RepositoryConfiguration.class);
+            }
+        }
+
+        return repoConfig;
     }
 }

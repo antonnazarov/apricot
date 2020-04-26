@@ -70,6 +70,13 @@ public class RepositoryRow implements Serializable {
         return null;
     }
 
+    public boolean hasBothSides() {
+        if (localObject != null && remoteObject != null) {
+            return !localObject.isEmpty() && !remoteObject.isEmpty();
+        }
+        return false;
+    }
+
     public boolean includesSnapshots() {
         return includesSnapshots;
     }

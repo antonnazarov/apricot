@@ -55,7 +55,7 @@ public class RepositoryController {
 
     @FXML
     public void configureRepository() {
-        configHandler.showRepositoryConfigForm();
+        configHandler.showRepositoryConfigForm(false);
     }
 
     @FXML

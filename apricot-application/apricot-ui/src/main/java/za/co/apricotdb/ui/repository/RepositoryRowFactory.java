@@ -21,13 +21,9 @@ public class RepositoryRowFactory {
         }
 
         RepositoryRow row = new RepositoryRow(type, equal, includesSnapshots(type, equal, localName, remoteName));
-        RepositoryCell oLocal = new RepositoryCell(localName, false, row);
-        RepositoryCell oRemote = new RepositoryCell(remoteName, true, row);
-        RepositoryControl cntrl = new RepositoryControl();
-
-        row.setLocalObject(oLocal);
-        row.setRemoteObject(oRemote);
-        row.setControl(cntrl);
+        row.setLocalObject(new RepositoryCell(localName, false, row));
+        row.setRemoteObject(new RepositoryCell(remoteName, true, row));
+        row.setControl(new RepositoryControl(row));
 
         return row;
     }

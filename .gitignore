@@ -4,4 +4,6 @@
 **/.project
 apricot-db/apricot-project.trace.db
 apricot-reports/ApricotReport.xlsx
+**/.idea
+**/*.iml
 

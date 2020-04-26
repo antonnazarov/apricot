@@ -53,8 +53,8 @@ public class AlertMessageDecorator {
         ButtonType no = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
         Alert alert = new Alert(type, null, yes, no);
         alert.setTitle(title);
-        // alert.setHeaderText(WordUtils.wrap(text, STANDARD_MESSAGE_LENGTH));
-        alert.setHeaderText(text);
+        alert.setHeaderText(WordUtils.wrap(text, STANDARD_MESSAGE_LENGTH));
+        // alert.setHeaderText(text);
         decorateAlert(alert);
         Stage alertWindow = (Stage) alert.getDialogPane().getScene().getWindow();
         alertWindow.getIcons().add(new Image(getClass().getResourceAsStream("/za/co/apricotdb/ui/handler/system-error-small.png")));

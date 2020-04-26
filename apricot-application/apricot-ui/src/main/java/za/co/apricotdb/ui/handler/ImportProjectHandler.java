@@ -78,7 +78,7 @@ public class ImportProjectHandler {
                 alert.showAndWait();
             }
             
-            project = importProcessor.importProject(sProject);
+            project = importProcessor.importProject(sProject, true);
 
             parameterManager.saveParameter(project, ProjectParameterManager.PROJECT_DEFAULT_OUTPUT_DIR,
                     file.getParent());

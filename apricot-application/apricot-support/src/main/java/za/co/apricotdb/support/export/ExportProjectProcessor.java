@@ -23,7 +23,7 @@ import za.co.apricotdb.persistence.entity.ApricotProject;
 @Component
 public class ExportProjectProcessor {
 
-    public static final String PROJECT_DIVIDER = "\n<-------------------------------------------------------->\n";
+    public static final String PROJECT_DIVIDER = "<-------------------------------------------------------->";
     private Logger logger = LoggerFactory.getLogger(ExportProjectProcessor.class);
 
     @Autowired

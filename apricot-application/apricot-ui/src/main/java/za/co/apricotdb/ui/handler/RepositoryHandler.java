@@ -4,6 +4,9 @@ import java.io.IOException;
 
 import javax.annotation.Resource;
 
+import javafx.scene.control.Alert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -19,10 +22,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import za.co.apricotdb.ui.RepositoryController;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
-import za.co.apricotdb.ui.repository.ModelRow;
-import za.co.apricotdb.ui.repository.RepositoryModel;
-import za.co.apricotdb.ui.repository.RepositoryRowFactory;
-import za.co.apricotdb.ui.repository.RowType;
+import za.co.apricotdb.ui.repository.*;
+import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
 /**
  * The Repository related functionality is supported by this component.
@@ -33,14 +34,44 @@ import za.co.apricotdb.ui.repository.RowType;
 @Component
 public class RepositoryHandler {
 
+    private final Logger logger = LoggerFactory.getLogger(RepositoryHandler.class);
+
     @Resource
     ApplicationContext context;
     
     @Autowired
     RepositoryRowFactory rowFactory;
 
+    @Autowired
+    RepositoryConsistencyService consistencyService;
+
+    @Autowired
+    RepositoryConfigHandler configHandler;
+
+    @Autowired
+    AlertMessageDecorator alertDec;
+
+    @Autowired
+    RemoteRepositoryService remoteRepositoryService;
+
+    @Autowired
+    LocalRepoService localRepoService;
+
     @ApricotErrorLogger(title = "Unable to create the Apricot Repository forms")
     public void showRepositoryForm() {
+        if (!checkIfUrlConfigured()) {
+            return;
+        }
+        if (!checkRemoteRepository()) {
+            return;
+        }
+
+        try {
+            localRepoService.initLocalRepo();
+        } catch (IOException ex) {
+            throw new IllegalArgumentException("Unable to initialize the local repository", ex);
+        }
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-repository.fxml"));
         loader.setControllerFactory(context::getBean);
         Pane window = null;
@@ -67,11 +98,68 @@ public class RepositoryHandler {
         });
 
         RepositoryController controller = loader.<RepositoryController>getController();
+        generateModel();
         controller.init(generateTestModel());
 
         dialog.show();
     }
-    
+
+    /**
+     * Check if the Remote Repository if properly configured.
+     */
+    private boolean checkIfUrlConfigured() {
+        boolean first = true;
+        if (!consistencyService.isRemoteRepositoryUrlConfigured()) {
+            while (true) {
+                if (first) {
+                    first = false;
+                } else {
+                    if (!alertDec.requestYesNoOption("Configure Remote Git Repository",
+                            "The URL of the remote Git repository is not configured",
+                            "Configure", Alert.AlertType.WARNING)) {
+                        return false;
+                    }
+                }
+                configHandler.showRepositoryConfigForm(true);
+                if (consistencyService.isRemoteRepositoryUrlConfigured()) {
+                    break;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public RepositoryModel generateModel() {
+        RepositoryModel model = new RepositoryModel();
+
+        try {
+            ProjectItems repoItems = localRepoService.readLocalRepo();
+            logger.info(repoItems.toString());
+        } catch (IOException ex) {
+            throw new IllegalArgumentException("Unable to read the content of the local repository", ex);
+        }
+
+        return model;
+    }
+
+    private boolean checkRemoteRepository() {
+        while (true) {
+            try {
+                remoteRepositoryService.checkRemoteRepository(configHandler.getRepositoryConfiguration());
+                return true;
+            } catch (ApricotRepositoryException ex) {
+                if (!alertDec.requestYesNoOption("The Remote Repository Check",
+                        "Unable to access the Remote Repository: " + ex.getMessage(),
+                        "Configure", Alert.AlertType.WARNING)) {
+                    return false;
+                } else {
+                    configHandler.showRepositoryConfigForm(true);
+                }
+            }
+        }
+    }
+
     private RepositoryModel generateTestModel() {
         RepositoryModel model = new RepositoryModel();
         

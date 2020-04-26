@@ -1,5 +1,6 @@
 package za.co.apricotdb.ui.repository;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +11,7 @@ import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import za.co.apricotdb.ui.handler.RepositoryConfigHandler;
 import za.co.apricotdb.ui.model.RepositoryConfiguration;
 import za.co.apricotdb.ui.util.StringEncoder;
 
@@ -29,6 +31,9 @@ public class RemoteRepositoryService {
 
     @Autowired
     ProxyService proxyHandler;
+
+    @Autowired
+    RepositoryConfigHandler configHandler;
 
     public void checkRemoteRepository(RepositoryConfiguration config) throws ApricotRepositoryException {
         Map<String, Ref> refs = getRemoteReferences(config);
@@ -60,5 +65,28 @@ public class RemoteRepositoryService {
         }
 
         return ret;
+    }
+
+    public void cloneRepository() {
+        RepositoryConfiguration config = configHandler.getRepositoryConfiguration();
+        File localRepo = new File(LocalRepoService.LOCAL_REPO);
+        proxyHandler.setProxy(config);
+        boolean auth = StringUtils.isNotEmpty(config.getUserName()) && StringUtils.isNotEmpty(config.getPassword());
+        try {
+            Git result = null;
+            if (auth) {
+                result = Git.cloneRepository().setURI(config.getRemoteUrl()).setDirectory(localRepo)
+                        .setCredentialsProvider(new UsernamePasswordCredentialsProvider(config.getUserName(), StringEncoder.decode(config.getPassword())))
+                        .call();
+            } else {
+                result = Git.cloneRepository().setURI(config.getRemoteUrl()).setDirectory(localRepo)
+                        .call();
+            }
+            if (result != null) {
+                logger.info("The remote repository was cloned: " + result.toString());
+            }
+        } catch (Exception ex) {
+            throw new IllegalArgumentException("Unable to clone repository", ex);
+        }
     }
 }

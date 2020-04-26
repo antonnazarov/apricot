@@ -51,7 +51,7 @@ public class ImportProjectProcessor {
     }
 
     @Transactional
-    public ApricotProject importProject(String sProject) {
+    public ApricotProject importProject(String sProject, boolean serialize) {
         String[] splt = parseProject(sProject);
 
         ApricotProject project = deserializeProject(sProject);
@@ -155,7 +155,9 @@ public class ImportProjectProcessor {
             }
         }
 
-        serializeProject(project, relationships, colConstraints);
+        if (serialize) {
+            serializeProject(project, relationships, colConstraints);
+        }
         
         return project;
     }

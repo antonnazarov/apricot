@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -168,5 +169,27 @@ public class ApricotProject implements Serializable {
 
     public void setErdNotation(ERDNotation erdNotation) {
         this.erdNotation = erdNotation;
+    }
+
+    @Override
+    public String toString() {
+        return "ApricotProject{" +
+                "name='" + name + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ApricotProject that = (ApricotProject) o;
+        return id == that.id &&
+                current == that.current &&
+                name.equals(that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }
