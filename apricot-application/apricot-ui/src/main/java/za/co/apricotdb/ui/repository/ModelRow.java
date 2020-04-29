@@ -1,6 +1,8 @@
 package za.co.apricotdb.ui.repository;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The holder of the row of the model.
@@ -15,6 +17,7 @@ public class ModelRow implements Serializable {
     private boolean equal;
     private String localName;
     private String remoteName;
+    private List<ModelRow> includedItems = new ArrayList<>();
 
     public ModelRow(RowType type, boolean equal, String localName, String remoteName) {
         if (localName == null && remoteName == null) {
@@ -40,6 +43,10 @@ public class ModelRow implements Serializable {
 
     public String getRemoteName() {
         return remoteName;
+    }
+    
+    public  List<ModelRow> getIncludedItems() {
+        return includedItems;
     }
 
     public String getName() {

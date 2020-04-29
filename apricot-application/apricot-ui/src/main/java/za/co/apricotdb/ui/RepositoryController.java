@@ -87,17 +87,15 @@ public class RepositoryController {
                 rowFactory.buildRow(RowType.PROJECT, true, "root node", "root node"));
         repositoryView.setRoot(root);
 
-        TreeItem<RepositoryRow> currentProject = null;
         for (ModelRow mr : model.getRows()) {
             if (mr.getType() == RowType.PROJECT) {
-                currentProject = new TreeItem<>(
+                TreeItem<RepositoryRow> project = new TreeItem<>(
                         rowFactory.buildRow(mr.getType(), mr.isEqual(), mr.getLocalName(), mr.getRemoteName()));
-                root.getChildren().add(currentProject);
-            } else {
-                if (currentProject != null) {
-                    TreeItem<RepositoryRow> snap = new TreeItem<>(
-                            rowFactory.buildRow(mr.getType(), mr.isEqual(), mr.getLocalName(), mr.getRemoteName()));
-                    currentProject.getChildren().add(snap);
+                root.getChildren().add(project);
+                for (ModelRow r : mr.getIncludedItems()) {
+                    TreeItem<RepositoryRow> itm = new TreeItem<>(
+                            rowFactory.buildRow(r.getType(), r.isEqual(), r.getLocalName(), r.getRemoteName()));
+                    project.getChildren().add(itm);
                 }
             }
         }

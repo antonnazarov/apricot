@@ -76,7 +76,7 @@ public class LocalRepoService {
                             Charset.defaultCharset()), false);
                     ret.add(new ProjectItem(project.getName(), f.getName(), project));
                 } catch (Exception ex) {
-                    //  upparseable project file
+                    //  unparseable project file
                 }
             }
         }
