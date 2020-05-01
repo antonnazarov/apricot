@@ -49,7 +49,7 @@ public class EntityHeader extends HBox {
             iv.setOnMousePressed(e -> {
                 canvas.publishEvent(event);
             });
-            Tooltip.install(iv, new Tooltip("There are the parent Entity(s) not included into this view"));
+            Tooltip.install(iv, new Tooltip("There are some parent Entity(s) not included into this view"));
             getChildren().add(iv);
         }
         getChildren().add(text);
@@ -58,7 +58,7 @@ public class EntityHeader extends HBox {
             iv.setOnMousePressed(e -> {
                 canvas.publishEvent(event);
             });
-            Tooltip.install(iv, new Tooltip("There are the child Entity(s) not included into this view"));
+            Tooltip.install(iv, new Tooltip("There are some child Entity(s) not included into this view"));
             getChildren().add(iv);
         }
     }

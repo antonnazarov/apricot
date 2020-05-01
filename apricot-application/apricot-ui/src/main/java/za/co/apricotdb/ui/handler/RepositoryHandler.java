@@ -57,6 +57,9 @@ public class RepositoryHandler {
     @Autowired
     LocalRepoService localRepoService;
 
+    @Autowired
+    RepoCompareService compareService;
+
     @ApricotErrorLogger(title = "Unable to create the Apricot Repository forms")
     public void showRepositoryForm() {
         if (!checkIfUrlConfigured()) {
@@ -98,7 +101,7 @@ public class RepositoryHandler {
         });
 
         RepositoryController controller = loader.<RepositoryController>getController();
-        generateModel();
+        compareService.generateModel();
         controller.init(generateTestModel());
 
         dialog.show();
@@ -128,22 +131,6 @@ public class RepositoryHandler {
         }
 
         return true;
-    }
-
-    /**
-     * Generate the Repository Model to show in the Repository Form.
-     */
-    public RepositoryModel generateModel() {
-        RepositoryModel model = new RepositoryModel();
-
-        try {
-            ProjectItems repoItems = localRepoService.readLocalRepo();
-            logger.info("The following Repository Items have been recognized: " + repoItems.toString());
-        } catch (IOException ex) {
-            throw new IllegalArgumentException("Unable to read the content of the local repository", ex);
-        }
-
-        return model;
     }
 
     private boolean checkRemoteRepository() {
