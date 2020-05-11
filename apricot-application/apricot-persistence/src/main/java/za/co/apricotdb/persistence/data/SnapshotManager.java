@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -85,10 +86,27 @@ public class SnapshotManager {
         return ret;
     }
 
+    @Transactional
+    public List<ApricotSnapshot> getSnapshotsForProject(String projectName) {
+        List<ApricotSnapshot> ret = new ArrayList<>();
+
+        TypedQuery<ApricotSnapshot> query = em.createNamedQuery("ApricotSnapshot.getSnapshotsByProjectName",
+                ApricotSnapshot.class);
+        query.setParameter("projectName", projectName);
+        List<ApricotSnapshot> res = query.getResultList();
+        if (res != null && res.size() > 0) {
+            ret = res;
+        }
+
+        return ret;
+    }
+
+    @Transactional
     public ApricotSnapshot getSnapshotById(long id) {
         return snapshotRepository.getOne(id);
     }
 
+    @Transactional
     public ApricotSnapshot getSnapshotByName(ApricotProject project, String name) {
         ApricotSnapshot ret = null;
         TypedQuery<ApricotSnapshot> query = em.createNamedQuery("ApricotSnapshot.getSnapshotByName",

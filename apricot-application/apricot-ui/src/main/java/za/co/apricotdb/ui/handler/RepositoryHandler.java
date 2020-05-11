@@ -3,6 +3,7 @@ package za.co.apricotdb.ui.handler;
 import java.io.IOException;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 
 import javafx.scene.control.Alert;
 import org.slf4j.Logger;
@@ -61,6 +62,7 @@ public class RepositoryHandler {
     RepoCompareService compareService;
 
     @ApricotErrorLogger(title = "Unable to create the Apricot Repository forms")
+    @Transactional
     public void showRepositoryForm() {
         if (!checkIfUrlConfigured()) {
             return;
@@ -101,8 +103,11 @@ public class RepositoryHandler {
         });
 
         RepositoryController controller = loader.<RepositoryController>getController();
-        compareService.generateModel();
-        controller.init(generateTestModel());
+        // controller.init(generateTestModel());
+        RepositoryModel model = compareService.generateModel();
+        if (model != null) {
+            controller.init(model);
+        }
 
         dialog.show();
     }

@@ -29,6 +29,7 @@ import javax.persistence.TemporalType;
 @NamedQuery(name = "ApricotSnapshot.getDefaultSnapshot", query = "SELECT sn FROM ApricotSnapshot sn WHERE sn.project = :project AND sn.defaultSnapshot = true")
 @NamedQuery(name = "ApricotSnapshot.getAllSnapshotsInProject", query = "SELECT sn FROM ApricotSnapshot sn WHERE sn.project = :project ORDER by sn.created")
 @NamedQuery(name = "ApricotSnapshot.getSnapshotByName", query = "SELECT sn FROM ApricotSnapshot sn WHERE sn.name = :name AND sn.project = :project")
+@NamedQuery(name = "ApricotSnapshot.getSnapshotsByProjectName", query = "SELECT sn FROM ApricotSnapshot sn WHERE sn.project.name = :projectName")
 public class ApricotSnapshot implements Serializable {
 
     public final static int SNAPSHOT_COMMENT_LENGTH = 500;

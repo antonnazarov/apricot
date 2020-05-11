@@ -37,6 +37,10 @@ public class ModelRow implements Serializable {
         return equal;
     }
 
+    public void setEqual(boolean equalFlag) {
+        this.equal = equalFlag;
+    }
+
     public String getLocalName() {
         return localName;
     }

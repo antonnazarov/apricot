@@ -36,11 +36,10 @@ public class ExportProjectProcessor {
     ConstraintColumnSerializer constraintColumnSerializer;
 
     @Transactional
-    public String serializeProject() {
+    public String serializeProject(ApricotProject project) {
         StringBuilder sb = new StringBuilder();
         Gson gson = initGson();
 
-        ApricotProject project = projectManager.findCurrentProject();
         sb.append(gson.toJson(project)).append(PROJECT_DIVIDER);
 
         ProjectHolder ph = new ProjectHolder();
@@ -52,6 +51,11 @@ public class ExportProjectProcessor {
                 + " symbols");
 
         return sb.toString();
+    }
+
+    @Transactional
+    public String serializeProject() {
+        return serializeProject(projectManager.findCurrentProject());
     }
 
     public static Gson initGson() {

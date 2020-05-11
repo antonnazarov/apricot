@@ -35,7 +35,7 @@ public class RepositoryConsistencyService {
      * Check if the local repository catalogue exists.
      */
     public boolean localRepoExists() {
-        Path path = FileSystems.getDefault().getPath(LocalRepoService.LOCAL_REPO);
+        Path path = FileSystems.getDefault().getPath(LocalRepoService.LOCAL_REPO + "/.git");
         if (Files.exists(path, LinkOption.NOFOLLOW_LINKS)) {
             return true;
         }
@@ -67,7 +67,7 @@ public class RepositoryConsistencyService {
             return false; 
         }
         
-        if (RepositoryCache.FileKey.isGitRepository(new File(LocalRepoService.LOCAL_REPO), FS.DETECTED)) {
+        if (RepositoryCache.FileKey.isGitRepository(new File(LocalRepoService.LOCAL_REPO + "/.git"), FS.DETECTED)) {
             return true;
         }
         

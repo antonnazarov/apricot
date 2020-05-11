@@ -79,13 +79,14 @@ public class ProjectManager {
 
         return ret;
     }
-    
+
+    @Transactional
     public List<ApricotProject> getAllProjects() {
         TypedQuery<ApricotProject> query = em.createNamedQuery("ApricotProject.getAllProjects", ApricotProject.class);
         query.setParameter("undo_project", UNDO_PROJECT_NAME);
         return query.getResultList();
     }
-    
+
     public ApricotProject getProjectByName(String name) {
         ApricotProject ret = null;
         
@@ -103,7 +104,7 @@ public class ProjectManager {
     public ApricotProject saveApricotProject(ApricotProject project) {
         return projectRepository.saveAndFlush(project);
     }
-    
+
     public ApricotProject getProject(long projectId) {
         Optional<ApricotProject> o = projectRepository.findById(projectId);
         
