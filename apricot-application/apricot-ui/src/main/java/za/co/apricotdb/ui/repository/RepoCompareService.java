@@ -99,7 +99,7 @@ public class RepoCompareService {
                 //  import
                 ModelRow mr = new ModelRow(RowType.PROJECT, false, null, pi.getProjectName());
                 ret.getRows().add(mr);
-                logger.info("Added the import project to model: " + ap.getName());
+                logger.info("Added the import project to model: " + pi.getProjectName());
             }
         }
 
