@@ -28,8 +28,8 @@ public class ProgressBarHandler {
         Platform.runLater(() -> {
             parentWindow.getProgressBarModel().setProgress(1.0d);
             parentWindow.getProgressBarModel().setVisible(false);
-            ProgressBar pb = parentWindow.getProgressBarModel().getProgressBar();
-            pb.setPrefHeight(0);
+            HBox p = getParentBox();
+            p.setPrefHeight(0);
         });
     }
 
@@ -40,11 +40,15 @@ public class ProgressBarHandler {
     }
 
     private void setProgressBarSize() {
-        ProgressBar pb = parentWindow.getProgressBarModel().getProgressBar();
-        HBox p = (HBox) pb.getParent();
+        HBox p = getParentBox();
         double width = p.getWidth();
         p.setPrefHeight(20);
 
-        pb.setPrefWidth(width);
+        parentWindow.getProgressBarModel().getProgressBar().setPrefWidth(width);
+    }
+
+    private HBox getParentBox() {
+        ProgressBar pb = parentWindow.getProgressBarModel().getProgressBar();
+        return (HBox) pb.getParent();
     }
 }
