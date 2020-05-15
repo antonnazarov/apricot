@@ -1,34 +1,32 @@
 package za.co.apricotdb.ui.handler;
 
-import java.io.IOException;
-
-import javax.annotation.Resource;
-import javax.transaction.Transactional;
-
-import javafx.scene.control.Alert;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
-
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 import za.co.apricotdb.ui.RepositoryController;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.repository.*;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
+import javax.annotation.Resource;
+import java.io.IOException;
+
 /**
  * The Repository related functionality is supported by this component.
- * 
+ *
  * @author Anton Nazarov
  * @since 04/04/2020
  */
@@ -39,7 +37,7 @@ public class RepositoryHandler {
 
     @Resource
     ApplicationContext context;
-    
+
     @Autowired
     RepositoryRowFactory rowFactory;
 
@@ -61,13 +59,12 @@ public class RepositoryHandler {
     @Autowired
     RepoCompareService compareService;
 
+    @Autowired
+    ProgressBarHandler progressBarHandler;
+
     @ApricotErrorLogger(title = "Unable to create the Apricot Repository forms")
-    @Transactional
     public void showRepositoryForm() {
         if (!checkIfUrlConfigured()) {
-            return;
-        }
-        if (!checkRemoteRepository()) {
             return;
         }
 
@@ -102,14 +99,23 @@ public class RepositoryHandler {
             }
         });
 
-        RepositoryController controller = loader.<RepositoryController>getController();
-        // controller.init(generateTestModel());
-        RepositoryModel model = compareService.generateModel();
-        if (model != null) {
-            controller.init(model);
-        }
+        // this extra thread was created to reflect the Progress Bar on the long running process
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RepositoryController controller = loader.<RepositoryController>getController();
+                progressBarHandler.initProgressBar();
+                RepositoryModel model = compareService.generateModel();
+                if (model != null) {
+                    controller.init(model);
+                }
+                progressBarHandler.finalizeProgressBar();
 
-        dialog.show();
+                Platform.runLater(() -> {
+                    dialog.show();
+                });
+            }
+        }).start();
     }
 
     /**
@@ -138,7 +144,11 @@ public class RepositoryHandler {
         return true;
     }
 
-    private boolean checkRemoteRepository() {
+    /**
+     * Check the presence of the remote repository.
+     * Prompt the config form if the check did not pass.
+     */
+    public boolean checkRemoteRepository() {
         while (true) {
             try {
                 remoteRepositoryService.checkRemoteRepository(configHandler.getRepositoryConfiguration());
@@ -153,53 +163,5 @@ public class RepositoryHandler {
                 }
             }
         }
-    }
-
-    private RepositoryModel generateTestModel() {
-        RepositoryModel model = new RepositoryModel();
-
-        model.getRows().add(new ModelRow(RowType.PROJECT, true, "Equal Project", "Equal Project"));
-        model.getRows().add(new ModelRow(RowType.PROJECT, false, null, "Test Project A"));
-        model.getRows().add(new ModelRow(RowType.PROJECT, false, null, "Test Project Imp"));
-
-        model.getRows().add(new ModelRow(RowType.PROJECT, false, "Export Test Project X", null));
-        model.getRows().add(new ModelRow(RowType.PROJECT, false, "Export Test Project Y", null));
-
-        ModelRow prj = new ModelRow(RowType.PROJECT, false, "IE Account PRJ", "IE Account PRJ");
-        model.getRows().add(prj);
-        prj.getIncludedItems().add(new ModelRow(RowType.SNAPSHOT, false, null, "IE Snapshot 2"));
-        prj.getIncludedItems().add(new ModelRow(RowType.SNAPSHOT, false, "Snapshot with changes 1", "Snapshot with changes 1"));
-        prj.getIncludedItems().add(new ModelRow(RowType.SNAPSHOT, false, "My Snapshot to export", null));
-        prj.getIncludedItems().add(new ModelRow(RowType.SNAPSHOT, false, "My Second Snapshot to export", null));
-        prj.getIncludedItems().add(new ModelRow(RowType.SNAPSHOT, false, "My Third Snapshot to export", null));
-        prj.getIncludedItems().add(new ModelRow(RowType.SNAPSHOT, false, "Snapshot with changes 2", "Snapshot with changes 2"));
-        prj.getIncludedItems().add(new ModelRow(RowType.SNAPSHOT, false, "Snapshot with changes 3", "Snapshot with changes 3"));
-        prj.getIncludedItems().add(new ModelRow(RowType.SNAPSHOT, false, "Snapshot with changes 4", "Snapshot with changes 4"));
-        prj.getIncludedItems().add(new ModelRow(RowType.SNAPSHOT, true, "Equal Snapshot", "Equal Snapshot"));
-        prj.getIncludedItems().add(new ModelRow(RowType.SNAPSHOT, false, null, "IE Snapshot 1"));
-
-        model.getRows().add(new ModelRow(RowType.PROJECT, false, "Test Project Exp W", null));
-        model.getRows().add(new ModelRow(RowType.PROJECT, true, "Equal Project", "Equal Project"));
-
-        prj = new ModelRow(RowType.PROJECT, false, "IE Account PRJ2 ", "IE Account PRJ 2");
-        model.getRows().add(prj);
-        prj.getIncludedItems().add(new ModelRow(RowType.SNAPSHOT, true, "Equal Snapshot", "Equal Snapshot"));
-        prj.getIncludedItems().add(new ModelRow(RowType.SNAPSHOT, false, null, "IE Snapshot 2"));
-        prj.getIncludedItems().add(new ModelRow(RowType.SNAPSHOT, false, "My Snapshot to export", null));
-        prj.getIncludedItems().add(new ModelRow(RowType.SNAPSHOT, false, "My Second Snapshot to export", null));
-        prj.getIncludedItems().add(new ModelRow(RowType.SNAPSHOT, false, "My Third Snapshot to export", null));
-        prj.getIncludedItems().add(new ModelRow(RowType.SNAPSHOT, false, "Snapshot with changes 2", "Snapshot with changes 2"));
-        prj.getIncludedItems().add(new ModelRow(RowType.SNAPSHOT, false, "Snapshot with changes 3", "Snapshot with changes 3"));
-        prj.getIncludedItems().add(new ModelRow(RowType.SNAPSHOT, false, null, "IE Snapshot 1"));
-        prj.getIncludedItems().add(new ModelRow(RowType.SNAPSHOT, false, "Snapshot with changes 4", "Snapshot with changes 4"));
-        prj.getIncludedItems().add(new ModelRow(RowType.SNAPSHOT, false, "Snapshot with changes 1", "Snapshot with changes 1"));
-        
-        model.getRows().add(new ModelRow(RowType.PROJECT, true, "This is second equal project", "This is second equal project"));
-        model.getRows().add(new ModelRow(RowType.PROJECT, false, null, "Test Project Imp 2"));
-        model.getRows().add(new ModelRow(RowType.PROJECT, false, "Test Project Exp Z", null));
-
-        model.sort();
-        
-        return model;
     }
 }

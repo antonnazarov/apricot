@@ -1,22 +1,20 @@
 package za.co.apricotdb.ui.repository;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import za.co.apricotdb.ui.handler.RepositoryConfigHandler;
 import za.co.apricotdb.ui.model.RepositoryConfiguration;
 import za.co.apricotdb.ui.util.StringEncoder;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This component hold the functions to work with the remote repository.
@@ -85,6 +83,7 @@ public class RemoteRepositoryService {
             if (result != null) {
                 logger.info("The remote repository was cloned: " + result.toString());
             }
+            result.close();
         } catch (Exception ex) {
             throw new IllegalArgumentException("Unable to clone repository", ex);
         }

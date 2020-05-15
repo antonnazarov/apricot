@@ -1,0 +1,5 @@
+https://github.com/antonnazarov/apricot-project-repository.git
+antonnazarov
+g....100
+
+10.0.0.131 8080

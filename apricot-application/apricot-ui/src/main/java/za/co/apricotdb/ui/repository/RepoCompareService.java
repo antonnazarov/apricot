@@ -12,9 +12,9 @@ import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.support.export.ExportProjectProcessor;
 import za.co.apricotdb.support.export.ImportProjectProcessor;
+import za.co.apricotdb.ui.handler.ProgressBarHandler;
 
 import javax.transaction.Transactional;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +48,9 @@ public class RepoCompareService {
 
     @Autowired
     ImportProjectProcessor importProcessor;
+
+    @Autowired
+    ProgressBarHandler progressBarHandler;
 
     /**
      * Generate the Repository Model to show in the Repository Form.
@@ -104,6 +107,8 @@ public class RepoCompareService {
         }
 
         // check the equality of the matched projects
+        int total = matchProjects.size();
+        int cnt = 0;
         for (ProjectItem pi : matchProjects) {
             List<ModelRow> snapshotRows = compareSnapshots(pm.get(pi.getProjectName()), pi.getProject());
             boolean eqSnaps = snapshotsEqual(snapshotRows);
@@ -111,6 +116,9 @@ public class RepoCompareService {
             mr.getIncludedItems().addAll(snapshotRows);
             ret.getRows().add(mr);
             logger.info("Added the match project to model: " + pi.getProjectName() + ", equal=" + eqSnaps);
+
+            cnt++;
+            progressBarHandler.setProgress(0.8d + Double.valueOf(cnt) * 0.2d/Double.valueOf(total));
         }
 
         ret.sort();
@@ -128,10 +136,15 @@ public class RepoCompareService {
 
     @Transactional
     public List<ApricotProject> getDetachedProjects(List<ApricotProject> projects) {
+        int total = projects.size();
+        int cnt = 0;
         List<ApricotProject> ret = new ArrayList<>();
-        projects.forEach(p -> {
+        for (ApricotProject p : projects) {
             ret.add(getDetachedProject(p));
-        });
+
+            cnt++;
+            progressBarHandler.setProgress(0.2d + Double.valueOf(cnt) * 0.6d/Double.valueOf(total));
+        }
 
         return ret;
     }
@@ -159,14 +172,12 @@ public class RepoCompareService {
         // scan through the result and compare the matched snapshots
         for (ModelRow r : rows) {
             if (r.getLocalName() != null && r.getRemoteName() != null) {
-                ApricotSnapshot localSnapshot = findSnapshot(localProject, r.getLocalName(),false);
+                ApricotSnapshot localSnapshot = findSnapshot(localProject, r.getLocalName(), false);
                 ApricotSnapshot repoSnapshot = findSnapshot(repoProject, r.getRemoteName(), false);
                 if (localSnapshot != null && repoSnapshot != null) {
                     SnapshotDifference diff = snapshotComparator.compare(localSnapshot, repoSnapshot);
                     if (diff != null) {
                         r.setEqual(!diff.isDifferent());
-                        // logger.info("Comparing snapshot: " + localSnapshot.getName() + ", result: " + diff.toString
-                        // ());
                     }
                 }
             }

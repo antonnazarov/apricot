@@ -1,8 +1,5 @@
 package za.co.apricotdb.ui;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
@@ -10,19 +7,24 @@ import javafx.scene.control.TreeTableView;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import za.co.apricotdb.ui.handler.RepositoryConfigHandler;
+import za.co.apricotdb.ui.handler.RepositoryHandler;
+import za.co.apricotdb.ui.repository.LocalRepoService;
+import za.co.apricotdb.ui.repository.ModelRow;
+import za.co.apricotdb.ui.repository.RepoCompareService;
 import za.co.apricotdb.ui.repository.RepositoryCell;
 import za.co.apricotdb.ui.repository.RepositoryColumnConstructor;
 import za.co.apricotdb.ui.repository.RepositoryControl;
 import za.co.apricotdb.ui.repository.RepositoryModel;
-import za.co.apricotdb.ui.repository.ModelRow;
 import za.co.apricotdb.ui.repository.RepositoryRow;
 import za.co.apricotdb.ui.repository.RepositoryRowFactory;
 import za.co.apricotdb.ui.repository.RowType;
 
 /**
  * This controller serves the form apricot-repository.fxml.
- * 
+ *
  * @author Anton Nazarov
  * @since 04/04/2020
  */
@@ -37,6 +39,15 @@ public class RepositoryController {
 
     @Autowired
     RepositoryColumnConstructor columnConstructor;
+
+    @Autowired
+    RepositoryHandler repositoryHandler;
+
+    @Autowired
+    LocalRepoService localRepoService;
+
+    @Autowired
+    RepoCompareService compareService;
 
     @FXML
     Pane mainPane;
@@ -60,7 +71,12 @@ public class RepositoryController {
 
     @FXML
     public void refresh() {
+        if (!repositoryHandler.checkRemoteRepository()) {
+            return;
+        }
 
+        localRepoService.refreshLocalRepo();
+        init(compareService.generateModel());
     }
 
     @FXML
@@ -83,7 +99,7 @@ public class RepositoryController {
         columnConstructor.construct(remoteRepository);
 
         repositoryView.setShowRoot(false);
-        TreeItem<RepositoryRow> root = new TreeItem<RepositoryRow>(
+        TreeItem<RepositoryRow> root = new TreeItem<>(
                 rowFactory.buildRow(RowType.PROJECT, true, "root node", "root node"));
         repositoryView.setRoot(root);
 

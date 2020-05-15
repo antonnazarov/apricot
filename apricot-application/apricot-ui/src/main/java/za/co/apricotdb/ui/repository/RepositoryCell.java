@@ -1,11 +1,16 @@
 package za.co.apricotdb.ui.repository;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 
 /**
  * A cell of repository (left/local, buttons, right/remote).
@@ -69,6 +74,11 @@ public class RepositoryCell extends HBox {
         }
 
         setAlignment(Pos.CENTER_LEFT);
+
+        //  for the Projects make the background grey to distinguish them from the Snapshots
+        if (row.getRowType() == RowType.PROJECT) {
+            setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
+        }
     }
 
     public ImageView getImage() {

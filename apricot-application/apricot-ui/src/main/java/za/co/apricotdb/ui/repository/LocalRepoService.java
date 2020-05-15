@@ -6,11 +6,15 @@ import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.support.export.ExportProjectProcessor;
 import za.co.apricotdb.support.export.ImportProjectProcessor;
+import za.co.apricotdb.ui.error.ApricotErrorLogger;
+import za.co.apricotdb.ui.handler.ProgressBarHandler;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * This is the local repo functionality service.
@@ -29,6 +33,9 @@ public class LocalRepoService {
 
     @Autowired
     ImportProjectProcessor importProjectProcessor;
+
+    @Autowired
+    ProgressBarHandler progressBarHandler;
 
     public static final String LOCAL_REPO = System.getProperty("user.home") + "/.apricotdb/repository";
 
@@ -61,12 +68,30 @@ public class LocalRepoService {
     }
 
     /**
+     * Remove the local repo and create it from scratch, cloning the remote Repository.
+     */
+    @ApricotErrorLogger(title = "Unable to refresh the local repository")
+    public void refreshLocalRepo() {
+        try {
+            if (!consistencyService.localRepoExists()) {
+                consistencyService.createLocalRepo();
+            }
+            consistencyService.clearLocalRepo();
+            remoteRepositoryService.cloneRepository();
+        } catch (IOException ex) {
+            throw new IllegalArgumentException("Unable to refresh the local repository", ex);
+        }
+    }
+
+    /**
      * Read content of the local repository.
      */
     public ProjectItems readLocalRepo() throws IOException {
         ProjectItems ret = new ProjectItems();
         File localRepo = new File(LOCAL_REPO);
 
+        int total = getFileList(LOCAL_REPO).size();
+        int cnt = 0;
         Iterator<File> itr = FileUtils.iterateFiles(localRepo, new String[]{"txt"}, false);
         while (itr.hasNext()) {
             File f = itr.next();
@@ -77,10 +102,28 @@ public class LocalRepoService {
                     ret.add(new ProjectItem(project.getName(), f.getName(), project));
                 } catch (Exception ex) {
                     //  unparseable project file
+                    ex.printStackTrace();
+                }
+            }
+
+            cnt++;
+            progressBarHandler.setProgress(Double.valueOf(cnt) * 0.2d / Double.valueOf(total));
+        }
+
+        return ret;
+    }
+
+    private List<String> getFileList(String path) {
+        List<String> result = new ArrayList<>();
+        File folder = new File(path);
+        if (folder.isDirectory()) {
+            for (File f : folder.listFiles()) {
+                if (!f.isDirectory()) {
+                    result.add(f.toString());
                 }
             }
         }
 
-        return ret;
+        return result;
     }
 }
