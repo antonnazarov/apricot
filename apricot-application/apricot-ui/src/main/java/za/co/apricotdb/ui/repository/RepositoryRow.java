@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * This bean represents a row of the left-buttons-right panel of Apricot
  * Repository comparison form.
- * 
+ *
  * @author Anton Nazarov
  * @since 16/04/2020
  */
@@ -19,15 +19,13 @@ public class RepositoryRow implements Serializable {
     private boolean equal;
     private RowType rowType;
     private boolean includesSnapshots;
+    private ModelRow modelRow;
 
-    public RepositoryRow(RowType rowType, boolean equal, boolean includesSnapshots) {
+    public RepositoryRow(RowType rowType, boolean equal, boolean includesSnapshots, ModelRow modelRow) {
         this.rowType = rowType;
         this.equal = equal;
         this.includesSnapshots = includesSnapshots;
-    }
-
-    public RepositoryCell getLocalObject() {
-        return localObject;
+        this.modelRow = modelRow;
     }
 
     public void setLocalObject(RepositoryCell localObject) {
@@ -40,10 +38,6 @@ public class RepositoryRow implements Serializable {
 
     public void setControl(RepositoryControl control) {
         this.control = control;
-    }
-
-    public RepositoryCell getRemoteObject() {
-        return remoteObject;
     }
 
     public void setRemoteObject(RepositoryCell remoteObject) {
@@ -59,7 +53,7 @@ public class RepositoryRow implements Serializable {
     }
 
     public String getObjectName() {
-        if (localObject != null) {
+        if (localObject != null && localObject.getText() != null && localObject.getText().getText() != null) {
             return localObject.getText().getText();
         }
 
@@ -79,5 +73,17 @@ public class RepositoryRow implements Serializable {
 
     public boolean includesSnapshots() {
         return includesSnapshots;
+    }
+
+    public ModelRow getModelRow() {
+        return modelRow;
+    }
+
+    public RepositoryCell getLocalObject() {
+        return localObject;
+    }
+
+    public RepositoryCell getRemoteObject() {
+        return remoteObject;
     }
 }

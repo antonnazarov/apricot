@@ -57,7 +57,7 @@ public class AlertMessageDecorator {
         // alert.setHeaderText(text);
         decorateAlert(alert);
         Stage alertWindow = (Stage) alert.getDialogPane().getScene().getWindow();
-        alertWindow.getIcons().add(new Image(getClass().getResourceAsStream("/za/co/apricotdb/ui/handler/system-error-small.png")));
+        // alertWindow.getIcons().add(new Image(getClass().getResourceAsStream("/za/co/apricotdb/ui/handler/system-error-small.png")));
         Optional<ButtonType> result = alert.showAndWait();
         if (result.orElse(no) == yes) {
             return true;

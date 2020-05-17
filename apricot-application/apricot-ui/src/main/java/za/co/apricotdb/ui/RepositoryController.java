@@ -1,5 +1,6 @@
 package za.co.apricotdb.ui;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
@@ -9,6 +10,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import za.co.apricotdb.ui.handler.ProgressBarHandler;
 import za.co.apricotdb.ui.handler.RepositoryConfigHandler;
 import za.co.apricotdb.ui.handler.RepositoryHandler;
 import za.co.apricotdb.ui.repository.LocalRepoService;
@@ -49,6 +51,9 @@ public class RepositoryController {
     @Autowired
     RepoCompareService compareService;
 
+    @Autowired
+    ProgressBarHandler progressBarHandler;
+
     @FXML
     Pane mainPane;
 
@@ -71,12 +76,7 @@ public class RepositoryController {
 
     @FXML
     public void refresh() {
-        if (!repositoryHandler.checkRemoteRepository()) {
-            return;
-        }
-
-        localRepoService.refreshLocalRepo();
-        init(compareService.generateModel());
+        repositoryHandler.refreshModel(true);
     }
 
     @FXML
@@ -100,17 +100,17 @@ public class RepositoryController {
 
         repositoryView.setShowRoot(false);
         TreeItem<RepositoryRow> root = new TreeItem<>(
-                rowFactory.buildRow(RowType.PROJECT, true, "root node", "root node"));
+                rowFactory.buildRow(RowType.PROJECT, true, "root node", "root node", null));
         repositoryView.setRoot(root);
 
         for (ModelRow mr : model.getRows()) {
             if (mr.getType() == RowType.PROJECT) {
                 TreeItem<RepositoryRow> project = new TreeItem<>(
-                        rowFactory.buildRow(mr.getType(), mr.isEqual(), mr.getLocalName(), mr.getRemoteName()));
+                        rowFactory.buildRow(mr.getType(), mr.isEqual(), mr.getLocalName(), mr.getRemoteName(), mr));
                 root.getChildren().add(project);
                 for (ModelRow r : mr.getIncludedItems()) {
                     TreeItem<RepositoryRow> itm = new TreeItem<>(
-                            rowFactory.buildRow(r.getType(), r.isEqual(), r.getLocalName(), r.getRemoteName()));
+                            rowFactory.buildRow(r.getType(), r.isEqual(), r.getLocalName(), r.getRemoteName(), mr));
                     project.getChildren().add(itm);
                 }
             }

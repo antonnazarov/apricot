@@ -2,11 +2,12 @@ package za.co.apricotdb.ui.repository;
 
 import za.co.apricotdb.persistence.entity.ApricotProject;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * The holder of the Apricot Project repository item.
+ * The holder of the Apricot Project repository item (the remote side).
  *
  * @author Anton Nazarov
  * @since 26/04/2020
@@ -14,12 +15,12 @@ import java.util.Objects;
 public class ProjectItem implements Serializable {
 
     private String projectName;
-    private String fileName;
+    private File file;
     private ApricotProject project;
 
-    public ProjectItem(String projectName, String fileName, ApricotProject project) {
+    public ProjectItem(String projectName, File file, ApricotProject project) {
         this.projectName = projectName;
-        this.fileName = fileName;
+        this.file = file;
         this.project = project;
     }
 
@@ -27,8 +28,8 @@ public class ProjectItem implements Serializable {
         return projectName;
     }
 
-    public String getFileName() {
-        return fileName;
+    public File getFile() {
+        return file;
     }
 
     public ApricotProject getProject() {
@@ -52,7 +53,7 @@ public class ProjectItem implements Serializable {
     public String toString() {
         return "ProjectItem{" +
                 "projectName='" + projectName + '\'' +
-                ", fileName='" + fileName + '\'' +
+                ", fileName='" + file.getName() + '\'' +
                 ", project=" + project +
                 '}';
     }

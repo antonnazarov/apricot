@@ -22,7 +22,7 @@ import za.co.apricotdb.ui.util.AlertMessageDecorator;
 /**
  * This component inclapsulates the functions for importing of the Aprocit
  * Project.
- * 
+ *
  * @author Anton Nazarov
  * @since 21/03/2020
  */
@@ -40,7 +40,7 @@ public class ImportProjectHandler {
 
     @Autowired
     ImportProjectProcessor importProcessor;
-    
+
     @Autowired
     ApplicationInitializer applicationInitializer;
 
@@ -65,34 +65,37 @@ public class ImportProjectHandler {
         File file = fileChooser.showOpenDialog(window);
         String sProject = null;
         if (file != null) {
-            try {
-                sProject = FileUtils.readFileToString(file, Charset.defaultCharset());
-            } catch (Exception e) {
-                throw new IllegalArgumentException(e);
-            }
-            ApricotProject importedProj = importProcessor.deserializeProject(sProject);
-            if (projectManager.getProjectByName(importedProj.getName()) != null) {
-                Alert alert = alertDecorator.getErrorAlert("Import File", "The Project named \""
-                        + importedProj.getName()
-                        + "\" already exists in the system. You can delete or rename the existing project and then try to import again");
-                alert.showAndWait();
-            }
-            
-            project = importProcessor.importProject(sProject, true);
-
-            parameterManager.saveParameter(project, ProjectParameterManager.PROJECT_DEFAULT_OUTPUT_DIR,
-                    file.getParent());
-
-            Alert alert = alertDecorator.getAlert("Import Project",
-                    "The project \"" + importedProj.getName() + "\" was successfully imported", AlertType.INFORMATION);
-            alert.showAndWait();
-            
-            //  the the just imported project as current
-            projectManager.setProjectCurrent(project);
-            applicationInitializer.initializeDefault();
-            
-        } else {
-            alertDecorator.getErrorAlert("Import File", "Unable to import the selected file");
+            importProject(file);
         }
+
+        parameterManager.saveParameter(project, ProjectParameterManager.PROJECT_DEFAULT_OUTPUT_DIR,
+                file.getParent());
+    }
+
+    @ApricotErrorLogger(title = "Unable to Import Project")
+    public void importProject(File file) {
+        String sProject = null;
+        try {
+            sProject = FileUtils.readFileToString(file, Charset.defaultCharset());
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
+        }
+        ApricotProject importedProj = importProcessor.deserializeProject(sProject);
+        if (projectManager.getProjectByName(importedProj.getName()) != null) {
+            Alert alert = alertDecorator.getErrorAlert("Import File", "The Project named \""
+                    + importedProj.getName()
+                    + "\" already exists in the system. You can delete or rename the existing project and then try to import again");
+            alert.showAndWait();
+        }
+
+        ApricotProject project = importProcessor.importProject(sProject, true);
+
+        Alert alert = alertDecorator.getAlert("Import Project",
+                "The project \"" + importedProj.getName() + "\" was successfully imported", AlertType.INFORMATION);
+        alert.showAndWait();
+
+        //  the the just imported project as current
+        projectManager.setProjectCurrent(project);
+        applicationInitializer.initializeDefault();
     }
 }

@@ -90,6 +90,7 @@ public class RepoCompareService {
             } else {
                 //  export
                 ModelRow mr = new ModelRow(RowType.PROJECT, false, ap.getName(), null);
+                mr.setLocalProject(ap);
                 ret.getRows().add(mr);
                 logger.info("Added the export project to model: " + ap.getName());
             }
@@ -102,6 +103,8 @@ public class RepoCompareService {
                 //  import
                 ModelRow mr = new ModelRow(RowType.PROJECT, false, null, pi.getProjectName());
                 ret.getRows().add(mr);
+                mr.setRemoteProject(pi.getProject());
+                mr.setFile(pi.getFile());
                 logger.info("Added the import project to model: " + pi.getProjectName());
             }
         }
@@ -113,6 +116,9 @@ public class RepoCompareService {
             List<ModelRow> snapshotRows = compareSnapshots(pm.get(pi.getProjectName()), pi.getProject());
             boolean eqSnaps = snapshotsEqual(snapshotRows);
             ModelRow mr = new ModelRow(RowType.PROJECT, eqSnaps, pi.getProjectName(), pi.getProjectName());
+            mr.setLocalProject(pm.get(pi.getProjectName()));
+            mr.setRemoteProject(pi.getProject());
+            mr.setFile(pi.getFile());
             mr.getIncludedItems().addAll(snapshotRows);
             ret.getRows().add(mr);
             logger.info("Added the match project to model: " + pi.getProjectName() + ", equal=" + eqSnaps);

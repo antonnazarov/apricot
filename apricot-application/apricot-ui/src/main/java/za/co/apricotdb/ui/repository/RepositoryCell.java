@@ -4,6 +4,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -11,6 +12,9 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import org.springframework.context.ApplicationContext;
+import za.co.apricotdb.ui.handler.RepositoryHandler;
 
 /**
  * A cell of repository (left/local, buttons, right/remote).
@@ -34,27 +38,37 @@ public class RepositoryCell extends HBox {
         this.row = row;
         this.image = getObjectTypeImageView();
         this.remote = remote;
-        
-        init();
     }
     
-    private void init() {
+    public void init(ApplicationContext applicationContext) {
+        RepositoryHandler handler = applicationContext.getBean(RepositoryHandler.class);
+
         text.setPrefWidth(300);
         if (row.getRowType() == RowType.PROJECT) {
             text.setStyle("-fx-font-weight: bold;");
-        }
-        setSpacing(4);
-
-        // populate the horizontal box with the text and graphical definitions of the
-        // cell
-        if (row.getRowType() == RowType.PROJECT) {
             getChildren().add(getPlaceholder());
+            //  for the Projects make the background grey to distinguish them from the Snapshots
+            setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
         } else {
             getChildren().addAll(getPlaceholder(), getPlaceholder());
         }
 
+        // populate the horizontal box with the text and graphical definitions of the
+        // cell
         if (!row.includesSnapshots() && objectName != null && !row.isEqual() && remote) {
             Button btn = getButton("import-27.png");
+            if (row.getRowType() == RowType.PROJECT) {
+                btn.setTooltip(getToolTip("Import Project"));
+                btn.setOnAction(e -> {
+                    handler.importRepoProject(row);
+                });
+            } else {
+                btn.setTooltip(getToolTip("Import Snapshot into the Project"));
+                btn.setOnAction(e -> {
+                    handler.importRepoSnapshpot(row, objectName);
+                });
+            }
+
             getChildren().add(btn);
         }
 
@@ -67,18 +81,14 @@ public class RepositoryCell extends HBox {
                 getChildren().addAll(btn, getPlaceholder());
             }
         }
-        
+
         if (remote && objectName != null) {
             Button btn = getButton("triple-dot-27.png");
             getChildren().add(btn);
         }
 
+        setSpacing(4);
         setAlignment(Pos.CENTER_LEFT);
-
-        //  for the Projects make the background grey to distinguish them from the Snapshots
-        if (row.getRowType() == RowType.PROJECT) {
-            setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
-        }
     }
 
     public ImageView getImage() {
@@ -115,5 +125,14 @@ public class RepositoryCell extends HBox {
         btn.setGraphic(new ImageView(new Image(getClass().getResourceAsStream(imageFile))));
 
         return btn;
+    }
+
+    private Tooltip getToolTip(String text) {
+        Tooltip tip = new Tooltip();
+        tip.setText(text);
+        Font f = new Font(15);
+        tip.setFont(f);
+
+        return tip;
     }
 }

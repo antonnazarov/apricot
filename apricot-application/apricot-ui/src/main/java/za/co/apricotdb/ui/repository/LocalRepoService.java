@@ -99,7 +99,7 @@ public class LocalRepoService {
                 try {
                     ApricotProject project = importProjectProcessor.importProject(FileUtils.readFileToString(f,
                             Charset.defaultCharset()), false);
-                    ret.add(new ProjectItem(project.getName(), f.getName(), project));
+                    ret.add(new ProjectItem(project.getName(), f, project));
                 } catch (Exception ex) {
                     //  unparseable project file
                     ex.printStackTrace();

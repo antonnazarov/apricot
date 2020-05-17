@@ -22,7 +22,7 @@ public class ProjectItems {
         // check if item with the same name exists and substitute only of the file name is newer than the existing one
         ProjectItem itm = items.get(item.getProjectName());
         if (itm != null) {
-            if (item.getFileName().compareTo(itm.getFileName()) > 0) {
+            if (item.getFile().getName().compareTo(itm.getFile().getName()) > 0) {
                 items.put(item.getProjectName(), item);
             }
         } else {

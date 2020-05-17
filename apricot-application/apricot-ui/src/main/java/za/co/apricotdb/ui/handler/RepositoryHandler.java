@@ -22,6 +22,7 @@ import za.co.apricotdb.ui.repository.*;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -61,6 +62,12 @@ public class RepositoryHandler {
 
     @Autowired
     ProgressBarHandler progressBarHandler;
+
+    @Autowired
+    RepositoryController repositoryController;
+
+    @Autowired
+    ImportProjectHandler importProjectHandler;
 
     @ApricotErrorLogger(title = "Unable to create the Apricot Repository forms")
     public void showRepositoryForm() {
@@ -116,6 +123,46 @@ public class RepositoryHandler {
                 });
             }
         }).start();
+    }
+
+    /**
+     * The full refresh means to wipe the local repo and clone from the remote repository.
+     */
+    @ApricotErrorLogger(title = "Unable to refresh the Repository state")
+    public void refreshModel(boolean fullRefresh) {
+        if (fullRefresh && !checkRemoteRepository()) {
+            return;
+        }
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                progressBarHandler.initProgressBar();
+                progressBarHandler.setProgress(0.1d);
+                if (fullRefresh) {
+                    localRepoService.refreshLocalRepo();
+                }
+                RepositoryModel model = compareService.generateModel();
+                Platform.runLater(() -> {
+                    repositoryController.init(model);
+                });
+                progressBarHandler.finalizeProgressBar();
+            }
+        }).start();
+    }
+
+    public void importRepoProject(RepositoryRow row) {
+        File f = row.getModelRow().getFile();
+        if (f != null && alertDec.requestYesNoOption("Import Repo File",
+                "Do you want to import the project " + row.getObjectName() + "?", "Import",
+                Alert.AlertType.CONFIRMATION)) {
+            importProjectHandler.importProject(f);
+            refreshModel(false);
+        }
+    }
+
+    public void importRepoSnapshpot(RepositoryRow row, String snapshotName) {
+
     }
 
     /**
