@@ -53,7 +53,7 @@ public class RepositoryCell extends HBox {
             getChildren().addAll(getPlaceholder(), getPlaceholder());
         }
 
-        // populate the horizontal box with the text and graphical definitions of the
+        // populate the horizontal box with the textual and graphical definitions of the
         // cell
         if (!row.includesSnapshots() && objectName != null && !row.isEqual() && remote) {
             Button btn = getButton("import-27.png");
@@ -78,6 +78,10 @@ public class RepositoryCell extends HBox {
 
             if (!row.includesSnapshots() && !row.isEqual() && !remote) {
                 Button btn = getButton("export-27.png");
+                btn.setTooltip(getToolTip("Export the Project into the Repository"));
+                btn.setOnAction(e -> {
+                    handler.exportLocalProject(row);
+                });
                 getChildren().addAll(btn, getPlaceholder());
             }
         }

@@ -13,6 +13,9 @@ import com.google.gson.GsonBuilder;
 
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
+import za.co.apricotdb.support.util.ApricotUtils;
+
+import java.text.SimpleDateFormat;
 
 /**
  * The Project- export functionality.
@@ -58,6 +61,12 @@ public class ExportProjectProcessor {
         return serializeProject(projectManager.findCurrentProject());
     }
 
+    @Transactional
+    public String serializeProject(String projectName) {
+        ApricotProject project = projectManager.getProjectByName(projectName);
+        return serializeProject(project);
+    }
+
     public static Gson initGson() {
         ExclusionStrategy strategy = new ApricotExclusionStrategy();
         GsonBuilder builder = new GsonBuilder();
@@ -65,5 +74,14 @@ public class ExportProjectProcessor {
         builder.setPrettyPrinting();
 
         return builder.create();
+    }
+
+    public String getDefaultProjectExportFileName(String projectName) {
+        StringBuilder sb = new StringBuilder();
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+        sb.append(df.format(new java.util.Date())).append("-").append(ApricotUtils.convertToFileName(projectName));
+        sb.append(".txt");
+
+        return sb.toString();
     }
 }

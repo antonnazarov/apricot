@@ -11,11 +11,14 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+import za.co.apricotdb.persistence.data.ProjectManager;
+import za.co.apricotdb.support.export.ExportProjectProcessor;
 import za.co.apricotdb.ui.RepositoryController;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.repository.*;
@@ -24,6 +27,7 @@ import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 /**
  * The Repository related functionality is supported by this component.
@@ -68,6 +72,12 @@ public class RepositoryHandler {
 
     @Autowired
     ImportProjectHandler importProjectHandler;
+
+    @Autowired
+    ExportProjectProcessor exportProcessor;
+
+    @Autowired
+    ProjectManager projectManager;
 
     @ApricotErrorLogger(title = "Unable to create the Apricot Repository forms")
     public void showRepositoryForm() {
@@ -151,6 +161,9 @@ public class RepositoryHandler {
         }).start();
     }
 
+    /**
+     * Import the project into the local Apricot.
+     */
     public void importRepoProject(RepositoryRow row) {
         File f = row.getModelRow().getFile();
         if (f != null && alertDec.requestYesNoOption("Import Repo File",
@@ -161,7 +174,40 @@ public class RepositoryHandler {
         }
     }
 
+    /**
+     * Import the selected snapshot into the local Apricot.
+     */
     public void importRepoSnapshpot(RepositoryRow row, String snapshotName) {
+
+    }
+
+    /**
+     * Export the local project into the remote repository.
+     */
+    @ApricotErrorLogger(title = "Unable to export the Project into the Remote Repository")
+    public void exportLocalProject(RepositoryRow row) {
+        String projectName = row.getObjectName();
+        String sProject = exportProcessor.serializeProject(row.getObjectName());
+        String fileName = exportProcessor.getDefaultProjectExportFileName(projectName);
+        File file = new File(LocalRepoService.LOCAL_REPO + "/" + fileName);
+        try {
+            FileUtils.write(file, sProject, Charset.defaultCharset());
+        } catch (IOException e) {
+            throw new IllegalArgumentException(e);
+        }
+        localRepoService.commitProjectFile(fileName, "The project export file \"" + fileName + "\" was added");
+        remoteRepositoryService.pushRepository();
+        refreshModel(false);
+
+        Alert alert = alertDec.getAlert("Export Project", "The project \"" + projectName + "\" has been " +
+                "successfully exported into the Remote Repository", Alert.AlertType.INFORMATION);
+        alert.showAndWait();
+    }
+
+    /**
+     * Export the selected Snapshot into the Remote Repository.
+     */
+    public void exportLocalSnapshpot(RepositoryRow row, String snapshotName) {
 
     }
 

@@ -1,6 +1,8 @@
 package za.co.apricotdb.ui.repository;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.entity.ApricotProject;
@@ -111,6 +113,22 @@ public class LocalRepoService {
         }
 
         return ret;
+    }
+
+    /**
+     * Add the given file to the local repository.
+     */
+    public void commitProjectFile(String fileName, String comment) {
+        Git git = null;
+        try {
+            git = Git.open(new File(LOCAL_REPO));
+            git.add().addFilepattern(fileName).call();
+            git.commit().setMessage(comment).call();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Unable to commit the file " + fileName, e);
+        } finally {
+            git.close();
+        }
     }
 
     private List<String> getFileList(String path) {

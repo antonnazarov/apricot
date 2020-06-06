@@ -59,7 +59,7 @@ public class ExportProjectHandler {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Export Project");
             fileChooser.setInitialDirectory(new File(outputDir));
-            fileChooser.setInitialFileName(getFileName(project.getName()));
+            fileChooser.setInitialFileName(exportProcessor.getDefaultProjectExportFileName(project.getName()));
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Text Files", "*.txt");
             fileChooser.getExtensionFilters().add(extFilter);
 
@@ -81,14 +81,5 @@ public class ExportProjectHandler {
             Alert alert = alertDecorator.getErrorAlert("Export Project", "No Apricot DB Project is currently open");
             alert.show();
         }
-    }
-
-    private String getFileName(String projectName) {
-        StringBuilder sb = new StringBuilder();
-        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
-        sb.append(df.format(new java.util.Date())).append("-").append(ApricotUtils.convertToFileName(projectName));
-        sb.append(".txt");
-
-        return sb.toString();
     }
 }

@@ -18,7 +18,7 @@ import java.util.Map;
 
 /**
  * This component hold the functions to work with the remote repository.
- * 
+ *
  * @author Anton Nazarov
  * @since 07/04/2020
  */
@@ -86,6 +86,36 @@ public class RemoteRepositoryService {
             result.close();
         } catch (Exception ex) {
             throw new IllegalArgumentException("Unable to clone repository", ex);
+        }
+    }
+
+    public void pushRepository() {
+        RepositoryConfiguration config = configHandler.getRepositoryConfiguration();
+        proxyHandler.setProxy(config);
+        boolean auth = StringUtils.isNotEmpty(config.getUserName()) && StringUtils.isNotEmpty(config.getPassword());
+
+        Git git = null;
+        try {
+            Map<String, Ref> refs = getRemoteReferences(config);
+            Ref ref = refs.get("refs/heads/master");
+            if (ref == null) {
+                throw new IllegalArgumentException("Unable to find the refs/heads/master in the remote repository");
+            }
+
+            git = Git.open(new File(LocalRepoService.LOCAL_REPO));
+            if (auth) {
+                git.push().setRemote(config.getRemoteUrl())
+                        .setCredentialsProvider(new UsernamePasswordCredentialsProvider(config.getUserName(),
+                                StringEncoder.decode(config.getPassword())))
+                        .add(ref)
+                        .call();
+            } else {
+                git.push().setRemote(config.getRemoteUrl())
+                        .add(ref)
+                        .call();
+            }
+        } catch (Exception ex) {
+            throw new IllegalArgumentException("Unable to push changes into the Remote Repository", ex);
         }
     }
 }
