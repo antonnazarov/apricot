@@ -70,8 +70,8 @@ public class RemoteRepositoryService {
         File localRepo = new File(LocalRepoService.LOCAL_REPO);
         proxyHandler.setProxy(config);
         boolean auth = StringUtils.isNotEmpty(config.getUserName()) && StringUtils.isNotEmpty(config.getPassword());
+        Git result = null;
         try {
-            Git result = null;
             if (auth) {
                 result = Git.cloneRepository().setURI(config.getRemoteUrl()).setDirectory(localRepo)
                         .setCredentialsProvider(new UsernamePasswordCredentialsProvider(config.getUserName(), StringEncoder.decode(config.getPassword())))
@@ -86,6 +86,8 @@ public class RemoteRepositoryService {
             result.close();
         } catch (Exception ex) {
             throw new IllegalArgumentException("Unable to clone repository", ex);
+        } finally {
+            result.close();
         }
     }
 
@@ -116,6 +118,8 @@ public class RemoteRepositoryService {
             }
         } catch (Exception ex) {
             throw new IllegalArgumentException("Unable to push changes into the Remote Repository", ex);
+        } finally {
+            git.close();
         }
     }
 }
