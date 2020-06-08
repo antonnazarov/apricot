@@ -177,7 +177,7 @@ public class RepositoryHandler {
     /**
      * Import the selected snapshot into the local Apricot.
      */
-    public void importRepoSnapshpot(RepositoryRow row, String snapshotName) {
+    public void importRepoSnapshot(RepositoryRow row, String snapshotName) {
 
     }
 
@@ -207,7 +207,36 @@ public class RepositoryHandler {
     /**
      * Export the selected Snapshot into the Remote Repository.
      */
-    public void exportLocalSnapshpot(RepositoryRow row, String snapshotName) {
+    public void exportLocalSnapshot(RepositoryRow row, String snapshotName) {
+
+    }
+
+    public void showRemoteProjectInfo(RepositoryRow row) {
+
+    }
+
+    public void deleteRemoteProject(RepositoryRow row) {
+        if (!alertDec.requestYesNoOption("Delete Remote Project",
+                "Do you want to delete the Project in the Remote Repository?",
+                "Delete", Alert.AlertType.CONFIRMATION)) {
+            return;
+        }
+
+        String fileName = row.getModelRow().getFile().getName();
+        localRepoService.removeProjectFile(fileName, "The project \"" + fileName + "\" was deleted");
+        remoteRepositoryService.pushRepository();
+        refreshModel(false);
+
+        Alert alert = alertDec.getAlert("Delete remote Project", "The project \"" + row.getObjectName() + "\" has been " +
+                "successfully deleted in the Remote Repository", Alert.AlertType.INFORMATION);
+        alert.showAndWait();
+    }
+
+    public void showRemoteSnapshotInfo(RepositoryRow row) {
+
+    }
+
+    public void deleteRemoteSnapshot(RepositoryRow row) {
 
     }
 

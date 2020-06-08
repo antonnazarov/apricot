@@ -2,9 +2,7 @@ package za.co.apricotdb.ui.repository;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -14,6 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.springframework.context.ApplicationContext;
+import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.handler.RepositoryHandler;
 
 /**
@@ -42,6 +41,7 @@ public class RepositoryCell extends HBox {
     
     public void init(ApplicationContext applicationContext) {
         RepositoryHandler handler = applicationContext.getBean(RepositoryHandler.class);
+        ParentWindow window = applicationContext.getBean(ParentWindow.class);
 
         text.setPrefWidth(300);
         if (row.getRowType() == RowType.PROJECT) {
@@ -65,7 +65,7 @@ public class RepositoryCell extends HBox {
             } else {
                 btn.setTooltip(getToolTip("Import Snapshot into the Project"));
                 btn.setOnAction(e -> {
-                    handler.importRepoSnapshpot(row, objectName);
+                    handler.importRepoSnapshot(row, objectName);
                 });
             }
 
@@ -88,6 +88,34 @@ public class RepositoryCell extends HBox {
 
         if (remote && objectName != null) {
             Button btn = getButton("triple-dot-27.png");
+            ContextMenu contextMenu = new ContextMenu();
+            if (row.getRowType() == RowType.PROJECT) {
+                MenuItem item = new MenuItem("View Project Info");
+                item.setOnAction(e -> {
+                    handler.showRemoteProjectInfo(row);
+                });
+                contextMenu.getItems().add(item);
+                item = new MenuItem("Delete Project from Remote Repository");
+                item.setOnAction(e -> {
+                    handler.deleteRemoteProject(row);
+                });
+                contextMenu.getItems().add(item);
+            } else {
+                MenuItem item = new MenuItem("View Snapshot Info");
+                item.setOnAction(e -> {
+                    handler.showRemoteSnapshotInfo(row);
+                });
+                contextMenu.getItems().add(item);
+                item = new MenuItem("Delete Snapshot from Remote Repository");
+                item.setOnAction(e -> {
+                    handler.deleteRemoteSnapshot(row);
+                });
+                contextMenu.getItems().add(item);
+            }
+            btn.setOnMouseClicked(e -> {
+                contextMenu.setAutoHide(true);
+                contextMenu.show(btn, e.getScreenX(), e.getScreenY());
+            });
             getChildren().add(btn);
         }
 

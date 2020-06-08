@@ -125,7 +125,20 @@ public class LocalRepoService {
             git.add().addFilepattern(fileName).call();
             git.commit().setMessage(comment).call();
         } catch (Exception e) {
-            throw new IllegalArgumentException("Unable to commit the file " + fileName, e);
+            throw new IllegalArgumentException("Unable to commit the added file " + fileName, e);
+        } finally {
+            git.close();
+        }
+    }
+
+    public void removeProjectFile(String fileName, String comment) {
+        Git git = null;
+        try {
+            git = Git.open(new File(LOCAL_REPO));
+            git.rm().addFilepattern(fileName).call();
+            git.commit().setMessage(comment).call();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Unable to commit the deleted file " + fileName, e);
         } finally {
             git.close();
         }
