@@ -52,9 +52,17 @@ public class ImportProjectProcessor {
 
     @Transactional
     public ApricotProject importProject(String sProject, boolean serialize) {
+        return importProject(sProject, serialize, null);
+    }
+
+    @Transactional
+    public ApricotProject importProject(String sProject, boolean serialize, String replacedName) {
         String[] splt = parseProject(sProject);
 
         ApricotProject project = deserializeProject(sProject);
+        if (replacedName != null) {
+            project.setName(replacedName);
+        }
 
         Gson gson = ExportProjectProcessor.initGson();
         ProjectHolder prjHolder = gson.fromJson(splt[1], ProjectHolder.class);
@@ -103,12 +111,12 @@ public class ImportProjectProcessor {
             ApricotConstraint parentConstr = constraintsMap.get(rh.getParentConstraintId());
             if (parentConstr == null) {
                 throw new IllegalArgumentException(
-                        "Unable to find the parent constraint with ID=" + rh.getParentConstraintId());
+                        "Unable to find the parent constraint with ID=" + rh.getParentConstraintId() + " for the project=[" + project.getName() + "]");
             }
             ApricotConstraint childConstr = constraintsMap.get(rh.getChildConstraintId());
             if (childConstr == null) {
                 throw new IllegalArgumentException(
-                        "Unable to find the child constraint with ID=" + rh.getChildConstraintId());
+                        "Unable to find the child constraint with ID=" + rh.getChildConstraintId() + " for the project=[" + project.getName() + "]");
             }
 
             ApricotRelationship relationship = new ApricotRelationship(parentConstr, childConstr);

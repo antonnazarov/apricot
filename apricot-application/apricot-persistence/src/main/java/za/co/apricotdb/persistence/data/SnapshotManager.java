@@ -1,16 +1,7 @@
 package za.co.apricotdb.persistence.data;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Resource;
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import za.co.apricotdb.persistence.entity.ApricotColumnConstraint;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
@@ -20,9 +11,16 @@ import za.co.apricotdb.persistence.repository.ApricotColumnConstraintRepository;
 import za.co.apricotdb.persistence.repository.ApricotRelationshipRepository;
 import za.co.apricotdb.persistence.repository.ApricotSnapshotRepository;
 
+import javax.annotation.Resource;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * The SNAPSHOT- related operations.
- * 
+ *
  * @author Anton Nazarov
  * @since 09/01/2019
  */
@@ -155,5 +153,18 @@ public class SnapshotManager {
 
         snapshot.setDefaultSnapshot(true);
         saveSnapshot(snapshot);
+    }
+
+    /**
+     * Find the snapshot by the given name in the given apricot project.
+     */
+    public ApricotSnapshot findSnapshotByName(ApricotProject project, String snapshotName) {
+        for (ApricotSnapshot s : project.getSnapshots()) {
+            if (s.getName().equals(snapshotName)) {
+                return s;
+            }
+        }
+
+        return null;
     }
 }

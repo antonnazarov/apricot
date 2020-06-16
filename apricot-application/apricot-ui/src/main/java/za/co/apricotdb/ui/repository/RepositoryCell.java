@@ -65,7 +65,7 @@ public class RepositoryCell extends HBox {
             } else {
                 btn.setTooltip(getToolTip("Import Snapshot into the Project"));
                 btn.setOnAction(e -> {
-                    handler.importRepoSnapshot(row, objectName);
+                    handler.importRepoSnapshot(row);
                 });
             }
 
@@ -76,11 +76,19 @@ public class RepositoryCell extends HBox {
         if (objectName != null) {
             getChildren().add(this.text);
 
-            if (!row.includesSnapshots() && !row.isEqual() && !remote) {
+            //  the export part
+            if (row.getRowType() == RowType.PROJECT && !row.includesSnapshots() && !row.isEqual() && !remote) {
                 Button btn = getButton("export-27.png");
                 btn.setTooltip(getToolTip("Export the Project into the Repository"));
                 btn.setOnAction(e -> {
                     handler.exportLocalProject(row);
+                });
+                getChildren().addAll(btn, getPlaceholder());
+            } else if (row.getRowType() == RowType.SNAPSHOT && !row.isEqual() && !remote) {
+                Button btn = getButton("export-27.png");
+                btn.setTooltip(getToolTip("Export the Snapshot into the Repository"));
+                btn.setOnAction(e -> {
+                    handler.exportLocalSnapshot(row);
                 });
                 getChildren().addAll(btn, getPlaceholder());
             }

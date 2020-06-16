@@ -15,6 +15,7 @@ import za.co.apricotdb.support.export.ImportProjectProcessor;
 import za.co.apricotdb.ui.handler.ProgressBarHandler;
 
 import javax.transaction.Transactional;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -113,7 +114,7 @@ public class RepoCompareService {
         int total = matchProjects.size();
         int cnt = 0;
         for (ProjectItem pi : matchProjects) {
-            List<ModelRow> snapshotRows = compareSnapshots(pm.get(pi.getProjectName()), pi.getProject());
+            List<ModelRow> snapshotRows = compareSnapshots(pm.get(pi.getProjectName()), pi.getProject(), pi.getFile());
             boolean eqSnaps = snapshotsEqual(snapshotRows);
             ModelRow mr = new ModelRow(RowType.PROJECT, eqSnaps, pi.getProjectName(), pi.getProjectName());
             mr.setLocalProject(pm.get(pi.getProjectName()));
@@ -171,7 +172,7 @@ public class RepoCompareService {
     /**
      * Compare two projects with the same names.
      */
-    private List<ModelRow> compareSnapshots(ApricotProject localProject, ApricotProject repoProject) {
+    private List<ModelRow> compareSnapshots(ApricotProject localProject, ApricotProject repoProject, File file) {
         List<ModelRow> rows = compareElements(getSnapshots(localProject, false), getSnapshots(repoProject, false),
                 RowType.SNAPSHOT);
 
@@ -187,6 +188,9 @@ public class RepoCompareService {
                     }
                 }
             }
+            r.setLocalProject(localProject);
+            r.setRemoteProject(repoProject);
+            r.setFile(file);
         }
 
         return rows;

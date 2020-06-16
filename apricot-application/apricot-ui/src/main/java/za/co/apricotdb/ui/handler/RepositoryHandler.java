@@ -79,6 +79,9 @@ public class RepositoryHandler {
     @Autowired
     ProjectManager projectManager;
 
+    @Autowired
+    RemoteExportService remoteExportService;
+
     @ApricotErrorLogger(title = "Unable to create the Apricot Repository forms")
     public void showRepositoryForm() {
         if (!checkIfUrlConfigured()) {
@@ -177,7 +180,7 @@ public class RepositoryHandler {
     /**
      * Import the selected snapshot into the local Apricot.
      */
-    public void importRepoSnapshot(RepositoryRow row, String snapshotName) {
+    public void importRepoSnapshot(RepositoryRow row) {
 
     }
 
@@ -207,8 +210,9 @@ public class RepositoryHandler {
     /**
      * Export the selected Snapshot into the Remote Repository.
      */
-    public void exportLocalSnapshot(RepositoryRow row, String snapshotName) {
-
+    @ApricotErrorLogger(title = "Unable to export the local Snapshot into the Remote Repository")
+    public void exportLocalSnapshot(RepositoryRow row) {
+        remoteExportService.exportSnapshot(row);
     }
 
     public void showRemoteProjectInfo(RepositoryRow row) {

@@ -110,7 +110,7 @@ public class RepositoryController {
                 root.getChildren().add(project);
                 for (ModelRow r : mr.getIncludedItems()) {
                     TreeItem<RepositoryRow> itm = new TreeItem<>(
-                            rowFactory.buildRow(r.getType(), r.isEqual(), r.getLocalName(), r.getRemoteName(), mr));
+                            rowFactory.buildRow(r.getType(), r.isEqual(), r.getLocalName(), r.getRemoteName(), r));
                     project.getChildren().add(itm);
                 }
             }
