@@ -28,7 +28,7 @@ public class ProjectManager {
     
     //  the "undo" project contains the historic undo information  
     //  of the current snapshot of the current project
-    public static final String UNDO_PROJECT_NAME = "$UNDO_PROJECT$";
+    public static final String TMP_PROJECT_NAME = "TMP_PROJECT";
 
     @Resource
     private ApricotProjectRepository projectRepository;
@@ -83,7 +83,7 @@ public class ProjectManager {
     @Transactional
     public List<ApricotProject> getAllProjects() {
         TypedQuery<ApricotProject> query = em.createNamedQuery("ApricotProject.getAllProjects", ApricotProject.class);
-        query.setParameter("undo_project", UNDO_PROJECT_NAME);
+        query.setParameter("undo_project", TMP_PROJECT_NAME);
         return query.getResultList();
     }
 

@@ -37,9 +37,9 @@ public class UndoSnapshotManager {
     SnapshotCloneManager cloneManager;
 
     public ApricotProject getUndoProject() {
-        ApricotProject undoProject = projectManager.getProjectByName(ProjectManager.UNDO_PROJECT_NAME);
+        ApricotProject undoProject = projectManager.getProjectByName(ProjectManager.TMP_PROJECT_NAME);
         if (undoProject == null) {
-            undoProject = new ApricotProject(ProjectManager.UNDO_PROJECT_NAME, "The invisible UNDO project", "N/A",
+            undoProject = new ApricotProject(ProjectManager.TMP_PROJECT_NAME, "The invisible UNDO project", "N/A",
                     false, new java.util.Date(), new ArrayList<ApricotSnapshot>(),
                     new ArrayList<ApricotProjectParameter>(), new ArrayList<ApricotView>(), ERDNotation.IDEF1x);
             projectManager.saveApricotProject(undoProject);

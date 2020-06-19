@@ -21,7 +21,15 @@ import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.support.export.ExportProjectProcessor;
 import za.co.apricotdb.ui.RepositoryController;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
-import za.co.apricotdb.ui.repository.*;
+import za.co.apricotdb.ui.repository.ApricotRepositoryException;
+import za.co.apricotdb.ui.repository.LocalRepoService;
+import za.co.apricotdb.ui.repository.RemoteExportService;
+import za.co.apricotdb.ui.repository.RemoteRepositoryService;
+import za.co.apricotdb.ui.repository.RepoCompareService;
+import za.co.apricotdb.ui.repository.RepositoryConsistencyService;
+import za.co.apricotdb.ui.repository.RepositoryModel;
+import za.co.apricotdb.ui.repository.RepositoryRow;
+import za.co.apricotdb.ui.repository.RepositoryRowFactory;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
 import javax.annotation.Resource;
@@ -181,7 +189,51 @@ public class RepositoryHandler {
      * Import the selected snapshot into the local Apricot.
      */
     public void importRepoSnapshot(RepositoryRow row) {
+        String projectName = row.getModelRow().getLocalProject().getName();
+        boolean isOverride = (row.getModelRow().getRemoteName() != null && row.getModelRow().getRemoteName().equals(row.getModelRow().getLocalName()));
+        if (isOverride && !alertDec.requestYesNoOption("Import Snapshot",
+                "The local version of snapshot \"" + row.getObjectName() + "\" will be overridden by the one from the" +
+                        " Remote Repository",
+                "Override", Alert.AlertType.CONFIRMATION)) {
+            return;
+        } else if (!isOverride && !alertDec.requestYesNoOption("Import Snapshot",
+                "The snapshot \"" + row.getObjectName() + "\" will be imported into the project \"" + projectName + "\"",
+                "Import", Alert.AlertType.CONFIRMATION)) {
+            return;
+        }
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                progressBarHandler.initProgressBar();
+                try {
+                    remoteExportService.removeTemporaryProject();
+                    progressBarHandler.setProgress(0.1d);
+
+                    remoteExportService.createTemporaryProject(row.getModelRow().getFile());
+                    progressBarHandler.setProgress(0.3d);
+
+                    remoteExportService.removeSnapshotInTargetProject(projectName, row.getObjectName());
+                    progressBarHandler.setProgress(0.4d);
+
+                    remoteExportService.cloneSnapshotIntoTargetProject(projectName, row.getObjectName());
+                    progressBarHandler.setProgress(0.9d);
+
+                    remoteExportService.removeTemporaryProject();
+                    progressBarHandler.setProgress(1.0d);
+                } finally {
+                    progressBarHandler.finalizeProgressBar();
+                }
+
+                Platform.runLater(() -> {
+                    refreshModel(false);
+                    Alert alert = alertDec.getAlert("Import Snapshot", "The snapshot \"" + row.getObjectName() + "\" " +
+                                    "was successfully imported into the local project \"" + projectName + "\"",
+                            Alert.AlertType.INFORMATION);
+                    alert.showAndWait();
+                });
+            }
+        }).start();
     }
 
     /**
@@ -212,13 +264,28 @@ public class RepositoryHandler {
      */
     @ApricotErrorLogger(title = "Unable to export the local Snapshot into the Remote Repository")
     public void exportLocalSnapshot(RepositoryRow row) {
-        remoteExportService.exportSnapshot(row);
+        String projectName = row.getModelRow().getLocalProject().getName();
+        boolean isOverride = (row.getModelRow().getRemoteName() != null && row.getModelRow().getRemoteName().equals(row.getModelRow().getLocalName()));
+        if (isOverride && !alertDec.requestYesNoOption("Export Snapshot",
+                "The snapshot \"" + row.getObjectName() + "\" will be overridden by your local version of the snapshot",
+                "Override", Alert.AlertType.CONFIRMATION)) {
+            return;
+        } else if (!isOverride && !alertDec.requestYesNoOption("Export Snapshot",
+                "The snapshot \"" + row.getObjectName() + "\" will be exported into the project \"" + projectName + "\" of the Remote Repository",
+                "Export", Alert.AlertType.CONFIRMATION)) {
+            return;
+        }
+
+        updateRemoteSnapshot(projectName, row.getObjectName(), row.getModelRow().getFile(),
+                "The snapshot \"" + row.getObjectName() + "\" of the project \"" + projectName + "\" was exported",
+                false);
     }
 
     public void showRemoteProjectInfo(RepositoryRow row) {
 
     }
 
+    @ApricotErrorLogger(title = "Unable to delete Project in the Remote Repository")
     public void deleteRemoteProject(RepositoryRow row) {
         if (!alertDec.requestYesNoOption("Delete Remote Project",
                 "Do you want to delete the Project in the Remote Repository?",
@@ -240,8 +307,62 @@ public class RepositoryHandler {
 
     }
 
+    /**
+     * Delete the snapshot in the Remote Repository.
+     */
+    @ApricotErrorLogger(title = "Unable to delete Snapshot in the Remote Repository")
     public void deleteRemoteSnapshot(RepositoryRow row) {
+        String projectName = row.getModelRow().getLocalProject().getName();
 
+        if (!alertDec.requestYesNoOption("Remove Remote Snapshot",
+                "The snapshot \"" + row.getObjectName() + "\" will be removed from the Remote Repository",
+                "Remove", Alert.AlertType.CONFIRMATION)) {
+            return;
+        }
+
+        updateRemoteSnapshot(projectName, row.getObjectName(), row.getModelRow().getFile(),
+                "The snapshot \"" + row.getObjectName() + "\" of the project \"" + projectName + "\" was deleted",
+                true);
+    }
+
+    private void updateRemoteSnapshot(String projectName, String snapshotName, File file, String confirmationInfo,
+                                      boolean remove) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                progressBarHandler.initProgressBar();
+                try {
+                    remoteExportService.removeTemporaryProject();
+                    progressBarHandler.setProgress(0.1d);
+
+                    remoteExportService.createTemporaryProject(file);
+                    progressBarHandler.setProgress(0.3d);
+
+                    remoteExportService.removeTargetSnapshotInTemporaryProject(snapshotName);
+                    progressBarHandler.setProgress(0.4d);
+
+                    if (!remove) {
+                        remoteExportService.cloneSnapshot(projectName, snapshotName);
+                        progressBarHandler.setProgress(0.5d);
+                    }
+
+                    remoteExportService.exportProject(ProjectManager.TMP_PROJECT_NAME, file, confirmationInfo, projectName);
+                    progressBarHandler.setProgress(0.8d);
+
+                    remoteExportService.removeTemporaryProject();
+                    progressBarHandler.setProgress(1.0d);
+                } finally {
+                    progressBarHandler.finalizeProgressBar();
+                }
+
+                Platform.runLater(() -> {
+                    refreshModel(false);
+                    Alert alert = alertDec.getAlert("Remote Snapshot", confirmationInfo, Alert.AlertType.INFORMATION);
+                    alert.showAndWait();
+                });
+            }
+        }).start();
     }
 
     /**

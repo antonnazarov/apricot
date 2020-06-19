@@ -83,11 +83,12 @@ public class RemoteRepositoryService {
             if (result != null) {
                 logger.info("The remote repository was cloned: " + result.toString());
             }
-            result.close();
         } catch (Exception ex) {
             throw new IllegalArgumentException("Unable to clone repository", ex);
         } finally {
-            result.close();
+            if (result != null) {
+                result.close();
+            }
         }
     }
 
@@ -119,7 +120,9 @@ public class RemoteRepositoryService {
         } catch (Exception ex) {
             throw new IllegalArgumentException("Unable to push changes into the Remote Repository", ex);
         } finally {
-            git.close();
+            if (git != null) {
+                git.close();
+            }
         }
     }
 }

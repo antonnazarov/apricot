@@ -28,6 +28,17 @@ public class AlertMessageDecorator {
         dialogPane.getStyleClass().add("apricotDialog");
     }
 
+    public void decorateAlert(Alert alert, AlertType type) {
+        if (type == AlertType.CONFIRMATION || type == AlertType.INFORMATION) {
+            DialogPane dialogPane = alert.getDialogPane();
+            dialogPane.getStylesheets()
+                    .add(getClass().getResource("/za/co/apricotdb/ui/apricot-info-style.css").toExternalForm());
+            dialogPane.getStyleClass().add("apricotDialog");
+        } else {
+            decorateAlert(alert);
+        }
+    }
+
     public Alert getErrorAlert(String title, String text) {
         Alert alert = new Alert(AlertType.ERROR, null, ButtonType.OK);
         alert.setTitle(title);
@@ -54,8 +65,7 @@ public class AlertMessageDecorator {
         Alert alert = new Alert(type, null, yes, no);
         alert.setTitle(title);
         alert.setHeaderText(WordUtils.wrap(text, STANDARD_MESSAGE_LENGTH));
-        // alert.setHeaderText(text);
-        decorateAlert(alert);
+        decorateAlert(alert, type);
         Stage alertWindow = (Stage) alert.getDialogPane().getScene().getWindow();
         // alertWindow.getIcons().add(new Image(getClass().getResourceAsStream("/za/co/apricotdb/ui/handler/system-error-small.png")));
         Optional<ButtonType> result = alert.showAndWait();

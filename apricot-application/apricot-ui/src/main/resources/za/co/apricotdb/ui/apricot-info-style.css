@@ -1,0 +1,17 @@
+.apricotDialog{
+    -fx-background-color: #c7e9f2;
+}
+.apricotDialog > *.button-bar > *.container{
+    -fx-background-color: #c7e9f2;
+}
+.apricotDialog > *.label.content{
+//    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+.apricotDialog:header *.header-panel{
+    -fx-background-color: #c7e9f2;
+}
+.apricotDialog:header *.header-panel *.label{
+//    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
