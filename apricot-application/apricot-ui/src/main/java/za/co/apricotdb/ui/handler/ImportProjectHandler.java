@@ -80,18 +80,19 @@ public class ImportProjectHandler {
         } catch (Exception e) {
             throw new IllegalArgumentException(e);
         }
-        ApricotProject importedProj = importProcessor.deserializeProject(sProject);
-        if (projectManager.getProjectByName(importedProj.getName()) != null) {
+        ApricotProject importedProject = importProcessor.deserializeProject(sProject);
+        if (projectManager.getProjectByName(importedProject.getName()) != null) {
             Alert alert = alertDecorator.getErrorAlert("Import File", "The Project named \""
-                    + importedProj.getName()
+                    + importedProject.getName()
                     + "\" already exists in the system. You can delete or rename the existing project and then try to import again");
             alert.showAndWait();
+            return;
         }
 
         ApricotProject project = importProcessor.importProject(sProject, true);
 
         Alert alert = alertDecorator.getAlert("Import Project",
-                "The project \"" + importedProj.getName() + "\" was successfully imported", AlertType.INFORMATION);
+                "The project \"" + importedProject.getName() + "\" was successfully imported", AlertType.INFORMATION);
         alert.showAndWait();
 
         //  the the just imported project as current

@@ -1,27 +1,21 @@
 package za.co.apricotdb.ui.error;
 
-import java.lang.reflect.Method;
-
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.davidmoten.text.utils.WordWrap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javafx.scene.control.Alert.AlertType;
-import za.co.apricotdb.ui.ErrorFormController;
-import za.co.apricotdb.ui.util.AlertMessageDecorator;
+import java.lang.reflect.Method;
 
 /**
  * The implementation of the aspect system logic, which handles the errors in
  * the application (wired to the user interface).
- * 
+ *
  * @author Anton Nazarov
  * @since 16/01/2020
  */
@@ -32,10 +26,7 @@ public class ErrorLoggerAspect {
     private Logger logger = null;
 
     @Autowired
-    AlertMessageDecorator alertHandler;
-
-    @Autowired
-    ErrorFormController formController;
+    ApricotErrorHandler errorHandler;
 
     /**
      * Handle the exception which happened in the annotated method.
@@ -60,21 +51,10 @@ public class ErrorLoggerAspect {
                     }
 
                     if (t.getMessage() != null) {
-                        text.append(wrapText(t.getMessage()));
+                        text.append(errorHandler.wrapText(t.getMessage()));
                     }
 
-                    if (alertHandler.requestYesNoOption(l.title(), text.toString(), "View the error details",
-                            AlertType.ERROR)) {
-                        // show the stack trace
-                        try {
-                            String stacktrace = l.title() + "\n\n" + "---> The simplified stack trace:\n"
-                                    + getSimplifiedStackTrace(t) + "\n" + "---> The full stack trace:\n"
-                                    + ExceptionUtils.getStackTrace(t);
-                            formController.openForm(stacktrace);
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
-                    }
+                    errorHandler.showErrorInfo(text.toString(), l.title(), t);
                 }
 
                 if (l.stop()) {
@@ -95,7 +75,7 @@ public class ErrorLoggerAspect {
         boolean entryClassPassed = false;
         for (StackTraceElement elm : elms) {
             String className = elm.getClassName();
-            if (isApricotSpecificClass(className)) {
+            if (errorHandler.isApricotSpecificClass(className)) {
                 boolean isErrorHandlingAnnotated = false;
                 try {
                     Class<?> clazz = Class.forName(elm.getClassName());
@@ -123,29 +103,5 @@ public class ErrorLoggerAspect {
         }
 
         return false;
-    }
-
-    private boolean isApricotSpecificClass(String className) {
-        return className.startsWith("za.co.apricotdb") && !className.contains("ErrorLoggerAspect")
-                && !className.contains("CGLIB");
-    }
-
-    private String getSimplifiedStackTrace(Throwable t) {
-        StringBuilder sb = new StringBuilder();
-
-        StackTraceElement[] elms = t.getStackTrace();
-        for (StackTraceElement elm : elms) {
-            if (isApricotSpecificClass(elm.getClassName())) {
-                sb.append(elm.getClassName()).append(".").append(elm.getMethodName()).append("(")
-                        .append(elm.getClassName()).append(":").append(elm.getLineNumber()).append(")\n");
-            }
-        }
-
-        return sb.toString();
-    }
-
-    private String wrapText(String text) {
-        return WordWrap.from(text).maxWidth(60).insertHyphens(true) // true is the default
-                .wrap();
     }
 }
