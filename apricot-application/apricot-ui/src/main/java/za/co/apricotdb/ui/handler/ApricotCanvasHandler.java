@@ -1,20 +1,12 @@
 package za.co.apricotdb.ui.handler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.transaction.Transactional;
-
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
+import javafx.scene.control.Tab;
+import javafx.util.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
-
-import javafx.animation.PauseTransition;
-import javafx.scene.control.Tab;
-import javafx.util.Duration;
 import za.co.apricotdb.persistence.data.RelationshipManager;
 import za.co.apricotdb.persistence.data.TableManager;
 import za.co.apricotdb.persistence.entity.ApricotColumn;
@@ -43,17 +35,21 @@ import za.co.apricotdb.viewport.relationship.ApricotRelationshipBuilder;
 import za.co.apricotdb.viewport.relationship.RelationshipBuilder;
 import za.co.apricotdb.viewport.relationship.RelationshipType;
 
+import javax.annotation.Resource;
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * The Canvas- related top level operations.
- * 
+ *
  * @author Anton Nazarov
  * @since 12/01/2019
  */
 @Component
 public class ApricotCanvasHandler {
-
-    @Resource
-    ApplicationContext context;
 
     @Autowired
     TableManager tableManager;
@@ -101,8 +97,10 @@ public class ApricotCanvasHandler {
         if ((v.getObjectLayouts() == null || v.getObjectLayouts().size() == 0) && v.isGeneral()) {
             runAlignerAfterDelay(canvas, v, 0.1).play();
         } else {
-            runAllocationAfterDelay(canvas, v, 0, ElementType.ENTITY).play();
-            runAllocationAfterDelay(canvas, v, 2.0, ElementType.RELATIONSHIP).play();
+            runAllocation(canvas, v, ElementType.ENTITY);
+            Platform.runLater(() -> {
+                runAllocation(canvas, v, ElementType.RELATIONSHIP);
+            });
         }
 
         return tables;
@@ -141,7 +139,7 @@ public class ApricotCanvasHandler {
     }
 
     private void populateCanvas(ApricotCanvas canvas, List<ApricotTable> tables, ViewDetailLevel detailLevel,
-            Map<String, RelatedEntityAbsent> absenceInfo) {
+                                Map<String, RelatedEntityAbsent> absenceInfo) {
         List<ApricotRelationship> relationships = relationshipManager.getRelationshipsForTables(tables);
 
         Map<String, List<FieldDetail>> fieldDetails = new HashMap<>();
@@ -253,7 +251,8 @@ public class ApricotCanvasHandler {
     }
 
     private za.co.apricotdb.viewport.relationship.ApricotRelationship convertRelationship(ApricotRelationship r,
-            Map<String, List<FieldDetail>> fieldDetails, RelationshipBuilder rBuilder) {
+                                                                                          Map<String, List<FieldDetail>> fieldDetails,
+                                                                                          RelationshipBuilder rBuilder) {
         String parentTable = r.getParent().getTable().getName();
         String childTable = r.getChild().getTable().getName();
         // both sides of relationship have to have some key(s) in the constraint
@@ -299,18 +298,14 @@ public class ApricotCanvasHandler {
         return transition;
     }
 
-    private PauseTransition runAllocationAfterDelay(ApricotCanvas canvas, ApricotView view, double delay,
-            ElementType elementType) {
-        PauseTransition transition = new PauseTransition(Duration.seconds(delay));
-        transition.setOnFinished(e -> {
-            CanvasAllocationMap map = tabViewHandler.readCanvasAllocationMap(view);
-            canvas.applyAllocationMap(map, elementType);
+    private PauseTransition runAllocation(ApricotCanvas canvas, ApricotView view,
+                                          ElementType elementType) {
+        CanvasAllocationMap map = tabViewHandler.readCanvasAllocationMap(view);
+        canvas.applyAllocationMap(map, elementType);
+        AlignCommand aligner = new CanvasSizeAdjustor(canvas);
+        aligner.align();
 
-            AlignCommand aligner = new CanvasSizeAdjustor(canvas);
-            aligner.align();
-        });
-
-        return transition;
+        return null;
     }
 
     private List<FieldDetail> getFieldDetails(ApricotTable table, List<ApricotRelationship> relationships) {
