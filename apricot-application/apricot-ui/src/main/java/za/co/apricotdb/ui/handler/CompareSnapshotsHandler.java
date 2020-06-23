@@ -49,6 +49,7 @@ import za.co.apricotdb.ui.comparator.CompareStateDiff;
 import za.co.apricotdb.ui.comparator.CompareStateEqual;
 import za.co.apricotdb.ui.comparator.CompareStateRemove;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
+import za.co.apricotdb.ui.repository.ModelRow;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.ui.util.UiConstants;
 
@@ -78,16 +79,26 @@ public class CompareSnapshotsHandler {
     @Autowired
     SnapshotComparator snapshotComparator;
 
+    /**
+     * Open the Snapshot comparator form.
+     * @param compareRemote if true, the form is used for the comparison between local and remote snapshots
+     * @param row if compareRemote=true, then this parameter should be not null - the Repository model row
+     */
     @ApricotErrorLogger(title = "Unable to open the Compare Snapshots form")
-    public void openCompareSnapshotsForm() throws IOException {
-        if (!validate()) {
+    public void openCompareSnapshotsForm(boolean compareRemote, ModelRow row) {
+        if (!compareRemote && !validate()) {
             return;
         }
 
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/za/co/apricotdb/ui/apricot-compare-snapshots.fxml"));
         loader.setControllerFactory(context::getBean);
-        Pane window = loader.load();
+        Pane window = null;
+        try {
+            window = loader.load();
+        } catch (IOException ex) {
+            throw new IllegalArgumentException("Unable to open the Compare Snapshots form", ex);
+        }
 
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
@@ -107,18 +118,25 @@ public class CompareSnapshotsHandler {
         dialog.setScene(scene);
 
         CompareSnapshotsController controller = loader.<CompareSnapshotsController>getController();
-        controller.init();
+        if (!compareRemote) {
+            controller.init();
+        } else {
+            if (row != null) {
+                controller.initCompareRemote(row.getLocalSnapshot(), row.getRemoteSnapshot());
+            }
+        }
 
         dialog.show();
     }
 
     /**
-     * Compare two snapshots: the source and the target ones.
+     * Compare two unmanaged snapshots
      */
     @Transactional
-    public TreeItem<CompareSnapshotRow> compare(String sourceSnapshot, String targetSnapshot, boolean diffOnly) {
-        SnapshotDifference diff = compareSnapshots(sourceSnapshot, targetSnapshot);
+    public TreeItem<CompareSnapshotRow> compare(ApricotSnapshot sourceSnapshot, ApricotSnapshot targetSnapshot,
+                                                boolean diffOnly) {
 
+        SnapshotDifference diff = snapshotComparator.compare(sourceSnapshot, targetSnapshot);
         logger.info(diff.toString());
 
         CompareState state = null;
@@ -128,9 +146,10 @@ public class CompareSnapshotsHandler {
             state = new CompareStateEqual();
         }
 
-        CompareSnapshotRow snapshots = new CompareSnapshotRow(diff.getSourceObject().getName(), diff.isDifferent(),
+        CompareSnapshotRow compareRow = new CompareSnapshotRow(diff.getSourceObject().getName(),
+                diff.isDifferent(),
                 diff.getTargetObject().getName(), CompareRowType.SNAPSHOT, state, "snapshot", diff);
-        TreeItem<CompareSnapshotRow> root = new TreeItem<>(snapshots);
+        TreeItem<CompareSnapshotRow> root = new TreeItem<>(compareRow);
 
         String sourceName = null;
         String targetName = null;
@@ -209,12 +228,16 @@ public class CompareSnapshotsHandler {
         return root;
     }
 
-    private SnapshotDifference compareSnapshots(String sourceSnapshot, String targetSnapshot) {
+    /**
+     * Compare two snapshots: the source and the target ones.
+     */
+    @Transactional
+    public TreeItem<CompareSnapshotRow> compare(String sourceSnapshot, String targetSnapshot, boolean diffOnly) {
         ApricotProject project = projectManager.findCurrentProject();
         ApricotSnapshot source = snapshotManager.getSnapshotByName(project, sourceSnapshot);
         ApricotSnapshot target = snapshotManager.getSnapshotByName(project, targetSnapshot);
 
-        return snapshotComparator.compare(source, target);
+        return compare(source, target, diffOnly);
     }
 
     private boolean validate() {

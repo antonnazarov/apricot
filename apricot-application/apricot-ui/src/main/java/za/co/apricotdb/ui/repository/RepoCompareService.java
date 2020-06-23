@@ -185,6 +185,9 @@ public class RepoCompareService {
                     SnapshotDifference diff = snapshotComparator.compare(localSnapshot, repoSnapshot);
                     if (diff != null) {
                         r.setEqual(!diff.isDifferent());
+                        //  in case of the snapshots are not equal, initialize the snapshots in the ModelRow
+                        r.setLocalSnapshot(localSnapshot);
+                        r.setRemoteSnapshot(repoSnapshot);
                     }
                 }
             }

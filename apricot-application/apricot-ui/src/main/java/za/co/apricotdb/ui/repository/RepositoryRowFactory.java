@@ -34,7 +34,7 @@ public class RepositoryRowFactory {
         cell = new RepositoryCell(remoteName, true, row);
         cell.init(applicationContext);
         row.setRemoteObject(cell);
-        row.setControl(new RepositoryControl(row));
+        row.setControl(new RepositoryControl(row, applicationContext));
 
         return row;
     }

@@ -91,8 +91,15 @@ public class CompareSnapshotsController {
     @FXML
     Button generateScriptButton;
 
+    @FXML
+    Button swapButton;
+
+    @FXML
+    Button compareButton;
+
     private TreeItem<CompareSnapshotRow> root;
     private boolean compared = false;
+    private boolean compareRemote;
 
     @FXML
     public void swapSnapshots(ActionEvent event) {
@@ -135,6 +142,9 @@ public class CompareSnapshotsController {
         }
     }
 
+    /**
+     * Do the normal init between snapshots of the current project.
+     */
     public void init() {
         ApricotSnapshot defSnapshot = snapshotManager.getDefaultSnapshot();
 
@@ -170,6 +180,48 @@ public class CompareSnapshotsController {
             if (compared) {
                 compare(e);
             }
+        });
+    }
+
+    /**
+     * Initialize the form for the comparison of the local and remote snapshots
+     */
+    public void initCompareRemote(ApricotSnapshot localSnapshot, ApricotSnapshot remoteSnapshot) {
+        this.compareRemote = true;
+
+        String localName = localSnapshot.getName() + " (local)";
+        sourceSnapshot.getItems().clear();
+        sourceSnapshot.getItems().add(localName);
+        sourceSnapshot.getSelectionModel().select(localName);
+        sourceSnapshot.setDisable(true);
+
+        String repoName = remoteSnapshot.getName() + " (repository)";
+        targetSnapshot.getItems().clear();
+        targetSnapshot.getItems().add(repoName);
+        targetSnapshot.getSelectionModel().select(repoName);
+        targetSnapshot.setDisable(true);
+
+        swapButton.setDisable(true);
+        compareButton.setDisable(true);
+
+        sourceColumn.setText("Local Snapshot");
+        targetColumn.setText("Repository Snapshot");
+
+        // construct the three columns of the comparator table
+        sourceColumnConstructor.construct(sourceColumn);
+        targetColumnConstructor.construct(targetColumn);
+        diffColumnConstructor.construct(diffColumn);
+
+        root = compareSnapshotsHandler.compare(localSnapshot, remoteSnapshot, diffOnlyFlag.isSelected());
+        root.setExpanded(true);
+        compareTree.setRoot(root);
+        compareTree.refresh();
+        compared = true;
+
+        generateScriptButton.setDisable(false);
+
+        diffOnlyFlag.setOnAction(e -> {
+            initCompareRemote(localSnapshot, remoteSnapshot);
         });
     }
 

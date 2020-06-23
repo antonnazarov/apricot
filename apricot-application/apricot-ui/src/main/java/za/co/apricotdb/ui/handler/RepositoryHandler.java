@@ -94,6 +94,9 @@ public class RepositoryHandler {
     @Autowired
     ApricotErrorHandler errorHandler;
 
+    @Autowired
+    CompareSnapshotsHandler compareSnapshotsHandler;
+
     @ApricotErrorLogger(title = "Unable to create the Apricot Repository form")
     public void showRepositoryForm() {
         if (!checkIfUrlConfigured()) {
@@ -483,5 +486,9 @@ public class RepositoryHandler {
                 }
             }
         }
+    }
+
+    public void showSnapshotDifferences(RepositoryRow row) {
+        compareSnapshotsHandler.openCompareSnapshotsForm(true, row.getModelRow());
     }
 }

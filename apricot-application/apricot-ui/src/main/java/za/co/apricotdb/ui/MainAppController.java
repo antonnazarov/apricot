@@ -4,7 +4,15 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Side;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -12,8 +20,36 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.entity.ApricotView;
-import za.co.apricotdb.ui.handler.*;
-import za.co.apricotdb.ui.toolbar.*;
+import za.co.apricotdb.ui.handler.ApplicationInitializer;
+import za.co.apricotdb.ui.handler.ApricotAboutHandler;
+import za.co.apricotdb.ui.handler.ApricotCanvasHandler;
+import za.co.apricotdb.ui.handler.ApricotClipboardHandler;
+import za.co.apricotdb.ui.handler.ApricotProjectHandler;
+import za.co.apricotdb.ui.handler.ApricotRelationshipHandler;
+import za.co.apricotdb.ui.handler.ApricotSnapshotHandler;
+import za.co.apricotdb.ui.handler.ApricotViewHandler;
+import za.co.apricotdb.ui.handler.CanvasScaleHandler;
+import za.co.apricotdb.ui.handler.CompareSnapshotsHandler;
+import za.co.apricotdb.ui.handler.EntityAlignHandler;
+import za.co.apricotdb.ui.handler.EntityFilterHandler;
+import za.co.apricotdb.ui.handler.ExcelReportHandler;
+import za.co.apricotdb.ui.handler.ExportProjectHandler;
+import za.co.apricotdb.ui.handler.GenerateScriptHandler;
+import za.co.apricotdb.ui.handler.ImportProjectHandler;
+import za.co.apricotdb.ui.handler.NonTransactionalPort;
+import za.co.apricotdb.ui.handler.ProjectExplorerContextMenuHandler;
+import za.co.apricotdb.ui.handler.ProjectExplorerItem;
+import za.co.apricotdb.ui.handler.RepositoryHandler;
+import za.co.apricotdb.ui.handler.ReverseEngineHandler;
+import za.co.apricotdb.ui.handler.SelectViewTabHandler;
+import za.co.apricotdb.ui.handler.TabViewHandler;
+import za.co.apricotdb.ui.toolbar.TbAddFilterHandler;
+import za.co.apricotdb.ui.toolbar.TbButton;
+import za.co.apricotdb.ui.toolbar.TbQuickViewHandler;
+import za.co.apricotdb.ui.toolbar.TbRepositoryHandler;
+import za.co.apricotdb.ui.toolbar.TbResetFilterHandler;
+import za.co.apricotdb.ui.toolbar.TbSetFilterHandler;
+import za.co.apricotdb.ui.toolbar.ToolbarHolder;
 import za.co.apricotdb.ui.undo.ApricotUndoManager;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
@@ -23,7 +59,7 @@ import java.io.IOException;
 
 /**
  * This controller serves the main application form apricot-main.fxml.
- * 
+ *
  * @author Anton Nazarov
  * @since 20/01/2019
  */
@@ -423,11 +459,7 @@ public class MainAppController {
 
     @FXML
     public void compareSnapshots(ActionEvent event) {
-        try {
-            compareSnapshotsHandler.openCompareSnapshotsForm();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        compareSnapshotsHandler.openCompareSnapshotsForm(false, null);
     }
 
     /**

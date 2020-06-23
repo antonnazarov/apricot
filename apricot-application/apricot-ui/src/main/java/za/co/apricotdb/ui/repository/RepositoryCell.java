@@ -41,7 +41,6 @@ public class RepositoryCell extends HBox {
     
     public void init(ApplicationContext applicationContext) {
         RepositoryHandler handler = applicationContext.getBean(RepositoryHandler.class);
-        ParentWindow window = applicationContext.getBean(ParentWindow.class);
 
         text.setPrefWidth(300);
         if (row.getRowType() == RowType.PROJECT) {
