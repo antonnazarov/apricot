@@ -2,6 +2,7 @@ package za.co.apricotdb.ui.handler;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -194,9 +195,41 @@ public class ApricotSnapshotHandler {
         
         return false;
     }
-    
+
+    public String getTableList(ApricotSnapshot snapshot, int lengthLimit) {
+        StringBuilder sb = new StringBuilder();
+        boolean first = true;
+
+        for (String table: getTablesAsStrings(snapshot.getTables())) {
+            if (lengthLimit > 0 && sb.length() >= lengthLimit) {
+                sb.append("...");
+                break;
+            }
+
+            if (!first) {
+                sb.append(", ");
+            } else {
+                first = false;
+            }
+            sb.append(table);
+        }
+        sb.append(" (").append(snapshot.getTables().size()).append(" tables)");
+
+        return sb.toString();
+    }
+
+    private List<String> getTablesAsStrings(List<ApricotTable> tables) {
+        List<String> ret = new ArrayList<>();
+        for (ApricotTable t : tables) {
+            ret.add(t.getName());
+        }
+        Collections.sort(ret, String.CASE_INSENSITIVE_ORDER);
+
+        return ret;
+    }
+
     @Transactional
-    private void syncSnapshotTransactional(boolean synchAllViews) {
+    public void syncSnapshotTransactional(boolean synchAllViews) {
         TabInfoObject currentTab = canvasHandler.getCurrentViewTabInfo();
         if (synchAllViews) {
             TabPane tp = parentWindow.getProjectTabPane();

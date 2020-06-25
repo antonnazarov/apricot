@@ -97,6 +97,12 @@ public class RepositoryHandler {
     @Autowired
     CompareSnapshotsHandler compareSnapshotsHandler;
 
+    @Autowired
+    ApricotProjectHandler projectHandler;
+
+    @Autowired
+    HtmlViewHandler htmlViewHandler;
+
     @ApricotErrorLogger(title = "Unable to create the Apricot Repository form")
     public void showRepositoryForm() {
         if (!checkIfUrlConfigured()) {
@@ -334,7 +340,8 @@ public class RepositoryHandler {
     }
 
     public void showRemoteProjectInfo(RepositoryRow row) {
-
+        htmlViewHandler.showHtmlViewForm(projectHandler.getProjectValuesMap(row.getModelRow().getRemoteProject()),
+                "repository-project-info.html", "Project Info");
     }
 
     @ApricotErrorLogger(title = "Unable to delete Project in the Remote Repository")

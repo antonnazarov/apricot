@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        #project {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #project td, #project th {
+            border: 1px solid #ddd;
+            padding: 8px;
+            vertical-align:top;
+        }
+
+        #project tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #project tr:hover {
+            background-color: #ddd;
+        }
+
+        #project th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div>
+    <table id="project">
+        <tr>
+            <td style="white-space:nowrap;"><b>Project Name:</b></td>
+            <td>${project_name}</td>
+        </tr>
+        <tr>
+            <td style="white-space:nowrap;"><b>Database Type:</b></td>
+            <td>${database_type}</td>
+        </tr>
+        <tr>
+            <td style="white-space:nowrap;"><b>ERD Notation:</b></td>
+            <td>${erd_notation}</td>
+        </tr>
+        <tr>
+            <td style="white-space:nowrap;"><b>Description:</b></td>
+            <td>${description}</td>
+        </tr>
+        <tr>
+            <td style="white-space:nowrap;"><b>Snapshots:</b></td>
+            <td>${snapshot_list}</td>
+        </tr>
+        <tr>
+            <td style="white-space:nowrap;"><b>Tables:</b></td>
+            <td>${table_list}</td>
+        </tr>
+        <tr>
+            <td style="white-space:nowrap;"><b>Black list:</b></td>
+            <td>${black_list}</td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

@@ -1,15 +1,5 @@
 package za.co.apricotdb.ui.handler;
 
-import java.util.List;
-import java.util.Optional;
-
-import javax.annotation.Resource;
-import javax.transaction.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
-
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -24,8 +14,15 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ProjectManager;
+import za.co.apricotdb.persistence.data.ProjectParameterManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
+import za.co.apricotdb.persistence.entity.ApricotProjectParameter;
+import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.ui.EditProjectController;
 import za.co.apricotdb.ui.OpenProjectController;
 import za.co.apricotdb.ui.ParentWindow;
@@ -34,6 +31,13 @@ import za.co.apricotdb.ui.model.EditProjectModelBuilder;
 import za.co.apricotdb.ui.model.NewProjectModelBuilder;
 import za.co.apricotdb.ui.model.ProjectFormModel;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
+
+import javax.annotation.Resource;
+import javax.transaction.Transactional;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * All the project- related high level business logic is implemented in this
@@ -62,6 +66,9 @@ public class ApricotProjectHandler {
 
     @Autowired
     ApplicationInitializer applicationInitializer;
+
+    @Autowired
+    ApricotSnapshotHandler snapshotHandler;
 
     @ApricotErrorLogger(title = "Unable to open the list of projects")
     public void createOpenProjectForm(Pane mainPane) throws Exception {
@@ -166,5 +173,61 @@ public class ApricotProjectHandler {
         ApricotProject selectedProject = projectsList.getSelectionModel().getSelectedItem();
         projectManager.setProjectCurrent(selectedProject);
         applicationInitializer.initializeDefault();
+    }
+
+    /**
+     * Compose the map of the give project values.
+     */
+    public Map<String, String> getProjectValuesMap(ApricotProject project) {
+        Map<String, String> ret = new HashMap<>();
+
+        ret.put("project_name", fixEmpty(project.getName()));
+        ret.put("database_type", fixEmpty(project.getTargetDatabase()));
+        ret.put("erd_notation", fixEmpty(project.getErdNotation().getDefinition()));
+        ret.put("description", fixEmpty(project.getDescription()));
+        ret.put("snapshot_list", fixEmpty(getSnapshotList(project)));
+        ret.put("table_list", fixEmpty(getTableList(project)));
+        ret.put("black_list", fixEmpty(getBlackList(project)));
+
+        return ret;
+    }
+
+    private String fixEmpty(String s) {
+        if (StringUtils.isEmpty(s)) {
+            return "NONE";
+        }
+
+        return s;
+    }
+
+    public String getSnapshotList(ApricotProject project) {
+        StringBuilder sb = new StringBuilder();
+        boolean first = true;
+        for (ApricotSnapshot s: project.getSnapshots()) {
+            if (!first) {
+                sb.append(", ");
+            } else {
+                first = false;
+            }
+            sb.append(s.getName());
+        }
+
+        return sb.toString();
+    }
+
+    public String getTableList(ApricotProject project) {
+        ApricotSnapshot snapshot = project.getSnapshots().get(project.getSnapshots().size()-1);
+
+        return snapshotHandler.getTableList(snapshot, 300);
+    }
+
+    private String getBlackList(ApricotProject project) {
+        for (ApricotProjectParameter pp : project.getParameters()) {
+            if (pp.getName().equals(ProjectParameterManager.PROJECT_BLACKLIST_PARAM)) {
+                return pp.getValue();
+            }
+        }
+
+        return null;
     }
 }
