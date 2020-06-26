@@ -2,6 +2,7 @@ package za.co.apricotdb.ui.handler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -76,6 +77,12 @@ public class EntityContextMenuHandler {
     @Autowired
     RelatedEntitiesHandler relatedEntitiesHandler;
 
+    @Autowired
+    HtmlViewHandler htmlViewHandler;
+
+    @Autowired
+    HtmlEntityInfoHandler htmlEntityInfoHandler;
+
     @ApricotErrorLogger(title = "Unable to create the Entity context menu")
     public void createEntityContextMenu(ApricotEntity entity, double x, double y) {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
@@ -85,15 +92,17 @@ public class EntityContextMenuHandler {
         if (selected.size() != 0) {
             ContextMenu contextMenu = new ContextMenu();
             if (selected.size() == 1) {
-                // one entity was selected
+                // exact one entity was selected
                 if (!view.getName().equals(ApricotView.MAIN_VIEW)) {
                     contextMenu.getItems().addAll(buildEditEntityItem(entity.getTableName()), buildCopyItem(),
+                            buildShowAsTextItem(entity.getTableName()),
                             buildDeleteEntityItem(), buildRemoveFromViewItem(getNames(selected)),
                             buildSelectInListItem(getNames(selected)),
                             buildSelectRelatedEntitiesItem(getNames(selected)), new SeparatorMenuItem(),
                             buildRelationshipItem(true));
                 } else {
                     contextMenu.getItems().addAll(buildEditEntityItem(entity.getTableName()), buildCopyItem(),
+                            buildShowAsTextItem(entity.getTableName()),
                             buildDeleteEntityItem(), buildSelectInListItem(getNames(selected)),
                             buildSelectRelatedEntitiesItem(getNames(selected)), new SeparatorMenuItem(),
                             buildRelationshipItem(true));
@@ -290,6 +299,16 @@ public class EntityContextMenuHandler {
         MenuItem item = new MenuItem("Quick View <Ctrl+Q>");
         item.setOnAction(e -> {
             quickViewHandler.createQuickView();
+        });
+
+        return item;
+    }
+
+    public MenuItem buildShowAsTextItem(String entity) {
+        MenuItem item = new MenuItem("Show as Text (<Space>)");
+        item.setOnAction(e -> {
+            Map<String, String> values = htmlEntityInfoHandler.getEntityValueMap(entity);
+            htmlViewHandler.showHtmlViewForm(values, "table-info.html", "Table Information");
         });
 
         return item;

@@ -50,11 +50,13 @@ public class ProjectExplorerContextMenuHandler {
                     String name = items.get(0);
                     if (isMainView) {
                         menu.getItems().addAll(entityMenuHandler.buildEditEntityItem(name),
+                                entityMenuHandler.buildShowAsTextItem(name),
                                 entityMenuHandler.buildDeleteEntityItem(items),
                                 entityMenuHandler.buildSelectOnCanvasItem(items),
                                 entityMenuHandler.buildSelectRelatedEntitiesItem(items));
                     } else {
                         menu.getItems().addAll(entityMenuHandler.buildEditEntityItem(name),
+                                entityMenuHandler.buildShowAsTextItem(name),
                                 entityMenuHandler.buildDeleteEntityItem(items),
                                 entityMenuHandler.buildRemoveFromViewItem(items),
                                 entityMenuHandler.buildSelectOnCanvasItem(items),

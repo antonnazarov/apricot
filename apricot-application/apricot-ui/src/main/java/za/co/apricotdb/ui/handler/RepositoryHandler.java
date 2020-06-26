@@ -98,7 +98,10 @@ public class RepositoryHandler {
     CompareSnapshotsHandler compareSnapshotsHandler;
 
     @Autowired
-    ApricotProjectHandler projectHandler;
+    HtmlProjectInfoHandler projectHandler;
+
+    @Autowired
+    HtmlSnapshotInfoHandler snapshotHandler;
 
     @Autowired
     HtmlViewHandler htmlViewHandler;
@@ -340,7 +343,7 @@ public class RepositoryHandler {
     }
 
     public void showRemoteProjectInfo(RepositoryRow row) {
-        htmlViewHandler.showHtmlViewForm(projectHandler.getProjectValuesMap(row.getModelRow().getRemoteProject()),
+        htmlViewHandler.showHtmlViewForm(projectHandler.getProjectValueMap(row.getModelRow().getRemoteProject()),
                 "repository-project-info.html", "Project Info");
     }
 
@@ -384,7 +387,8 @@ public class RepositoryHandler {
     }
 
     public void showRemoteSnapshotInfo(RepositoryRow row) {
-
+        htmlViewHandler.showHtmlViewForm(snapshotHandler.getSnapshotValueMap(row.getModelRow().getRemoteSnapshot()),
+                "repository-snapshot-info.html", "Snapshot Info");
     }
 
     /**

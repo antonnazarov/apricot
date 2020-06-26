@@ -1,16 +1,5 @@
 package za.co.apricotdb.ui.handler;
 
-import java.io.IOException;
-import java.util.List;
-
-import javax.annotation.Resource;
-import javax.transaction.Transactional;
-import javax.transaction.Transactional.TxType;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
-
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -18,6 +7,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ConstraintManager;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.RelationshipManager;
@@ -36,9 +28,15 @@ import za.co.apricotdb.ui.model.EditEntityModelBuilder;
 import za.co.apricotdb.ui.undo.ApricotUndoManager;
 import za.co.apricotdb.ui.undo.UndoType;
 
+import javax.annotation.Resource;
+import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
+import java.io.IOException;
+import java.util.List;
+
 /**
  * The handled of Apricot Entity (Table).
- * 
+ *
  * @author Anton Nazarov
  * @since 26/02/2019
  */

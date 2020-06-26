@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        div {
+            margin: 5px;
+        }
+
+        table {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #ddd;
+            padding: 8px;
+            vertical-align: top;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div>
+    <div>
+        <table id="header">
+            <tr>
+                <th>${table_name}</th>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <table id="columns">
+            <tr>
+                <th colspan="3">Columns</th>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Nullable</th>
+            </tr>
+            ${table_columns}
+        </table>
+    </div>
+    <div>
+        <table id="constraints">
+            <tr>
+                <th colspan="3">Constraints</th>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Columns included</th>
+            </tr>
+            ${table_constraints}
+        </table>
+    </div>
+    <div>
+        <table id="relationships">
+            <tr>
+                <th colspan="2">Relationships</th>
+            </tr>
+            <tr>
+                <th>Parent Tables</th>
+                <th>Child Tables</th>
+            </tr>
+            ${table_relationships}
+        </table>
+    </div>
+</div>
+</body>
+</html>

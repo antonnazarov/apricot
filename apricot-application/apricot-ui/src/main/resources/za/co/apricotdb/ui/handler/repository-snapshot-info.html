@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        #snapshot {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #snapshot td, #snapshot th {
+            border: 1px solid #ddd;
+            padding: 8px;
+            vertical-align:top;
+        }
+
+        #snapshot tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #snapshot tr:hover {
+            background-color: #ddd;
+        }
+
+        #snapshot th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div>
+    <table id="snapshot">
+        <tr>
+            <td style="white-space:nowrap;"><b>Snapshot Name:</b></td>
+            <td>${snapshot_name}</td>
+        </tr>
+        <tr>
+            <td style="white-space:nowrap;"><b>Comment:</b></td>
+            <td>${snapshot_comment}</td>
+        </tr>
+        <tr>
+            <td style="white-space:nowrap;"><b>Created:</b></td>
+            <td>${snapshot_created}</td>
+        </tr>
+        <tr>
+            <td style="white-space:nowrap;"><b>Updated:</b></td>
+            <td>${snapshot_updated}</td>
+        </tr>
+        <tr>
+            <td style="white-space:nowrap;"><b>Tables included:</b></td>
+            <td>${table_list}</td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

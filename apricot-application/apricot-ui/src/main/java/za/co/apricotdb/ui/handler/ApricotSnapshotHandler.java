@@ -1,19 +1,5 @@
 package za.co.apricotdb.ui.handler;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import javax.annotation.Resource;
-import javax.transaction.Transactional;
-
-import org.apache.commons.text.WordUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
-
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -29,6 +15,10 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.apache.commons.text.WordUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.ViewManager;
@@ -48,6 +38,13 @@ import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ElementStatus;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
+
+import javax.annotation.Resource;
+import javax.transaction.Transactional;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ApricotSnapshotHandler {
@@ -84,10 +81,10 @@ public class ApricotSnapshotHandler {
 
     @Autowired
     EntityFilterHandler filterHandler;
-    
+
     @Autowired
     ApricotSnapshotSerializer snapshotSerializer;
-    
+
     @Autowired
     ApplicationInitializer applicationInitializer;
 
@@ -180,52 +177,20 @@ public class ApricotSnapshotHandler {
      * Re-draw all the views for the current (default) snapshot together with the
      * tree view representation of the data
      */
-    @ApricotErrorLogger(title="Unable to synchronize the Snapshot")
+    @ApricotErrorLogger(title = "Unable to synchronize the Snapshot")
     public void syncronizeSnapshot(boolean synchAllViews) {
         syncSnapshotTransactional(synchAllViews);
     }
-    
+
     @ApricotErrorLogger(title = "Unable to save the current Snapshot")
     public boolean serializeSnapshot(SnapshotFormModel model) {
         if (snapshotSerializer.serializeSnapshot(model)) {
             applicationInitializer.initializeForProject(projectManager.findCurrentProject());
-            
+
             return true;
         }
-        
+
         return false;
-    }
-
-    public String getTableList(ApricotSnapshot snapshot, int lengthLimit) {
-        StringBuilder sb = new StringBuilder();
-        boolean first = true;
-
-        for (String table: getTablesAsStrings(snapshot.getTables())) {
-            if (lengthLimit > 0 && sb.length() >= lengthLimit) {
-                sb.append("...");
-                break;
-            }
-
-            if (!first) {
-                sb.append(", ");
-            } else {
-                first = false;
-            }
-            sb.append(table);
-        }
-        sb.append(" (").append(snapshot.getTables().size()).append(" tables)");
-
-        return sb.toString();
-    }
-
-    private List<String> getTablesAsStrings(List<ApricotTable> tables) {
-        List<String> ret = new ArrayList<>();
-        for (ApricotTable t : tables) {
-            ret.add(t.getName());
-        }
-        Collections.sort(ret, String.CASE_INSENSITIVE_ORDER);
-
-        return ret;
     }
 
     @Transactional

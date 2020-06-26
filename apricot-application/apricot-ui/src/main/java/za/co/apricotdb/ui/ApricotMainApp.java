@@ -1,5 +1,7 @@
 package za.co.apricotdb.ui;
 
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -73,7 +75,13 @@ public class ApricotMainApp extends Application {
         primaryStage.show();
 
         // handling key pressed in the main scene
-        primaryStage.getScene().setOnKeyPressed(context.getBean(OnKeyPressedEventHandler.class));
+        OnKeyPressedEventHandler handler = context.getBean(OnKeyPressedEventHandler.class);
+        primaryStage.getScene().setOnKeyPressed(handler);
+        primaryStage.getScene().addEventFilter(KeyEvent.KEY_PRESSED, e -> {
+            if (e.getCode() == KeyCode.SPACE) {
+                handler.handleSpace();
+            }
+        });
     }
 
     @Override
