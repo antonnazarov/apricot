@@ -11,7 +11,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.text.StringSubstitutor;
-import org.springframework.boot.autoconfigure.http.HttpProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.ui.HtmlViewController;
@@ -72,7 +71,7 @@ public class HtmlViewHandler {
     public void showHtmlViewForm(Map<String, String> values, String templateFile, String formTitle) {
         File file = new File(getClass().getResource("/za/co/apricotdb/ui/handler/" + templateFile).getFile());
         try {
-            String template = FileUtils.readFileToString(file, HttpProperties.Encoding.DEFAULT_CHARSET);
+            String template = FileUtils.readFileToString(file, java.nio.charset.Charset.defaultCharset());
             StringSubstitutor substitutor = new StringSubstitutor(values);
             String html = substitutor.replace(template);
             showHtmlViewForm(html, formTitle);
