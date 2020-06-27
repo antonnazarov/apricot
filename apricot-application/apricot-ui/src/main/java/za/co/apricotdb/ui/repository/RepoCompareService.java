@@ -178,24 +178,30 @@ public class RepoCompareService {
 
         // scan through the result and compare the matched snapshots
         for (ModelRow r : rows) {
+            ApricotSnapshot localSnapshot = null;
+            ApricotSnapshot repoSnapshot = null;
+            if (r.getLocalName() != null) {
+                localSnapshot = findSnapshot(localProject, r.getLocalName(), false);
+            }
+            if (r.getRemoteName() != null) {
+                repoSnapshot = findSnapshot(repoProject, r.getRemoteName(), false);
+            }
             if (r.getLocalName() != null && r.getRemoteName() != null) {
-                ApricotSnapshot localSnapshot = findSnapshot(localProject, r.getLocalName(), false);
-                ApricotSnapshot repoSnapshot = findSnapshot(repoProject, r.getRemoteName(), false);
                 if (localSnapshot != null && repoSnapshot != null) {
                     SnapshotDifference diff = snapshotComparator.compare(localSnapshot, repoSnapshot);
                     if (diff != null) {
                         r.setEqual(!diff.isDifferent());
                     }
                 }
-                if (localSnapshot != null) {
-                    r.setLocalSnapshot(localSnapshot);
-                }
-                if (repoSnapshot != null) {
-                    r.setRemoteSnapshot(repoSnapshot);
-                }
             }
             r.setLocalProject(localProject);
             r.setRemoteProject(repoProject);
+            if (localSnapshot != null) {
+                r.setLocalSnapshot(localSnapshot);
+            }
+            if (repoSnapshot != null) {
+                r.setRemoteSnapshot(repoSnapshot);
+            }
             r.setFile(file);
         }
 
