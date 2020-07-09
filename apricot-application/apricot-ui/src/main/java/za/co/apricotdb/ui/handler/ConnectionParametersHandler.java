@@ -10,5 +10,6 @@ import java.util.Properties;
  */
 public interface ConnectionParametersHandler {
     
-    void saveConnectionParameters(Properties params);
+    void saveConnectionParameters(String dbType, String server, String port, String database, String schema,
+                                  String user, String password);
 }

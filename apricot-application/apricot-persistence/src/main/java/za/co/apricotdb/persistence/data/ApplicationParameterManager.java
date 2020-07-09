@@ -20,6 +20,8 @@ import za.co.apricotdb.persistence.repository.ApricotApplicationParameterReposit
 @Component
 public class ApplicationParameterManager {
 
+    public static final String DATABASE_CONNECTIONS = "DATABASE_CONNECTIONS";
+
     @Resource
     EntityManager em;
 

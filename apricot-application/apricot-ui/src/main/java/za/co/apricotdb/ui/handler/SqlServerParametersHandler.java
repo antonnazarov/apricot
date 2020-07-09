@@ -1,94 +1,88 @@
 package za.co.apricotdb.ui.handler;
 
-import java.util.List;
-import java.util.Properties;
-
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import za.co.apricotdb.persistence.data.ApplicationParameterManager;
+import za.co.apricotdb.persistence.entity.ApricotApplicationParameter;
+import za.co.apricotdb.ui.model.ConnectionAppParameterModel;
+import za.co.apricotdb.ui.model.ConnectionParametersModel;
+import za.co.apricotdb.ui.util.GsonFactory;
 
-import za.co.apricotdb.persistence.data.ProjectManager;
-import za.co.apricotdb.persistence.data.ProjectParameterManager;
-import za.co.apricotdb.persistence.entity.ApricotProject;
-import za.co.apricotdb.persistence.entity.ApricotProjectParameter;
+import java.util.Properties;
 
+/**
+ * The handler of the DB connection parameters.
+ * This component stores the parameters, successfully passed the connection test into the application for
+ * re-usage.
+ *
+ * @author Anton Nazarov
+ * @version 08/07/2020
+ * @since unknown
+ */
 @Component
 public class SqlServerParametersHandler implements ConnectionParametersHandler {
 
     @Autowired
-    ProjectParameterManager projectParameterManager;
+    ApplicationParameterManager appParameterManager;
 
-    @Autowired
-    ProjectManager projectManager;
-
+    /**
+     * Save the given connection parameters of the successful connection.
+     */
     @Override
-    public void saveConnectionParameters(Properties params) {
-        ApricotProject project = projectManager.findCurrentProject();
-        List<ApricotProjectParameter> prm = projectParameterManager.getConnectionParametersForTargetDb(project,
-                project.getTargetDatabase());
-        String paramsValue = projectParameterManager.getPropertiesAsString(params, "SqlServer connection");
-        boolean found = false;
-        String idx = null;
-        if (prm != null && prm.size() > 0) {
-            for (ApricotProjectParameter app : prm) {
-                if (idx == null) {
-                    idx = getIdx(app.getName());
-                }
-                Properties p = projectParameterManager.restorePropertiesFromString(app.getValue());
+    public void saveConnectionParameters(String dbType, String server, String port, String database, String schema,
+                                         String user, String password) {
 
-                if (areEqual(p, params, ProjectParameterManager.CONNECTION_PORT)
-                        && areEqual(p, params, ProjectParameterManager.CONNECTION_DATABASE)
-                        && areEqual(p, params, ProjectParameterManager.CONNECTION_SCHEMA)
-                        && areEqual(p, params, ProjectParameterManager.CONNECTION_USER)) {
-                    // found the same combination of parameters. Rewrite upon the existing one (in
-                    // sake of the password).
-                    projectParameterManager.saveParameter(project, app.getName(), paramsValue);
-                    found = true;
-                    break;
-                }
+        ConnectionAppParameterModel model = getModel();
+        ConnectionParametersModel connModel = new ConnectionParametersModel(dbType, server, port, database, schema,
+                user, password);
+        if (model.addConnection(connModel)) {
+            //  the model was altered
+            saveModel(model);
+        }
+    }
+
+    /**
+     * Retrieve the current version of ConnectionAppParameterModel stored in the database.
+     */
+    public ConnectionAppParameterModel getModel() {
+        ConnectionAppParameterModel model = null;
+        ApricotApplicationParameter param =
+                appParameterManager.getParameterByName(ApplicationParameterManager.DATABASE_CONNECTIONS);
+        if (param != null && StringUtils.isNotEmpty(param.getValue())) {
+            Gson gson = GsonFactory.initGson();
+            try {
+                model = gson.fromJson(param.getValue(), ConnectionAppParameterModel.class);
+            } catch (JsonSyntaxException e) {
+                //  the value in the database is not recognizable
+                model = new ConnectionAppParameterModel();
+            }
+        } else {
+            model = new ConnectionAppParameterModel();
+        }
+
+        return model;
+    }
+
+    private void saveModel(ConnectionAppParameterModel model) {
+        if (model != null) {
+            Gson gson = GsonFactory.initGson();
+            String gModel = gson.toJson(model);
+            appParameterManager.saveParameter(ApplicationParameterManager.DATABASE_CONNECTIONS, gModel);
+        }
+    }
+
+    public Properties getLatestConnectionProperties() {
+        ConnectionAppParameterModel model = getModel();
+        if (model != null) {
+            ConnectionParametersModel paramModel = model.getLatestSuccessfulConnection();
+            if (paramModel != null) {
+                return paramModel.getAsProperties();
             }
         }
 
-        if (!found) {
-            idx = calcNextIdx(idx);
-            projectParameterManager.saveParameter(project,
-                    ProjectParameterManager.DATABASE_CONNECTION_PARAM_PREFIX + project.getTargetDatabase() + "." + idx,
-                    paramsValue);
-        }
-
-        // save the latest successful connection for this project
-        projectParameterManager.saveParameter(project, ProjectParameterManager.DATABASE_CONNECTION_LATEST, paramsValue);
-    }
-
-    public Properties getLatestConnectionProperties(ApricotProject project) {
-        Properties ret = null;
-        ApricotProjectParameter param = projectParameterManager.getParameterByName(project,
-                ProjectParameterManager.DATABASE_CONNECTION_LATEST);
-
-        if (param != null) {
-            ret = projectParameterManager.restorePropertiesFromString(param.getValue());
-        }
-
-        return ret;
-    }
-
-    private String getIdx(String paramName) {
-        String idx = null;
-        String[] pn = paramName.split("\\.");
-        if (pn.length == 4) {
-            idx = pn[3];
-        }
-
-        return idx;
-    }
-
-    private String calcNextIdx(String idx) {
-        if (idx == null) {
-            return "001";
-        }
-        return String.format("%03d", Integer.parseInt(idx) + 1);
-    }
-
-    private boolean areEqual(Properties p1, Properties p2, String parameterName) {
-        return p1.getProperty(parameterName, "<none>").equalsIgnoreCase(p2.getProperty(parameterName, "<none>"));
+        return null;
     }
 }

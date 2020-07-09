@@ -1,26 +1,5 @@
 package za.co.apricotdb.ui.handler;
 
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.text.WordUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.jdbc.core.JdbcOperations;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
-
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -34,13 +13,18 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.apache.commons.text.WordUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.jdbc.core.JdbcOperations;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 import za.co.apricotdb.metascan.ApricotTargetDatabase;
 import za.co.apricotdb.metascan.MetaDataScanner;
 import za.co.apricotdb.metascan.MetaDataScannerFactory;
 import za.co.apricotdb.persistence.data.DataSaver;
 import za.co.apricotdb.persistence.data.MetaData;
 import za.co.apricotdb.persistence.data.ProjectManager;
-import za.co.apricotdb.persistence.data.ProjectParameterManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.TableManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
@@ -51,10 +35,19 @@ import za.co.apricotdb.ui.ConnectionH2Controller;
 import za.co.apricotdb.ui.ConnectionSqlServerController;
 import za.co.apricotdb.ui.ReversedTablesController;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
-import za.co.apricotdb.ui.model.DatabaseConnectionModel;
-import za.co.apricotdb.ui.model.DatabaseConnectionModelBuilder;
+import za.co.apricotdb.ui.model.ConnectionAppParameterModel;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
-import za.co.apricotdb.ui.util.StringEncoder;
+
+import javax.annotation.Resource;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * This component is responsible for reverse engineering operation.
@@ -76,9 +69,6 @@ public class ReverseEngineHandler {
 
     @Autowired
     AlertMessageDecorator alertDecorator;
-
-    @Autowired
-    DatabaseConnectionModelBuilder databaseConnectionModelBuilder;
 
     @Autowired
     ConsistencyHandler consistencyHandler;
@@ -143,7 +133,7 @@ public class ReverseEngineHandler {
 
     @ApricotErrorLogger(title = "Unable to save the reversed objects in the current Snapshot")
     public boolean saveReversedObjects(List<ApricotTable> included, List<ApricotTable> excluded,
-            List<ApricotRelationship> relationships, String reverseEngineeringParameters) {
+                                       List<ApricotRelationship> relationships, String reverseEngineeringParameters) {
         Map<ApricotTable, ApricotTable> extraExclude = consistencyHandler.getFullConsistentExclude(excluded,
                 relationships);
         if (!extraExclude.isEmpty()) {
@@ -195,7 +185,7 @@ public class ReverseEngineHandler {
 
     @ApricotErrorLogger(title = "Unable to scan the database meta data")
     public MetaData getMetaData(ApricotTargetDatabase dbType, String driverClass, String url, String schema,
-            String user, String password, ApricotSnapshot snapshot) {
+                                String user, String password, ApricotSnapshot snapshot) {
         MetaDataScanner scanner = scannerFactory.getScanner(dbType);
         MetaData metaData = scanner.scan(dbType, driverClass, url, schema, user, password, snapshot);
 
@@ -204,7 +194,7 @@ public class ReverseEngineHandler {
 
     @ApricotErrorLogger(title = "Unable to establish connection to the database", stop = true)
     public void testConnection(String server, String port, String database, String schema, String user, String password,
-            ApricotTargetDatabase targetDb, boolean integratedSecurity) {
+                               ApricotTargetDatabase targetDb, boolean integratedSecurity) {
 
         String driverClass = scannerFactory.getDriverClass(targetDb);
         String url = scannerFactory.getUrl(targetDb, server, port, database, integratedSecurity);
@@ -216,28 +206,7 @@ public class ReverseEngineHandler {
         op.query(scannerFactory.getTestSQL(targetDb), rowMapper);
 
         // Success! Save the connection parameters in the project- parameter
-        Properties params = getConnectionParameters(server, port, database, schema, user, password);
-        parametersHandler.saveConnectionParameters(params);
-    }
-
-    private Properties getConnectionParameters(String server, String port, String database, String schema, String user,
-            String password) {
-        Properties params = new Properties();
-
-        params.setProperty(ProjectParameterManager.CONNECTION_SERVER, server);
-        params.setProperty(ProjectParameterManager.CONNECTION_PORT, port);
-        params.setProperty(ProjectParameterManager.CONNECTION_DATABASE, database);
-        if (StringUtils.isNotEmpty(schema)) {
-            params.setProperty(ProjectParameterManager.CONNECTION_SCHEMA, schema);
-        }
-        if (StringUtils.isNotEmpty(user)) {
-            params.setProperty(ProjectParameterManager.CONNECTION_USER, user);
-        }
-        if (StringUtils.isNotEmpty(password)) {
-            params.setProperty(ProjectParameterManager.CONNECTION_PASSWORD, StringEncoder.encode(password));
-        }
-
-        return params;
+        parametersHandler.saveConnectionParameters(targetDb.getDatabaseName(), server, port, database, schema, user, password);
     }
 
     private String getMessageForExtraExclude(Map<ApricotTable, ApricotTable> extraExclude) {
@@ -264,48 +233,48 @@ public class ReverseEngineHandler {
 
     private void openDatabaseConnectionForm(ApricotProject project) throws IOException {
         ApricotTargetDatabase targetDatabase = ApricotTargetDatabase.parse(project.getTargetDatabase());
-        DatabaseConnectionModel model = databaseConnectionModelBuilder.buildModel(project);
+        ConnectionAppParameterModel model = parametersHandler.getModel();
 
         Pane window = null;
         FXMLLoader loader = null;
         String title = null;
         switch (targetDatabase) {
-        case MSSQLServer:
-            title = "Connect to SQL Server database";
-            window = initFormController(model);
-            break;
-        case Oracle:
-            title = "Connect to Oracle database";
-            window = initFormController(model);
-            break;
-        case PostrgeSQL:
-            title = "Connect to PostgreSQL database";
-            window = initFormController(model);
-            break;
-        case MySQL:
-            title = "Connect to MySQL database";
-            window = initFormController(model);
-            break;
-        case DB2:
-            title = "Connect to DB2 (legacy) database";
-            window = initFormController(model);
-            break;
-        case DB2_LUW:
-            title = "Connect to DB2 (LUW) database";
-            window = initFormController(model);
-            break;
-        case H2:
-            loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-re-h2.fxml"));
-            loader.setControllerFactory(context::getBean);
-            window = loader.load();
+            case MSSQLServer:
+                title = "Connect to SQL Server database";
+                window = initFormController(model);
+                break;
+            case Oracle:
+                title = "Connect to Oracle database";
+                window = initFormController(model);
+                break;
+            case PostrgeSQL:
+                title = "Connect to PostgreSQL database";
+                window = initFormController(model);
+                break;
+            case MySQL:
+                title = "Connect to MySQL database";
+                window = initFormController(model);
+                break;
+            case DB2:
+                title = "Connect to DB2 (legacy) database";
+                window = initFormController(model);
+                break;
+            case DB2_LUW:
+                title = "Connect to DB2 (LUW) database";
+                window = initFormController(model);
+                break;
+            case H2:
+                loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-re-h2.fxml"));
+                loader.setControllerFactory(context::getBean);
+                window = loader.load();
 
-            title = "Connect to H2 database";
-            ConnectionH2Controller h2controller = loader.<ConnectionH2Controller>getController();
-            h2controller.init(model);
-            break;
+                title = "Connect to H2 database";
+                ConnectionH2Controller h2controller = loader.<ConnectionH2Controller>getController();
+                h2controller.init();
+                break;
 
-        default:
-            break;
+            default:
+                break;
         }
 
         final Stage dialog = new Stage();
@@ -345,7 +314,7 @@ public class ReverseEngineHandler {
         }
     }
 
-    private Pane initFormController(DatabaseConnectionModel model) throws IOException {
+    private Pane initFormController(ConnectionAppParameterModel model) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-re-sqlserver.fxml"));
         loader.setControllerFactory(context::getBean);
         Pane window = loader.load();

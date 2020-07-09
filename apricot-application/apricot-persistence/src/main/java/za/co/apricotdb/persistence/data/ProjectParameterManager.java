@@ -118,6 +118,11 @@ public class ProjectParameterManager {
         projectParameterRepository.saveAndFlush(p);
     }
 
+    /**
+     * Get the connection parameters.
+     *
+     * @deprecated
+     */
     public List<ApricotProjectParameter> getConnectionParametersForTargetDb(ApricotProject project, String targetDb) {
         TypedQuery<ApricotProjectParameter> query = em
                 .createNamedQuery("ApricotProjectParameter.getParametersWithPrefix", ApricotProjectParameter.class);

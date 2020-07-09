@@ -1,12 +1,5 @@
 package za.co.apricotdb.ui;
 
-import java.io.File;
-import java.util.Properties;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -15,6 +8,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import za.co.apricotdb.metascan.ApricotTargetDatabase;
 import za.co.apricotdb.metascan.h2.H2Scanner;
 import za.co.apricotdb.metascan.h2.H2UrlBuilder;
@@ -28,13 +24,15 @@ import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.ui.handler.BlackListHandler;
 import za.co.apricotdb.ui.handler.ReverseEngineHandler;
 import za.co.apricotdb.ui.handler.SqlServerParametersHandler;
-import za.co.apricotdb.ui.model.DatabaseConnectionModel;
+import za.co.apricotdb.ui.model.ConnectionAppParameterModel;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
-import za.co.apricotdb.ui.util.StringEncoder;
+
+import java.io.File;
+import java.util.Properties;
 
 /**
  * The controller under the apricot-re-h2.fxml form.
- * 
+ *
  * @author Anton Nazarov
  * @since 08/04/2019
  */
@@ -86,11 +84,11 @@ public class ConnectionH2Controller {
     private ApricotSnapshot snapshot;
     private ApricotProject project;
 
-    public void init(DatabaseConnectionModel model) {
+    public void init() {
         project = projectManager.findCurrentProject();
         snapshot = snapshotManager.getDefaultSnapshot();
 
-        Properties props = parametersHandler.getLatestConnectionProperties(projectManager.findCurrentProject());
+        Properties props = parametersHandler.getLatestConnectionProperties();
         if (props != null) {
             String sFileName = props.getProperty(ProjectParameterManager.CONNECTION_SERVER);
             if (StringUtils.isNotEmpty(sFileName) && doesFileExist(sFileName, false)) {
@@ -160,8 +158,8 @@ public class ConnectionH2Controller {
         reverseEngineHandler.openScanResultForm(metaData, blackList, composeReverseEngineeringParameters());
 
         // save the parameters filed in the form
-        Properties params = getConnectionParameters();
-        parametersHandler.saveConnectionParameters(params);
+        parametersHandler.saveConnectionParameters("H2", fileName.getText(), "N/A", "N/A", schema.getText(),
+                userName.getText(), password.getText());
     }
 
     @FXML
@@ -180,19 +178,6 @@ public class ConnectionH2Controller {
         }
 
         return null;
-    }
-
-    private Properties getConnectionParameters() {
-        Properties params = new Properties();
-
-        params.setProperty(ProjectParameterManager.CONNECTION_SERVER, fileName.getText());
-        params.setProperty(ProjectParameterManager.CONNECTION_PORT, "N/A");
-        params.setProperty(ProjectParameterManager.CONNECTION_DATABASE, "N/A");
-        params.setProperty(ProjectParameterManager.CONNECTION_SCHEMA, schema.getText());
-        params.setProperty(ProjectParameterManager.CONNECTION_USER, userName.getText());
-        params.setProperty(ProjectParameterManager.CONNECTION_PASSWORD, StringEncoder.encode(password.getText()));
-
-        return params;
     }
 
     private String composeReverseEngineeringParameters() {

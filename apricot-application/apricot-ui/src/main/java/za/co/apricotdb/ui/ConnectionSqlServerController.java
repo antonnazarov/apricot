@@ -1,10 +1,5 @@
 package za.co.apricotdb.ui;
 
-import java.util.Properties;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -16,25 +11,27 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import za.co.apricotdb.metascan.ApricotTargetDatabase;
 import za.co.apricotdb.metascan.MetaDataScannerFactory;
 import za.co.apricotdb.persistence.data.MetaData;
 import za.co.apricotdb.persistence.data.ProjectManager;
-import za.co.apricotdb.persistence.data.ProjectParameterManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.ui.handler.BlackListHandler;
 import za.co.apricotdb.ui.handler.ReverseEngineHandler;
-import za.co.apricotdb.ui.handler.SqlServerParametersHandler;
-import za.co.apricotdb.ui.model.DatabaseConnectionModel;
-import za.co.apricotdb.ui.model.DatabaseConnectionModelBuilder;
+import za.co.apricotdb.ui.model.ConnectionAppParameterModel;
+import za.co.apricotdb.ui.model.ConnectionParametersModel;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
-import za.co.apricotdb.ui.util.StringEncoder;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * The controller of SQL Server- specific connection.
- * 
+ *
  * @author Anton Nazarov
  * @since 17/02/2019
  */
@@ -55,12 +52,6 @@ public class ConnectionSqlServerController {
 
     @Autowired
     BlackListHandler blackListHandler;
-
-    @Autowired
-    SqlServerParametersHandler parametersHandler;
-
-    @Autowired
-    DatabaseConnectionModelBuilder dbConnModelBuilder;
 
     @Autowired
     MetaDataScannerFactory scannerFactory;
@@ -92,27 +83,26 @@ public class ConnectionSqlServerController {
     @FXML
     CheckBox useWindowsUserFlag;
 
-    private DatabaseConnectionModel model;
+    private ConnectionAppParameterModel model;
     private ApricotSnapshot snapshot;
     private ApricotProject project;
+    private ApricotTargetDatabase targetDb;
 
-    public void init(DatabaseConnectionModel model) {
+    public void init(ConnectionAppParameterModel model) {
         this.model = model;
-
-        this.snapshot = snapshotManager.getDefaultSnapshot();
-        this.project = projectManager.findCurrentProject();
-
+        snapshot = snapshotManager.getDefaultSnapshot();
+        project = projectManager.findCurrentProject();
+        targetDb = ApricotTargetDatabase.parse(project.getTargetDatabase());
         applyModel(model);
-        setLatestConnectionParameters();
 
-        if (model.getTargetDb() == ApricotTargetDatabase.Oracle) {
+        if (targetDb == ApricotTargetDatabase.Oracle) {
             serviceLabel.setText("SID:");
             schema.setDisable(true);
             // the schema and user name are the same for the Oracle database
             schema.valueProperty().bind(user.valueProperty());
         }
 
-        if (model.getTargetDb() == ApricotTargetDatabase.MSSQLServer) {
+        if (targetDb == ApricotTargetDatabase.MSSQLServer) {
             useWindowsUserFlag.setVisible(true);
         }
     }
@@ -122,7 +112,7 @@ public class ConnectionSqlServerController {
         reverseEngineHandler.testConnection(server.getSelectionModel().getSelectedItem(),
                 port.getSelectionModel().getSelectedItem(), database.getSelectionModel().getSelectedItem(),
                 schema.getSelectionModel().getSelectedItem(), user.getSelectionModel().getSelectedItem(),
-                password.getText(), model.getTargetDb(), useWindowsUserFlag.isSelected());
+                password.getText(), targetDb, useWindowsUserFlag.isSelected());
         Alert alert = getAlert(AlertType.INFORMATION, "The connection was successfully established");
         alert.showAndWait();
     }
@@ -138,14 +128,14 @@ public class ConnectionSqlServerController {
         reverseEngineHandler.testConnection(server.getSelectionModel().getSelectedItem(),
                 port.getSelectionModel().getSelectedItem(), database.getSelectionModel().getSelectedItem(),
                 schema.getSelectionModel().getSelectedItem(), user.getSelectionModel().getSelectedItem(),
-                password.getText(), model.getTargetDb(), useWindowsUserFlag.isSelected());
+                password.getText(), targetDb, useWindowsUserFlag.isSelected());
 
-        String driverClass = scannerFactory.getDriverClass(model.getTargetDb());
-        String url = scannerFactory.getUrl(model.getTargetDb(), server.getSelectionModel().getSelectedItem(),
+        String driverClass = scannerFactory.getDriverClass(targetDb);
+        String url = scannerFactory.getUrl(targetDb, server.getSelectionModel().getSelectedItem(),
                 port.getSelectionModel().getSelectedItem(), database.getSelectionModel().getSelectedItem(),
                 useWindowsUserFlag.isSelected());
 
-        MetaData metaData = reverseEngineHandler.getMetaData(model.getTargetDb(), driverClass, url, schema.getValue(),
+        MetaData metaData = reverseEngineHandler.getMetaData(targetDb, driverClass, url, schema.getValue(),
                 user.getSelectionModel().getSelectedItem(), password.getText(), snapshot);
         String[] blackList = blackListHandler.getBlackListTables(project);
 
@@ -155,13 +145,12 @@ public class ConnectionSqlServerController {
 
     @FXML
     public void serverSelected(ActionEvent event) {
-        dbConnModelBuilder.populateModel(project, model, server.getSelectionModel().getSelectedItem());
-        applyModel(model);
+        //  no action on the server selected
     }
 
     @FXML
     public void userSelected(ActionEvent event) {
-        password.setText(model.getPassword(user.getSelectionModel().getSelectedItem()));
+        //  no action on the user selected
     }
 
     @FXML
@@ -176,37 +165,31 @@ public class ConnectionSqlServerController {
         }
     }
 
-    private void applyModel(DatabaseConnectionModel model) {
+    private void applyModel(ConnectionAppParameterModel model) {
+        server.getItems().clear();
         port.getItems().clear();
         database.getItems().clear();
-        user.getItems().clear();
         schema.getItems().clear();
+        user.getItems().clear();
 
-        if (server.getItems().isEmpty()) {
-            server.getItems().addAll(model.getServers());
+        Map<String, List<String>> valuesMap = model.getValuesMap();
+        if (valuesMap != null) {
+            server.getItems().addAll(valuesMap.get("servers"));
+            port.getItems().addAll(valuesMap.get("ports"));
+            database.getItems().addAll(valuesMap.get("databases"));
+            schema.getItems().addAll(valuesMap.get("schemas"));
+            user.getItems().addAll(valuesMap.get("users"));
+
+            ConnectionParametersModel lastModel = model.getLatestSuccessfulConnection();
+            if (lastModel != null) {
+                server.setValue(lastModel.getServer());
+                port.setValue(lastModel.getPort());
+                database.setValue(lastModel.getDatabase());
+                schema.setValue(lastModel.getSchema());
+                user.setValue(lastModel.getUser());
+                password.setText(lastModel.getPassword());
+            }
         }
-
-        if (model.getPort() != null) {
-            port.getItems().add(model.getPort());
-            port.getSelectionModel().select(model.getPort());
-        }
-
-        database.getItems().addAll(model.getDatabases());
-        if (model.getDatabase() != null) {
-            database.getSelectionModel().select(model.getDatabase());
-        }
-
-        schema.getItems().addAll(model.getSchemas());
-        if (model.getSchema() != null) {
-            schema.getSelectionModel().select(model.getSchema());
-        }
-
-        user.getItems().addAll(model.getUsers());
-        if (model.getUser() != null) {
-            user.getSelectionModel().select(model.getUser());
-        }
-
-        password.setText(model.getPassword());
     }
 
     private Alert getAlert(AlertType alertType, String text) {
@@ -224,36 +207,10 @@ public class ConnectionSqlServerController {
         return (Stage) mainPane.getScene().getWindow();
     }
 
-    private void setLatestConnectionParameters() {
-        Properties props = parametersHandler.getLatestConnectionProperties(project);
-        if (props != null) {
-            String sServer = props.getProperty(ProjectParameterManager.CONNECTION_SERVER);
-            if (sServer != null && server.getItems() != null && server.getItems().contains(sServer)) {
-                server.getSelectionModel().select(sServer);
-                serverSelected(new ActionEvent());
-            }
-            if (props.getProperty(ProjectParameterManager.CONNECTION_PORT) != null) {
-                port.setValue(props.getProperty(ProjectParameterManager.CONNECTION_PORT));
-            }
-            if (props.getProperty(ProjectParameterManager.CONNECTION_DATABASE) != null) {
-                database.setValue(props.getProperty(ProjectParameterManager.CONNECTION_DATABASE));
-            }
-            if (props.getProperty(ProjectParameterManager.CONNECTION_SCHEMA) != null) {
-                schema.setValue(props.getProperty(ProjectParameterManager.CONNECTION_SCHEMA));
-            }
-            if (props.getProperty(ProjectParameterManager.CONNECTION_USER) != null) {
-                user.setValue(props.getProperty(ProjectParameterManager.CONNECTION_USER));
-            }
-            if (props.getProperty(ProjectParameterManager.CONNECTION_PASSWORD) != null) {
-                password.setText(StringEncoder.decode(props.getProperty(ProjectParameterManager.CONNECTION_PASSWORD)));
-            }
-        }
-    }
-
     private String composeReverseEngineeringParameters() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Database Type: ").append(model.getTargetDb().name()).append("\n");
+        sb.append("Database Type: ").append(targetDb.name()).append("\n");
         sb.append("Server: ").append(server.getSelectionModel().getSelectedItem()).append("\n");
         sb.append("Port: ").append(port.getSelectionModel().getSelectedItem()).append("\n");
         sb.append("Database: ").append(database.getSelectionModel().getSelectedItem()).append("\n");

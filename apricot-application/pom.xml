@@ -121,7 +121,7 @@
             <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
 
-        <!-- JavaFX is not included into Java 13 -->
+        <!-- JavaFX is not included into Java 14 -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
