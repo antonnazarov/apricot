@@ -69,9 +69,16 @@ public class ApricotLauncher {
                     System.out.println("INFO: version of the target database=[" + targetVersion + "]");
                     
                     if (!targetVersion.equals(referenceVersion)) {
-                        System.out.println("WARNING: the versions of the reference- and target-databases are different. Replacing the [" + targetVersion + "] with [" + referenceVersion + "]");
+                        System.out.println("INFO: the versions of the reference- and target-databases are " +
+                                "different. Trying to run adapters to align the database structure");
                         launcher.createBackup();
-                        launcher.copyReferenceToTarget();
+                        AdapterRunner runner = new AdapterRunner();
+                        if (!runner.runAdapters()) {
+                            System.out.println("WARNING: the versions of the reference- and target-databases are " +
+                                    "different. Since the Adapters failed to fix the database structure, replacing " +
+                                    "the [" + targetVersion + "] with [" + referenceVersion + "]");
+                            launcher.copyReferenceToTarget();
+                        }
                     } else {
                         System.out.println("SUCCESS: the version of the target DB is up-to-date");
                     }
@@ -83,11 +90,11 @@ public class ApricotLauncher {
             }
         }
 
-        System.out.println("SUCCESS: Apricot DB was successfully launched");
+        System.out.println("SUCCESS: the Apricot Project Database has been checked and up-to-date");
     }
 
     private boolean checkIfDatabaseFileExists(String dbFile) {
-        File f = new File("./data/apricot-project.mv.db");
+        File f = new File(dbFile);
         if (f.exists()) {
             return true;
         }
