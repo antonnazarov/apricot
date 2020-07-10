@@ -1,23 +1,22 @@
 package za.co.apricotdb.ui;
 
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Configuration;
-
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Configuration;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
 import za.co.apricotdb.ui.handler.OnKeyPressedEventHandler;
+import za.co.apricotdb.ui.util.ImageHelper;
 
 @Configuration
 @EnableAutoConfiguration
@@ -26,10 +25,10 @@ public class ApricotMainApp extends Application {
 
     private ConfigurableApplicationContext context;
     private Pane rootNode;
-    private MainAppController controller; 
+    private MainAppController controller;
 
     ApplicationInitializer initializer;
-     
+
 
     @Override
     public void init() throws Exception {
@@ -57,21 +56,21 @@ public class ApricotMainApp extends Application {
         primaryStage.setScene(new Scene(rootNode));
         primaryStage.centerOnScreen();
         primaryStage.setTitle("Apricot DB");
-        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("favicon-32x32.png")));
+        primaryStage.getIcons().add(ImageHelper.getImage("favicon-32x32.png", getClass()));
         primaryStage.setMaximized(true);
-        
+
         primaryStage.showingProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
-                    double ratio = 350.0/rootNode.getWidth();
+                    double ratio = 350.0 / rootNode.getWidth();
                     controller.splitPane.setDividerPositions(ratio);
                     observable.removeListener(this);
                 }
             }
-        });        
+        });
 
-        
+
         primaryStage.show();
 
         // handling key pressed in the main scene

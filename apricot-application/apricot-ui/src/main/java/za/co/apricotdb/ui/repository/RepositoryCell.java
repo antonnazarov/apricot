@@ -2,8 +2,11 @@ package za.co.apricotdb.ui.repository;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
-import javafx.scene.image.Image;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -12,12 +15,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.springframework.context.ApplicationContext;
-import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.handler.RepositoryHandler;
+import za.co.apricotdb.ui.util.ImageHelper;
 
 /**
  * A cell of repository (left/local, buttons, right/remote).
- * 
+ *
  * @author Anton Nazarov
  * @since 16/04/2020
  */
@@ -38,7 +41,7 @@ public class RepositoryCell extends HBox {
         this.image = getObjectTypeImageView();
         this.remote = remote;
     }
-    
+
     public void init(ApplicationContext applicationContext) {
         RepositoryHandler handler = applicationContext.getBean(RepositoryHandler.class);
 
@@ -147,21 +150,21 @@ public class RepositoryCell extends HBox {
     }
 
     private ImageView getObjectTypeImageView() {
-        ImageView ret = new ImageView(new Image(getClass().getResourceAsStream("does-not-exist-grey-27.png")));
+        ImageView ret = new ImageView(ImageHelper.getImage("does-not-exist-grey-27.png", getClass()));
         if (objectName != null) {
-            ret = new ImageView(new Image(getClass().getResourceAsStream(row.getRowType().getImageFile())));
+            ret = new ImageView(ImageHelper.getImage(row.getRowType().getImageFile(), getClass()));
         }
 
         return ret;
     }
 
     private ImageView getPlaceholder() {
-        return new ImageView(new Image(getClass().getResourceAsStream("placeholder-27.png")));
+        return new ImageView(ImageHelper.getImage("placeholder-27.png", getClass()));
     }
 
     private Button getButton(String imageFile) {
         Button btn = new Button();
-        btn.setGraphic(new ImageView(new Image(getClass().getResourceAsStream(imageFile))));
+        btn.setGraphic(new ImageView(ImageHelper.getImage(imageFile, getClass())));
 
         return btn;
     }

@@ -1,20 +1,19 @@
 package za.co.apricotdb.ui.comparator;
 
-import org.springframework.stereotype.Component;
-
 import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableRow;
 import javafx.scene.control.cell.CheckBoxTreeTableCell;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import org.springframework.stereotype.Component;
+import za.co.apricotdb.ui.util.ImageHelper;
 
 /**
  * The constructor component for the middle (difference) column of the Snapshot
  * comparator table.
- * 
+ *
  * @author Anton Nazarov
  * @since 26/10/2019
  */
@@ -77,7 +76,7 @@ public class CompareDiffColumnConstructor implements CompareColumnConstructor<Co
 
     private ImageView getImage(String image) {
         ImageView img = new ImageView();
-        img.setImage(new Image(getClass().getResourceAsStream(CompareState.ICON_PATH + image)));
+        img.setImage(ImageHelper.getImage(CompareState.ICON_PATH + image, getClass()));
 
         return img;
     }

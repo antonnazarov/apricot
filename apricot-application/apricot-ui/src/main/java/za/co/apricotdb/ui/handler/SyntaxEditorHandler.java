@@ -1,27 +1,25 @@
 package za.co.apricotdb.ui.handler;
 
-import java.io.IOException;
-
-import javax.annotation.Resource;
-
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
-
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 import za.co.apricotdb.ui.SyntaxEditorController;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
+import za.co.apricotdb.ui.util.ImageHelper;
+
+import javax.annotation.Resource;
+import java.io.IOException;
 
 /**
  * The Syntax Editor related business logic.
- * 
+ *
  * @author Anton Nazarov
  * @since 04/04/2019
  */
@@ -41,7 +39,7 @@ public class SyntaxEditorHandler {
         dialog.setTitle(formHeader);
         Scene syntaxEditorScene = new Scene(window);
         dialog.setScene(syntaxEditorScene);
-        dialog.getIcons().add(new Image(getClass().getResourceAsStream("script-s1.JPG")));
+        dialog.getIcons().add(ImageHelper.getImage("script-s1.JPG", getClass()));
         syntaxEditorScene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {

@@ -1,15 +1,5 @@
 package za.co.apricotdb.ui.handler;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Resource;
-import javax.transaction.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
-
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -17,12 +7,14 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ObjectLayoutManager;
 import za.co.apricotdb.persistence.data.RelationshipManager;
 import za.co.apricotdb.persistence.data.TableManager;
@@ -44,12 +36,18 @@ import za.co.apricotdb.ui.model.NewViewModelBuilder;
 import za.co.apricotdb.ui.model.ViewFormModel;
 import za.co.apricotdb.ui.undo.ApricotUndoManager;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
+import za.co.apricotdb.ui.util.ImageHelper;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.CanvasBuilder;
 
+import javax.annotation.Resource;
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * The view- related operations.
- * 
+ *
  * @author Anton Nazarov
  * @since 12/01/2019
  */
@@ -167,7 +165,7 @@ public class ApricotViewHandler {
 
         Scene addViewScene = new Scene(window);
         dialog.setScene(addViewScene);
-        dialog.getIcons().add(new Image(getClass().getResourceAsStream("view-s1.jpg")));
+        dialog.getIcons().add(ImageHelper.getImage("view-s1.jpg", getClass()));
         addViewScene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
@@ -189,7 +187,8 @@ public class ApricotViewHandler {
      * re-used.
      */
     public List<ApricotObjectLayout> getObjectLayoutsFromReferenceView(List<String> viewTables,
-            ApricotView referenceView, ApricotSnapshot snapshot) {
+                                                                       ApricotView referenceView,
+                                                                       ApricotSnapshot snapshot) {
         List<ApricotObjectLayout> ret = new ArrayList<>();
 
         // scan through the view tables

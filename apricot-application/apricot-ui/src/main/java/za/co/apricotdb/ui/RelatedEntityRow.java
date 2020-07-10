@@ -7,6 +7,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import za.co.apricotdb.ui.handler.RelatedEntityAbsent;
+import za.co.apricotdb.ui.util.ImageHelper;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * This bean represents the related entity in form/controller:
@@ -72,8 +76,7 @@ public class RelatedEntityRow {
         if (crowFoot) {
             img = "/za/co/apricotdb/ui/handler/crow-foot-small.png";
         }
-        Image image = new Image(getClass().getResourceAsStream(img));
 
-        return new ImageView(image);
+        return new ImageView(ImageHelper.getImage(img, getClass()));
     }
 }

@@ -2,16 +2,16 @@ package za.co.apricotdb.ui.repository;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import org.springframework.context.ApplicationContext;
 import za.co.apricotdb.ui.handler.RepositoryHandler;
+import za.co.apricotdb.ui.util.ImageHelper;
 
 /**
  * The control which is allocated between two Repository cells: the local and
  * remote one.
- * 
+ *
  * @author Anton Nazarov
  * @since 18/04/2020
  */
@@ -44,7 +44,7 @@ public class RepositoryControl extends HBox {
 
         if (!row.isEqual() && row.getRowType() == RowType.SNAPSHOT && row.hasBothSides()) {
             Button btn = new Button();
-            btn.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("not-equal-27.png"))));
+            btn.setGraphic(new ImageView(ImageHelper.getImage("not-equal-27.png", getClass())));
             btn.setOnAction(e -> {
                 handler.showSnapshotDifferences(row);
             });
@@ -53,6 +53,6 @@ public class RepositoryControl extends HBox {
     }
 
     private ImageView getImageView(String file) {
-        return new ImageView(new Image(getClass().getResourceAsStream(file)));
+        return new ImageView(ImageHelper.getImage(file, getClass()));
     }
 }

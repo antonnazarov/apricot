@@ -1,26 +1,17 @@
 package za.co.apricotdb.ui.handler;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Resource;
-import javax.transaction.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
-
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.TableView;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ConstraintManager;
 import za.co.apricotdb.persistence.data.RelationshipManager;
 import za.co.apricotdb.persistence.entity.ApricotColumn;
@@ -34,6 +25,13 @@ import za.co.apricotdb.ui.model.ApricotConstraintData;
 import za.co.apricotdb.ui.model.EditConstraintModel;
 import za.co.apricotdb.ui.model.EditConstraintModelBuilder;
 import za.co.apricotdb.ui.model.EditEntityModel;
+import za.co.apricotdb.ui.util.ImageHelper;
+
+import javax.annotation.Resource;
+import javax.transaction.Transactional;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class ApricotConstraintHandler {
@@ -74,7 +72,8 @@ public class ApricotConstraintHandler {
 
     @Transactional
     public void openConstraintEditorForm(boolean newConstraint, ApricotConstraintData constraintData,
-            EditEntityModel editEntityModel, TableView<ApricotConstraintData> constraintsTable, boolean editableFields)
+                                         EditEntityModel editEntityModel,
+                                         TableView<ApricotConstraintData> constraintsTable, boolean editableFields)
             throws IOException {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/za/co/apricotdb/ui/apricot-constraint-editor.fxml"));
@@ -88,7 +87,7 @@ public class ApricotConstraintHandler {
         } else {
             dialog.setTitle("Edit Constraint");
         }
-        dialog.getIcons().add(new Image(getClass().getResourceAsStream("table-1-s1.jpg")));
+        dialog.getIcons().add(ImageHelper.getImage("table-1-s1.jpg", getClass()));
 
         Scene editConstraintScene = new Scene(window);
         editConstraintScene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {

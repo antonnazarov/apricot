@@ -1,5 +1,26 @@
 package za.co.apricotdb.ui.handler;
 
+import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
+import za.co.apricotdb.persistence.data.RelationshipManager;
+import za.co.apricotdb.persistence.data.TableManager;
+import za.co.apricotdb.persistence.entity.ApricotRelationship;
+import za.co.apricotdb.persistence.entity.ApricotTable;
+import za.co.apricotdb.ui.RelatedEntitiesController;
+import za.co.apricotdb.ui.error.ApricotErrorLogger;
+import za.co.apricotdb.ui.util.ImageHelper;
+import za.co.apricotdb.viewport.canvas.ApricotCanvas;
+
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,32 +29,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.Resource;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
-
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Pane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import za.co.apricotdb.persistence.data.RelationshipManager;
-import za.co.apricotdb.persistence.data.TableManager;
-import za.co.apricotdb.persistence.entity.ApricotRelationship;
-import za.co.apricotdb.persistence.entity.ApricotTable;
-import za.co.apricotdb.ui.RelatedEntitiesController;
-import za.co.apricotdb.ui.error.ApricotErrorLogger;
-import za.co.apricotdb.viewport.canvas.ApricotCanvas;
-
 /**
  * This component contains all "Related Entities" business logic.
- * 
+ *
  * @author Anton Nazarov
  * @since 13/04/2020
  */
@@ -59,7 +57,7 @@ public class RelatedEntitiesHandler {
     public void makeRelatedEntitiesSelected(List<String> tables) {
         Set<String> selectTbl = new HashSet<>();
         Map<String, RelatedEntityAbsent> absentTbl = new HashMap<>(); // the tables, which have not been presented on
-                                                                      // the current view
+        // the current view
         selectTbl.addAll(tables);
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
         for (String tableName : tables) {
@@ -117,7 +115,7 @@ public class RelatedEntitiesHandler {
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setTitle("Related Entities not in the View");
-        dialog.getIcons().add(new Image(getClass().getResourceAsStream("table-1-s1.jpg")));
+        dialog.getIcons().add(ImageHelper.getImage("table-1-s1.jpg", getClass()));
 
         Scene relatedEntitiesScene = new Scene(window);
         dialog.setScene(relatedEntitiesScene);

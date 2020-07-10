@@ -9,7 +9,6 @@ import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
@@ -34,6 +33,7 @@ import za.co.apricotdb.ui.model.EditSnapshotModelBuilder;
 import za.co.apricotdb.ui.model.NewSnapshotModelBuilder;
 import za.co.apricotdb.ui.model.SnapshotFormModel;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
+import za.co.apricotdb.ui.util.ImageHelper;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ElementStatus;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
@@ -117,8 +117,7 @@ public class ApricotSnapshotHandler {
             dialog.setTitle("Edit Snapshot");
             model = editSnapshotModelBuilder.buildModel();
         }
-
-        dialog.getIcons().add(new Image(getClass().getResourceAsStream("snapshot-s1.JPG")));
+        dialog.getIcons().add(ImageHelper.getImage("snapshot-s1.JPG", getClass()));
 
         Scene editSnapshotScene = new Scene(window);
         dialog.setScene(editSnapshotScene);

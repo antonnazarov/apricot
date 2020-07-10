@@ -2,7 +2,6 @@ package za.co.apricotdb.ui.handler;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
@@ -27,6 +26,7 @@ import za.co.apricotdb.ui.model.EditEntityModel;
 import za.co.apricotdb.ui.model.EditEntityModelBuilder;
 import za.co.apricotdb.ui.undo.ApricotUndoManager;
 import za.co.apricotdb.ui.undo.UndoType;
+import za.co.apricotdb.ui.util.ImageHelper;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
@@ -119,7 +119,7 @@ public class ApricotEntityHandler {
         } else {
             dialog.setTitle("Edit Entity");
         }
-        dialog.getIcons().add(new Image(getClass().getResourceAsStream("table-1-s1.jpg")));
+        dialog.getIcons().add(ImageHelper.getImage("table-1-s1.jpg", getClass()));
 
         Scene editEntityScene = new Scene(window);
         editEntityScene.addEventFilter(KeyEvent.KEY_PRESSED, keyHandler);

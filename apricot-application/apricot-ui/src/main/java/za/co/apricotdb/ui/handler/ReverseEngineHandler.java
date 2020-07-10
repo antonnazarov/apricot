@@ -7,7 +7,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
@@ -37,6 +36,7 @@ import za.co.apricotdb.ui.ReversedTablesController;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.model.ConnectionAppParameterModel;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
+import za.co.apricotdb.ui.util.ImageHelper;
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -124,7 +124,7 @@ public class ReverseEngineHandler {
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setTitle("Result of the database scan");
-        dialog.getIcons().add(new Image(getClass().getResourceAsStream("bw-reverse-s1.jpg")));
+        dialog.getIcons().add(ImageHelper.getImage("bw-reverse-s1.jpg", getClass()));
         Scene openProjectScene = new Scene(window);
         dialog.setScene(openProjectScene);
 
@@ -280,7 +280,7 @@ public class ReverseEngineHandler {
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setTitle(title);
-        dialog.getIcons().add(new Image(getClass().getResourceAsStream("bw-reverse-s1.jpg")));
+        dialog.getIcons().add(ImageHelper.getImage("bw-reverse-s1.jpg", getClass()));
         Scene connectionScene = new Scene(window);
         dialog.setScene(connectionScene);
         connectionScene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {

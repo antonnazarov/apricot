@@ -1,25 +1,10 @@
 package za.co.apricotdb.ui.handler;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Resource;
-import javax.transaction.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
-
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
@@ -27,6 +12,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.ProjectParameterManager;
 import za.co.apricotdb.persistence.data.RelationshipManager;
@@ -45,12 +33,22 @@ import za.co.apricotdb.ui.ScriptGenerateController.ScriptTarget;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.ui.util.ApricotTableUtils;
+import za.co.apricotdb.ui.util.ImageHelper;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 
+import javax.annotation.Resource;
+import javax.transaction.Transactional;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * The Generate Script- related business logic.
- * 
+ *
  * @author Anton Nazarov
  * @since 02/04/2019
  */
@@ -104,7 +102,7 @@ public class GenerateScriptHandler {
         dialog.setTitle(getFormHeader(scriptType));
         Scene generateScriptScene = new Scene(window);
         dialog.setScene(generateScriptScene);
-        dialog.getIcons().add(new Image(getClass().getResourceAsStream("script-s1.JPG")));
+        dialog.getIcons().add(ImageHelper.getImage("script-s1.JPG", getClass()));
         generateScriptScene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
@@ -116,34 +114,34 @@ public class GenerateScriptHandler {
 
         ScriptGenerateController controller = loader.<ScriptGenerateController>getController();
         controller.init(scriptType, getSelectedEntities().size() > 0);
-        
+
         //  initialize the SQL database dialect/syntax
         scriptGenerator.init();
-        
+
         dialog.show();
     }
 
     @Transactional
     public boolean generateScript(ScriptSource source, ScriptTarget target, DBScriptType scriptType, Window window,
-            String schema) {
+                                  String schema) {
         String operationName = null;
         String script = null;
 
         switch (scriptType) {
-        case CREATE_SCRIPT:
-            operationName = "CREATE";
-            script = generateCreateScript(source, schema);
-            break;
-        case DROP_SCRIPT:
-            operationName = "DROP";
-            script = generateDropScript(source, schema);
-            break;
-        case DELETE_SCRIPT:
-            operationName = "DELETE";
-            script = generateDeleteScript(source, schema);
-            break;
-        default:
-            break;
+            case CREATE_SCRIPT:
+                operationName = "CREATE";
+                script = generateCreateScript(source, schema);
+                break;
+            case DROP_SCRIPT:
+                operationName = "DROP";
+                script = generateDropScript(source, schema);
+                break;
+            case DELETE_SCRIPT:
+                operationName = "DELETE";
+                script = generateDeleteScript(source, schema);
+                break;
+            default:
+                break;
         }
 
         if (script == null) {
@@ -151,15 +149,15 @@ public class GenerateScriptHandler {
         }
 
         switch (target) {
-        case FILE:
-            return saveToFile(operationName, script, window);
-        case SQL_EDITOR:
-            try {
-                syntaxEditorHandler.createSyntaxEditorForm(script, getFormHeader(scriptType));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return true;
+            case FILE:
+                return saveToFile(operationName, script, window);
+            case SQL_EDITOR:
+                try {
+                    syntaxEditorHandler.createSyntaxEditorForm(script, getFormHeader(scriptType));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return true;
         }
 
         return false;
@@ -168,17 +166,17 @@ public class GenerateScriptHandler {
     private String getFormHeader(DBScriptType scriptType) {
         String formHeader = null;
         switch (scriptType) {
-        case CREATE_SCRIPT:
-            formHeader = "Generate CREATE- Script";
-            break;
-        case DELETE_SCRIPT:
-            formHeader = "Generate DELETE- Script";
-            break;
-        case DROP_SCRIPT:
-            formHeader = "Generate DROP- Script";
-            break;
-        default:
-            break;
+            case CREATE_SCRIPT:
+                formHeader = "Generate CREATE- Script";
+                break;
+            case DELETE_SCRIPT:
+                formHeader = "Generate DELETE- Script";
+                break;
+            case DROP_SCRIPT:
+                formHeader = "Generate DROP- Script";
+                break;
+            default:
+                break;
         }
 
         return formHeader;
@@ -241,7 +239,7 @@ public class GenerateScriptHandler {
     }
 
     private List<ApricotTable> sortTables(List<ApricotTable> tables, List<ApricotRelationship> rels,
-            boolean isChildToParent) {
+                                          boolean isChildToParent) {
         List<ApricotTable> sortedTables = null;
         if (isChildToParent) {
             sortedTables = entityChainHandler.getChildParentChain(tables, rels);
@@ -322,15 +320,15 @@ public class GenerateScriptHandler {
     private List<ApricotTable> getScriptTables(ScriptSource source) {
         List<ApricotTable> ret = new ArrayList<>();
         switch (source) {
-        case SELECTED:
-            ret = getSelectedEntities();
-            break;
-        case CURRENT_VIEW:
-            ret = viewHandler.getTablesForView(snapshotManager.getDefaultSnapshot(), canvasHandler.getCurrentView());
-            break;
-        case CURRENT_SNAPSHOT:
-            ret = tableManager.getTablesForSnapshot(snapshotManager.getDefaultSnapshot());
-            break;
+            case SELECTED:
+                ret = getSelectedEntities();
+                break;
+            case CURRENT_VIEW:
+                ret = viewHandler.getTablesForView(snapshotManager.getDefaultSnapshot(), canvasHandler.getCurrentView());
+                break;
+            case CURRENT_SNAPSHOT:
+                ret = tableManager.getTablesForSnapshot(snapshotManager.getDefaultSnapshot());
+                break;
         }
 
         return ret;

@@ -1,27 +1,19 @@
 package za.co.apricotdb.ui.handler;
 
-import java.io.IOException;
-import java.util.List;
-
-import javax.annotation.Resource;
-import javax.transaction.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
-
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ConstraintManager;
 import za.co.apricotdb.persistence.data.RelationshipManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
@@ -38,12 +30,18 @@ import za.co.apricotdb.ui.model.ApricotRelationshipValidator;
 import za.co.apricotdb.ui.model.EditRelationshipModel;
 import za.co.apricotdb.ui.model.EditRelationshipModelBuilder;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
+import za.co.apricotdb.ui.util.ImageHelper;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 
+import javax.annotation.Resource;
+import javax.transaction.Transactional;
+import java.io.IOException;
+import java.util.List;
+
 /**
  * This component contains all Relationship high level business logic.
- * 
+ *
  * @author Anton Nazarov
  * @since 14/03/2019
  */
@@ -79,13 +77,13 @@ public class ApricotRelationshipHandler {
 
     @Autowired
     ConstraintManager constraintManager;
-    
+
     @Autowired
     ApricotSnapshotHandler snapshotHandler;
 
     @Autowired
     MainAppController appController;
-    
+
     @Transactional
     public void openRelationshipEditorForm(TabPane viewsTabPane) throws IOException {
 
@@ -112,7 +110,7 @@ public class ApricotRelationshipHandler {
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setTitle("Create a new Relationship");
-        dialog.getIcons().add(new Image(getClass().getResourceAsStream("table-1-s1.jpg")));
+        dialog.getIcons().add(ImageHelper.getImage("table-1-s1.jpg", getClass()));
 
         Scene newRelationshipScene = new Scene(window);
         dialog.setScene(newRelationshipScene);

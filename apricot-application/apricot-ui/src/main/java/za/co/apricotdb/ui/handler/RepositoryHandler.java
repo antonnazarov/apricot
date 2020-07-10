@@ -5,7 +5,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
@@ -32,6 +31,7 @@ import za.co.apricotdb.ui.repository.RepositoryModel;
 import za.co.apricotdb.ui.repository.RepositoryRow;
 import za.co.apricotdb.ui.repository.RepositoryRowFactory;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
+import za.co.apricotdb.ui.util.ImageHelper;
 
 import javax.annotation.Resource;
 import java.io.File;
@@ -130,7 +130,7 @@ public class RepositoryHandler {
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setTitle("Apricot Repository Import/Export");
-        dialog.getIcons().add(new Image(getClass().getResourceAsStream("repository-small-s.png")));
+        dialog.getIcons().add(ImageHelper.getImage("repository-small-s.png", getClass()));
 
         Scene openProjectScene = new Scene(window);
         dialog.setScene(openProjectScene);

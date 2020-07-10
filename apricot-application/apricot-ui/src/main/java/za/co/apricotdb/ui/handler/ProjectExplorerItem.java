@@ -2,13 +2,13 @@ package za.co.apricotdb.ui.handler;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import za.co.apricotdb.ui.util.ImageHelper;
 
 /**
  * An item of the Project Explorer which represents one Entity.
- * 
+ *
  * @author Anton Nazarov
  * @since 29/05/2019
  */
@@ -32,7 +32,7 @@ public class ProjectExplorerItem extends HBox {
 
         img = new ImageView();
         if (itemType == ItemType.PROJECT) {
-            img.setImage(new Image(getClass().getResourceAsStream("project-2-s1.JPG")));
+            img.setImage(ImageHelper.getImage("project-2-s1.JPG", getClass()));
         }
 
         label = new Label(itemName);
@@ -63,10 +63,10 @@ public class ProjectExplorerItem extends HBox {
         this.included = included;
         if (included) {
             label.setStyle("-fx-text-fill: blue;");
-            img.setImage(new Image(getClass().getResourceAsStream("table-small-black.jpg")));
+            img.setImage(ImageHelper.getImage("table-small-black.jpg", getClass()));
         } else {
             label.setStyle("-fx-text-fill: black;");
-            img.setImage(new Image(getClass().getResourceAsStream("table-small-gray.jpg")));
+            img.setImage(ImageHelper.getImage("table-small-gray.jpg", getClass()));
         }
     }
 

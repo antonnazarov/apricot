@@ -8,7 +8,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableView;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
@@ -27,6 +26,7 @@ import za.co.apricotdb.ui.model.EditProjectModelBuilder;
 import za.co.apricotdb.ui.model.NewProjectModelBuilder;
 import za.co.apricotdb.ui.model.ProjectFormModel;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
+import za.co.apricotdb.ui.util.ImageHelper;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
@@ -70,7 +70,7 @@ public class ApricotProjectHandler {
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setTitle("Open Project");
-        dialog.getIcons().add(new Image(getClass().getResourceAsStream("project-2-s1.JPG")));
+        dialog.getIcons().add(ImageHelper.getImage("project-2-s1.JPG", getClass()));
 
         Scene openProjectScene = new Scene(window);
         dialog.setScene(openProjectScene);
@@ -108,7 +108,7 @@ public class ApricotProjectHandler {
             model = editProjectModelBuilder.buildModel(parentWindow.getApplicationData().getCurrentProject());
         }
 
-        dialog.getIcons().add(new Image(getClass().getResourceAsStream("project-2-s1.JPG")));
+        dialog.getIcons().add(ImageHelper.getImage("project-2-s1.JPG", getClass()));
 
         Scene openProjectScene = new Scene(window);
         dialog.setScene(openProjectScene);

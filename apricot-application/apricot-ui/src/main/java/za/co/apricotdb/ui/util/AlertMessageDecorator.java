@@ -1,17 +1,14 @@
 package za.co.apricotdb.ui.util;
 
-import java.util.Optional;
-
-import org.apache.commons.text.WordUtils;
-import org.springframework.stereotype.Component;
-
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
-import javafx.scene.image.Image;
-import javafx.stage.Stage;
+import org.apache.commons.text.WordUtils;
+import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Component
 public class AlertMessageDecorator {
@@ -66,7 +63,7 @@ public class AlertMessageDecorator {
         alert.setTitle(title);
         alert.setHeaderText(WordUtils.wrap(text, STANDARD_MESSAGE_LENGTH));
         decorateAlert(alert, type);
-        Stage alertWindow = (Stage) alert.getDialogPane().getScene().getWindow();
+        // Stage alertWindow = (Stage) alert.getDialogPane().getScene().getWindow();
         // alertWindow.getIcons().add(new Image(getClass().getResourceAsStream("/za/co/apricotdb/ui/handler/system-error-small.png")));
         Optional<ButtonType> result = alert.showAndWait();
         if (result.orElse(no) == yes) {

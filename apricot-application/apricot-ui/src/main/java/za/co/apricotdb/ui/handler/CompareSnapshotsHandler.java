@@ -1,29 +1,20 @@
 package za.co.apricotdb.ui.handler;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Resource;
-import javax.transaction.Transactional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
-
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TreeItem;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.comparator.ApricotObjectDifference;
 import za.co.apricotdb.persistence.comparator.ColumnDifference;
 import za.co.apricotdb.persistence.comparator.ConstraintDifference;
@@ -51,11 +42,18 @@ import za.co.apricotdb.ui.comparator.CompareStateRemove;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.repository.ModelRow;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
+import za.co.apricotdb.ui.util.ImageHelper;
 import za.co.apricotdb.ui.util.UiConstants;
+
+import javax.annotation.Resource;
+import javax.transaction.Transactional;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The compare snapshots functionality.
- * 
+ *
  * @author Anton Nazarov
  * @since 15/10/2019
  */
@@ -81,8 +79,9 @@ public class CompareSnapshotsHandler {
 
     /**
      * Open the Snapshot comparator form.
+     *
      * @param compareRemote if true, the form is used for the comparison between local and remote snapshots
-     * @param row if compareRemote=true, then this parameter should be not null - the Repository model row
+     * @param row           if compareRemote=true, then this parameter should be not null - the Repository model row
      */
     @ApricotErrorLogger(title = "Unable to open the Compare Snapshots form")
     public void openCompareSnapshotsForm(boolean compareRemote, ModelRow row) {
@@ -103,8 +102,8 @@ public class CompareSnapshotsHandler {
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setTitle("Compare Snapshots");
-        dialog.getIcons().add(
-                new Image(getClass().getResourceAsStream("/za/co/apricotdb/ui/toolbar/tbCompareSnapshotEnabled.png")));
+        dialog.getIcons().add(ImageHelper.getImage("/za/co/apricotdb/ui/toolbar/tbCompareSnapshotEnabled.png",
+                getClass()));
         Scene scene = new Scene(window);
         scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             @Override
@@ -299,7 +298,7 @@ public class CompareSnapshotsHandler {
     }
 
     private void populateConstraint(ConstraintDifference cnstrd, TreeItem<CompareSnapshotRow> parentRow,
-            boolean diffOnly) {
+                                    boolean diffOnly) {
         if (cnstrd == null) {
             return;
         }

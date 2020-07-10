@@ -1,36 +1,34 @@
 package za.co.apricotdb.ui.handler;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
-
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TreeItem;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 import za.co.apricotdb.ui.CompareScriptController;
 import za.co.apricotdb.ui.comparator.CompareRowType;
 import za.co.apricotdb.ui.comparator.CompareSnapshotRow;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
+import za.co.apricotdb.ui.util.ImageHelper;
+
+import javax.annotation.Resource;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This component implements the logic of the diff alignment script generator.
- * 
+ *
  * @author Anton Nazarov
  * @since 05/11/2019
  */
@@ -76,7 +74,7 @@ public class CompareScriptHandler {
      * Get all items, the diff alignment script has to be generated for.
      */
     private List<TreeItem<CompareSnapshotRow>> retrieveAlignItems(TreeItem<CompareSnapshotRow> item,
-            boolean isParentSelected) {
+                                                                  boolean isParentSelected) {
         List<TreeItem<CompareSnapshotRow>> ret = new ArrayList<>();
 
         if (!isParentSelected) {
@@ -135,8 +133,8 @@ public class CompareScriptHandler {
         dialog.setTitle("Generate Alignment Script");
         Scene generateScriptScene = new Scene(window);
         dialog.setScene(generateScriptScene);
-        dialog.getIcons().add(
-                new Image(getClass().getResourceAsStream("/za/co/apricotdb/ui/toolbar/tbInsertScriptEnabled.png")));
+        dialog.getIcons().add(ImageHelper.getImage("/za/co/apricotdb/ui/toolbar/tbInsertScriptEnabled.png", getClass()));
+
         generateScriptScene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {

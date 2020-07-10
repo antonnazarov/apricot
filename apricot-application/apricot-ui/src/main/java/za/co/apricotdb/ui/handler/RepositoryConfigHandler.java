@@ -1,27 +1,20 @@
 package za.co.apricotdb.ui.handler;
 
-import java.io.IOException;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
-
 import com.google.gson.Gson;
-
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ApplicationParameterManager;
 import za.co.apricotdb.persistence.entity.ApricotApplicationParameter;
 import za.co.apricotdb.ui.RepositoryConfigController;
@@ -32,10 +25,14 @@ import za.co.apricotdb.ui.repository.ApricotRepositoryException;
 import za.co.apricotdb.ui.repository.RemoteRepositoryService;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.ui.util.GsonFactory;
+import za.co.apricotdb.ui.util.ImageHelper;
+
+import javax.annotation.Resource;
+import java.io.IOException;
 
 /**
  * The business logic under the Repository Configuration functionality.
- * 
+ *
  * @author Anton Nazarov
  * @since 05/04/2020
  */
@@ -71,7 +68,7 @@ public class RepositoryConfigHandler {
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setTitle("Configure Repository");
-        dialog.getIcons().add(new Image(getClass().getResourceAsStream("repository-small-s.png")));
+        dialog.getIcons().add(ImageHelper.getImage("repository-small-s.png", getClass()));
 
         Scene openProjectScene = new Scene(window);
         dialog.setScene(openProjectScene);
