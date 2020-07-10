@@ -21,7 +21,7 @@
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
-            <Label layoutX="88.0" layoutY="55.0" prefHeight="21.0" prefWidth="203.0" text="Version 2.3, xxxxxxx 2020">
+            <Label layoutX="88.0" layoutY="55.0" prefHeight="21.0" prefWidth="203.0" text="Version 2.3, July 2020">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
