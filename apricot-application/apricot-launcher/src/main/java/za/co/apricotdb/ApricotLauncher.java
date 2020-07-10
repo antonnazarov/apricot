@@ -57,6 +57,7 @@ public class ApricotLauncher {
             if (!launcher.checkIfDatabaseFileExists(System.getProperty("user.home") + "/.apricotdb/apricot-project.mv.db")) {
                 try {
                     launcher.copyReferenceToTarget();
+                    System.out.println("INFO: new database was copied to the apricotdb catalogue");
                 } catch (IOException e) {
                     System.out.println("ERROR: unable to copy the project database from reference to target");
                     e.printStackTrace();
