@@ -79,6 +79,8 @@ public class ApricotMainApp extends Application {
         primaryStage.getScene().addEventFilter(KeyEvent.KEY_PRESSED, e -> {
             if (e.getCode() == KeyCode.SPACE) {
                 handler.handleSpace();
+            } else {
+                handler.handle(e);
             }
         });
     }
