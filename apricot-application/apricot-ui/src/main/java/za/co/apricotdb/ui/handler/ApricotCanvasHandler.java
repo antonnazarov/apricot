@@ -5,7 +5,6 @@ import javafx.application.Platform;
 import javafx.scene.control.Tab;
 import javafx.util.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.RelationshipManager;
 import za.co.apricotdb.persistence.data.TableManager;
@@ -35,7 +34,6 @@ import za.co.apricotdb.viewport.relationship.ApricotRelationshipBuilder;
 import za.co.apricotdb.viewport.relationship.RelationshipBuilder;
 import za.co.apricotdb.viewport.relationship.RelationshipType;
 
-import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -102,6 +100,11 @@ public class ApricotCanvasHandler {
                 runAllocation(canvas, v, ElementType.RELATIONSHIP);
             });
         }
+
+        Platform.runLater(() -> {
+            AlignCommand aligner = new CanvasSizeAdjustor(canvas);
+            aligner.align();
+        });
 
         return tables;
     }
@@ -302,8 +305,8 @@ public class ApricotCanvasHandler {
                                           ElementType elementType) {
         CanvasAllocationMap map = tabViewHandler.readCanvasAllocationMap(view);
         canvas.applyAllocationMap(map, elementType);
-        AlignCommand aligner = new CanvasSizeAdjustor(canvas);
-        aligner.align();
+        // AlignCommand aligner = new CanvasSizeAdjustor(canvas);
+        // aligner.align();
 
         return null;
     }
