@@ -1,0 +1,6 @@
+<!-- https://mvnrepository.com/artifact/com.github.jsqlparser/jsqlparser -->
+<dependency>
+    <groupId>com.github.jsqlparser</groupId>
+    <artifactId>jsqlparser</artifactId>
+    <version>3.2</version>
+</dependency>
