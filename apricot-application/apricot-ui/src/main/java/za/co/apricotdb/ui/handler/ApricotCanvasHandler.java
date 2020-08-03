@@ -303,10 +303,9 @@ public class ApricotCanvasHandler {
 
     private PauseTransition runAllocation(ApricotCanvas canvas, ApricotView view,
                                           ElementType elementType) {
+        canvas.buildRelationships();
         CanvasAllocationMap map = tabViewHandler.readCanvasAllocationMap(view);
         canvas.applyAllocationMap(map, elementType);
-        // AlignCommand aligner = new CanvasSizeAdjustor(canvas);
-        // aligner.align();
 
         return null;
     }

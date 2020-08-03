@@ -165,7 +165,6 @@ public class ApricotCanvasImpl extends Pane implements ApricotCanvas {
             if (e.getElementType() == ElementType.ENTITY) {
                 ApricotEntity entity = (ApricotEntity) e;
                 entities.add(entity);
-
             }
         }
 
