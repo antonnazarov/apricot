@@ -1,15 +1,11 @@
 package za.co.apricotdb.ui.handler;
 
-import java.io.IOException;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
 import javafx.stage.Window;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.ViewManager;
@@ -25,11 +21,14 @@ import za.co.apricotdb.ui.model.ApricotConstraintData;
 import za.co.apricotdb.ui.model.EditEntityModel;
 import za.co.apricotdb.ui.model.EditRelationshipModel;
 
+import java.io.IOException;
+import java.util.List;
+
 /**
  * This component represents a collection of he non transactional calls to the
  * transactional methods in the business logic specific components. It allows to
  * use the general mechanism of the error handling of Apricot DB.
- * 
+ *
  * @author Anton Nazarov
  * @since 08/02/2020
  */
@@ -65,7 +64,7 @@ public class NonTransactionalPort {
 
     @Autowired
     ExcelReportHandler excelReportHandler;
-    
+
     @ApricotErrorLogger(title = "Unable to compare the selected Snapshots")
     public TreeItem<CompareSnapshotRow> compare(String sourceSnapshot, String targetSnapshot, boolean diffOnly) {
         return compareSnapshotHandler.compare(sourceSnapshot, targetSnapshot, diffOnly);
@@ -108,14 +107,10 @@ public class NonTransactionalPort {
 
     @ApricotErrorLogger(title = "Unable to open the Constraint Editor form")
     public void openConstraintEditorForm(boolean newConstraint, ApricotConstraintData constraintData,
-            EditEntityModel editEntityModel, TableView<ApricotConstraintData> constraintsTable,
-            boolean editableFields) {
-        try {
-            constraintHandler.openConstraintEditorForm(newConstraint, constraintData, editEntityModel, constraintsTable,
-                    editableFields);
-        } catch (IOException ex) {
-            throw new IllegalStateException(ex);
-        }
+                                         EditEntityModel editEntityModel, TableView<ApricotConstraintData> constraintsTable,
+                                         boolean editableFields) {
+        constraintHandler.openConstraintEditorForm(newConstraint, constraintData, editEntityModel, constraintsTable,
+                editableFields);
     }
 
     @ApricotErrorLogger(title = "Unable to open the Relationship Editor form")

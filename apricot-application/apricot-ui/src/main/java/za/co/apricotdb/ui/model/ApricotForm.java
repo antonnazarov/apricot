@@ -26,4 +26,8 @@ public class ApricotForm {
     public void show() {
         dialog.show();
     }
+
+    public Stage getDialog() {
+        return dialog;
+    }
 }

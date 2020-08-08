@@ -124,6 +124,11 @@
         <!-- JavaFX is not included into Java 14 -->
         <dependency>
             <groupId>org.openjfx</groupId>
+            <artifactId>javafx-base</artifactId>
+            <version>14.0.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>14.0.2.1</version>
         </dependency>

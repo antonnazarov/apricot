@@ -28,11 +28,16 @@ public class DialogFormHandler {
     @Resource
     ApplicationContext context;
 
-    public ApricotForm buildApricotForm(String formFile, String imageFile, String formTitle) {
+    public ApricotForm buildApricotForm(String formFile, String imageFile, String formTitle,
+                                        EventHandler<KeyEvent> eventHandler) {
         FXMLLoader loader = getLoader(formFile);
-        Stage dialog = buildForm(loader, imageFile, formTitle);
+        Stage dialog = buildForm(loader, imageFile, formTitle, eventHandler);
 
         return new ApricotForm(loader, dialog);
+    }
+
+    public ApricotForm buildApricotForm(String formFile, String imageFile, String formTitle) {
+        return buildApricotForm(formFile, imageFile, formTitle, null);
     }
 
     private FXMLLoader getLoader(String formFile) {
@@ -42,7 +47,8 @@ public class DialogFormHandler {
         return loader;
     }
 
-    private Stage buildForm(FXMLLoader loader, String imageFile, String formTitle) {
+    private Stage buildForm(FXMLLoader loader, String imageFile, String formTitle,
+                            EventHandler<KeyEvent> eventHandler) {
         Scene scene = null;
         try {
             Pane window = loader.load();
@@ -59,14 +65,18 @@ public class DialogFormHandler {
         }
         dialog.setScene(scene);
 
-        scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ESCAPE) {
-                    dialog.close();
+        if (eventHandler == null) {
+            scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+                @Override
+                public void handle(KeyEvent event) {
+                    if (event.getCode() == KeyCode.ESCAPE) {
+                        dialog.close();
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            scene.addEventFilter(KeyEvent.KEY_PRESSED, eventHandler);
+        }
 
         return dialog;
     }
