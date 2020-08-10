@@ -1,16 +1,7 @@
 package za.co.apricotdb.ui.handler;
 
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Pane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ProjectParameterManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
@@ -18,9 +9,8 @@ import za.co.apricotdb.persistence.entity.ApricotProjectParameter;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.ui.BlackListEditController;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
-import za.co.apricotdb.ui.util.ImageHelper;
+import za.co.apricotdb.ui.model.ApricotForm;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.List;
 
@@ -33,11 +23,11 @@ import java.util.List;
 @Component
 public class BlackListHandler {
 
-    @Resource
-    ApplicationContext context;
-
     @Autowired
     ProjectParameterManager projectParameterManager;
+
+    @Autowired
+    DialogFormHandler formHandler;
 
     public String getBlackListAsString(ApricotProject project) {
         String ret = null;
@@ -89,29 +79,11 @@ public class BlackListHandler {
      */
     @ApricotErrorLogger(title = "Unable to open the Black List editor")
     public void openEditBlackListForm(TextArea blackList) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-blacklist-editor.fxml"));
-        loader.setControllerFactory(context::getBean);
-        Pane window = loader.load();
-
-        final Stage dialog = new Stage();
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.setTitle("Edit Black List");
-        dialog.getIcons().add(ImageHelper.getImage("project-2-s1.JPG", getClass()));
-
-        Scene scene = new Scene(window);
-        dialog.setScene(scene);
-        scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ESCAPE) {
-                    dialog.close();
-                }
-            }
-        });
-
-        BlackListEditController controller = loader.<BlackListEditController>getController();
+        ApricotForm form = formHandler.buildApricotForm("/za/co/apricotdb/ui/apricot-blacklist-editor.fxml",
+                "project-2-s1.JPG", "Edit Black List");
+        BlackListEditController controller = form.getController();
         controller.init(blackList);
 
-        dialog.show();
+        form.show();
     }
 }

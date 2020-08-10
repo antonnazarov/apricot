@@ -1,15 +1,6 @@
 package za.co.apricotdb.ui.handler;
 
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Pane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.RelationshipManager;
 import za.co.apricotdb.persistence.data.TableManager;
@@ -17,11 +8,9 @@ import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.ui.RelatedEntitiesController;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
-import za.co.apricotdb.ui.util.ImageHelper;
+import za.co.apricotdb.ui.model.ApricotForm;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 
-import javax.annotation.Resource;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -38,9 +27,6 @@ import java.util.Set;
 @Component
 public class RelatedEntitiesHandler {
 
-    @Resource
-    ApplicationContext context;
-
     @Autowired
     ApricotCanvasHandler canvasHandler;
 
@@ -49,6 +35,9 @@ public class RelatedEntitiesHandler {
 
     @Autowired
     RelationshipManager relationshipManager;
+
+    @Autowired
+    DialogFormHandler formHandler;
 
     /**
      * Select tables, related to the given list.
@@ -103,35 +92,12 @@ public class RelatedEntitiesHandler {
      */
     @ApricotErrorLogger(title = "Unable to open the list of related Entities")
     public void createRelatedEntitiesForm(List<RelatedEntityAbsent> relatedEntities) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-related-entities.fxml"));
-        loader.setControllerFactory(context::getBean);
-        Pane window = null;
-        try {
-            window = loader.load();
-        } catch (IOException ex) {
-            throw new IllegalArgumentException(ex);
-        }
-
-        final Stage dialog = new Stage();
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.setTitle("Related Entities not in the View");
-        dialog.getIcons().add(ImageHelper.getImage("table-1-s1.jpg", getClass()));
-
-        Scene relatedEntitiesScene = new Scene(window);
-        dialog.setScene(relatedEntitiesScene);
-        relatedEntitiesScene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ESCAPE) {
-                    dialog.close();
-                }
-            }
-        });
-
-        RelatedEntitiesController controller = loader.<RelatedEntitiesController>getController();
+        ApricotForm form = formHandler.buildApricotForm("/za/co/apricotdb/ui/apricot-related-entities.fxml",
+                "table-1-s1.jpg", "Related Entities not in the View");
+        RelatedEntitiesController controller = form.getController();
         controller.init(relatedEntities);
 
-        dialog.show();
+        form.show();
     }
 
     /**

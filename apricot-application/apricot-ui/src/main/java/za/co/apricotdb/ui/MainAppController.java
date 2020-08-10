@@ -55,8 +55,6 @@ import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ElementStatus;
 
-import java.io.IOException;
-
 /**
  * This controller serves the main application form apricot-main.fxml.
  *
@@ -489,29 +487,17 @@ public class MainAppController {
 
     @FXML
     public void generateCreateScript(ActionEvent event) {
-        try {
-            generateScriptHandler.createGenerateScriptForm(DBScriptType.CREATE_SCRIPT);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        generateScriptHandler.createGenerateScriptForm(DBScriptType.CREATE_SCRIPT);
     }
 
     @FXML
     public void generateDropScript(ActionEvent event) {
-        try {
-            generateScriptHandler.createGenerateScriptForm(DBScriptType.DROP_SCRIPT);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        generateScriptHandler.createGenerateScriptForm(DBScriptType.DROP_SCRIPT);
     }
 
     @FXML
     public void generateDeleteScript(ActionEvent event) {
-        try {
-            generateScriptHandler.createGenerateScriptForm(DBScriptType.DELETE_SCRIPT);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        generateScriptHandler.createGenerateScriptForm(DBScriptType.DELETE_SCRIPT);
     }
 
     public void undo(ActionEvent event) {
@@ -520,11 +506,7 @@ public class MainAppController {
 
     @FXML
     public void about(ActionEvent event) {
-        try {
-            aboutHandler.showAboutForm();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        aboutHandler.showAboutForm();
     }
 
     @FXML

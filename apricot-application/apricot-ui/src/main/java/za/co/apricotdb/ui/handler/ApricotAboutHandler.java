@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import za.co.apricotdb.ui.model.ApricotForm;
 
 import javax.annotation.Resource;
-import java.io.IOException;
 
 /**
  * This is a handler that created the Apricot About form.
@@ -23,7 +22,7 @@ public class ApricotAboutHandler {
     @Autowired
     DialogFormHandler formHandler;
 
-    public void showAboutForm() throws IOException {
+    public void showAboutForm() {
         ApricotForm form = formHandler.buildApricotForm("/za/co/apricotdb/ui/apricot-about-form.fxml",
                 "favicon-32x32.png", "About Apricot DB");
         form.show();

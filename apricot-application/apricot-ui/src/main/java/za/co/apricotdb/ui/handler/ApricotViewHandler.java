@@ -1,19 +1,10 @@
 package za.co.apricotdb.ui.handler;
 
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Pane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ObjectLayoutManager;
 import za.co.apricotdb.persistence.data.RelationshipManager;
@@ -30,17 +21,16 @@ import za.co.apricotdb.persistence.entity.ViewDetailLevel;
 import za.co.apricotdb.ui.MainAppController;
 import za.co.apricotdb.ui.ViewFormController;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
+import za.co.apricotdb.ui.model.ApricotForm;
 import za.co.apricotdb.ui.model.ApricotViewSerializer;
 import za.co.apricotdb.ui.model.EditViewModelBuilder;
 import za.co.apricotdb.ui.model.NewViewModelBuilder;
 import za.co.apricotdb.ui.model.ViewFormModel;
 import za.co.apricotdb.ui.undo.ApricotUndoManager;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
-import za.co.apricotdb.ui.util.ImageHelper;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.CanvasBuilder;
 
-import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,9 +43,6 @@ import java.util.List;
  */
 @Component
 public class ApricotViewHandler {
-
-    @Resource
-    ApplicationContext context;
 
     @Autowired
     ViewManager viewManager;
@@ -98,6 +85,9 @@ public class ApricotViewHandler {
 
     @Autowired
     ApricotSnapshotHandler snapshotHandler;
+
+    @Autowired
+    DialogFormHandler formHandler;
 
     public List<ApricotView> getAllViews(ApricotProject project) {
         checkGeneralView(project);
@@ -147,38 +137,21 @@ public class ApricotViewHandler {
             return;
         }
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-view-editor.fxml"));
-        loader.setControllerFactory(context::getBean);
-        Pane window = loader.load();
-
-        final Stage dialog = new Stage();
-        dialog.initModality(Modality.APPLICATION_MODAL);
-
+        String title = null;
         ViewFormModel model = null;
         if (view == null) {
-            dialog.setTitle("Create view");
+            title = "Create view";
             model = newViewModelBuilder.buildModel(viewsTabPane);
         } else {
-            dialog.setTitle("Edit view");
+            title = "Edit view";
             model = editViewModelBuilder.buildModel(tab);
         }
-
-        Scene addViewScene = new Scene(window);
-        dialog.setScene(addViewScene);
-        dialog.getIcons().add(ImageHelper.getImage("view-s1.jpg", getClass()));
-        addViewScene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ESCAPE) {
-                    dialog.close();
-                }
-            }
-        });
-
-        ViewFormController controller = loader.<ViewFormController>getController();
+        ApricotForm form = formHandler.buildApricotForm("/za/co/apricotdb/ui/apricot-view-editor.fxml",
+                "view-s1.jpg", title);
+        ViewFormController controller = form.getController();
         controller.init(model, viewsTabPane);
 
-        dialog.show();
+        form.show();
     }
 
     /**

@@ -1,22 +1,13 @@
 package za.co.apricotdb.ui.handler;
 
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Pane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.text.StringSubstitutor;
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.ui.HtmlViewController;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
-import za.co.apricotdb.ui.util.ImageHelper;
+import za.co.apricotdb.ui.model.ApricotForm;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -31,41 +22,17 @@ import java.util.Map;
 @Component
 public class HtmlViewHandler {
 
-    @Resource
-    ApplicationContext context;
+    @Autowired
+    DialogFormHandler formHandler;
 
     @ApricotErrorLogger(title = "Unable to show information form")
     public void showHtmlViewForm(String html, String formTitle) {
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/za/co/apricotdb/ui/apricot-html-viewer.fxml"));
-        loader.setControllerFactory(context::getBean);
-        Pane window = null;
-        try {
-            window = loader.load();
-        } catch (IOException ex) {
-            throw new IllegalArgumentException("Unable to open the Html Viewer form", ex);
-        }
-
-        final Stage dialog = new Stage();
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.setTitle(formTitle);
-        dialog.getIcons().add(ImageHelper.getImage("/za/co/apricotdb/ui/toolbar/tbEditProjectEnabled.png", getClass()));
-        Scene scene = new Scene(window);
-        scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ESCAPE) {
-                    dialog.close();
-                }
-            }
-        });
-
-        dialog.setScene(scene);
-
-        HtmlViewController controller = loader.<HtmlViewController>getController();
+        ApricotForm form = formHandler.buildApricotForm("/za/co/apricotdb/ui/apricot-html-viewer.fxml",
+                "/za/co/apricotdb/ui/toolbar/tbEditProjectEnabled.png", formTitle);
+        HtmlViewController controller = form.getController();
         controller.init(html);
 
-        dialog.show();
+        form.show();
     }
 
     public void showHtmlViewForm(Map<String, String> values, String templateFile, String formTitle) {

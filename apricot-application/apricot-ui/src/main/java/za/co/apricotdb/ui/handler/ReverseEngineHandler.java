@@ -34,6 +34,7 @@ import za.co.apricotdb.ui.ConnectionH2Controller;
 import za.co.apricotdb.ui.ConnectionSqlServerController;
 import za.co.apricotdb.ui.ReversedTablesController;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
+import za.co.apricotdb.ui.model.ApricotForm;
 import za.co.apricotdb.ui.model.ConnectionAppParameterModel;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.ui.util.ImageHelper;
@@ -85,6 +86,9 @@ public class ReverseEngineHandler {
     @Autowired
     SqlServerParametersHandler parametersHandler;
 
+    @Autowired
+    DialogFormHandler formHandler;
+
     @ApricotErrorLogger(title = "Unable to start the Reverse Engineering process")
     public boolean startReverseEngineering() {
         ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
@@ -109,26 +113,12 @@ public class ReverseEngineHandler {
 
     @ApricotErrorLogger(title = "Unable to open the result of the scan process")
     public void openScanResultForm(MetaData metaData, String[] blackList, String reverseEngineeringParameters) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-re-tables-list.fxml"));
-        loader.setControllerFactory(context::getBean);
-        Pane window = null;
-        try {
-            window = loader.load();
-        } catch (IOException ex) {
-            throw new IllegalStateException(ex);
-        }
-
-        ReversedTablesController controller = loader.<ReversedTablesController>getController();
+        ApricotForm form = formHandler.buildApricotForm("/za/co/apricotdb/ui/apricot-re-tables-list.fxml",
+                "bw-reverse-s1.jpg", "Result of the database scan");
+        ReversedTablesController controller = form.getController();
         controller.init(metaData, blackList, reverseEngineeringParameters);
 
-        final Stage dialog = new Stage();
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.setTitle("Result of the database scan");
-        dialog.getIcons().add(ImageHelper.getImage("bw-reverse-s1.jpg", getClass()));
-        Scene openProjectScene = new Scene(window);
-        dialog.setScene(openProjectScene);
-
-        dialog.show();
+        form.show();
     }
 
     @ApricotErrorLogger(title = "Unable to save the reversed objects in the current Snapshot")

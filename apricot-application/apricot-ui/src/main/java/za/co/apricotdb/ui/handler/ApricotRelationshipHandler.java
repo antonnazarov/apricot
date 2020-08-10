@@ -1,18 +1,9 @@
 package za.co.apricotdb.ui.handler;
 
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Pane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ConstraintManager;
 import za.co.apricotdb.persistence.data.RelationshipManager;
@@ -25,16 +16,15 @@ import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.ui.EditRelationshipController;
 import za.co.apricotdb.ui.MainAppController;
+import za.co.apricotdb.ui.model.ApricotForm;
 import za.co.apricotdb.ui.model.ApricotRelationshipSerializer;
 import za.co.apricotdb.ui.model.ApricotRelationshipValidator;
 import za.co.apricotdb.ui.model.EditRelationshipModel;
 import za.co.apricotdb.ui.model.EditRelationshipModelBuilder;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
-import za.co.apricotdb.ui.util.ImageHelper;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 
-import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.List;
@@ -47,9 +37,6 @@ import java.util.List;
  */
 @Component
 public class ApricotRelationshipHandler {
-
-    @Resource
-    ApplicationContext context;
 
     @Autowired
     EditRelationshipModelBuilder modelBuilder;
@@ -84,6 +71,9 @@ public class ApricotRelationshipHandler {
     @Autowired
     MainAppController appController;
 
+    @Autowired
+    DialogFormHandler formHandler;
+
     @Transactional
     public void openRelationshipEditorForm(TabPane viewsTabPane) throws IOException {
 
@@ -91,7 +81,7 @@ public class ApricotRelationshipHandler {
         ApricotTable[] selectedTables = getRelatedTables(viewsTabPane);
         if (selectedTables == null) {
             Alert alert = alertDecorator.getErrorAlert("New Relationship",
-                    "Please select one or two Entites which you want to build a new Relationship between");
+                    "Please select one or two Entities which you want to build a new Relationship between");
             alert.showAndWait();
 
             return;
@@ -102,32 +92,14 @@ public class ApricotRelationshipHandler {
             return;
         }
 
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/za/co/apricotdb/ui/apricot-relationship-editor.fxml"));
-        loader.setControllerFactory(context::getBean);
-        Pane window = loader.load();
+        ApricotForm form = formHandler.buildApricotForm("/za/co/apricotdb/ui/apricot-relationship-editor.fxml",
+                "table-1-s1.jpg", "Create a new Relationship");
 
-        final Stage dialog = new Stage();
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.setTitle("Create a new Relationship");
-        dialog.getIcons().add(ImageHelper.getImage("table-1-s1.jpg", getClass()));
-
-        Scene newRelationshipScene = new Scene(window);
-        dialog.setScene(newRelationshipScene);
-        newRelationshipScene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ESCAPE) {
-                    dialog.close();
-                }
-            }
-        });
-
-        EditRelationshipController controller = loader.<EditRelationshipController>getController();
+        EditRelationshipController controller = form.getController();
         controller.init(model);
         modelBuilder.populateKeys(model);
 
-        dialog.show();
+        form.show();
     }
 
     @Transactional

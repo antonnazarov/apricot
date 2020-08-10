@@ -1,26 +1,18 @@
 package za.co.apricotdb.ui.handler;
 
 import javafx.application.Platform;
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Pane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.support.export.ExportProjectProcessor;
 import za.co.apricotdb.ui.RepositoryController;
 import za.co.apricotdb.ui.error.ApricotErrorHandler;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
+import za.co.apricotdb.ui.model.ApricotForm;
 import za.co.apricotdb.ui.repository.ApricotRepositoryException;
 import za.co.apricotdb.ui.repository.LocalRepoService;
 import za.co.apricotdb.ui.repository.RemoteExportService;
@@ -31,9 +23,7 @@ import za.co.apricotdb.ui.repository.RepositoryModel;
 import za.co.apricotdb.ui.repository.RepositoryRow;
 import za.co.apricotdb.ui.repository.RepositoryRowFactory;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
-import za.co.apricotdb.ui.util.ImageHelper;
 
-import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -48,9 +38,6 @@ import java.nio.charset.Charset;
 public class RepositoryHandler {
 
     private final Logger logger = LoggerFactory.getLogger(RepositoryHandler.class);
-
-    @Resource
-    ApplicationContext context;
 
     @Autowired
     RepositoryRowFactory rowFactory;
@@ -106,6 +93,9 @@ public class RepositoryHandler {
     @Autowired
     HtmlViewHandler htmlViewHandler;
 
+    @Autowired
+    DialogFormHandler formHandler;
+
     @ApricotErrorLogger(title = "Unable to create the Apricot Repository form")
     public void showRepositoryForm() {
         if (!checkIfUrlConfigured()) {
@@ -118,37 +108,15 @@ public class RepositoryHandler {
             throw new IllegalArgumentException("Unable to initialize the local repository", ex);
         }
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-repository.fxml"));
-        loader.setControllerFactory(context::getBean);
-        Pane window = null;
-        try {
-            window = loader.load();
-        } catch (IOException e) {
-            throw new IllegalArgumentException(e);
-        }
-
-        final Stage dialog = new Stage();
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.setTitle("Apricot Repository Import/Export");
-        dialog.getIcons().add(ImageHelper.getImage("repository-small-s.png", getClass()));
-
-        Scene openProjectScene = new Scene(window);
-        dialog.setScene(openProjectScene);
-        openProjectScene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ESCAPE) {
-                    dialog.close();
-                }
-            }
-        });
+        ApricotForm form = formHandler.buildApricotForm("/za/co/apricotdb/ui/apricot-repository.fxml",
+                "repository-small-s.png", "Apricot Repository Import/Export");
 
         // this extra thread was created to reflect the Progress Bar on the long running process
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    RepositoryController controller = loader.<RepositoryController>getController();
+                    RepositoryController controller = form.getController();
                     progressBarHandler.initProgressBar();
                     RepositoryModel model = compareService.generateModel();
                     if (model != null) {
@@ -156,7 +124,7 @@ public class RepositoryHandler {
                     }
 
                     Platform.runLater(() -> {
-                        dialog.show();
+                        form.show();
                     });
                 } catch (Exception ex) {
                     errorHandler.showErrorInfo("Unable to create the Apricot Repository form", "Apricot " +

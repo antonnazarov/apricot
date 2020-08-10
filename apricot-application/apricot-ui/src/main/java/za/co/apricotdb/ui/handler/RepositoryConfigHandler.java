@@ -1,34 +1,22 @@
 package za.co.apricotdb.ui.handler;
 
 import com.google.gson.Gson;
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Pane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ApplicationParameterManager;
 import za.co.apricotdb.persistence.entity.ApricotApplicationParameter;
 import za.co.apricotdb.ui.RepositoryConfigController;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
+import za.co.apricotdb.ui.model.ApricotForm;
 import za.co.apricotdb.ui.model.RepositoryConfiguration;
 import za.co.apricotdb.ui.model.RepositoryConfigurationModel;
 import za.co.apricotdb.ui.repository.ApricotRepositoryException;
 import za.co.apricotdb.ui.repository.RemoteRepositoryService;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.ui.util.GsonFactory;
-import za.co.apricotdb.ui.util.ImageHelper;
-
-import javax.annotation.Resource;
-import java.io.IOException;
 
 /**
  * The business logic under the Repository Configuration functionality.
@@ -41,9 +29,6 @@ public class RepositoryConfigHandler {
 
     public static final String REPOSITORY_CONFIGURATION = "REPOSITORY_CONFIGURATION";
 
-    @Resource
-    ApplicationContext context;
-
     @Autowired
     AlertMessageDecorator alertDec;
 
@@ -53,41 +38,20 @@ public class RepositoryConfigHandler {
     @Autowired
     RemoteRepositoryService remoteRepositoryHandler;
 
+    @Autowired
+    DialogFormHandler formHandler;
+
     @ApricotErrorLogger(title = "Unable to create the Repository configuration forms")
     public void showRepositoryConfigForm(boolean showAndWait) {
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/za/co/apricotdb/ui/apricot-repository-config.fxml"));
-        loader.setControllerFactory(context::getBean);
-        Pane window = null;
-        try {
-            window = loader.load();
-        } catch (IOException e) {
-            throw new IllegalArgumentException(e);
-        }
-
-        final Stage dialog = new Stage();
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.setTitle("Configure Repository");
-        dialog.getIcons().add(ImageHelper.getImage("repository-small-s.png", getClass()));
-
-        Scene openProjectScene = new Scene(window);
-        dialog.setScene(openProjectScene);
-        openProjectScene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ESCAPE) {
-                    dialog.close();
-                }
-            }
-        });
-
-        RepositoryConfigController controller = loader.<RepositoryConfigController>getController();
+        ApricotForm form = formHandler.buildApricotForm("/za/co/apricotdb/ui/apricot-repository-config.fxml",
+                "repository-small-s.png", "Configure Repository");
+        RepositoryConfigController controller = form.getController();
         controller.init();
 
         if (showAndWait) {
-            dialog.showAndWait();
+            form.showAndWait();
         } else {
-            dialog.show();
+            form.show();
         }
     }
 
