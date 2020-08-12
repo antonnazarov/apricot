@@ -31,7 +31,6 @@ import za.co.apricotdb.persistence.repository.ApricotProjectParameterRepository;
 public class ProjectParameterManager {
 
     public static final String DATABASE_CONNECTION_PARAM_PREFIX = "DATABASE.CONNECTION.";
-    public static final String DATABASE_CONNECTION_LATEST = "DATABASE.CONNECTION.LATEST";
     public static final String PROJECT_BLACKLIST_PARAM = "PROJECT.BLACKLIST";
     public static final String CONNECTION_SERVER = "CONNECTION.SERVER";
     public static final String CONNECTION_PORT = "CONNECTION.PORT";
@@ -42,6 +41,7 @@ public class ProjectParameterManager {
     public static final String PROJECT_DEFAULT_OUTPUT_DIR = "PROJECT.DEFAULT.OUTPUT.DIR";
     public static final String SCRIPT_DEFAULT_OUTPUT_DIR = "SCRIPT.DEFAULT.OUTPUT.DIR";
     public static final String H2DB_FILE_DEFAULT_DIR = "H2DB.FILE.DEFAULT.DIR";
+    public static final String PREVIOUS_ADVANCED_SEARCH = "PREVIOUS.ADVANCED.SEARCH";
 
     @Resource
     EntityManager em;
