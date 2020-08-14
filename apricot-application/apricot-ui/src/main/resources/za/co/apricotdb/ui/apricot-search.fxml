@@ -64,8 +64,10 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
                <children>
-                  <Label fx:id="statusBar" prefHeight="17.0" prefWidth="681.0" text="Found: 23 Entities; Selected: 3 Entities" HBox.hgrow="ALWAYS" />
-                  <Button mnemonicParsing="false" onAction="#close" prefHeight="25.0" prefWidth="151.0" text="Close" HBox.hgrow="NEVER" />
+                  <Label fx:id="statusBar" prefHeight="17.0" prefWidth="281.0" text="Found: 23 Entities; Selected: 3 Entities" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="makeQuickViewButton" mnemonicParsing="false" onAction="#makeQuickView" prefHeight="25.0" prefWidth="184.0" text="Make Quick View" />
+                  <Button fx:id="selectEntitiesButton" mnemonicParsing="false" onAction="#selectEntities" prefHeight="25.0" prefWidth="184.0" text="Select Entities on Diagrams" HBox.hgrow="NEVER" />
+                  <Button mnemonicParsing="false" onAction="#close" prefHeight="25.0" prefWidth="184.0" text="Close" />
                </children>
                <opaqueInsets>
                   <Insets left="5.0" />

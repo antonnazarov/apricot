@@ -19,6 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.syntaxtext.SyntaxTextAreaFX;
 import za.co.apricotdb.ui.handler.AdvancedSearchHandler;
+import za.co.apricotdb.ui.handler.ApricotCanvasHandler;
+import za.co.apricotdb.ui.handler.QuickViewHandler;
+import za.co.apricotdb.viewport.canvas.ApricotCanvas;
+import za.co.apricotdb.viewport.entity.ApricotEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +38,12 @@ public class AdvancedSearchController {
 
     @Autowired
     AdvancedSearchHandler searchHandler;
+
+    @Autowired
+    QuickViewHandler quickViewHandler;
+
+    @Autowired
+    ApricotCanvasHandler canvasHandler;
 
     @FXML
     Pane mainPane;
@@ -64,6 +74,12 @@ public class AdvancedSearchController {
 
     @FXML
     HBox editorHolder;
+
+    @FXML
+    Button selectEntitiesButton;
+
+    @FXML
+    Button makeQuickViewButton;
 
     private SyntaxTextAreaFX textEditor;
     private ObservableList<AdvancedSearchResultRow> resultList;
@@ -100,6 +116,8 @@ public class AdvancedSearchController {
         selectAllButton.setDisable(true);
         unselectAllButton.setDisable(true);
         cleanResultButton.setDisable(true);
+        selectEntitiesButton.setDisable(true);
+        makeQuickViewButton.setDisable(true);
 
         entityName.setCellValueFactory(new PropertyValueFactory<AdvancedSearchResultRow, String>("entityName"));
         entitySelected.setCellValueFactory(new PropertyValueFactory<AdvancedSearchResultRow, CheckBox>("entitySelected"));
@@ -128,6 +146,7 @@ public class AdvancedSearchController {
                 cleanResultButton.setDisable(false);
 
                 searchHandler.savePreviousSearchCondition(textEditor.getText());
+                selectAll();
             } else {
                 selectAllButton.setDisable(true);
                 unselectAllButton.setDisable(true);
@@ -141,6 +160,8 @@ public class AdvancedSearchController {
     @FXML
     public void cleanResult() {
         resultList.clear();
+        selectAllButton.setDisable(true);
+        unselectAllButton.setDisable(true);
         buildStatusBar();
     }
 
@@ -158,6 +179,22 @@ public class AdvancedSearchController {
             r.getEntitySelected().setSelected(false);
         }
         buildStatusBar();
+    }
+
+    @FXML
+    public void selectEntities() {
+        List<String> entities = getSelectedEntities();
+        searchHandler.selectEntitiesOnAllCanvas(entities);
+    }
+
+    @FXML
+    public void makeQuickView() {
+        selectEntities();
+        ApricotCanvas canvas = canvasHandler.getMainCanvas();
+        if (canvas != null && !canvas.getSelectedEntities().isEmpty()) {
+            quickViewHandler.createQuickView(canvas.getSelectedEntities());
+            close();
+        }
     }
 
     @FXML
@@ -179,7 +216,19 @@ public class AdvancedSearchController {
                     selected++;
                 }
             }
+            selectEntitiesButton.setDisable(selected == 0);
+            makeQuickViewButton.setDisable(selected == 0);
+
             statusBar.setText("Found: " + resultList.size() + " Entities; Selected: " + selected + " Entities");
         }
+    }
+
+    private List<String> getSelectedEntities() {
+        List<String> ret = new ArrayList<>();
+        for (AdvancedSearchResultRow r : resultList) {
+            ret.add(r.getEntityName());
+        }
+
+        return ret;
     }
 }

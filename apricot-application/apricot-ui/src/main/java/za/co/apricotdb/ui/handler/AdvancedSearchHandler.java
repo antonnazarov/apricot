@@ -13,6 +13,7 @@ import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.ui.AdvancedSearchController;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.model.ApricotForm;
+import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -41,6 +42,9 @@ public class AdvancedSearchHandler {
 
     @Autowired
     TableManager tableManager;
+
+    @Autowired
+    ApricotCanvasHandler canvasHandler;
 
     @ApricotErrorLogger(title = "Unable to open the Advanced Search screen")
     public void openSearchForm() {
@@ -84,5 +88,12 @@ public class AdvancedSearchHandler {
         ret.sort(Comparator.comparing(String::toLowerCase));
 
         return ret;
+    }
+
+    public void selectEntitiesOnAllCanvas(List<String> entities) {
+        List<ApricotCanvas> canvases = canvasHandler.getAllCanvases();
+        for (ApricotCanvas canvas : canvases) {
+            canvasHandler.makeEntitiesSelected(canvas, entities, true);
+        }
     }
 }
