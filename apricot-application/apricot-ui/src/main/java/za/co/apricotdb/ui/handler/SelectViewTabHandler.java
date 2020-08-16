@@ -1,9 +1,5 @@
 package za.co.apricotdb.ui.handler;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.stereotype.Component;
-
 import javafx.animation.PauseTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -11,13 +7,16 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.util.Duration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ViewManager;
 import za.co.apricotdb.ui.undo.ApricotUndoManager;
 import za.co.apricotdb.viewport.notification.EntityStatusChangedEvent;
 
 /**
  * This functionality is related to the selection of the View on the View Tabs.
- * 
+ *
  * @author Anton Nazarov
  * @since 05/10/2019
  */

@@ -139,6 +139,8 @@ public class OnKeyPressedEventHandler implements EventHandler<KeyEvent> {
                     quickViewHandler.createQuickView();
                 }
                 break;
+            case SPACE:
+                handleSpace();
             default:
                 break;
         }

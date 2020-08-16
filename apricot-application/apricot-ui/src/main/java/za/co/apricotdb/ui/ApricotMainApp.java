@@ -5,8 +5,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.springframework.boot.SpringApplication;
@@ -15,7 +13,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
-import za.co.apricotdb.ui.handler.OnKeyPressedEventHandler;
 import za.co.apricotdb.ui.util.ImageHelper;
 
 @Configuration
@@ -72,17 +69,6 @@ public class ApricotMainApp extends Application {
 
 
         primaryStage.show();
-
-        // handling key pressed in the main scene
-        OnKeyPressedEventHandler handler = context.getBean(OnKeyPressedEventHandler.class);
-        primaryStage.getScene().setOnKeyPressed(handler);
-        primaryStage.getScene().addEventFilter(KeyEvent.KEY_PRESSED, e -> {
-            if (e.getCode() == KeyCode.SPACE) {
-                handler.handleSpace();
-            } else {
-                handler.handle(e);
-            }
-        });
     }
 
     @Override

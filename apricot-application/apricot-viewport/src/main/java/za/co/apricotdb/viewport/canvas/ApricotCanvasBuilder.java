@@ -47,8 +47,8 @@ public class ApricotCanvasBuilder implements CanvasBuilder {
     }
     
     private void buildBorder(Pane p) {
-        BorderStroke bs = new BorderStroke(Color.LIGHTGREY, BorderStrokeStyle.DASHED, new CornerRadii(0),
-                new BorderWidths(2));
+        BorderStroke bs = new BorderStroke(Color.LIGHTGREY, BorderStrokeStyle.DOTTED, new CornerRadii(0),
+                new BorderWidths(1));
         Border border = new Border(bs);
         p.setBorder(border);
     }

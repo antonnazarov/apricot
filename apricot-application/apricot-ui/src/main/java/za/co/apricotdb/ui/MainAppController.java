@@ -301,12 +301,6 @@ public class MainAppController {
             }
         });
 
-        projectsTreeView.setOnKeyPressed(e -> {
-            Pane canvas = (Pane) canvasHandler.getSelectedCanvas();
-            canvas.fireEvent(e);
-            canvas.requestFocus();
-        });
-
         scale.getItems().clear();
         scale.getItems().add("100%");
         scale.getItems().add("80%");

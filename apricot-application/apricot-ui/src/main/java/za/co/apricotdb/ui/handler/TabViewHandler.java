@@ -167,18 +167,6 @@ public class TabViewHandler {
     private ScrollPane buildScrollPane() {
         ScrollPane scroll = new ScrollPane();
 
-        Set<Node> nodes = scroll.lookupAll(".scroll-bar");
-        for (final Node node : nodes) {
-            if (node instanceof ScrollBar) {
-                ScrollBar sb = (ScrollBar) node;
-                if (sb.getOrientation() == Orientation.VERTICAL) { // HORIZONTAL is another option.
-                    sb.setPrefWidth(18); // You can define your preferred width here.
-                } else {
-                    sb.setPrefHeight(18);
-                }
-            }
-        }
-
         return scroll;
     }
 

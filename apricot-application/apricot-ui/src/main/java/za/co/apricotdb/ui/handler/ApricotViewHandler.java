@@ -9,7 +9,13 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,6 +104,9 @@ public class ApricotViewHandler {
 
     @Autowired
     ApricotSnapshotHandler snapshotHandler;
+
+    @Autowired
+    OnKeyPressedEventHandler keyPressedEventHandler;
 
     public List<ApricotView> getAllViews(ApricotProject project) {
         checkGeneralView(project);
@@ -216,9 +225,35 @@ public class ApricotViewHandler {
         ApricotCanvas canvas = canvasBuilder.buildCanvas(view.getDetailLevel().toString(),
                 snapshot.getProject().getErdNotation().toString());
         Tab tab = tabViewHandler.buildTab(snapshot, view, canvas);
+        tab.setOnSelectionChanged(e -> {
+            ((Pane) canvas).fireEvent(e);
+            ((Pane) canvas).requestFocus();
+        });
         tabPane.getTabs().add(tab);
 
         canvasHandler.populateCanvas(snapshot, view, canvas);
+
+        /*
+         * The advanced Canvas focusing strategy:
+         * any click in the current canvas or even mouse entered, makes it focused
+         */
+        Pane pCanvas = (Pane) canvas;
+        pCanvas.setOnMouseEntered(e -> {
+            pCanvas.requestFocus();
+        });
+        pCanvas.setOnKeyPressed(keyPressedEventHandler);
+        pCanvas.focusedProperty().addListener((oVal, bOld, bNew) -> {
+            BorderStroke bs;
+            if (bNew) {
+                bs = new BorderStroke(Color.BLUE, BorderStrokeStyle.DOTTED, new CornerRadii(0),
+                        new BorderWidths(1));
+            } else {
+                bs = new BorderStroke(Color.LIGHTGRAY, BorderStrokeStyle.DOTTED, new CornerRadii(0),
+                        new BorderWidths(1));
+            }
+            Border border = new Border(bs);
+            pCanvas.setBorder(border);
+        });
 
         return tab;
     }
