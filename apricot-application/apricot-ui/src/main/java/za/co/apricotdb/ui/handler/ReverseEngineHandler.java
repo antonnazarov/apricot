@@ -32,6 +32,7 @@ import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.ui.ConnectionH2Controller;
 import za.co.apricotdb.ui.ConnectionSqlServerController;
+import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.ReversedTablesController;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.model.ApricotForm;
@@ -44,6 +45,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -88,6 +90,9 @@ public class ReverseEngineHandler {
 
     @Autowired
     DialogFormHandler formHandler;
+
+    @Autowired
+    ParentWindow pw;
 
     @ApricotErrorLogger(title = "Unable to start the Reverse Engineering process")
     public boolean startReverseEngineering() {
@@ -148,9 +153,7 @@ public class ReverseEngineHandler {
                 }
 
                 // save the black list
-                excluded.sort((ApricotTable t1, ApricotTable t2) -> {
-                    return t1.getName().compareTo(t2.getName());
-                });
+                excluded.sort(Comparator.comparing(ApricotTable::getName));
                 blackListHandler.saveBlackList(projectManager.findCurrentProject(), excluded);
             } else {
                 return false;
@@ -269,16 +272,14 @@ public class ReverseEngineHandler {
 
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(pw.getPrimaryStage());
         dialog.setTitle(title);
         dialog.getIcons().add(ImageHelper.getImage("bw-reverse-s1.jpg", getClass()));
         Scene connectionScene = new Scene(window);
         dialog.setScene(connectionScene);
-        connectionScene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ESCAPE) {
-                    dialog.close();
-                }
+        connectionScene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.ESCAPE) {
+                dialog.close();
             }
         });
 

@@ -16,6 +16,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.SnapshotManager;
@@ -358,12 +359,8 @@ public class MainAppController {
      * Show a list of the projects, registered in the system.
      */
     @FXML
-    public void openProject(ActionEvent event) {
-        try {
-            projectHandler.createOpenProjectForm(mainPane);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void openProject() {
+        projectHandler.createOpenProjectForm(mainPane);
     }
 
     /**

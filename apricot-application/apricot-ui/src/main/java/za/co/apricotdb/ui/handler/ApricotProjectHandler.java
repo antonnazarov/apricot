@@ -6,6 +6,7 @@ import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ProjectManager;
@@ -53,7 +54,7 @@ public class ApricotProjectHandler {
     DialogFormHandler formHandler;
 
     @ApricotErrorLogger(title = "Unable to open the list of projects")
-    public void createOpenProjectForm(Pane mainPane) throws Exception {
+    public void createOpenProjectForm(Pane mainPane) {
         ApricotForm form = formHandler.buildApricotForm("/za/co/apricotdb/ui/apricot-project-open.fxml",
                 "project-2-s1.JPG", "Open Project");
         OpenProjectController controller = form.getController();

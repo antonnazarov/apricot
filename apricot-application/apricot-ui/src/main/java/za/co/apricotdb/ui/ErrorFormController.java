@@ -2,6 +2,7 @@ package za.co.apricotdb.ui;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +27,9 @@ public class ErrorFormController {
     @Resource
     ApplicationContext context;
 
+    @Autowired
+    ParentWindow pw;
+
     @FXML
     TextArea errorText;
 
@@ -45,6 +49,7 @@ public class ErrorFormController {
 
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(pw.getPrimaryStage());
         dialog.setTitle("The error details");
 
         Scene scene = new Scene(window);

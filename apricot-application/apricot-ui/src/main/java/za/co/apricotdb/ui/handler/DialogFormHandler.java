@@ -2,14 +2,17 @@ package za.co.apricotdb.ui.handler;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.model.ApricotForm;
 import za.co.apricotdb.ui.util.ImageHelper;
 
@@ -27,6 +30,9 @@ public class DialogFormHandler {
 
     @Resource
     ApplicationContext context;
+
+    @Autowired
+    ParentWindow pw;
 
     public ApricotForm buildApricotForm(String formFile, String imageFile, String formTitle,
                                         EventHandler<KeyEvent> eventHandler) {
@@ -59,6 +65,7 @@ public class DialogFormHandler {
 
         Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(pw.getPrimaryStage());
         dialog.setTitle(formTitle);
         if (imageFile != null) {
             dialog.getIcons().add(ImageHelper.getImage(imageFile, getClass()));
