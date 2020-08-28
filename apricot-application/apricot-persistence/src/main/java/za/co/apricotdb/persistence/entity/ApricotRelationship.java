@@ -105,7 +105,12 @@ public class ApricotRelationship implements Serializable {
      */
     public String getName() {
         StringBuilder sb = new StringBuilder();
-        
+
+        //  checking if the database is consistent
+        if (parent.getColumns() == null || parent.getColumns().size() == 0 || child.getColumns() == null || child.getColumns().size() == 0) {
+            return "undefined";
+        }
+
         sb.append(parent.getTable().getName()).append("|")
             .append(child.getTable().getName()).append("|")
             .append(parent.getColumns().get(0).getColumn().getName()).append("|")

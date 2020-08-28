@@ -16,7 +16,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
+import org.controlsfx.dialog.ProgressDialog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.SnapshotManager;
@@ -44,6 +44,7 @@ import za.co.apricotdb.ui.handler.RepositoryHandler;
 import za.co.apricotdb.ui.handler.ReverseEngineHandler;
 import za.co.apricotdb.ui.handler.SelectViewTabHandler;
 import za.co.apricotdb.ui.handler.TabViewHandler;
+import za.co.apricotdb.ui.service.MockService;
 import za.co.apricotdb.ui.toolbar.TbAddFilterHandler;
 import za.co.apricotdb.ui.toolbar.TbButton;
 import za.co.apricotdb.ui.toolbar.TbQuickViewHandler;
@@ -160,6 +161,9 @@ public class MainAppController {
 
     @Autowired
     TbQuickViewHandler tbQuickViewHandler;
+
+    @Autowired
+    MockService mockService;
 
     @FXML
     AnchorPane mainPane;
@@ -438,10 +442,8 @@ public class MainAppController {
      * Delete the chosen snapshot.
      */
     @FXML
-    public void deleteSnapshot(ActionEvent event) {
-        if (snapshotHandler.deleteSnapshot()) {
-            applicationInitializer.initializeDefault();
-        }
+    public void deleteSnapshot() {
+        snapshotHandler.deleteSnapshot();
     }
 
     /**
@@ -643,5 +645,24 @@ public class MainAppController {
 
     public TextField getFilterField() {
         return filterField;
+    }
+
+    @FXML
+    public void runProgressBar() {
+        mockService.setMsg("(!)");
+        mockService.setOnSucceeded(e -> {
+            Boolean ret = mockService.getValue();
+            System.out.println("After the worker is finished with result: " + ret);
+        });
+
+        ProgressDialog dlg = new ProgressDialog(mockService);
+        //  dlg.setContentText("This is the context text");
+        dlg.setTitle("Title: test dialog");
+        dlg.setHeaderText("This is a header text");
+        dlg.initOwner(parentWindow.getPrimaryStage());
+
+        mockService.start();
+        boolean ret = mockService.getValue();
+        System.out.println("Ret: " + ret);
     }
 }

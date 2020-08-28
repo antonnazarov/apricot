@@ -1,6 +1,5 @@
 package za.co.apricotdb.ui;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;

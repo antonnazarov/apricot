@@ -1,5 +1,6 @@
 package za.co.apricotdb.ui.handler;
 
+import javafx.concurrent.Worker;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
@@ -8,6 +9,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
 import org.apache.commons.text.WordUtils;
+import org.controlsfx.dialog.ProgressDialog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ProjectManager;
@@ -25,6 +27,7 @@ import za.co.apricotdb.ui.model.ApricotSnapshotSerializer;
 import za.co.apricotdb.ui.model.EditSnapshotModelBuilder;
 import za.co.apricotdb.ui.model.NewSnapshotModelBuilder;
 import za.co.apricotdb.ui.model.SnapshotFormModel;
+import za.co.apricotdb.ui.service.DeleteSnapshotService;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ElementStatus;
@@ -79,6 +82,9 @@ public class ApricotSnapshotHandler {
     @Autowired
     DialogFormHandler formHandler;
 
+    @Autowired
+    DeleteSnapshotService deleteSnapshotService;
+
     @ApricotErrorLogger(title = "Unable to create the default (empty) snapshot")
     public void createDefaultSnapshot(ApricotProject project) {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
@@ -111,17 +117,17 @@ public class ApricotSnapshotHandler {
     }
 
     @ApricotErrorLogger(title = "Unable to delete the current snapshot")
-    public boolean deleteSnapshot() {
+    public void deleteSnapshot() {
         ApricotProject project = projectManager.findCurrentProject();
-        List<ApricotSnapshot> snaps = snapshotManager.getAllSnapshots(project);
-        if (snaps.size() == 1) {
-            Alert alert = getAlert(AlertType.WARNING, WordUtils.wrap("The snapshot \"" + snaps.get(0).getName()
+        List<ApricotSnapshot> snapshots = snapshotManager.getAllSnapshots(project);
+        if (snapshots.size() == 1) {
+            Alert alert = getAlert(AlertType.WARNING, WordUtils.wrap("The snapshot \"" + snapshots.get(0).getName()
                     + "\" is the only snapshot in the project \"" + project.getName()
                     + "\". This snapshot can't be deleted, since a project has to include at least one snapshot.", 60));
             alertDecorator.decorateAlert(alert);
             alert.showAndWait();
 
-            return false;
+            return;
         }
 
         ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
@@ -135,15 +141,30 @@ public class ApricotSnapshotHandler {
         Optional<ButtonType> result = alert.showAndWait();
 
         if (result.orElse(no) == yes) {
-            snapshotManager.deleteSnapshot(snapshot);
-            List<ApricotSnapshot> snapshots = snapshotManager.getAllSnapshots(project);
-            ApricotSnapshot defSnapshot = snapshots.get(snapshots.size() - 1);
-            snapshotManager.setDefaultSnapshot(defSnapshot);
-
-            return true;
+            prepareDeleteSnapshotService(snapshot);
+            deleteSnapshotService.start();
         }
+    }
 
-        return false;
+    private void prepareDeleteSnapshotService(ApricotSnapshot snapshot) {
+        //  transfer the input parameter
+        deleteSnapshotService.reset();
+        deleteSnapshotService.setSnapshotId(snapshot.getId());
+        //  define post Snapshot Delete operations
+        deleteSnapshotService.setOnSucceeded(e -> {
+            List<ApricotSnapshot> snapshots = snapshotManager.getAllSnapshots(snapshot.getProject());
+            snapshotManager.setDefaultSnapshot(snapshots.get(snapshots.size() - 1));
+            applicationInitializer.initializeDefault();
+        });
+
+        deleteSnapshotService.setOnFailed(e -> {
+            deleteSnapshotService.getException().printStackTrace();
+        });
+
+        ProgressDialog dlg = new ProgressDialog(deleteSnapshotService);
+        dlg.setTitle("Delete Snapshot");
+        dlg.setHeaderText("The deletion of the snapshot \"" + snapshot.getName() + "\" is in progress");
+        dlg.initOwner(parentWindow.getPrimaryStage());
     }
 
     /**

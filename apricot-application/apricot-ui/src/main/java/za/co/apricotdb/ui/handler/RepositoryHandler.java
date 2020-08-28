@@ -145,25 +145,22 @@ public class RepositoryHandler {
             return;
         }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    progressBarHandler.initProgressBar();
-                    progressBarHandler.setProgress(0.1d);
+        new Thread(() -> {
+            try {
+                progressBarHandler.initProgressBar();
+                progressBarHandler.setProgress(0.1d);
 
-                    if (fullRefresh) {
-                        localRepoService.refreshLocalRepo();
-                    }
-                    RepositoryModel model = compareService.generateModel();
-                    Platform.runLater(() -> {
-                        repositoryController.init(model);
-                    });
-                } catch (Exception ex) {
-                    errorHandler.showErrorInfo("Unable to refresh the Repository state", "Refresh State", ex);
-                } finally {
-                    progressBarHandler.finalizeProgressBar();
+                if (fullRefresh) {
+                    localRepoService.refreshLocalRepo();
                 }
+                RepositoryModel model = compareService.generateModel();
+                Platform.runLater(() -> {
+                    repositoryController.init(model);
+                });
+            } catch (Exception ex) {
+                errorHandler.showErrorInfo("Unable to refresh the Repository state", "Refresh State", ex);
+            } finally {
+                progressBarHandler.finalizeProgressBar();
             }
         }).start();
     }
@@ -198,39 +195,36 @@ public class RepositoryHandler {
             return;
         }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                progressBarHandler.initProgressBar();
-                try {
-                    remoteExportService.removeTemporaryProject();
-                    progressBarHandler.setProgress(0.1d);
+        new Thread(() -> {
+            progressBarHandler.initProgressBar();
+            try {
+                remoteExportService.removeTemporaryProject();
+                progressBarHandler.setProgress(0.1d);
 
-                    remoteExportService.createTemporaryProject(row.getModelRow().getFile());
-                    progressBarHandler.setProgress(0.3d);
+                remoteExportService.createTemporaryProject(row.getModelRow().getFile());
+                progressBarHandler.setProgress(0.3d);
 
-                    remoteExportService.removeSnapshotInTargetProject(projectName, row.getObjectName());
-                    progressBarHandler.setProgress(0.4d);
+                remoteExportService.removeSnapshotInTargetProject(projectName, row.getObjectName());
+                progressBarHandler.setProgress(0.4d);
 
-                    remoteExportService.cloneSnapshotIntoTargetProject(projectName, row.getObjectName());
-                    progressBarHandler.setProgress(0.9d);
+                remoteExportService.cloneSnapshotIntoTargetProject(projectName, row.getObjectName());
+                progressBarHandler.setProgress(0.9d);
 
-                    remoteExportService.removeTemporaryProject();
-                    progressBarHandler.setProgress(1.0d);
+                remoteExportService.removeTemporaryProject();
+                progressBarHandler.setProgress(1.0d);
 
-                    Platform.runLater(() -> {
-                        refreshModel(false);
-                        Alert alert = alertDec.getAlert("Import Snapshot", "The snapshot \"" + row.getObjectName() + "\" " +
-                                        "was successfully imported into the local project \"" + projectName + "\"",
-                                Alert.AlertType.INFORMATION);
-                        alert.showAndWait();
-                    });
-                } catch (Exception ex) {
-                    errorHandler.showErrorInfo("Unable to import the snapshot from the repository",
-                            "Import Snapshot", ex);
-                } finally {
-                    progressBarHandler.finalizeProgressBar();
-                }
+                Platform.runLater(() -> {
+                    refreshModel(false);
+                    Alert alert = alertDec.getAlert("Import Snapshot", "The snapshot \"" + row.getObjectName() + "\" " +
+                                    "was successfully imported into the local project \"" + projectName + "\"",
+                            Alert.AlertType.INFORMATION);
+                    alert.showAndWait();
+                });
+            } catch (Exception ex) {
+                errorHandler.showErrorInfo("Unable to import the snapshot from the repository",
+                        "Import Snapshot", ex);
+            } finally {
+                progressBarHandler.finalizeProgressBar();
             }
         }).start();
     }
@@ -246,44 +240,41 @@ public class RepositoryHandler {
             return;
         }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                progressBarHandler.initProgressBar();
+        new Thread(() -> {
+            progressBarHandler.initProgressBar();
+            try {
+                String projectName = row.getObjectName();
+                String sProject = exportProcessor.serializeProject(row.getObjectName());
+                progressBarHandler.setProgress(0.2d);
+
+                String fileName = exportProcessor.getDefaultProjectExportFileName(projectName);
+                File file = new File(LocalRepoService.LOCAL_REPO + "/" + fileName);
                 try {
-                    String projectName = row.getObjectName();
-                    String sProject = exportProcessor.serializeProject(row.getObjectName());
-                    progressBarHandler.setProgress(0.2d);
-
-                    String fileName = exportProcessor.getDefaultProjectExportFileName(projectName);
-                    File file = new File(LocalRepoService.LOCAL_REPO + "/" + fileName);
-                    try {
-                        FileUtils.write(file, sProject, Charset.defaultCharset());
-                    } catch (IOException e) {
-                        throw new IllegalArgumentException(e);
-                    }
-                    progressBarHandler.setProgress(0.5d);
-
-                    localRepoService.commitProjectFile(fileName, "The project export file \"" + fileName + "\" was added");
-                    progressBarHandler.setProgress(0.7d);
-
-                    remoteRepositoryService.pushRepository();
-                    progressBarHandler.setProgress(0.9d);
-
-                    refreshModel(false);
-                    progressBarHandler.setProgress(1.0d);
-
-                    Platform.runLater(() -> {
-                        Alert alert = alertDec.getAlert("Export Project", "The project \"" + projectName + "\" has been " +
-                                "successfully exported into the Remote Repository", Alert.AlertType.INFORMATION);
-                        alert.showAndWait();
-                    });
-                } catch (Exception ex) {
-                    errorHandler.showErrorInfo("Unable to export the Project into the Remote Repository",
-                            "Export Project", ex);
-                } finally {
-                    progressBarHandler.finalizeProgressBar();
+                    FileUtils.write(file, sProject, Charset.defaultCharset());
+                } catch (IOException e) {
+                    throw new IllegalArgumentException(e);
                 }
+                progressBarHandler.setProgress(0.5d);
+
+                localRepoService.commitProjectFile(fileName, "The project export file \"" + fileName + "\" was added");
+                progressBarHandler.setProgress(0.7d);
+
+                remoteRepositoryService.pushRepository();
+                progressBarHandler.setProgress(0.9d);
+
+                refreshModel(false);
+                progressBarHandler.setProgress(1.0d);
+
+                Platform.runLater(() -> {
+                    Alert alert = alertDec.getAlert("Export Project", "The project \"" + projectName + "\" has been " +
+                            "successfully exported into the Remote Repository", Alert.AlertType.INFORMATION);
+                    alert.showAndWait();
+                });
+            } catch (Exception ex) {
+                errorHandler.showErrorInfo("Unable to export the Project into the Remote Repository",
+                        "Export Project", ex);
+            } finally {
+                progressBarHandler.finalizeProgressBar();
             }
         }).start();
     }
@@ -323,33 +314,30 @@ public class RepositoryHandler {
             return;
         }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                progressBarHandler.initProgressBar();
-                try {
+        new Thread(() -> {
+            progressBarHandler.initProgressBar();
+            try {
 
-                    String fileName = row.getModelRow().getFile().getName();
-                    localRepoService.removeProjectFile(fileName, "The project \"" + fileName + "\" was deleted");
-                    progressBarHandler.setProgress(0.3d);
+                String fileName = row.getModelRow().getFile().getName();
+                localRepoService.removeProjectFile(fileName, "The project \"" + fileName + "\" was deleted");
+                progressBarHandler.setProgress(0.3d);
 
-                    remoteRepositoryService.pushRepository();
-                    progressBarHandler.setProgress(0.8d);
+                remoteRepositoryService.pushRepository();
+                progressBarHandler.setProgress(0.8d);
 
-                    refreshModel(false);
-                    progressBarHandler.setProgress(1.0d);
+                refreshModel(false);
+                progressBarHandler.setProgress(1.0d);
 
-                    Platform.runLater(() -> {
-                        Alert alert = alertDec.getAlert("Delete remote Project", "The project \"" + row.getObjectName() + "\" has been " +
-                                "successfully deleted in the Remote Repository", Alert.AlertType.INFORMATION);
-                        alert.showAndWait();
-                    });
-                } catch (Exception ex) {
-                    errorHandler.showErrorInfo("Unable to delete the Project in the Remote Repository",
-                            "Delete Project", ex);
-                } finally {
-                    progressBarHandler.finalizeProgressBar();
-                }
+                Platform.runLater(() -> {
+                    Alert alert = alertDec.getAlert("Delete remote Project", "The project \"" + row.getObjectName() + "\" has been " +
+                            "successfully deleted in the Remote Repository", Alert.AlertType.INFORMATION);
+                    alert.showAndWait();
+                });
+            } catch (Exception ex) {
+                errorHandler.showErrorInfo("Unable to delete the Project in the Remote Repository",
+                        "Delete Project", ex);
+            } finally {
+                progressBarHandler.finalizeProgressBar();
             }
         }).start();
     }
