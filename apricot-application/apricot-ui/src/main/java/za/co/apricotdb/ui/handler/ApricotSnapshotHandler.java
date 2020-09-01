@@ -158,13 +158,11 @@ public class ApricotSnapshotHandler {
         });
 
         deleteSnapshotService.setOnFailed(e -> {
-            deleteSnapshotService.getException().printStackTrace();
+            throw new IllegalArgumentException(deleteSnapshotService.getException());
         });
 
-        ProgressDialog dlg = new ProgressDialog(deleteSnapshotService);
-        dlg.setTitle("Delete Snapshot");
-        dlg.setHeaderText("The deletion of the snapshot \"" + snapshot.getName() + "\" is in progress");
-        dlg.initOwner(parentWindow.getPrimaryStage());
+        deleteSnapshotService.initProgressDialog("Delete Snapshot",
+                "The deletion of the snapshot \"" + snapshot.getName() + "\" is in progress");
     }
 
     /**

@@ -16,6 +16,7 @@ import za.co.apricotdb.metascan.ApricotTargetDatabase;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.entity.ERDNotation;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
+import za.co.apricotdb.ui.handler.ApricotSnapshotHandler;
 import za.co.apricotdb.ui.handler.BlackListHandler;
 import za.co.apricotdb.ui.model.ApricotProjectSerializer;
 import za.co.apricotdb.ui.model.ProjectFormModel;
@@ -43,6 +44,9 @@ public class EditProjectController {
 
     @Autowired
     BlackListHandler blackListHandler;
+
+    @Autowired
+    ApricotSnapshotHandler snapshotHandler;
 
     @FXML
     Pane mainPane;
@@ -76,6 +80,7 @@ public class EditProjectController {
         model.setErdNotation(ERDNotation.parseNotation(erdNotation.getSelectionModel().getSelectedItem()));
 
         if (projectSerializer.serializeProject(model, isCreateNew)) {
+            snapshotHandler.syncronizeSnapshot(true);
             getStage().close();
         }
     }

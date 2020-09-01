@@ -75,7 +75,6 @@
                               </Menu>
                               <MenuItem mnemonicParsing="false" onAction="#repository" text="Repository" />
                               <MenuItem disable="true" mnemonicParsing="false" text="Print Diagram" />
-                              <MenuItem mnemonicParsing="false" onAction="#runProgressBar" text="Test Progress Bar" />
                            </items>
                         </Menu>
                       <Menu mnemonicParsing="false" text="Help">

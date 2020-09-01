@@ -4,6 +4,7 @@ import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import org.controlsfx.dialog.ProgressDialog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ConstraintManager;
@@ -17,6 +18,7 @@ import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.repository.ApricotColumnConstraintRepository;
 import za.co.apricotdb.persistence.repository.ApricotRelationshipRepository;
 import za.co.apricotdb.persistence.repository.ApricotSnapshotRepository;
+import za.co.apricotdb.ui.ParentWindow;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -51,7 +53,11 @@ public class DeleteSnapshotService extends Service<Boolean> {
     @Resource
     ApricotSnapshotRepository snapshotRepository;
 
+    @Autowired
+    ParentWindow parentWindow;
+
     private LongProperty snapshotId = new SimpleLongProperty();
+    private ProgressDialog progressDialog;
 
     public void setSnapshotId(Long snapshotId) {
         this.snapshotId.setValue(snapshotId);
@@ -100,5 +106,16 @@ public class DeleteSnapshotService extends Service<Boolean> {
                 return true;
             }
         };
+    }
+
+    public ProgressDialog initProgressDialog(String title, String headerText) {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.initOwner(parentWindow.getPrimaryStage());
+        }
+        progressDialog.setTitle(title);
+        progressDialog.setHeaderText(headerText);
+
+        return progressDialog;
     }
 }
