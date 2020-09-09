@@ -56,6 +56,12 @@ public class CanvasContextMenuHandler {
     @Autowired
     NonTransactionalPort port;
 
+    @Autowired
+    ExportDiagramToPictureHandler exportDiagramToPictureHandler;
+
+    @Autowired
+    ExportDiagramToPdfHandler exportDiagramToPdfHandler;
+
     @ApricotErrorLogger(title = "Unable to create the context menu")
     public void createCanvasContextMenu(ApricotCanvas canvas, double x, double y) {
         ApricotView view = canvasHandler.getCurrentView();
@@ -125,15 +131,25 @@ public class CanvasContextMenuHandler {
             resetViewHandler.resetView(true);
         });
 
+        MenuItem exportToImage = new MenuItem("Export Diagram to picture");
+        exportToImage.setOnAction(e -> {
+            exportDiagramToPictureHandler.exportDiagram();
+        });
+
+        MenuItem exportToPDF = new MenuItem("Export Diagram to PDF");
+        exportToPDF.setOnAction(e -> {
+            exportDiagramToPdfHandler.openSearchForm();
+        });
+
         ContextMenu contextMenu = new ContextMenu();
         if (clipboardHandler.containsInfoToPaste()) {
             contextMenu.getItems().addAll(paste, refreshCanvas, editViewEntity, new SeparatorMenuItem(), newEntity,
                     new SeparatorMenuItem(), rSimple, rDefault, rExtended, new SeparatorMenuItem(), alignView,
-                    resetView);
+                    resetView, new SeparatorMenuItem(), exportToImage, exportToPDF);
         } else {
             contextMenu.getItems().addAll(refreshCanvas, editViewEntity, new SeparatorMenuItem(), newEntity,
                     new SeparatorMenuItem(), rSimple, rDefault, rExtended, new SeparatorMenuItem(), alignView,
-                    resetView);
+                    resetView, new SeparatorMenuItem(), exportToImage, exportToPDF);
         }
         contextMenu.setAutoHide(true);
         contextMenu.show(parentWindow.getWindow(), x, y);

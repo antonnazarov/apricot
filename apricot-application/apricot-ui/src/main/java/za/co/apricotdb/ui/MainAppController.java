@@ -37,7 +37,6 @@ import za.co.apricotdb.ui.handler.ExportProjectHandler;
 import za.co.apricotdb.ui.handler.GenerateScriptHandler;
 import za.co.apricotdb.ui.handler.ImportProjectHandler;
 import za.co.apricotdb.ui.handler.NonTransactionalPort;
-import za.co.apricotdb.ui.handler.PrintCanvasHandler;
 import za.co.apricotdb.ui.handler.ProjectExplorerContextMenuHandler;
 import za.co.apricotdb.ui.handler.ProjectExplorerItem;
 import za.co.apricotdb.ui.handler.RepositoryHandler;
@@ -160,9 +159,6 @@ public class MainAppController {
 
     @Autowired
     TbQuickViewHandler tbQuickViewHandler;
-
-    @Autowired
-    PrintCanvasHandler printCanvasHandler;
 
     @FXML
     AnchorPane mainPane;
@@ -640,11 +636,6 @@ public class MainAppController {
     public void filterReset(ActionEvent event) {
         filterHandler.resetEntityFilter();
         filterField.setText("*");
-    }
-
-    @FXML
-    public void printCanvas() {
-        printCanvasHandler.printCurrentCanvas();
     }
 
     public TextField getFilterField() {
