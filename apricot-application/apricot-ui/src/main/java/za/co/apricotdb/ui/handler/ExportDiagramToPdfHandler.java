@@ -18,6 +18,7 @@ import za.co.apricotdb.ui.ExportDiagramToPdfController;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.model.ApricotForm;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
+import za.co.apricotdb.viewport.align.CanvasSizeAdjustor;
 import za.co.apricotdb.viewport.canvas.ApricotCanvasImpl;
 
 import javax.imageio.ImageIO;
@@ -67,6 +68,8 @@ public class ExportDiagramToPdfHandler {
             pageSize = pageSize.rotate();
         }
         ApricotCanvasImpl canvas = (ApricotCanvasImpl) canvasHandler.getSelectedCanvas();
+        CanvasSizeAdjustor adjustor = new CanvasSizeAdjustor(canvas);
+        adjustor.alignCanvasSize();
         WritableImage image = canvas.snapshot(null, null);
         try {
             BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);

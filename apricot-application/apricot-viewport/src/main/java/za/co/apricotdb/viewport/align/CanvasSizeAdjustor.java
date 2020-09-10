@@ -34,11 +34,19 @@ public class CanvasSizeAdjustor implements AlignCommand {
 
     @Override
     public void align() {
+        alignCanvasSize();
+        alignWithVisibleFieldSize();
+    }
+
+    /**
+     * Align the size of the Canvas with no adjustment to the visible field
+     * of the screen.
+     */
+    public void alignCanvasSize() {
         Bounds canvasBounds = getCanvasBounds();
         biasAllElements(canvasBounds);
         canvasBounds = getCanvasBounds();
         alignCanvasSize(canvasBounds);
-        alignWithVisibleFieldSize();
     }
 
     /**

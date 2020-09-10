@@ -22,7 +22,6 @@ import za.co.apricotdb.ui.handler.AdvancedSearchHandler;
 import za.co.apricotdb.ui.handler.ApricotCanvasHandler;
 import za.co.apricotdb.ui.handler.QuickViewHandler;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
-import za.co.apricotdb.viewport.entity.ApricotEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +80,9 @@ public class AdvancedSearchController {
     @FXML
     Button makeQuickViewButton;
 
+    @FXML
+    Button addToViewButton;
+
     private SyntaxTextAreaFX textEditor;
     private ObservableList<AdvancedSearchResultRow> resultList;
 
@@ -118,6 +120,7 @@ public class AdvancedSearchController {
         cleanResultButton.setDisable(true);
         selectEntitiesButton.setDisable(true);
         makeQuickViewButton.setDisable(true);
+        addToViewButton.setDisable(true);
 
         entityName.setCellValueFactory(new PropertyValueFactory<AdvancedSearchResultRow, String>("entityName"));
         entitySelected.setCellValueFactory(new PropertyValueFactory<AdvancedSearchResultRow, CheckBox>("entitySelected"));
@@ -198,6 +201,11 @@ public class AdvancedSearchController {
     }
 
     @FXML
+    public void addToView() {
+        searchHandler.addToCurrentView(getSelectedEntities());
+    }
+
+    @FXML
     public void close() {
         getStage().close();
     }
@@ -218,6 +226,7 @@ public class AdvancedSearchController {
             }
             selectEntitiesButton.setDisable(selected == 0);
             makeQuickViewButton.setDisable(selected == 0);
+            addToViewButton.setDisable(selected == 0);
 
             statusBar.setText("Found: " + resultList.size() + " Entities; Selected: " + selected + " Entities");
         }

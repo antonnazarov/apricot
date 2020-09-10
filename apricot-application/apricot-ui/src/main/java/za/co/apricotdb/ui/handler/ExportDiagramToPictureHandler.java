@@ -13,6 +13,7 @@ import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.ui.util.SaveFileHelper;
+import za.co.apricotdb.viewport.align.CanvasSizeAdjustor;
 import za.co.apricotdb.viewport.canvas.ApricotCanvasImpl;
 
 import javax.imageio.ImageIO;
@@ -55,6 +56,8 @@ public class ExportDiagramToPictureHandler {
                 new FileChooser.ExtensionFilter("PNG files", "*.png"), owner,
                 ProjectParameterManager.EXPORT_PICTURE_OUTPUT_DIR);
         if (file != null) {
+            CanvasSizeAdjustor adjustor = new CanvasSizeAdjustor(canvas);
+            adjustor.alignCanvasSize();
             WritableImage image = canvas.snapshot(null, null);
             try {
                 BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);

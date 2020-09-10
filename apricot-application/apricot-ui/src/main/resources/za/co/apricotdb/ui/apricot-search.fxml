@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="555.0" prefWidth="809.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.AdvancedSearchController">
+<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="555.0" prefWidth="809.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.AdvancedSearchController">
    <children>
       <VBox layoutX="57.0" layoutY="40.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -64,10 +64,11 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
                <children>
-                  <Label fx:id="statusBar" prefHeight="17.0" prefWidth="281.0" text="Found: 23 Entities; Selected: 3 Entities" HBox.hgrow="ALWAYS" />
-                  <Button fx:id="makeQuickViewButton" mnemonicParsing="false" onAction="#makeQuickView" prefHeight="25.0" prefWidth="184.0" text="Make Quick View" />
-                  <Button fx:id="selectEntitiesButton" mnemonicParsing="false" onAction="#selectEntities" prefHeight="25.0" prefWidth="184.0" text="Select Entities on Diagrams" HBox.hgrow="NEVER" />
-                  <Button mnemonicParsing="false" onAction="#close" prefHeight="25.0" prefWidth="184.0" text="Close" />
+                  <Label fx:id="statusBar" prefHeight="17.0" prefWidth="278.0" text="Found: 23 Entities; Selected: 3 Entities" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="addToViewButton" layoutX="301.0" layoutY="15.0" mnemonicParsing="false" onAction="#addToView" prefHeight="25.0" prefWidth="125.0" text="Add to View" />
+                  <Button fx:id="makeQuickViewButton" mnemonicParsing="false" onAction="#makeQuickView" prefHeight="25.0" prefWidth="125.0" text="Make Quick View" />
+                  <Button fx:id="selectEntitiesButton" mnemonicParsing="false" onAction="#selectEntities" prefHeight="25.0" prefWidth="125.0" text="Select on Diagrams" HBox.hgrow="NEVER" />
+                  <Button mnemonicParsing="false" onAction="#close" prefHeight="25.0" prefWidth="125.0" text="Close" />
                </children>
                <opaqueInsets>
                   <Insets left="5.0" />
