@@ -1,7 +1,9 @@
 ------------------------------------------
-Apricot DB, Release 2.4, date:?
+Apricot DB, Release 2.4, September 2020
 ------------------------------------------
-
+Added export of the current diagram into PNG and PDF
+The Advanced Search functionality
+The bugfixing and refactoring
 ....................................
 
 This version of "Apricot DB" provides the Reverse Engineering of the following databases:
@@ -17,4 +19,4 @@ H2
 Apricot DB Installation
 ----------------------------
 1. Unzip apricotdb-2.4-windows-x64.zip;
-2. Run the application using the script: apricotdb\apricotdb.bat
+2. Run apricotdb.exe in the root directory
