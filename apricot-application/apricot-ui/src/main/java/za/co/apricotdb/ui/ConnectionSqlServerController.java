@@ -60,6 +60,9 @@ public class ConnectionSqlServerController {
     @Autowired
     ReverseEngineService reverseEngineService;
 
+    @Autowired
+    ParentWindow parent;
+
     @FXML
     Pane mainPane;
 
@@ -205,6 +208,7 @@ public class ConnectionSqlServerController {
         Alert alert = new Alert(alertType, null, ButtonType.OK);
         alert.setTitle("Test Connection");
         alert.setHeaderText(text);
+        alert.initOwner(parent.getWindow());
         if (alertType == AlertType.ERROR) {
             alertDecorator.decorateAlert(alert);
         }

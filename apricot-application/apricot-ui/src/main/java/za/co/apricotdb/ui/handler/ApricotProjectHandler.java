@@ -64,7 +64,7 @@ public class ApricotProjectHandler {
     }
 
     @ApricotErrorLogger(title = "Unable to create the Edit Project forms")
-    public void createEditProjectForm(boolean isCreateNew, Pane mainAppPane) throws Exception {
+    public void createEditProjectForm(boolean isCreateNew, Pane mainAppPane) {
 
         ProjectFormModel model = null;
         String title = null;
@@ -94,6 +94,7 @@ public class ApricotProjectHandler {
         Alert alert = new Alert(AlertType.WARNING, null, yes, no);
         alert.setTitle("Delete Project");
         alert.setHeaderText("Do you want to delete the project \"" + project.getName() + "\"?");
+        alert.initOwner(parentWindow.getWindow());
         alertDecorator.decorateAlert(alert);
         Optional<ButtonType> result = alert.showAndWait();
 

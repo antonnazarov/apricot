@@ -70,6 +70,9 @@ public class EditEntityController {
     @Autowired
     NonTransactionalPort port;
 
+    @Autowired
+    ParentWindow parent;
+
     @FXML
     Pane mainPane;
 
@@ -333,6 +336,7 @@ public class EditEntityController {
             alert.setTitle("Delete Column");
             alert.setHeaderText("The following constraints, attached to the column \"" + cd.getName().getValue()
                     + "\" will be deleted:\n" + sb.toString());
+            alert.initOwner(parent.getWindow());
             alertDecorator.decorateAlert(alert);
             Optional<ButtonType> result = alert.showAndWait();
 

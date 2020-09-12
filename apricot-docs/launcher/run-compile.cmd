@@ -1,0 +1,1 @@
+launch4jc apricot-launcher-config-2.4.xml 

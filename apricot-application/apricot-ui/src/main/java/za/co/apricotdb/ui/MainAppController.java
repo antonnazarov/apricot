@@ -33,6 +33,8 @@ import za.co.apricotdb.ui.handler.CompareSnapshotsHandler;
 import za.co.apricotdb.ui.handler.EntityAlignHandler;
 import za.co.apricotdb.ui.handler.EntityFilterHandler;
 import za.co.apricotdb.ui.handler.ExcelReportHandler;
+import za.co.apricotdb.ui.handler.ExportDiagramToPdfHandler;
+import za.co.apricotdb.ui.handler.ExportDiagramToPictureHandler;
 import za.co.apricotdb.ui.handler.ExportProjectHandler;
 import za.co.apricotdb.ui.handler.GenerateScriptHandler;
 import za.co.apricotdb.ui.handler.ImportProjectHandler;
@@ -159,6 +161,12 @@ public class MainAppController {
 
     @Autowired
     TbQuickViewHandler tbQuickViewHandler;
+
+    @Autowired
+    ExportDiagramToPictureHandler exportDiagramToPictureHandler;
+
+    @Autowired
+    ExportDiagramToPdfHandler exportDiagramToPdfHandler;
 
     @FXML
     AnchorPane mainPane;
@@ -343,11 +351,7 @@ public class MainAppController {
     }
 
     public void newView(ActionEvent event) {
-        try {
-            viewHandler.createViewEditor(viewsTabPane, null, null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        viewHandler.createViewEditor(viewsTabPane, null, null);
     }
 
     public void newRelationship(ActionEvent event) {
@@ -366,35 +370,23 @@ public class MainAppController {
      * Run the form of creation of the new project.
      */
     @FXML
-    public void newProject(ActionEvent event) {
-        try {
-            projectHandler.createEditProjectForm(true, mainPane);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void newProject() {
+        projectHandler.createEditProjectForm(true, mainPane);
     }
 
     /**
      * Edit the currently selected project.
      */
     @FXML
-    public void editProject(ActionEvent event) {
-        try {
-            projectHandler.createEditProjectForm(false, mainPane);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void editProject() {
+        projectHandler.createEditProjectForm(false, mainPane);
     }
 
     /**
      * Create a new snapshot.
      */
-    public void newSnapshot(ActionEvent event) {
-        try {
-            snapshotHandler.createEditSnapshotForm(true, mainPane);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void newSnapshot() {
+        snapshotHandler.createEditSnapshotForm(true, mainPane);
     }
 
     /**
@@ -636,6 +628,16 @@ public class MainAppController {
     public void filterReset(ActionEvent event) {
         filterHandler.resetEntityFilter();
         filterField.setText("*");
+    }
+
+    @FXML
+    public void exportToPng() {
+        exportDiagramToPictureHandler.exportDiagram();
+    }
+
+    @FXML
+    public void exportToPdf() {
+        exportDiagramToPdfHandler.openSearchForm();
     }
 
     public TextField getFilterField() {

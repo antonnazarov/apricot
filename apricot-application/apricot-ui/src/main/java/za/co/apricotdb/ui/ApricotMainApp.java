@@ -14,6 +14,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Configuration;
+import za.co.apricotdb.ApricotLauncher;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
 import za.co.apricotdb.ui.handler.OnKeyPressedEventHandler;
 import za.co.apricotdb.ui.util.ImageHelper;
@@ -91,6 +92,7 @@ public class ApricotMainApp extends Application {
     }
 
     public static void main(String[] args) {
+        ApricotLauncher.main(null);
         launch(args);
     }
 }

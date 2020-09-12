@@ -88,8 +88,24 @@ public class AdvancedSearchHandler {
         for (ApricotTable t : tables) {
             sTables.add(t.getName());
         }
-        List<String> ret = fullWordSearch(text, sTables);
+        List<String> ret = getTableNames(fullWordSearch(text, sTables));
         ret.sort(Comparator.comparing(String::toLowerCase));
+
+        return ret;
+    }
+
+    /**
+     * Recalculate the given table names into the proper names of entities in the system.
+     */
+    private List<String> getTableNames(List<String> tables) {
+        List<String> ret = new ArrayList<>();
+
+        for (String table : tables) {
+            ApricotTable aTable = tableManager.getTableByName(table);
+            if (aTable != null) {
+                ret.add(aTable.getName());
+            }
+        }
 
         return ret;
     }
@@ -101,7 +117,7 @@ public class AdvancedSearchHandler {
 
         List<String> ret = new ArrayList<>();
         while (matcher.find()) {
-            ret.add(matcher.group(1).toUpperCase());
+            ret.add(matcher.group(1));
         }
 
         return ret;

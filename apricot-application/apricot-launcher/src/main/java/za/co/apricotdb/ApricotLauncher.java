@@ -11,7 +11,7 @@ import java.sql.ResultSet;
 
 /**
  * This is a simple launcher of the Apricot application.
- * 
+ *
  * @author Anton Nazarov
  * @since 24/02/2019
  */
@@ -22,14 +22,15 @@ public class ApricotLauncher {
 
         ApricotLauncher launcher = new ApricotLauncher();
         if (!launcher.checkIfDatabaseFileExists("./data/apricot-project.mv.db")) {
-            System.out.println("ERROR: the reference database file was not found");
-            System.exit(1);
+            System.out.println("The reference database file was not found. Exiting the Apricot Launcher with no " +
+                    "database check");
+            return;
         }
 
         try {
             Class.forName("org.h2.Driver");
         } catch (ClassNotFoundException e) {
-            System.out.println("ERROR: unable to intialize the DB driver");
+            System.out.println("ERROR: unable to initialize the DB driver");
             e.printStackTrace();
             System.exit(1);
         }
@@ -68,7 +69,7 @@ public class ApricotLauncher {
                 try {
                     targetVersion = launcher.getDatabaseVersion(System.getProperty("user.home") + "/.apricotdb/apricot-project");
                     System.out.println("INFO: version of the target database=[" + targetVersion + "]");
-                    
+
                     if (!targetVersion.equals(referenceVersion)) {
                         System.out.println("INFO: the versions of the reference- and target-databases are " +
                                 "different. Trying to run adapters to align the database structure");
@@ -152,7 +153,7 @@ public class ApricotLauncher {
                 new File(System.getProperty("user.home") + "/.apricotdb/apricot-project.mv.db").toPath(),
                 StandardCopyOption.REPLACE_EXISTING);
     }
-    
+
     private void createBackup() throws IOException {
         Files.copy(new File(System.getProperty("user.home") + "/.apricotdb/apricot-project.mv.db").toPath(),
                 new File(System.getProperty("user.home") + "/.apricotdb/apricot-project.mv.db.backup").toPath(),

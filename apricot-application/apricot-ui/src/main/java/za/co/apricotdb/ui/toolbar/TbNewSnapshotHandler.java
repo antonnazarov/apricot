@@ -28,7 +28,7 @@ public class TbNewSnapshotHandler extends TbButtonHandlerState {
             @Override
             public void handle(ActionEvent event) {
                 if (isEnabled()) {
-                    appController.newSnapshot(null);
+                    appController.newSnapshot();
                 }
             }
         });

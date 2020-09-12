@@ -142,6 +142,7 @@ public class ReverseEngineHandler {
                             + "the corresponding Child tables will be excluded from the result:\n\n", 60)
                     + getMessageForExtraExclude(extraExclude));
             alertDecorator.decorateAlert(alert);
+            alert.initOwner(pw.getWindow());
             Optional<ButtonType> result = alert.showAndWait();
 
             if (result.orElse(no) == yes) {
@@ -219,6 +220,7 @@ public class ReverseEngineHandler {
         Alert alert = new Alert(AlertType.ERROR, null, ButtonType.OK);
         alert.setTitle("Start Reverse Engineering process");
         alert.setHeaderText(text);
+        alert.initOwner(pw.getWindow());
         alertDecorator.decorateAlert(alert);
 
         return alert;

@@ -98,7 +98,7 @@ public class ApricotSnapshotHandler {
      * Create the snapshot editing form for a new or existing snapshot.
      */
     @ApricotErrorLogger(title = "Create new Snapshot: unable to create the form")
-    public void createEditSnapshotForm(boolean isCreateNew, Pane mainAppPane) throws Exception {
+    public void createEditSnapshotForm(boolean isCreateNew, Pane mainAppPane) {
         String title = null;
         SnapshotFormModel model = null;
         if (isCreateNew) {
@@ -137,6 +137,7 @@ public class ApricotSnapshotHandler {
         Alert alert = new Alert(AlertType.WARNING, null, yes, no);
         alert.setTitle("Delete Snapshot");
         alert.setHeaderText("Do you really want to delete the snapshot \"" + snapshot.getName() + "\"?");
+        alert.initOwner(parentWindow.getWindow());
         alertDecorator.decorateAlert(alert);
         Optional<ButtonType> result = alert.showAndWait();
 
@@ -234,6 +235,7 @@ public class ApricotSnapshotHandler {
         Alert alert = new Alert(alertType, null, ButtonType.OK);
         alert.setTitle("Delete Snapshot");
         alert.setHeaderText(text);
+        alert.initOwner(parentWindow.getWindow());
         if (alertType == AlertType.ERROR) {
             alertDecorator.decorateAlert(alert);
         }

@@ -20,7 +20,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="mainPane" prefHeight="640.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.MainAppController">
+<AnchorPane fx:id="mainPane" prefHeight="640.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.MainAppController">
    <children>
       <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -65,7 +65,6 @@
                            <items>
                               <MenuItem mnemonicParsing="false" onAction="#reverseEngineer" text="Reverse Engineering" />
                               <MenuItem mnemonicParsing="false" onAction="#compareSnapshots" text="Compare Snapshots" />
-                              <MenuItem mnemonicParsing="false" onAction="#createExcelReport" text="Excel Report" />
                               <Menu mnemonicParsing="false" text="Scripts">
                                 <items>
                                   <MenuItem mnemonicParsing="false" onAction="#generateCreateScript" text="Generate &quot;Create&quot; Script" />
@@ -74,6 +73,9 @@
                                 </items>
                               </Menu>
                               <MenuItem mnemonicParsing="false" onAction="#repository" text="Repository" />
+                              <MenuItem mnemonicParsing="false" onAction="#createExcelReport" text="Export Snapshot to Excel" />
+                              <MenuItem mnemonicParsing="false" onAction="#exportToPng" text="Export Diagram to PNG" />
+                              <MenuItem mnemonicParsing="false" onAction="#exportToPdf" text="Export Diagram to PDF" />
                            </items>
                         </Menu>
                       <Menu mnemonicParsing="false" text="Help">

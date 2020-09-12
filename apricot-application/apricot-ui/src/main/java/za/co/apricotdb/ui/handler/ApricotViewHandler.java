@@ -128,7 +128,7 @@ public class ApricotViewHandler {
     }
 
     @ApricotErrorLogger(title = "Unable to create the View editor form")
-    public void createViewEditor(TabPane viewsTabPane, ApricotView view, Tab tab) throws Exception {
+    public void createViewEditor(TabPane viewsTabPane, ApricotView view, Tab tab) {
 
         // check if this is not the "Main View"
         if (view != null && view.isGeneral()) {
