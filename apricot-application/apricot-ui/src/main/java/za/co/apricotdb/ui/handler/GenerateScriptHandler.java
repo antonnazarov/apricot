@@ -1,19 +1,10 @@
 package za.co.apricotdb.ui.handler;
 
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.ProjectParameterManager;
@@ -31,13 +22,12 @@ import za.co.apricotdb.ui.ScriptGenerateController;
 import za.co.apricotdb.ui.ScriptGenerateController.ScriptSource;
 import za.co.apricotdb.ui.ScriptGenerateController.ScriptTarget;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
+import za.co.apricotdb.ui.model.ApricotForm;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.ui.util.ApricotTableUtils;
-import za.co.apricotdb.ui.util.ImageHelper;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 
-import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
@@ -54,9 +44,6 @@ import java.util.List;
  */
 @Component
 public class GenerateScriptHandler {
-
-    @Resource
-    ApplicationContext context;
 
     @Autowired
     ApricotCanvasHandler canvasHandler;
@@ -91,34 +78,20 @@ public class GenerateScriptHandler {
     @Autowired
     SyntaxEditorHandler syntaxEditorHandler;
 
+    @Autowired
+    DialogFormHandler formHandler;
+
     @ApricotErrorLogger(title = "Unable to create the script generation form")
-    public void createGenerateScriptForm(DBScriptType scriptType) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-generate-script.fxml"));
-        loader.setControllerFactory(context::getBean);
-        Pane window = loader.load();
-
-        final Stage dialog = new Stage();
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.setTitle(getFormHeader(scriptType));
-        Scene generateScriptScene = new Scene(window);
-        dialog.setScene(generateScriptScene);
-        dialog.getIcons().add(ImageHelper.getImage("script-s1.JPG", getClass()));
-        generateScriptScene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ESCAPE) {
-                    dialog.close();
-                }
-            }
-        });
-
-        ScriptGenerateController controller = loader.<ScriptGenerateController>getController();
+    public void createGenerateScriptForm(DBScriptType scriptType) {
+        ApricotForm form = formHandler.buildApricotForm("/za/co/apricotdb/ui/apricot-generate-script.fxml",
+                "script-s1.JPG", getFormHeader(scriptType));
+        ScriptGenerateController controller = form.getController();
         controller.init(scriptType, getSelectedEntities().size() > 0);
 
         //  initialize the SQL database dialect/syntax
         scriptGenerator.init();
 
-        dialog.show();
+        form.show();
     }
 
     @Transactional
@@ -152,11 +125,7 @@ public class GenerateScriptHandler {
             case FILE:
                 return saveToFile(operationName, script, window);
             case SQL_EDITOR:
-                try {
-                    syntaxEditorHandler.createSyntaxEditorForm(script, getFormHeader(scriptType));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                syntaxEditorHandler.createSyntaxEditorForm(script, getFormHeader(scriptType));
                 return true;
         }
 

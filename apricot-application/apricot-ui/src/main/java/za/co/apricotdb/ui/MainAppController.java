@@ -33,6 +33,8 @@ import za.co.apricotdb.ui.handler.CompareSnapshotsHandler;
 import za.co.apricotdb.ui.handler.EntityAlignHandler;
 import za.co.apricotdb.ui.handler.EntityFilterHandler;
 import za.co.apricotdb.ui.handler.ExcelReportHandler;
+import za.co.apricotdb.ui.handler.ExportDiagramToPdfHandler;
+import za.co.apricotdb.ui.handler.ExportDiagramToPictureHandler;
 import za.co.apricotdb.ui.handler.ExportProjectHandler;
 import za.co.apricotdb.ui.handler.GenerateScriptHandler;
 import za.co.apricotdb.ui.handler.ImportProjectHandler;
@@ -54,8 +56,6 @@ import za.co.apricotdb.ui.undo.ApricotUndoManager;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ElementStatus;
-
-import java.io.IOException;
 
 /**
  * This controller serves the main application form apricot-main.fxml.
@@ -161,6 +161,12 @@ public class MainAppController {
 
     @Autowired
     TbQuickViewHandler tbQuickViewHandler;
+
+    @Autowired
+    ExportDiagramToPictureHandler exportDiagramToPictureHandler;
+
+    @Autowired
+    ExportDiagramToPdfHandler exportDiagramToPdfHandler;
 
     @FXML
     AnchorPane mainPane;
@@ -339,11 +345,7 @@ public class MainAppController {
     }
 
     public void newView(ActionEvent event) {
-        try {
-            viewHandler.createViewEditor(viewsTabPane, null, null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        viewHandler.createViewEditor(viewsTabPane, null, null);
     }
 
     public void newRelationship(ActionEvent event) {
@@ -354,47 +356,31 @@ public class MainAppController {
      * Show a list of the projects, registered in the system.
      */
     @FXML
-    public void openProject(ActionEvent event) {
-        try {
-            projectHandler.createOpenProjectForm(mainPane);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void openProject() {
+        projectHandler.createOpenProjectForm(mainPane);
     }
 
     /**
      * Run the form of creation of the new project.
      */
     @FXML
-    public void newProject(ActionEvent event) {
-        try {
-            projectHandler.createEditProjectForm(true, mainPane);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void newProject() {
+        projectHandler.createEditProjectForm(true, mainPane);
     }
 
     /**
      * Edit the currently selected project.
      */
     @FXML
-    public void editProject(ActionEvent event) {
-        try {
-            projectHandler.createEditProjectForm(false, mainPane);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void editProject() {
+        projectHandler.createEditProjectForm(false, mainPane);
     }
 
     /**
      * Create a new snapshot.
      */
-    public void newSnapshot(ActionEvent event) {
-        try {
-            snapshotHandler.createEditSnapshotForm(true, mainPane);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void newSnapshot() {
+        snapshotHandler.createEditSnapshotForm(true, mainPane);
     }
 
     /**
@@ -437,10 +423,8 @@ public class MainAppController {
      * Delete the chosen snapshot.
      */
     @FXML
-    public void deleteSnapshot(ActionEvent event) {
-        if (snapshotHandler.deleteSnapshot()) {
-            applicationInitializer.initializeDefault();
-        }
+    public void deleteSnapshot() {
+        snapshotHandler.deleteSnapshot();
     }
 
     /**
@@ -483,29 +467,17 @@ public class MainAppController {
 
     @FXML
     public void generateCreateScript(ActionEvent event) {
-        try {
-            generateScriptHandler.createGenerateScriptForm(DBScriptType.CREATE_SCRIPT);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        generateScriptHandler.createGenerateScriptForm(DBScriptType.CREATE_SCRIPT);
     }
 
     @FXML
     public void generateDropScript(ActionEvent event) {
-        try {
-            generateScriptHandler.createGenerateScriptForm(DBScriptType.DROP_SCRIPT);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        generateScriptHandler.createGenerateScriptForm(DBScriptType.DROP_SCRIPT);
     }
 
     @FXML
     public void generateDeleteScript(ActionEvent event) {
-        try {
-            generateScriptHandler.createGenerateScriptForm(DBScriptType.DELETE_SCRIPT);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        generateScriptHandler.createGenerateScriptForm(DBScriptType.DELETE_SCRIPT);
     }
 
     public void undo(ActionEvent event) {
@@ -514,11 +486,7 @@ public class MainAppController {
 
     @FXML
     public void about(ActionEvent event) {
-        try {
-            aboutHandler.showAboutForm();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        aboutHandler.showAboutForm();
     }
 
     @FXML
@@ -654,6 +622,16 @@ public class MainAppController {
     public void filterReset(ActionEvent event) {
         filterHandler.resetEntityFilter();
         filterField.setText("*");
+    }
+
+    @FXML
+    public void exportToPng() {
+        exportDiagramToPictureHandler.exportDiagram();
+    }
+
+    @FXML
+    public void exportToPdf() {
+        exportDiagramToPdfHandler.openSearchForm();
     }
 
     public TextField getFilterField() {

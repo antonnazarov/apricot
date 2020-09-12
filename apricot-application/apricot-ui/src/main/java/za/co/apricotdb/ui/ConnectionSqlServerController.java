@@ -24,6 +24,7 @@ import za.co.apricotdb.ui.handler.BlackListHandler;
 import za.co.apricotdb.ui.handler.ReverseEngineHandler;
 import za.co.apricotdb.ui.model.ConnectionAppParameterModel;
 import za.co.apricotdb.ui.model.ConnectionParametersModel;
+import za.co.apricotdb.ui.service.ReverseEngineService;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
 import java.util.List;
@@ -55,6 +56,12 @@ public class ConnectionSqlServerController {
 
     @Autowired
     MetaDataScannerFactory scannerFactory;
+
+    @Autowired
+    ReverseEngineService reverseEngineService;
+
+    @Autowired
+    ParentWindow parent;
 
     @FXML
     Pane mainPane;
@@ -135,12 +142,17 @@ public class ConnectionSqlServerController {
                 port.getSelectionModel().getSelectedItem(), database.getSelectionModel().getSelectedItem(),
                 useWindowsUserFlag.isSelected());
 
-        MetaData metaData = reverseEngineHandler.getMetaData(targetDb, driverClass, url, schema.getValue(),
+        reverseEngineService.initService(targetDb, driverClass, url, schema.getValue(),
                 user.getSelectionModel().getSelectedItem(), password.getText(), snapshot);
-        String[] blackList = blackListHandler.getBlackListTables(project);
-
-        getStage().close();
-        reverseEngineHandler.openScanResultForm(metaData, blackList, composeReverseEngineeringParameters());
+        reverseEngineService.setOnSucceeded(e -> {
+            getStage().close();
+            reverseEngineHandler.openScanResultForm(reverseEngineService.getValue(), blackListHandler.getBlackListTables(project),
+                    composeReverseEngineeringParameters());
+        });
+        reverseEngineService.setOnFailed(e -> {
+            throw new IllegalArgumentException(reverseEngineService.getException());
+        });
+        reverseEngineService.start();
     }
 
     @FXML
@@ -196,6 +208,7 @@ public class ConnectionSqlServerController {
         Alert alert = new Alert(alertType, null, ButtonType.OK);
         alert.setTitle("Test Connection");
         alert.setHeaderText(text);
+        alert.initOwner(parent.getWindow());
         if (alertType == AlertType.ERROR) {
             alertDecorator.decorateAlert(alert);
         }

@@ -7,6 +7,7 @@ import za.co.apricotdb.persistence.data.ProjectParameterManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotProjectParameter;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
+import za.co.apricotdb.persistence.entity.ApricotView;
 
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -39,6 +40,7 @@ public class HtmlProjectInfoHandler {
         ret.put("snapshot_list", fixEmpty(getSnapshotList(project)));
         ret.put("table_list", fixEmpty(getTableList(project)));
         ret.put("black_list", fixEmpty(getBlackList(project)));
+        ret.put("apricot_views_list", fixEmpty(getApricotViewsList(project)));
 
         return ret;
     }
@@ -84,5 +86,20 @@ public class HtmlProjectInfoHandler {
         }
 
         return null;
+    }
+
+    private String getApricotViewsList(ApricotProject project) {
+        StringBuilder sb = new StringBuilder();
+        boolean first = true;
+        for (ApricotView view : project.getViews()) {
+            if (!first) {
+                sb.append(";<br/>");
+            } else {
+                first = false;
+            }
+            sb.append(view.getName());
+        }
+
+        return sb.toString();
     }
 }

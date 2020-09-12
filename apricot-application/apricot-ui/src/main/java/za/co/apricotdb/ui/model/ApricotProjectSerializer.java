@@ -15,6 +15,7 @@ import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotProjectParameter;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotView;
+import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
 import za.co.apricotdb.ui.handler.ApricotSnapshotHandler;
@@ -38,6 +39,9 @@ public class ApricotProjectSerializer {
     
     @Autowired
     ApplicationInitializer applicationInitializer;
+
+    @Autowired
+    ParentWindow parent;
 
     @Transactional
     public ApricotProject serializeNewProject(ProjectFormModel model) {
@@ -119,6 +123,7 @@ public class ApricotProjectSerializer {
         Alert alert = new Alert(AlertType.ERROR, null, ButtonType.OK);
         alert.setTitle("Save Project");
         alert.setHeaderText(text);
+        alert.initOwner(parent.getWindow());
         alertDecorator.decorateAlert(alert);
 
         return alert;

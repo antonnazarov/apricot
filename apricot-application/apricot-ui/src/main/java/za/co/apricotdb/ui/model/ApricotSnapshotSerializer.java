@@ -111,6 +111,7 @@ public class ApricotSnapshotSerializer {
         Alert alert = new Alert(AlertType.ERROR, null, ButtonType.OK);
         alert.setTitle("Save Snapshot");
         alert.setHeaderText(text);
+        alert.initOwner(parentWindow.getWindow());
         alertDecorator.decorateAlert(alert);
 
         return alert;

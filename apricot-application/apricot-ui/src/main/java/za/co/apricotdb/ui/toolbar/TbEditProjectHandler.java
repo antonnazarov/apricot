@@ -28,7 +28,7 @@ public class TbEditProjectHandler extends TbButtonHandlerState {
             @Override
             public void handle(ActionEvent event) {
                 if (isEnabled()) {
-                    appController.editProject(null);
+                    appController.editProject();
                 }
             }
         });

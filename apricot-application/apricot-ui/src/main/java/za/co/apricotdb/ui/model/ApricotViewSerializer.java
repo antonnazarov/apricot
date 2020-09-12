@@ -20,6 +20,7 @@ import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.persistence.entity.LayoutObjectType;
 import za.co.apricotdb.persistence.entity.ViewDetailLevel;
+import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.handler.ApricotViewHandler;
 import za.co.apricotdb.ui.handler.ObjectAllocationHandler;
 import za.co.apricotdb.ui.handler.TabInfoObject;
@@ -45,6 +46,9 @@ public class ApricotViewSerializer {
     
     @Autowired
     ObjectAllocationHandler allocHandler;
+
+    @Autowired
+    ParentWindow parent;
     
     public boolean validate(ViewFormModel model) {
         if (!validateName(model)) {
@@ -261,6 +265,7 @@ public class ApricotViewSerializer {
         Alert alert = new Alert(AlertType.ERROR, null, ButtonType.OK);
         alert.setTitle("Save View");
         alert.setHeaderText(text);
+        alert.initOwner(parent.getWindow());
         alertDecorator.decorateAlert(alert);
 
         return alert;

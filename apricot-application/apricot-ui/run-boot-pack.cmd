@@ -5,4 +5,4 @@ REM echo PATH=%PATH%
 java -version
 
 cd target
-java -jar apricot-ui-0.8.jar
+java -jar apricot-ui-2.4.jar

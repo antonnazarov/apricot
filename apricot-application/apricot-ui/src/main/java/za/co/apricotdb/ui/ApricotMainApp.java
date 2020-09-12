@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Configuration;
+import za.co.apricotdb.ApricotLauncher;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
 import za.co.apricotdb.ui.util.ImageHelper;
 
@@ -42,11 +43,12 @@ public class ApricotMainApp extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         ParentWindow pw = context.getBean(ParentWindow.class);
         pw.setParentPane(rootNode);
         pw.init(controller);
         pw.setApplication(this);
+        pw.setPrimaryStage(primaryStage);
         primaryStage.setOnShown(event -> {
             initializer.initializeDefault();
         });
@@ -67,7 +69,6 @@ public class ApricotMainApp extends Application {
             }
         });
 
-
         primaryStage.show();
     }
 
@@ -77,6 +78,7 @@ public class ApricotMainApp extends Application {
     }
 
     public static void main(String[] args) {
+        ApricotLauncher.main(null);
         launch(args);
     }
 }

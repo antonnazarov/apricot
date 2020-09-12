@@ -104,6 +104,10 @@ public class SnapshotManager {
         return snapshotRepository.getOne(id);
     }
 
+    public ApricotSnapshot findSnapshotById(long id) {
+        return snapshotRepository.findById(id).get();
+    }
+
     @Transactional
     public ApricotSnapshot getSnapshotByName(ApricotProject project, String name) {
         ApricotSnapshot ret = null;
@@ -123,11 +127,12 @@ public class SnapshotManager {
         return snapshotRepository.saveAndFlush(snapshot);
     }
 
+    @Transactional
     public void deleteSnapshot(ApricotSnapshot snapshot) {
         List<ApricotTable> tables = tableManager.getTablesForSnapshot(snapshot);
         for (ApricotTable t : tables) {
-            List<ApricotColumnConstraint> cnstrs = constraintManager.getConstraintColumnsByTable(t);
-            for (ApricotColumnConstraint cc : cnstrs) {
+            List<ApricotColumnConstraint> constraints = constraintManager.getConstraintColumnsByTable(t);
+            for (ApricotColumnConstraint cc : constraints) {
                 columnConstraintRepository.delete(cc);
             }
         }

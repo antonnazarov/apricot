@@ -1,16 +1,7 @@
 package za.co.apricotdb.ui.handler;
 
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.TableView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Pane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ConstraintManager;
 import za.co.apricotdb.persistence.data.RelationshipManager;
@@ -22,22 +13,17 @@ import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ConstraintType;
 import za.co.apricotdb.ui.EditConstraintController;
 import za.co.apricotdb.ui.model.ApricotConstraintData;
+import za.co.apricotdb.ui.model.ApricotForm;
 import za.co.apricotdb.ui.model.EditConstraintModel;
 import za.co.apricotdb.ui.model.EditConstraintModelBuilder;
 import za.co.apricotdb.ui.model.EditEntityModel;
-import za.co.apricotdb.ui.util.ImageHelper;
 
-import javax.annotation.Resource;
 import javax.transaction.Transactional;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class ApricotConstraintHandler {
-
-    @Resource
-    ApplicationContext context;
 
     @Autowired
     EditConstraintModelBuilder modelBuilder;
@@ -50,6 +36,9 @@ public class ApricotConstraintHandler {
 
     @Autowired
     ConstraintManager constraintManager;
+
+    @Autowired
+    DialogFormHandler formHandler;
 
     public List<ApricotConstraint> getConstraintsForColumn(ApricotColumn column) {
         List<ApricotConstraint> ret = new ArrayList<>();
@@ -73,39 +62,22 @@ public class ApricotConstraintHandler {
     @Transactional
     public void openConstraintEditorForm(boolean newConstraint, ApricotConstraintData constraintData,
                                          EditEntityModel editEntityModel,
-                                         TableView<ApricotConstraintData> constraintsTable, boolean editableFields)
-            throws IOException {
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/za/co/apricotdb/ui/apricot-constraint-editor.fxml"));
-        loader.setControllerFactory(context::getBean);
-        Pane window = loader.load();
-
-        final Stage dialog = new Stage();
-        dialog.initModality(Modality.APPLICATION_MODAL);
+                                         TableView<ApricotConstraintData> constraintsTable, boolean editableFields) {
+        String title;
         if (newConstraint) {
-            dialog.setTitle("Create a new Constraint");
+            title = "Create a new Constraint";
         } else {
-            dialog.setTitle("Edit Constraint");
+            title = "Edit Constraint";
         }
-        dialog.getIcons().add(ImageHelper.getImage("table-1-s1.jpg", getClass()));
 
-        Scene editConstraintScene = new Scene(window);
-        editConstraintScene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ESCAPE) {
-                    dialog.close();
-                }
-            }
-        });
-        dialog.setScene(editConstraintScene);
-
-        EditConstraintController controller = loader.<EditConstraintController>getController();
+        ApricotForm form = formHandler.buildApricotForm("/za/co/apricotdb/ui/apricot-constraint-editor.fxml",
+                "table-1-s1.jpg", title);
+        EditConstraintController controller = form.getController();
 
         EditConstraintModel model = modelBuilder.buildModel(newConstraint, constraintData, editEntityModel);
         controller.init(model, constraintsTable, editEntityModel, editableFields);
 
-        dialog.show();
+        form.show();
     }
 
     /**

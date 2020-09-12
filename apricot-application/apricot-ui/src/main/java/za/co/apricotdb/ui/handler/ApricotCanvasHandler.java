@@ -132,6 +132,36 @@ public class ApricotCanvasHandler {
         return ret;
     }
 
+    public List<ApricotCanvas> getAllCanvases() {
+        List<ApricotCanvas> ret = new ArrayList<>();
+        for (Tab tab : parentWindow.getProjectTabPane().getTabs()) {
+            if (tab.getUserData() instanceof TabInfoObject) {
+                TabInfoObject o = (TabInfoObject) tab.getUserData();
+                ret.add(o.getCanvas());
+            }
+        }
+
+        return ret;
+    }
+
+    /**
+     * Retrieve the canvas, which presents the Main View.
+     */
+    public ApricotCanvas getMainCanvas() {
+        ApricotCanvas ret = null;
+        for (Tab tab : parentWindow.getProjectTabPane().getTabs()) {
+            if (tab.getUserData() instanceof TabInfoObject) {
+                TabInfoObject o = (TabInfoObject) tab.getUserData();
+                if (o.getView().getName().equals(ApricotView.MAIN_VIEW)) {
+                    ret = o.getCanvas();
+                    break;
+                }
+            }
+        }
+
+        return ret;
+    }
+
     public ApricotView getCurrentView() {
         TabInfoObject tabInfo = getCurrentViewTabInfo();
         if (tabInfo != null) {

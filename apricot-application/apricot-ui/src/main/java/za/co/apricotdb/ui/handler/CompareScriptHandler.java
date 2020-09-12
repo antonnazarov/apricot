@@ -1,27 +1,17 @@
 package za.co.apricotdb.ui.handler;
 
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TreeItem;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Pane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.ui.CompareScriptController;
 import za.co.apricotdb.ui.comparator.CompareRowType;
 import za.co.apricotdb.ui.comparator.CompareSnapshotRow;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
+import za.co.apricotdb.ui.model.ApricotForm;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
-import za.co.apricotdb.ui.util.ImageHelper;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +25,11 @@ import java.util.List;
 @Component
 public class CompareScriptHandler {
 
-    @Resource
-    ApplicationContext context;
-
     @Autowired
     AlertMessageDecorator alertDecorator;
+
+    @Autowired
+    DialogFormHandler formHandler;
 
     @ApricotErrorLogger(title = "Unable to generate the align script")
     public void generateScript(TreeItem<CompareSnapshotRow> root) {
@@ -123,29 +113,10 @@ public class CompareScriptHandler {
     }
 
     public void createGenerateScriptForm(List<CompareSnapshotRow> differences) throws IOException {
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/za/co/apricotdb/ui/apricot-generate-diff-script.fxml"));
-        loader.setControllerFactory(context::getBean);
-        Pane window = loader.load();
-
-        final Stage dialog = new Stage();
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.setTitle("Generate Alignment Script");
-        Scene generateScriptScene = new Scene(window);
-        dialog.setScene(generateScriptScene);
-        dialog.getIcons().add(ImageHelper.getImage("/za/co/apricotdb/ui/toolbar/tbInsertScriptEnabled.png", getClass()));
-
-        generateScriptScene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ESCAPE) {
-                    dialog.close();
-                }
-            }
-        });
-
-        CompareScriptController controller = loader.<CompareScriptController>getController();
+        ApricotForm form = formHandler.buildApricotForm("/za/co/apricotdb/ui/apricot-generate-diff-script.fxml",
+                "/za/co/apricotdb/ui/toolbar/tbInsertScriptEnabled.png", "Generate Alignment Script");
+        CompareScriptController controller = form.getController();
         controller.init(differences);
-        dialog.show();
+        form.show();
     }
 }

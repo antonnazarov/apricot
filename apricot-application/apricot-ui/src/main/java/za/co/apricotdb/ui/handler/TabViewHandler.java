@@ -32,6 +32,7 @@ import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.persistence.entity.LayoutObjectType;
+import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.CanvasAllocationItem;
@@ -64,6 +65,9 @@ public class TabViewHandler {
 
     @Autowired
     NonTransactionalPort port;
+
+    @Autowired
+    ParentWindow parent;
 
     /**
      * Build a new Tab and populate it with the initial data.
@@ -206,6 +210,7 @@ public class TabViewHandler {
                 Alert alert = new Alert(AlertType.WARNING, null, yes, no);
                 alert.setTitle("Delete View");
                 alert.setHeaderText("Do you really want to delete the view \"" + tab.getText() + "\"?");
+                alert.initOwner(parent.getWindow());
                 alertDecorator.decorateAlert(alert);
 
                 Optional<ButtonType> result = alert.showAndWait();

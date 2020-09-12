@@ -6,6 +6,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.entity.ApricotTable;
@@ -33,6 +34,7 @@ public class ParentWindow {
     private List<ApricotTable> filterTables = new ArrayList<>();
     private TabPane viewsTabPane;
     private ProgressBarModel progressBarModel;
+    private Stage primaryStage;
 
     public void init(MainAppController controller) {
         this.controller = controller;
@@ -150,6 +152,14 @@ public class ParentWindow {
 
     public ProgressBarModel getProgressBarModel() {
         return progressBarModel;
+    }
+
+    public Stage getPrimaryStage() {
+        return primaryStage;
+    }
+
+    public void setPrimaryStage(Stage primaryStage) {
+        this.primaryStage = primaryStage;
     }
 
     /**

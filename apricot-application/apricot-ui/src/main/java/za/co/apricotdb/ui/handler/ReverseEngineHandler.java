@@ -32,8 +32,10 @@ import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.ui.ConnectionH2Controller;
 import za.co.apricotdb.ui.ConnectionSqlServerController;
+import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.ReversedTablesController;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
+import za.co.apricotdb.ui.model.ApricotForm;
 import za.co.apricotdb.ui.model.ConnectionAppParameterModel;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.ui.util.ImageHelper;
@@ -43,6 +45,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -85,6 +88,12 @@ public class ReverseEngineHandler {
     @Autowired
     SqlServerParametersHandler parametersHandler;
 
+    @Autowired
+    DialogFormHandler formHandler;
+
+    @Autowired
+    ParentWindow pw;
+
     @ApricotErrorLogger(title = "Unable to start the Reverse Engineering process")
     public boolean startReverseEngineering() {
         ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
@@ -109,26 +118,12 @@ public class ReverseEngineHandler {
 
     @ApricotErrorLogger(title = "Unable to open the result of the scan process")
     public void openScanResultForm(MetaData metaData, String[] blackList, String reverseEngineeringParameters) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-re-tables-list.fxml"));
-        loader.setControllerFactory(context::getBean);
-        Pane window = null;
-        try {
-            window = loader.load();
-        } catch (IOException ex) {
-            throw new IllegalStateException(ex);
-        }
-
-        ReversedTablesController controller = loader.<ReversedTablesController>getController();
+        ApricotForm form = formHandler.buildApricotForm("/za/co/apricotdb/ui/apricot-re-tables-list.fxml",
+                "bw-reverse-s1.jpg", "Result of the database scan");
+        ReversedTablesController controller = form.getController();
         controller.init(metaData, blackList, reverseEngineeringParameters);
 
-        final Stage dialog = new Stage();
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.setTitle("Result of the database scan");
-        dialog.getIcons().add(ImageHelper.getImage("bw-reverse-s1.jpg", getClass()));
-        Scene openProjectScene = new Scene(window);
-        dialog.setScene(openProjectScene);
-
-        dialog.show();
+        form.show();
     }
 
     @ApricotErrorLogger(title = "Unable to save the reversed objects in the current Snapshot")
@@ -147,6 +142,7 @@ public class ReverseEngineHandler {
                             + "the corresponding Child tables will be excluded from the result:\n\n", 60)
                     + getMessageForExtraExclude(extraExclude));
             alertDecorator.decorateAlert(alert);
+            alert.initOwner(pw.getWindow());
             Optional<ButtonType> result = alert.showAndWait();
 
             if (result.orElse(no) == yes) {
@@ -158,9 +154,7 @@ public class ReverseEngineHandler {
                 }
 
                 // save the black list
-                excluded.sort((ApricotTable t1, ApricotTable t2) -> {
-                    return t1.getName().compareTo(t2.getName());
-                });
+                excluded.sort(Comparator.comparing(ApricotTable::getName));
                 blackListHandler.saveBlackList(projectManager.findCurrentProject(), excluded);
             } else {
                 return false;
@@ -226,6 +220,7 @@ public class ReverseEngineHandler {
         Alert alert = new Alert(AlertType.ERROR, null, ButtonType.OK);
         alert.setTitle("Start Reverse Engineering process");
         alert.setHeaderText(text);
+        alert.initOwner(pw.getWindow());
         alertDecorator.decorateAlert(alert);
 
         return alert;
@@ -279,16 +274,14 @@ public class ReverseEngineHandler {
 
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(pw.getPrimaryStage());
         dialog.setTitle(title);
         dialog.getIcons().add(ImageHelper.getImage("bw-reverse-s1.jpg", getClass()));
         Scene connectionScene = new Scene(window);
         dialog.setScene(connectionScene);
-        connectionScene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ESCAPE) {
-                    dialog.close();
-                }
+        connectionScene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.ESCAPE) {
+                dialog.close();
             }
         });
 

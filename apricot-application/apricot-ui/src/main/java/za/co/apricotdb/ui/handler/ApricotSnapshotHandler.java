@@ -1,22 +1,16 @@
 package za.co.apricotdb.ui.handler;
 
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
+import javafx.concurrent.Worker;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import org.apache.commons.text.WordUtils;
+import org.controlsfx.dialog.ProgressDialog;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
@@ -28,18 +22,18 @@ import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.EditSnapshotController;
 import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
+import za.co.apricotdb.ui.model.ApricotForm;
 import za.co.apricotdb.ui.model.ApricotSnapshotSerializer;
 import za.co.apricotdb.ui.model.EditSnapshotModelBuilder;
 import za.co.apricotdb.ui.model.NewSnapshotModelBuilder;
 import za.co.apricotdb.ui.model.SnapshotFormModel;
+import za.co.apricotdb.ui.service.DeleteSnapshotService;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
-import za.co.apricotdb.ui.util.ImageHelper;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ElementStatus;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 
-import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,9 +42,6 @@ import java.util.Optional;
 
 @Component
 public class ApricotSnapshotHandler {
-
-    @Resource
-    ApplicationContext context;
 
     @Autowired
     NewSnapshotModelBuilder newSnapshotModelBuilder;
@@ -88,6 +79,12 @@ public class ApricotSnapshotHandler {
     @Autowired
     ApplicationInitializer applicationInitializer;
 
+    @Autowired
+    DialogFormHandler formHandler;
+
+    @Autowired
+    DeleteSnapshotService deleteSnapshotService;
+
     @ApricotErrorLogger(title = "Unable to create the default (empty) snapshot")
     public void createDefaultSnapshot(ApricotProject project) {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
@@ -101,53 +98,36 @@ public class ApricotSnapshotHandler {
      * Create the snapshot editing form for a new or existing snapshot.
      */
     @ApricotErrorLogger(title = "Create new Snapshot: unable to create the form")
-    public void createEditSnapshotForm(boolean isCreateNew, Pane mainAppPane) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-snapshot-editor.fxml"));
-        loader.setControllerFactory(context::getBean);
-        Pane window = loader.load();
-
-        final Stage dialog = new Stage();
-        dialog.initModality(Modality.APPLICATION_MODAL);
-
+    public void createEditSnapshotForm(boolean isCreateNew, Pane mainAppPane) {
+        String title = null;
         SnapshotFormModel model = null;
         if (isCreateNew) {
-            dialog.setTitle("Create Snapshot");
+            title = "Create Snapshot";
             model = newSnapshotModelBuilder.buildModel();
         } else {
-            dialog.setTitle("Edit Snapshot");
+            title = "Edit Snapshot";
             model = editSnapshotModelBuilder.buildModel();
         }
-        dialog.getIcons().add(ImageHelper.getImage("snapshot-s1.JPG", getClass()));
-
-        Scene editSnapshotScene = new Scene(window);
-        dialog.setScene(editSnapshotScene);
-        editSnapshotScene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ESCAPE) {
-                    dialog.close();
-                }
-            }
-        });
-
-        EditSnapshotController controller = loader.<EditSnapshotController>getController();
+        ApricotForm form = formHandler.buildApricotForm("/za/co/apricotdb/ui/apricot-snapshot-editor.fxml",
+                "snapshot-s1.JPG", title);
+        EditSnapshotController controller = form.getController();
         controller.init(model);
 
-        dialog.show();
+        form.show();
     }
 
     @ApricotErrorLogger(title = "Unable to delete the current snapshot")
-    public boolean deleteSnapshot() {
+    public void deleteSnapshot() {
         ApricotProject project = projectManager.findCurrentProject();
-        List<ApricotSnapshot> snaps = snapshotManager.getAllSnapshots(project);
-        if (snaps.size() == 1) {
-            Alert alert = getAlert(AlertType.WARNING, WordUtils.wrap("The snapshot \"" + snaps.get(0).getName()
+        List<ApricotSnapshot> snapshots = snapshotManager.getAllSnapshots(project);
+        if (snapshots.size() == 1) {
+            Alert alert = getAlert(AlertType.WARNING, WordUtils.wrap("The snapshot \"" + snapshots.get(0).getName()
                     + "\" is the only snapshot in the project \"" + project.getName()
                     + "\". This snapshot can't be deleted, since a project has to include at least one snapshot.", 60));
             alertDecorator.decorateAlert(alert);
             alert.showAndWait();
 
-            return false;
+            return;
         }
 
         ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
@@ -157,19 +137,33 @@ public class ApricotSnapshotHandler {
         Alert alert = new Alert(AlertType.WARNING, null, yes, no);
         alert.setTitle("Delete Snapshot");
         alert.setHeaderText("Do you really want to delete the snapshot \"" + snapshot.getName() + "\"?");
+        alert.initOwner(parentWindow.getWindow());
         alertDecorator.decorateAlert(alert);
         Optional<ButtonType> result = alert.showAndWait();
 
         if (result.orElse(no) == yes) {
-            snapshotManager.deleteSnapshot(snapshot);
-            List<ApricotSnapshot> snapshots = snapshotManager.getAllSnapshots(project);
-            ApricotSnapshot defSnapshot = snapshots.get(snapshots.size() - 1);
-            snapshotManager.setDefaultSnapshot(defSnapshot);
-
-            return true;
+            prepareDeleteSnapshotService(snapshot);
+            deleteSnapshotService.start();
         }
+    }
 
-        return false;
+    private void prepareDeleteSnapshotService(ApricotSnapshot snapshot) {
+        //  transfer the input parameter
+        deleteSnapshotService.reset();
+        deleteSnapshotService.setSnapshotId(snapshot.getId());
+        //  define post Snapshot Delete operations
+        deleteSnapshotService.setOnSucceeded(e -> {
+            List<ApricotSnapshot> snapshots = snapshotManager.getAllSnapshots(snapshot.getProject());
+            snapshotManager.setDefaultSnapshot(snapshots.get(snapshots.size() - 1));
+            applicationInitializer.initializeDefault();
+        });
+
+        deleteSnapshotService.setOnFailed(e -> {
+            throw new IllegalArgumentException(deleteSnapshotService.getException());
+        });
+
+        deleteSnapshotService.initProgressDialog("Delete Snapshot",
+                "The deletion of the snapshot \"" + snapshot.getName() + "\" is in progress");
     }
 
     /**
@@ -241,6 +235,7 @@ public class ApricotSnapshotHandler {
         Alert alert = new Alert(alertType, null, ButtonType.OK);
         alert.setTitle("Delete Snapshot");
         alert.setHeaderText(text);
+        alert.initOwner(parentWindow.getWindow());
         if (alertType == AlertType.ERROR) {
             alertDecorator.decorateAlert(alert);
         }

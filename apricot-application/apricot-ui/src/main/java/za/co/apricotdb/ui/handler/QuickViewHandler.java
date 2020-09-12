@@ -1,14 +1,9 @@
 package za.co.apricotdb.ui.handler;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
@@ -19,9 +14,13 @@ import za.co.apricotdb.ui.model.ViewFormModel;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * This handler serves the "Quick View" functionality.
- * 
+ *
  * @author Anton Nazarov
  * @since 13/03/2020
  */
@@ -47,10 +46,10 @@ public class QuickViewHandler {
 
     @Autowired
     NonTransactionalPort port;
-    
+
     @Autowired
     CanvasAlignHandler aligner;
-    
+
     @Autowired
     ReversedTablesController revTabController;
 
@@ -59,7 +58,16 @@ public class QuickViewHandler {
      */
     @ApricotErrorLogger(title = "Unable to build the Quick View")
     public void createQuickView() {
-        List<ApricotEntity> selected = getSelected();
+        createQuickView(null);
+    }
+
+    public void createQuickView(List<ApricotEntity> entities) {
+        List<ApricotEntity> selected = null;
+        if (entities == null) {
+            selected = getSelected();
+        } else {
+            selected = new ArrayList<>(entities);
+        }
 
         // if there is no selected entities in the current view,
         // just return with no action
@@ -70,8 +78,7 @@ public class QuickViewHandler {
         removeExistingQuickView();
         ntaViewHandler.saveView(createViewModel(selected, QUICK_VIEW_NAME), parentWindow.getProjectTabPane(),
                 QUICK_VIEW_NAME);
-        // aligner.alignCanvasIslands();
-        
+
         revTabController.alignAfterDelay(3).play();
     }
 
@@ -115,7 +122,7 @@ public class QuickViewHandler {
         return sb.toString();
     }
 
-    List<String> getTableNames(List<ApricotEntity> selected) {
+    private List<String> getTableNames(List<ApricotEntity> selected) {
         List<String> tables = new ArrayList<>();
 
         for (ApricotEntity ent : selected) {
@@ -136,7 +143,7 @@ public class QuickViewHandler {
                 break;
             }
         }
-        
+
         if (removeTab != null) {
             tpane.getTabs().remove(removeTab);
         }

@@ -1,19 +1,10 @@
 package za.co.apricotdb.ui.handler;
 
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TreeItem;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Pane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.comparator.ApricotObjectDifference;
 import za.co.apricotdb.persistence.comparator.ColumnDifference;
@@ -40,14 +31,12 @@ import za.co.apricotdb.ui.comparator.CompareStateDiff;
 import za.co.apricotdb.ui.comparator.CompareStateEqual;
 import za.co.apricotdb.ui.comparator.CompareStateRemove;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
+import za.co.apricotdb.ui.model.ApricotForm;
 import za.co.apricotdb.ui.repository.ModelRow;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
-import za.co.apricotdb.ui.util.ImageHelper;
 import za.co.apricotdb.ui.util.UiConstants;
 
-import javax.annotation.Resource;
 import javax.transaction.Transactional;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,9 +51,6 @@ public class CompareSnapshotsHandler {
 
     Logger logger = LoggerFactory.getLogger(CompareSnapshotsHandler.class);
 
-    @Resource
-    ApplicationContext context;
-
     @Autowired
     AlertMessageDecorator alertDecorator;
 
@@ -76,6 +62,9 @@ public class CompareSnapshotsHandler {
 
     @Autowired
     SnapshotComparator snapshotComparator;
+
+    @Autowired
+    DialogFormHandler formHandler;
 
     /**
      * Open the Snapshot comparator form.
@@ -89,34 +78,9 @@ public class CompareSnapshotsHandler {
             return;
         }
 
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/za/co/apricotdb/ui/apricot-compare-snapshots.fxml"));
-        loader.setControllerFactory(context::getBean);
-        Pane window = null;
-        try {
-            window = loader.load();
-        } catch (IOException ex) {
-            throw new IllegalArgumentException("Unable to open the Compare Snapshots form", ex);
-        }
-
-        final Stage dialog = new Stage();
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.setTitle("Compare Snapshots");
-        dialog.getIcons().add(ImageHelper.getImage("/za/co/apricotdb/ui/toolbar/tbCompareSnapshotEnabled.png",
-                getClass()));
-        Scene scene = new Scene(window);
-        scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ESCAPE) {
-                    dialog.close();
-                }
-            }
-        });
-
-        dialog.setScene(scene);
-
-        CompareSnapshotsController controller = loader.<CompareSnapshotsController>getController();
+        ApricotForm form = formHandler.buildApricotForm("/za/co/apricotdb/ui/apricot-compare-snapshots.fxml",
+                "/za/co/apricotdb/ui/toolbar/tbCompareSnapshotEnabled.png", "Compare Snapshots");
+        CompareSnapshotsController controller = form.getController();
         if (!compareRemote) {
             controller.init();
         } else {
@@ -125,7 +89,7 @@ public class CompareSnapshotsHandler {
             }
         }
 
-        dialog.show();
+        form.show();
     }
 
     /**

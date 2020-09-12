@@ -7,7 +7,7 @@
     <parent>
         <groupId>za.co.apricot</groupId>
         <artifactId>apricotdb</artifactId>
-        <version>2.3</version>
+        <version>2.4</version>
     </parent>
 
     <artifactId>apricot-viewport</artifactId>
@@ -18,13 +18,13 @@
         <dependency>
             <groupId>za.co.apricot</groupId>
             <artifactId>apricot-support</artifactId>
-            <version>2.3</version>
+            <version>2.4</version>
         </dependency>
 
         <dependency>
             <groupId>org.fxmisc.richtext</groupId>
             <artifactId>richtextfx</artifactId>
-            <version>0.10.4</version>
+            <version>0.10.5</version>
         </dependency>
     </dependencies>
 </project>

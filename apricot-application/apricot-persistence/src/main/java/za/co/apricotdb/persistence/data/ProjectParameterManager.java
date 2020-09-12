@@ -1,5 +1,14 @@
 package za.co.apricotdb.persistence.data;
 
+import com.microsoft.sqlserver.jdbc.StringUtils;
+import org.springframework.stereotype.Component;
+import za.co.apricotdb.persistence.entity.ApricotProject;
+import za.co.apricotdb.persistence.entity.ApricotProjectParameter;
+import za.co.apricotdb.persistence.repository.ApricotProjectParameterRepository;
+
+import javax.annotation.Resource;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -8,18 +17,6 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
-import javax.annotation.Resource;
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-
-import org.springframework.stereotype.Component;
-
-import com.microsoft.sqlserver.jdbc.StringUtils;
-
-import za.co.apricotdb.persistence.entity.ApricotProject;
-import za.co.apricotdb.persistence.entity.ApricotProjectParameter;
-import za.co.apricotdb.persistence.repository.ApricotProjectParameterRepository;
 
 /**
  * This manager serves the Parameters, associated with the Project.
@@ -31,7 +28,6 @@ import za.co.apricotdb.persistence.repository.ApricotProjectParameterRepository;
 public class ProjectParameterManager {
 
     public static final String DATABASE_CONNECTION_PARAM_PREFIX = "DATABASE.CONNECTION.";
-    public static final String DATABASE_CONNECTION_LATEST = "DATABASE.CONNECTION.LATEST";
     public static final String PROJECT_BLACKLIST_PARAM = "PROJECT.BLACKLIST";
     public static final String CONNECTION_SERVER = "CONNECTION.SERVER";
     public static final String CONNECTION_PORT = "CONNECTION.PORT";
@@ -42,6 +38,9 @@ public class ProjectParameterManager {
     public static final String PROJECT_DEFAULT_OUTPUT_DIR = "PROJECT.DEFAULT.OUTPUT.DIR";
     public static final String SCRIPT_DEFAULT_OUTPUT_DIR = "SCRIPT.DEFAULT.OUTPUT.DIR";
     public static final String H2DB_FILE_DEFAULT_DIR = "H2DB.FILE.DEFAULT.DIR";
+    public static final String PREVIOUS_ADVANCED_SEARCH = "PREVIOUS.ADVANCED.SEARCH";
+    public static final String EXPORT_PICTURE_OUTPUT_DIR = "EXPORT.PICTURE.OUTPUT.DIR";
+    public static final String EXPORT_PDF_OUTPUT_DIR = "EXPORT.PDF.OUTPUT.DIR";
 
     @Resource
     EntityManager em;
