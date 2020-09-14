@@ -1,7 +1,7 @@
 ------------------------------------------
 Apricot DB, Release 2.4, September 2020
 ------------------------------------------
-Added export of the current diagram into PNG and PDF
+Added export of the current diagram into PNG and PDF (all planned main functionality has been implemented)
 The Advanced Search functionality
 The bugfixing and refactoring
 ....................................

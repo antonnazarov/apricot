@@ -15,7 +15,7 @@
   <manifest></manifest>
   <icon>C:\AntonNazarov\apricot\apricot-docs\launcher\apricotdb.ico</icon>
   <jre>
-    <path>C:\AntonNazarov\apricotdb-2.4-windows-x64\java-runtime</path>
+    <path>java-runtime</path>
     <bundledJre64Bit>true</bundledJre64Bit>
     <bundledJreAsFallback>false</bundledJreAsFallback>
     <minVersion></minVersion>
