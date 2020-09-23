@@ -20,7 +20,7 @@ import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
 /**
- * This component inclapsulates the functions for importing of the Aprocit
+ * This component enclapsulates the functions for importing of the Apricot
  * Project.
  *
  * @author Anton Nazarov
@@ -63,13 +63,12 @@ public class ImportProjectHandler {
         fileChooser.getExtensionFilters().add(extFilter);
 
         File file = fileChooser.showOpenDialog(window);
-        String sProject = null;
         if (file != null) {
             importProject(file);
-        }
+            parameterManager.saveParameter(project, ProjectParameterManager.PROJECT_DEFAULT_OUTPUT_DIR,
+                    file.getParent());
 
-        parameterManager.saveParameter(project, ProjectParameterManager.PROJECT_DEFAULT_OUTPUT_DIR,
-                file.getParent());
+        }
     }
 
     @ApricotErrorLogger(title = "Unable to Import Project")
