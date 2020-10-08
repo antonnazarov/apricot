@@ -1,6 +1,5 @@
 package za.co.apricotdb.ui.handler;
 
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -32,6 +31,8 @@ import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.ui.ConnectionH2Controller;
 import za.co.apricotdb.ui.ConnectionSqlServerController;
+import za.co.apricotdb.ui.ConnectionSqliteController;
+import za.co.apricotdb.ui.FiledbController;
 import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.ReversedTablesController;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
@@ -93,6 +94,12 @@ public class ReverseEngineHandler {
 
     @Autowired
     ParentWindow pw;
+
+    @Autowired
+    ConnectionH2Controller h2Controller;
+
+    @Autowired
+    ConnectionSqliteController sqliteController;
 
     @ApricotErrorLogger(title = "Unable to start the Reverse Engineering process")
     public boolean startReverseEngineering() {
@@ -258,16 +265,22 @@ public class ReverseEngineHandler {
                 title = "Connect to DB2 (LUW) database";
                 window = initFormController(model);
                 break;
+            case SQLite:
             case H2:
-                loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-re-h2.fxml"));
+                loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-re-filedb.fxml"));
                 loader.setControllerFactory(context::getBean);
+                FiledbController controller = null;
+                if (targetDatabase == ApricotTargetDatabase.H2) {
+                    title = "Connect to H2 database";
+                    controller = h2Controller;
+                } else {
+                    title = "Connect to SQLite database";
+                    controller = sqliteController;
+                }
+                loader.setController(controller);
                 window = loader.load();
-
-                title = "Connect to H2 database";
-                ConnectionH2Controller h2controller = loader.<ConnectionH2Controller>getController();
-                h2controller.init();
+                controller.init();
                 break;
-
             default:
                 break;
         }

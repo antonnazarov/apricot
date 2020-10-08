@@ -18,23 +18,23 @@ public class SqliteUrlBuilder implements DatabaseUrlBuilder {
     }
 
     public String getUrl(String filePath) {
-        StringBuilder sb = new StringBuilder("jdbc:h2:file:").append(filePath);
+        StringBuilder sb = new StringBuilder("jdbc:sqlite:").append(filePath);
 
         return sb.toString();
     }
 
     @Override
     public String getDriverClass() {
-        return "org.h2.Driver";
+        return "org.sqlite.JDBC";
     }
 
     @Override
     public String getDefaultSchemaName(String url, String userName) {
-        return "PUBLIC";
+        return null;
     }
 
     @Override
     public String getTestSQL() {
-        return null;
+        return "select tbl_name, sql from sqlite_master";
     }
 }

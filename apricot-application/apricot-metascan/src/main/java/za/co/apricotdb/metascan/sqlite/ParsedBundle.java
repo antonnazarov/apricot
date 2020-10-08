@@ -16,6 +16,7 @@ import java.util.Map;
 public class ParsedBundle {
 
     private Map<String, ParsedTable> parsedTables = new HashMap<>();
+    private int idxCounter = 0;
 
     public List<ParsedTable> getParsedTables() {
         return new ArrayList<>(parsedTables.values());
@@ -36,5 +37,12 @@ public class ParsedBundle {
 
     public void addParsedTable(ParsedTable parsedTable) {
         parsedTables.put(parsedTable.toString(), parsedTable);
+    }
+
+    public int getNextCounter() {
+        int ret = idxCounter;
+        idxCounter++;
+
+        return ret;
     }
 }

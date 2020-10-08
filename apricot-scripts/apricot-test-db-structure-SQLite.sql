@@ -72,7 +72,8 @@ create table person (
    position_suffix varchar(5) not null, -- FK from position
    foreign key (religion) references religion(religion_name),
    foreign key(department) references department(department_code),
-   foreign key(manager) references person(person_id)
+   foreign key(manager) references person(person_id),
+   foreign key (position_code, position_suffix) references position (position_code, position_suffix)
 );
 
 create unique index tabel_nummer_idx on person (tabel_nummer);

@@ -6,9 +6,7 @@ import net.sf.jsqlparser.statement.create.table.CreateTable;
 import net.sf.jsqlparser.statement.create.table.ForeignKeyIndex;
 import net.sf.jsqlparser.statement.create.table.Index;
 import net.sf.jsqlparser.statement.create.table.NamedConstraint;
-import org.apache.commons.lang3.StringUtils;
 import za.co.apricotdb.persistence.entity.ApricotColumn;
-import za.co.apricotdb.persistence.entity.ApricotColumnConstraint;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
@@ -29,12 +27,12 @@ public class ParsedTable {
     private ApricotTable table;
     private CreateTable createTable;
     private List<ForeignKeyIndex> foreignKeys = new ArrayList<>();
-    ApricotSnapshot snapshot;
-    private int uniqueCnt = 0;
+    private ApricotSnapshot snapshot;
 
-    public static ParsedTable parseTable(CreateTable createTable, ApricotSnapshot snapshot) {
+    public static ParsedTable parseTable(CreateTable createTable, ApricotSnapshot snapshot,
+                                         ParsedBundle parsedBundle) {
         ParsedTable parsed = new ParsedTable(createTable, snapshot);
-        parsed.parseTable();
+        parsed.parseTable(parsedBundle);
 
         return parsed;
     }
@@ -65,11 +63,10 @@ public class ParsedTable {
         return Objects.hash(table);
     }
 
-    public void parseTable() {
+    public void parseTable(ParsedBundle parsedBundle) {
         ApricotTable table = new ApricotTable();
         Table cTable = createTable.getTable();
         table.setName(cTable.getName());
-        List<ApricotColumn> columns = new ArrayList<>();
         int ordinalPos = 0;
         for (ColumnDefinition cd : createTable.getColumnDefinitions()) {
             ApricotColumn column = new ApricotColumn();
@@ -80,27 +77,30 @@ public class ParsedTable {
             column.setOrdinalPosition(ordinalPos);
             ordinalPos++;
             column.setTable(table);
-            columns.add(column);
+            table.getColumns().add(column);
 
+            //  analyze and create the primary key
             if (isPrimaryKey(getColumnSpec(cd))) {
                 buildPrimaryKey(table, column);
             }
         }
 
-        table.setColumns(columns);
         table.setSnapshot(snapshot);
-        parseConstraints(createTable, table);
+        parseConstraints(createTable, table, parsedBundle);
         this.table = table;
     }
 
-    private void parseConstraints(CreateTable createTable, ApricotTable table) {
-        for (Index idx : createTable.getIndexes()) {
-            if (idx instanceof ForeignKeyIndex) {
-                foreignKeys.add((ForeignKeyIndex) idx);
-                continue;
-            }
-            if (idx instanceof NamedConstraint) {
-                parseNamedConstraint((NamedConstraint) idx, table);
+    private void parseConstraints(CreateTable createTable, ApricotTable table,
+                                  ParsedBundle parsedBundle) {
+        if (createTable.getIndexes() != null) {
+            for (Index idx : createTable.getIndexes()) {
+                if (idx instanceof ForeignKeyIndex) {
+                    foreignKeys.add((ForeignKeyIndex) idx);
+                    continue;
+                }
+                if (idx instanceof NamedConstraint) {
+                    SqliteParser.parseNamedConstraint((NamedConstraint) idx, table, parsedBundle);
+                }
             }
         }
     }
@@ -162,32 +162,6 @@ public class ParsedTable {
         }
 
         return sb.toString();
-    }
-
-    private void parseNamedConstraint(NamedConstraint nmdConstraint, ApricotTable table) {
-        ApricotConstraint constraint = new ApricotConstraint();
-        constraint.setTable(table);
-        String name = nmdConstraint.getName();
-        if (nmdConstraint.getType().equalsIgnoreCase("primary key")) {
-            constraint.setType(ConstraintType.PRIMARY_KEY);
-            if (StringUtils.isEmpty(name)) {
-                name = table.getName() + "_PK";
-            }
-        } else if (nmdConstraint.getType().equalsIgnoreCase("unique")) {
-            constraint.setType(ConstraintType.UNIQUE);
-            if (StringUtils.isEmpty(name)) {
-                name = table.getName() + "_UNIQUE" + uniqueCnt;
-                uniqueCnt++;
-            }
-        }
-        constraint.setName(name);
-
-        List<String> columns = nmdConstraint.getColumnsNames();
-        for (String col : columns) {
-            constraint.addColumn(col);
-        }
-
-        table.getConstraints().add(constraint);
     }
 
     @Override
