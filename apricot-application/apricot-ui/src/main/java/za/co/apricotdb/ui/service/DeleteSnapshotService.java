@@ -18,7 +18,6 @@ import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.repository.ApricotColumnConstraintRepository;
 import za.co.apricotdb.persistence.repository.ApricotRelationshipRepository;
 import za.co.apricotdb.persistence.repository.ApricotSnapshotRepository;
-import za.co.apricotdb.ui.ParentWindow;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -30,7 +29,7 @@ import java.util.List;
  * @since 28/08/2020
  */
 @Component
-public class DeleteSnapshotService extends Service<Boolean> {
+public class DeleteSnapshotService extends Service<Boolean> implements InitializableService {
 
     @Autowired
     TableManager tableManager;
@@ -54,7 +53,7 @@ public class DeleteSnapshotService extends Service<Boolean> {
     ApricotSnapshotRepository snapshotRepository;
 
     @Autowired
-    ParentWindow parentWindow;
+    ProgressInitializer progressInitializer;
 
     private LongProperty snapshotId = new SimpleLongProperty();
     private ProgressDialog progressDialog;
@@ -108,14 +107,8 @@ public class DeleteSnapshotService extends Service<Boolean> {
         };
     }
 
-    public ProgressDialog initProgressDialog(String title, String headerText) {
-        if (progressDialog == null) {
-            progressDialog = new ProgressDialog(this);
-            progressDialog.initOwner(parentWindow.getPrimaryStage());
-        }
-        progressDialog.setTitle(title);
-        progressDialog.setHeaderText(headerText);
-
-        return progressDialog;
+    @Override
+    public void init(String title, String headerText) {
+        progressInitializer.init(title, headerText, this);
     }
 }

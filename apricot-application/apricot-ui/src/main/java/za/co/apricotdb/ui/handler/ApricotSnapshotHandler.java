@@ -1,6 +1,5 @@
 package za.co.apricotdb.ui.handler;
 
-import javafx.concurrent.Worker;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
@@ -9,7 +8,6 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
 import org.apache.commons.text.WordUtils;
-import org.controlsfx.dialog.ProgressDialog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ProjectManager;
@@ -162,7 +160,7 @@ public class ApricotSnapshotHandler {
             throw new IllegalArgumentException(deleteSnapshotService.getException());
         });
 
-        deleteSnapshotService.initProgressDialog("Delete Snapshot",
+        deleteSnapshotService.init("Delete Snapshot",
                 "The deletion of the snapshot \"" + snapshot.getName() + "\" is in progress");
     }
 
