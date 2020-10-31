@@ -4,7 +4,6 @@ import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import org.controlsfx.dialog.ProgressDialog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ConstraintManager;
@@ -56,7 +55,6 @@ public class DeleteSnapshotService extends Service<Boolean> implements Initializ
     ProgressInitializer progressInitializer;
 
     private LongProperty snapshotId = new SimpleLongProperty();
-    private ProgressDialog progressDialog;
 
     public void setSnapshotId(Long snapshotId) {
         this.snapshotId.setValue(snapshotId);
