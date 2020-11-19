@@ -8,14 +8,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.SnapshotManager;
@@ -281,12 +279,8 @@ public class MainAppController {
     MenuItem menuMinWidth;
     @FXML
     MenuItem menuSameWidth;
-
     @FXML
     TextField filterField;
-
-    @FXML
-    ProgressBar mainProgressBar;
 
     public void init() {
         parentWindow.init(this);

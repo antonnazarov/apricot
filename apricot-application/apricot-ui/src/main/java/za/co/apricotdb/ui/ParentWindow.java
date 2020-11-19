@@ -33,14 +33,10 @@ public class ParentWindow {
     private MainAppController controller;
     private List<ApricotTable> filterTables = new ArrayList<>();
     private TabPane viewsTabPane;
-    private ProgressBarModel progressBarModel;
     private Stage primaryStage;
 
     public void init(MainAppController controller) {
         this.controller = controller;
-        progressBarModel = new ProgressBarModel(controller.mainProgressBar);
-        controller.mainProgressBar.visibleProperty().bind(progressBarModel.getVisibleProperty());
-        controller.mainProgressBar.progressProperty().bind(progressBarModel.getProgressProperty());
     }
 
     public void setParentPane(Pane mainAppPane) {
@@ -148,10 +144,6 @@ public class ParentWindow {
 
     public void setViewsTabPane(TabPane viewsTabPane) {
         this.viewsTabPane = viewsTabPane;
-    }
-
-    public ProgressBarModel getProgressBarModel() {
-        return progressBarModel;
     }
 
     public Stage getPrimaryStage() {
