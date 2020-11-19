@@ -104,6 +104,12 @@ public class RemoteExportService {
                 ApricotProject targetProject = projectManager.getProjectByName(projectName);
                 snapshotCloneManager.cloneSnapshot(snapshot.getName(), snapshot.getComment(), targetProject,
                         snapshot);
+
+                //  check if the overridden snapshot was the default one. If true, set it to default again
+                if (snapshotManager.getDefaultSnapshot() == null) {
+                    ApricotSnapshot clonedSnapshot = snapshotManager.getSnapshotByName(targetProject, snapshotName);
+                    snapshotManager.setDefaultSnapshot(clonedSnapshot);
+                }
             } else {
                 throw new IllegalArgumentException("Unable to find the snapshot=[" + snapshotName + "] in the " +
                         "remote project=[" + projectName + "]");

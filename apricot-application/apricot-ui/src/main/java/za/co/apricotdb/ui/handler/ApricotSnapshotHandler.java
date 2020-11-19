@@ -186,6 +186,7 @@ public class ApricotSnapshotHandler {
 
     @Transactional
     public void syncSnapshotTransactional(boolean synchAllViews) {
+        updateCurrentSnapshot();
         TabInfoObject currentTab = canvasHandler.getCurrentViewTabInfo();
         if (synchAllViews) {
             TabPane tp = parentWindow.getProjectTabPane();
@@ -202,6 +203,21 @@ public class ApricotSnapshotHandler {
         treeViewHandler.populate(projectManager.findCurrentProject(), snapshotManager.getDefaultSnapshot());
         treeViewHandler.markEntitiesIncludedIntoView(currentTab.getView());
         treeViewHandler.sortEntitiesByView();
+    }
+
+    /**
+     * Re-read the current snapshot from the database and update the TabInfo for all view tabs.
+     * It is important if the current snapshot was re-created and replaced.
+     */
+    private void updateCurrentSnapshot() {
+        ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
+        TabPane tp = parentWindow.getProjectTabPane();
+        for (Tab tab : tp.getTabs()) {
+            TabInfoObject tabInfo = TabInfoObject.getTabInfo(tab);
+            if (tabInfo != null) {
+                tabInfo.setSnapshot(snapshot);
+            }
+        }
     }
 
     private void synchronizeViewTab(TabInfoObject tabInfo) {

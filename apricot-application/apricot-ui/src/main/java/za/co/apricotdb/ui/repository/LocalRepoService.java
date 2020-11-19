@@ -2,14 +2,12 @@ package za.co.apricotdb.ui.repository;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.support.export.ExportProjectProcessor;
 import za.co.apricotdb.support.export.ImportProjectProcessor;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
-import za.co.apricotdb.ui.handler.ProgressBarHandler;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,9 +33,6 @@ public class LocalRepoService {
 
     @Autowired
     ImportProjectProcessor importProjectProcessor;
-
-    @Autowired
-    ProgressBarHandler progressBarHandler;
 
     public static final String LOCAL_REPO = System.getProperty("user.home") + "/.apricotdb/repository";
 
@@ -92,8 +87,6 @@ public class LocalRepoService {
         ProjectItems ret = new ProjectItems();
         File localRepo = new File(LOCAL_REPO);
 
-        int total = getFileList(LOCAL_REPO).size();
-        int cnt = 0;
         Iterator<File> itr = FileUtils.iterateFiles(localRepo, new String[]{"txt"}, false);
         while (itr.hasNext()) {
             File f = itr.next();
@@ -107,9 +100,6 @@ public class LocalRepoService {
                     ex.printStackTrace();
                 }
             }
-
-            cnt++;
-            progressBarHandler.setProgress(Double.valueOf(cnt) * 0.2d / Double.valueOf(total));
         }
 
         return ret;

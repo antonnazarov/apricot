@@ -1,20 +1,11 @@
 package za.co.apricotdb.support.export;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-
+import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import com.google.gson.Gson;
-
+import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.persistence.entity.ApricotColumnConstraint;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
@@ -24,6 +15,14 @@ import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ApricotView;
+
+import javax.annotation.Resource;
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This component imports the project from the file.
@@ -38,6 +37,9 @@ public class ImportProjectProcessor {
 
     @Resource
     EntityManager em;
+
+    @Autowired
+    SnapshotManager snapshotManager;
 
     public ApricotProject deserializeProject(String sProject) {
         String[] splt = parseProject(sProject);
@@ -165,8 +167,19 @@ public class ImportProjectProcessor {
 
         if (serialize) {
             serializeProject(project, relationships, colConstraints);
+
+            //  check if the default snapshot was set
+            ApricotSnapshot defaultSnapshot = snapshotManager.getDefaultSnapshot(project);
+            if (defaultSnapshot == null) {
+                if (project.getSnapshots() != null && project.getSnapshots().size() > 0) {
+                    snapshotManager.setDefaultSnapshot(project.getSnapshots().get(0));
+                } else {
+                    throw new IllegalArgumentException("Unable to set the default Snapshot. There is no snapshots in the project: " +
+                            project.getName());
+                }
+            }
         }
-        
+
         return project;
     }
 

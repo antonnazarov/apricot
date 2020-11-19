@@ -164,6 +164,7 @@ public class ReversedTablesController {
         transition.setOnFinished(e -> {
             alignHandler.alignCanvasIslands();
         });
+        transition.play();
 
         return transition;
     }
