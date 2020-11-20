@@ -109,7 +109,7 @@ public class DeleteSelectedHandler {
                         .findRelationshipById(r.getRelationshipId());
                 relationshipHandler.deleteRelationship(rel);
             }
-            snapshotHandler.syncronizeSnapshot(true);
+            snapshotHandler.synchronizeSnapshot(true);
         }
     }
 

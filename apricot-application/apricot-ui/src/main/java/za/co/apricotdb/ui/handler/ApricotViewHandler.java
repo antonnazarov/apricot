@@ -259,7 +259,7 @@ public class ApricotViewHandler {
         appController.save(null); // save the current layout
         TabInfoObject tabInfo = canvasHandler.getCurrentViewTabInfo();
         viewSerializer.deleteEntitiesFromView(entities, tabInfo);
-        snapshotHandler.syncronizeSnapshot(false);
+        snapshotHandler.synchronizeSnapshot(false);
     }
 
     @ApricotErrorLogger(title = "Unable to add Entity(s) into the View")
@@ -267,7 +267,7 @@ public class ApricotViewHandler {
         appController.save(null); // save the current layout
         TabInfoObject tabInfo = canvasHandler.getCurrentViewTabInfo();
         viewSerializer.addEntitiesToView(entities, tabInfo);
-        snapshotHandler.syncronizeSnapshot(false);
+        snapshotHandler.synchronizeSnapshot(false);
         canvasHandler.makeEntitiesSelected(entities, true);
     }
 }

@@ -42,7 +42,7 @@ public class SelectViewTabHandler {
         viewsTabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
             @Override
             public void changed(ObservableValue<? extends Tab> ov, Tab t, Tab t1) {
-                if (t1 != null) {
+                if (t1 != null && t != null) {
                     TabInfoObject tabInfo = TabInfoObject.getTabInfo(t1);
                     viewManager.setCurrentView(tabInfo.getView());
                     treeViewHandler.markEntitiesIncludedIntoView(tabInfo.getView());

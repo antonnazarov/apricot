@@ -110,7 +110,7 @@ public class OnKeyPressedEventHandler implements EventHandler<KeyEvent> {
                 }
                 break;
             case F5:
-                snapshotHandler.syncronizeSnapshot(false);
+                snapshotHandler.synchronizeSnapshot(false);
                 break;
             case C:
                 if (event.isControlDown()) {

@@ -78,6 +78,6 @@ public class CanvasAlignHandler {
         CanvasChangedEvent canvasChangedEvent = new CanvasChangedEvent(canvas);
         eventPublisher.publishEvent(canvasChangedEvent);
         appController.save(null);
-        snapshotHandler.syncronizeSnapshot(false);
+        snapshotHandler.synchronizeSnapshot(false);
     }
 }

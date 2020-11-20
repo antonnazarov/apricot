@@ -39,7 +39,7 @@ public class DeleteSelectedEntitiesService extends Service<Boolean> implements I
         init("Delete Entities", "The deletion of " + entities.size() + " entities is in progress");
 
         setOnSucceeded(e -> {
-            snapshotHandler.syncronizeSnapshot(true);
+            snapshotHandler.synchronizeSnapshot(true);
         });
 
         setOnFailed(e -> {

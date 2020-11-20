@@ -1,9 +1,5 @@
 package za.co.apricotdb.persistence.entity;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,6 +15,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This entity class represents the table apricot_view.
@@ -35,6 +34,7 @@ import javax.persistence.TemporalType;
 @NamedQuery(name = "ApricotView.getViewMaxOrdinalPosition", query = "SELECT MAX(vw.ordinalPosition) FROM ApricotView vw WHERE vw.project = :project")
 @NamedQuery(name = "ApricotView.getViewsByObjectName", query = "SELECT vw FROM ApricotView vw JOIN vw.objectLayouts l WHERE vw.project = :project AND l.objectType = :objectType AND l.objectName = :objectName")
 @NamedQuery(name = "ApricotView.getCurrentView", query = "SELECT vw FROM ApricotView vw WHERE vw.project = :project AND vw.current = :current")
+@NamedQuery(name = "ApricotView.getLayouts", query = "SELECT l FROM ApricotObjectLayout l WHERE l.view = :view")
 public class ApricotView implements Serializable {
 
     public static final String MAIN_VIEW = "Main View";

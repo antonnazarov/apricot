@@ -28,7 +28,7 @@ public class TbRefreshHandler extends TbButtonHandlerState {
             @Override
             public void handle(ActionEvent event) {
                 if (isEnabled()) {
-                    snapshotHandler.syncronizeSnapshot(false);
+                    snapshotHandler.synchronizeSnapshot(false);
                 }
             }
         });

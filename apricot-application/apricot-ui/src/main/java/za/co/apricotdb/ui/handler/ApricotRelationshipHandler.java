@@ -123,7 +123,7 @@ public class ApricotRelationshipHandler {
         }
         appController.save(null);  //  save the current layout
         relationshipSerializer.serializeRelationship(model);
-        snapshotHandler.syncronizeSnapshot(true);
+        snapshotHandler.synchronizeSnapshot(true);
 
         return true;
     }

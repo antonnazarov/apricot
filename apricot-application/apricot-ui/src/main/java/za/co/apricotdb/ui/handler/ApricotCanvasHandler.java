@@ -89,6 +89,7 @@ public class ApricotCanvasHandler {
             });
             absenceInfo = relatedEntitiesHandler.getRelatedEntitiesAbsence(tbNames);
         }
+
         populateCanvas(canvas, tables, v.getDetailLevel(), absenceInfo);
 
         // if view does not contain layout definitions, do default alignment
@@ -239,6 +240,28 @@ public class ApricotCanvasHandler {
         return null;
     }
 
+    public ApricotView getViewOnTab(Tab tab) {
+        for (Tab t : parentWindow.getProjectTabPane().getTabs()) {
+            if (t == tab) {
+                TabInfoObject o = (TabInfoObject) t.getUserData();
+                return o.getView();
+            }
+        }
+
+        return null;
+    }
+
+    public Tab getTabOnCurrentView() {
+        for (Tab t : parentWindow.getProjectTabPane().getTabs()) {
+            TabInfoObject o = (TabInfoObject) t.getUserData();
+            if (o.getView().isCurrent()) {
+                return t;
+            }
+        }
+
+        return null;
+    }
+
     public void makeEntitySelected(TabInfoObject tabInfo, String tableName, boolean deselectOthers) {
         ApricotEntity entity = tabInfo.getCanvas().findEntityByName(tableName);
         if (entity != null) {
@@ -331,13 +354,11 @@ public class ApricotCanvasHandler {
         return transition;
     }
 
-    private PauseTransition runAllocation(ApricotCanvas canvas, ApricotView view,
+    private void runAllocation(ApricotCanvas canvas, ApricotView view,
                                           ElementType elementType) {
         canvas.buildRelationships();
         CanvasAllocationMap map = tabViewHandler.readCanvasAllocationMap(view);
         canvas.applyAllocationMap(map, elementType);
-
-        return null;
     }
 
     private List<FieldDetail> getFieldDetails(ApricotTable table, List<ApricotRelationship> relationships) {

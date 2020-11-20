@@ -496,7 +496,7 @@ public class MainAppController {
 
     @FXML
     public void refresh(ActionEvent event) {
-        snapshotHandler.syncronizeSnapshot(false);
+        snapshotHandler.synchronizeSnapshot(false);
     }
 
     @FXML

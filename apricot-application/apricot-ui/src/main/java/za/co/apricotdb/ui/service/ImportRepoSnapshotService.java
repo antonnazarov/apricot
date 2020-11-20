@@ -5,6 +5,7 @@ import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import za.co.apricotdb.ui.handler.ApplicationInitializer;
 import za.co.apricotdb.ui.handler.ApricotSnapshotHandler;
 import za.co.apricotdb.ui.handler.RepositoryHandler;
 import za.co.apricotdb.ui.repository.RemoteExportService;
@@ -35,6 +36,10 @@ public class ImportRepoSnapshotService extends Service<Boolean> implements Initi
 
     @Autowired
     ApricotSnapshotHandler apricotSnapshotHandler;
+
+    @Autowired
+    ApplicationInitializer applicationInitializer;
+
 
     private File file;
     private String projectName;
@@ -85,7 +90,8 @@ public class ImportRepoSnapshotService extends Service<Boolean> implements Initi
                     Alert.AlertType.INFORMATION);
             alert.showAndWait();
 
-            apricotSnapshotHandler.syncronizeSnapshot(true);
+            applicationInitializer.initializeDefault();
+            // apricotSnapshotHandler.synchronizeSnapshot(true);
         });
 
         setOnFailed(e -> {
