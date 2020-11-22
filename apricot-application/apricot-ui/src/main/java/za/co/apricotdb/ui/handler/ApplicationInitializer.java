@@ -15,6 +15,7 @@ import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.handler.ProjectExplorerItem.ItemType;
+import za.co.apricotdb.ui.map.MapHandler;
 import za.co.apricotdb.ui.service.CanvasInitializerService;
 import za.co.apricotdb.ui.undo.ApricotUndoManager;
 
@@ -47,6 +48,9 @@ public class ApplicationInitializer {
 
     @Autowired
     CanvasInitializerService canvasInitializerService;
+
+    @Autowired
+    MapHandler mapHandler;
 
     @Transactional
     public void initializeDefault() {
@@ -94,6 +98,7 @@ public class ApplicationInitializer {
             PauseTransition delay = new PauseTransition(Duration.seconds(0.5));
             delay.setOnFinished(e -> {
                 undoManager.resetUndoBuffer();
+                mapHandler.drawMap();
             });
             delay.play();
         });

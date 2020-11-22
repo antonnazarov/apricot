@@ -14,6 +14,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.SnapshotManager;
@@ -43,6 +44,7 @@ import za.co.apricotdb.ui.handler.RepositoryHandler;
 import za.co.apricotdb.ui.handler.ReverseEngineHandler;
 import za.co.apricotdb.ui.handler.SelectViewTabHandler;
 import za.co.apricotdb.ui.handler.TabViewHandler;
+import za.co.apricotdb.ui.map.MapHandler;
 import za.co.apricotdb.ui.toolbar.TbAddFilterHandler;
 import za.co.apricotdb.ui.toolbar.TbButton;
 import za.co.apricotdb.ui.toolbar.TbQuickViewHandler;
@@ -166,6 +168,9 @@ public class MainAppController {
     @Autowired
     ExportDiagramToPdfHandler exportDiagramToPdfHandler;
 
+    @Autowired
+    MapHandler mapHandler;
+
     @FXML
     AnchorPane mainPane;
 
@@ -281,11 +286,19 @@ public class MainAppController {
     MenuItem menuSameWidth;
     @FXML
     TextField filterField;
+    @FXML
+    Pane mapPane;
 
     public void init() {
         parentWindow.init(this);
         parentWindow.setParentPane(mainPane);
         parentWindow.setViewsTabPane(viewsTabPane);
+
+        //  initialize the mapHandler
+        mapHandler.setMapPane(mapPane);
+        mapPane.setOnMouseClicked(e-> {
+            mapHandler.drawMap();
+        });
 
         selTabHandler.initTabPane(viewsTabPane, scale);
 
@@ -328,6 +341,13 @@ public class MainAppController {
         tbResetFilterHandler.initButton(tbResetFilter);
         tbRepositoryHandler.initButton(tbRepository);
         tbQuickViewHandler.initButton(tbQuickView);
+
+        mapPane.heightProperty().addListener((obs, oldVal, newVal) -> {
+            System.out.println("Height changed: old=" + oldVal + ", newVal:" + newVal);
+        });
+        mapPane.widthProperty().addListener((obs, oldVal, newVal) -> {
+            System.out.println("Width changed: old=" + oldVal + ", newVal:" + newVal);
+        });
     }
 
     public void save(ActionEvent event) {
