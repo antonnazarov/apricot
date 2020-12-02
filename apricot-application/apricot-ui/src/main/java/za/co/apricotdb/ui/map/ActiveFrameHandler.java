@@ -10,7 +10,6 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import org.springframework.stereotype.Component;
-import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 
 /**
  * This component contains the operations, related to the current active frame.
@@ -21,11 +20,11 @@ import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 @Component
 public class ActiveFrameHandler {
 
-    public Pane getActiveFrame(ScrollPane scroll, double canvasRatio) {
+    public Pane getActiveFrame(ScrollPane scroll, double canvasRatio, double scale) {
         Pane activeFrame = new Pane();
 
-        activeFrame.setPrefHeight(scroll.getHeight() * canvasRatio);
-        activeFrame.setPrefWidth(scroll.getWidth() * canvasRatio);
+        activeFrame.setPrefHeight(scroll.getHeight() * canvasRatio / scale);
+        activeFrame.setPrefWidth(scroll.getWidth() * canvasRatio / scale);
 
         activeFrame.setBorder(new Border(new BorderStroke(Color.GREEN,
                 BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(2))));
@@ -33,24 +32,9 @@ public class ActiveFrameHandler {
         return activeFrame;
     }
 
-    public Point2D getActiveFramePosition(ApricotCanvas canvas, ScrollPane scroll, Pane mapCanvas,
-                                          Pane activeFrame, double canvasRatio) {
-        double X = ((Pane)canvas).getWidth() * scroll.getHvalue() * canvasRatio;
-        X -= activeFrame.getPrefWidth()/2;
-        if (X < 0) {
-            X = 0;
-        }
-        double Y = ((Pane)canvas).getHeight() * scroll.getVvalue() * canvasRatio;
-        Y -= activeFrame.getPrefHeight()/2;
-        if (Y < 0) {
-            Y=0;
-        }
-        if (X+activeFrame.getPrefWidth() > mapCanvas.getPrefWidth()) {
-            X = mapCanvas.getPrefWidth() - activeFrame.getPrefWidth();
-        }
-        if (Y+activeFrame.getPrefHeight() > mapCanvas.getPrefHeight()) {
-            Y = mapCanvas.getPrefHeight() - activeFrame.getPrefHeight();
-        }
+    public Point2D getActiveFramePosition(ScrollPane scroll, Pane mapCanvas, Pane activeFrame) {
+        double X = mapCanvas.getPrefWidth() * scroll.getHvalue() - activeFrame.getPrefWidth() * scroll.getHvalue();
+        double Y = mapCanvas.getPrefHeight() * scroll.getVvalue() - activeFrame.getPrefHeight() * scroll.getVvalue();
 
         return new Point2D(X, Y);
     }

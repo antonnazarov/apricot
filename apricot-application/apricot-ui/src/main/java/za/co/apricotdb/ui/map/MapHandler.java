@@ -46,16 +46,15 @@ public class MapHandler {
 
         double ratio = calculateCanvasRatio(currentTabInfo.getCanvas());
         Pane mapCanvas = mapCanvasHandler.getMapCanvas(currentTabInfo.getCanvas(), ratio);
-        Pane activeFrame = activeFrameHandler.getActiveFrame(currentTabInfo.getScroll(), ratio);
+        Pane activeFrame = activeFrameHandler.getActiveFrame(currentTabInfo.getScroll(), ratio, currentTabInfo.getCanvas().getScale());
 
         mapHolder = new MapHolder(mapPane, mapCanvas, activeFrame,
-                activeFrameHandler.getActiveFramePosition(currentTabInfo.getCanvas(), currentTabInfo.getScroll(),
-                        mapCanvas, activeFrame, ratio));
+                activeFrameHandler.getActiveFramePosition(currentTabInfo.getScroll(), mapCanvas, activeFrame));
         mapCanvasHandler.populateMapCanvas(currentTabInfo.getCanvas(), mapHolder, ratio);
     }
 
     /**
-     * Calculate the Ratio which the curent canvas has to be resized down to fit the current map pane.
+     * Calculate the Ratio which the current canvas has to be resized down to fit the current map pane.
      */
     private double calculateCanvasRatio(ApricotCanvas canvas) {
         double ratio = 1d;
