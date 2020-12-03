@@ -1,5 +1,6 @@
 package za.co.apricotdb.ui.map;
 
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -7,6 +8,8 @@ import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.handler.ApricotCanvasHandler;
 import za.co.apricotdb.ui.handler.TabInfoObject;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
+import za.co.apricotdb.viewport.canvas.ElementStatus;
+import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
 
 /**
  * This is a central component which provides access to the functionality of Apricot Map.
@@ -44,13 +47,35 @@ public class MapHandler {
         }
         currentTabInfo = canvasHandler.getCurrentViewTabInfo();
 
-        double ratio = calculateCanvasRatio(currentTabInfo.getCanvas());
-        Pane mapCanvas = mapCanvasHandler.getMapCanvas(currentTabInfo.getCanvas(), ratio);
-        Pane activeFrame = activeFrameHandler.getActiveFrame(currentTabInfo.getScroll(), ratio, currentTabInfo.getCanvas().getScale());
+        if (currentTabInfo != null) {
+            ScrollPane scroll = currentTabInfo.getScroll();
+            double hValue = scroll.getHvalue();
+            double vValue = scroll.getVvalue();
 
-        mapHolder = new MapHolder(mapPane, mapCanvas, activeFrame,
-                activeFrameHandler.getActiveFramePosition(currentTabInfo.getScroll(), mapCanvas, activeFrame));
-        mapCanvasHandler.populateMapCanvas(currentTabInfo.getCanvas(), mapHolder, ratio);
+            double ratio = calculateCanvasRatio(currentTabInfo.getCanvas());
+            Pane mapCanvas = mapCanvasHandler.getMapCanvas(currentTabInfo.getCanvas(), ratio);
+            Pane activeFrame = activeFrameHandler.getActiveFrame(scroll, ratio, currentTabInfo.getCanvas().getScale());
+
+            mapHolder = new MapHolder(mapPane, mapCanvas, activeFrame,
+                    activeFrameHandler.getActiveFramePosition(scroll, mapCanvas, activeFrame));
+            mapCanvasHandler.populateMapCanvas(currentTabInfo.getCanvas(), mapHolder, ratio);
+
+            scroll.setHvalue(hValue);
+            scroll.setVvalue(vValue);
+        }
+    }
+
+    public MapHolder getMapHolder() {
+        return mapHolder;
+    }
+
+    public void moveEntity(ApricotEntityShape entityShape, double translateX, double translateY, String entityName) {
+        mapCanvasHandler.moveEntity(entityShape, translateX, translateY,
+                mapHolder, calculateCanvasRatio(currentTabInfo.getCanvas()), entityName);
+    }
+
+    public void changeEntityStatus(String entityName, ElementStatus status) {
+        mapCanvasHandler.changeEntityStatus(mapHolder, entityName, status);
     }
 
     /**

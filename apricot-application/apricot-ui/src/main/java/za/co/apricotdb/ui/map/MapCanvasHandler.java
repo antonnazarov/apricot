@@ -50,6 +50,20 @@ public class MapCanvasHandler {
         }
     }
 
+    public void moveEntity(ApricotEntityShape entityShape, double translateX, double translateY,
+                           MapHolder mapHolder, double canvasRatio, String entityName) {
+        Point2D newPosition = new Point2D((entityShape.getLayoutX()+translateX)*canvasRatio,
+                (entityShape.getLayoutY()+translateY)*canvasRatio);
+        mapHolder.setEntityPosition(entityName, newPosition);
+    }
+
+    public void changeEntityStatus(MapHolder mapHolder, String entityName, ElementStatus status) {
+        VBox entity = mapHolder.getEntityByName(entityName);
+        if (entity != null) {
+            entity.setBorder(getBorder(status));
+        }
+    }
+
     private VBox createEntity(double originalWidth, double originalHeight, double canvasRatio, ElementStatus status) {
         double prefWidth = originalWidth * canvasRatio;
         if (prefWidth < 5) {
@@ -60,6 +74,15 @@ public class MapCanvasHandler {
             prefHeight = 2;
         }
 
+        VBox entity = new VBox();
+        entity.setBorder(getBorder(status));
+        entity.setPrefHeight(prefHeight);
+        entity.setPrefWidth(prefWidth);
+
+        return entity;
+    }
+
+    private Border getBorder(ElementStatus status) {
         BorderWidths borderWidth = new BorderWidths((0.4));
         Color color = Color.BLACK;
         if (status == ElementStatus.SELECTED) {
@@ -69,11 +92,6 @@ public class MapCanvasHandler {
             color = Color.LIGHTGREY;
         }
 
-        VBox entity = new VBox();
-        entity.setBorder(new Border(new BorderStroke(color, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, borderWidth)));
-        entity.setPrefHeight(prefHeight);
-        entity.setPrefWidth(prefWidth);
-
-        return entity;
+        return new Border(new BorderStroke(color, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, borderWidth));
     }
 }

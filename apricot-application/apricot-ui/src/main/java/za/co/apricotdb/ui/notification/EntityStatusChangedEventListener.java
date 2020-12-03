@@ -5,6 +5,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import za.co.apricotdb.ui.MainAppController;
+import za.co.apricotdb.ui.map.MapHandler;
 import za.co.apricotdb.ui.toolbar.TbAlignBottomHandler;
 import za.co.apricotdb.ui.toolbar.TbAlignLeftHandler;
 import za.co.apricotdb.ui.toolbar.TbAlignRightHandler;
@@ -41,11 +42,18 @@ public class EntityStatusChangedEventListener implements ApplicationListener<Ent
     @Autowired
     MainAppController appController;
 
+    @Autowired
+    MapHandler mapHandler;
+
     @Override
     public void onApplicationEvent(EntityStatusChangedEvent event) {
         ApricotCanvas canvas = (ApricotCanvas) event.getSource();
         int selected = countSelectedEntities(canvas);
         handleSelection(selected);
+
+        if (event.getEntityName() != null) {
+            mapHandler.changeEntityStatus(event.getEntityName(), event.getStatus());
+        }
     }
 
     private int countSelectedEntities(ApricotCanvas canvas) {

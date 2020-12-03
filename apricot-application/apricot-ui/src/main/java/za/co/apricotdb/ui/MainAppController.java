@@ -296,10 +296,6 @@ public class MainAppController {
 
         //  initialize the mapHandler
         mapHandler.setMapPane(mapPane);
-        mapPane.setOnMouseClicked(e-> {
-            mapHandler.drawMap();
-        });
-
         selTabHandler.initTabPane(viewsTabPane, scale);
 
         projectsTreeView.setOnContextMenuRequested(e -> {
@@ -343,10 +339,10 @@ public class MainAppController {
         tbQuickViewHandler.initButton(tbQuickView);
 
         mapPane.heightProperty().addListener((obs, oldVal, newVal) -> {
-            System.out.println("Height changed: old=" + oldVal + ", newVal:" + newVal);
+            mapHandler.drawMap();
         });
         mapPane.widthProperty().addListener((obs, oldVal, newVal) -> {
-            System.out.println("Width changed: old=" + oldVal + ", newVal:" + newVal);
+            mapHandler.drawMap();
         });
     }
 

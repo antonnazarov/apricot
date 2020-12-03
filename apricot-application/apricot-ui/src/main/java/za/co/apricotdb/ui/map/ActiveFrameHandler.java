@@ -9,6 +9,7 @@ import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,8 +21,25 @@ import org.springframework.stereotype.Component;
 @Component
 public class ActiveFrameHandler {
 
+    @Autowired
+    ActiveFrameOnMousePressedHandler activeFrameOnMousePressedHandler;
+
+    @Autowired
+    ActiveFrameOnMouseDraggedHandler activeFrameOnMouseDraggedHandler;
+
+    @Autowired
+    ActiveFrameOnMouseReleasedEventHandler activeFrameOnMouseReleasedEventHandler;
+
+    @Autowired
+    MapHandler mapHandler;
+
+    private boolean isDragging;
+
     public Pane getActiveFrame(ScrollPane scroll, double canvasRatio, double scale) {
         Pane activeFrame = new Pane();
+        activeFrame.setOnMousePressed(activeFrameOnMousePressedHandler);
+        activeFrame.setOnMouseDragged(activeFrameOnMouseDraggedHandler);
+        activeFrame.setOnMouseReleased(activeFrameOnMouseReleasedEventHandler);
 
         activeFrame.setPrefHeight(scroll.getHeight() * canvasRatio / scale);
         activeFrame.setPrefWidth(scroll.getWidth() * canvasRatio / scale);
@@ -37,5 +55,30 @@ public class ActiveFrameHandler {
         double Y = mapCanvas.getPrefHeight() * scroll.getVvalue() - activeFrame.getPrefHeight() * scroll.getVvalue();
 
         return new Point2D(X, Y);
+    }
+
+    public void positionActiveFrame(ScrollPane scroll) {
+        MapHolder mapHolder = mapHandler.getMapHolder();
+        Pane activeFrame = mapHolder.getActiveFrame();
+        Point2D position = getActiveFramePosition(scroll, mapHolder.getMapCanvas(), activeFrame);
+
+        activeFrame.setLayoutX(position.getX());
+        activeFrame.setLayoutY(position.getY());
+    }
+
+    public double getScrollHvalue(Pane mapCanvas, Pane activeFrame, double activeFrameX) {
+        return activeFrameX/(mapCanvas.getWidth()-activeFrame.getWidth());
+    }
+
+    public double getScrollVvalue(Pane mapCanvas, Pane activeFrame, double activeFrameY) {
+        return activeFrameY/(mapCanvas.getHeight()-activeFrame.getHeight());
+    }
+
+    public boolean isDragging() {
+        return isDragging;
+    }
+
+    public void setDragging(boolean dragging) {
+        isDragging = dragging;
     }
 }

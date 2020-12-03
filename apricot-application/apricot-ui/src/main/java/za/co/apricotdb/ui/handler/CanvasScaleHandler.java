@@ -8,6 +8,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
 import za.co.apricotdb.ui.MainAppController;
+import za.co.apricotdb.ui.map.MapHandler;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 
 /**
@@ -28,6 +29,9 @@ public class CanvasScaleHandler {
     @Autowired
     MainAppController appController;
 
+    @Autowired
+    MapHandler mapHandler;
+
     public void setScale(String scale) {
         double sc = Double.parseDouble(scale.substring(0, scale.length() - 1)) / 100.0;
         setScale(sc);
@@ -46,6 +50,8 @@ public class CanvasScaleHandler {
         sp.setContent(g);
 
         allocationHandler.scrollToSelected(canvasHandler.getCurrentViewTabInfo());
+
+        mapHandler.drawMap();
     }
 
     public void resetScaleIndicator(ComboBox<String> scale) {

@@ -49,7 +49,19 @@ public class MapHolder {
         }
     }
 
+    public VBox getEntityByName(String entityName) {
+        return mapEntities.get(entityName);
+    }
+
     public void cleanMap() {
         mapPane.getChildren().clear();
+    }
+
+    public Pane getMapCanvas() {
+        return mapCanvas;
+    }
+
+    public Pane getActiveFrame() {
+        return activeFrame;
     }
 }

@@ -1,8 +1,5 @@
 package za.co.apricotdb.viewport.event;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ApricotElement;
 import za.co.apricotdb.viewport.canvas.ElementStatus;
@@ -10,8 +7,12 @@ import za.co.apricotdb.viewport.canvas.ElementType;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
 import za.co.apricotdb.viewport.entity.shape.DefaultEntityShape;
+import za.co.apricotdb.viewport.notification.EntityMovedEvent;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 import za.co.apricotdb.viewport.relationship.shape.ApricotRelationshipShape;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GroupOperationHandler {
 
@@ -25,6 +26,8 @@ public class GroupOperationHandler {
                 ApricotEntityShape entityShape = entity.getEntityShape();
                 entityShape.setTranslateX(translateX);
                 entityShape.setTranslateY(translateY);
+
+                canvas.publishEvent(new EntityMovedEvent(canvas, entityShape, translateX, translateY, entity.getTableName()));
             }
         }
     }
