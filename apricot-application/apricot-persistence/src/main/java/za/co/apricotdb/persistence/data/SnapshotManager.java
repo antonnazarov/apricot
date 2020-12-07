@@ -60,6 +60,9 @@ public class SnapshotManager {
         List<ApricotSnapshot> res = query.getResultList();
         if (res != null && res.size() > 0) {
             ret = res.get(0);
+        } else {
+            // the default snapshot was not found. Fix it and set the default snapshot
+            ret = setDefaultSnapshot();
         }
 
         return ret;
@@ -158,6 +161,20 @@ public class SnapshotManager {
 
         snapshot.setDefaultSnapshot(true);
         saveSnapshot(snapshot);
+    }
+
+    /**
+     * Set the default snapshot if the one was not set. It sets the first snapshot in the list.
+     */
+    public ApricotSnapshot setDefaultSnapshot() {
+        ApricotSnapshot ret = null;
+        List<ApricotSnapshot> snapshots = getAllSnapshots(projectManager.findCurrentProject());
+        if (snapshots != null && snapshots.size() > 0) {
+            ret = snapshots.get(0);
+            setDefaultSnapshot(ret);
+        }
+
+        return ret;
     }
 
     /**
