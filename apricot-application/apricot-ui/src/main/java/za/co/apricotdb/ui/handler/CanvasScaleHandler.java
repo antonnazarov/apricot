@@ -70,8 +70,8 @@ public class CanvasScaleHandler {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
         Pane canvasBox = (Pane) canvas;
         ScrollPane sp = canvasHandler.getCurrentViewTabInfo().getScroll();
-        double ratioX = sp.getWidth() / canvasBox.getWidth();
-        double ratioY = sp.getHeight() / canvasBox.getHeight();
+        double ratioX = sp.getWidth() / canvasBox.getPrefWidth();
+        double ratioY = sp.getHeight() / canvasBox.getPrefHeight();
 
         double ratio = Math.max(ratioX, ratioY);
         setScale(getFitScale(ratio));

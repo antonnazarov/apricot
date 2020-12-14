@@ -1,7 +1,9 @@
 package za.co.apricotdb.ui.map;
 
+import javafx.animation.PauseTransition;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
+import javafx.util.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
@@ -63,6 +65,13 @@ public class MapHandler {
             scroll.setHvalue(hValue);
             scroll.setVvalue(vValue);
         }
+    }
+
+    public void drawMap(double delay) {
+        PauseTransition transition = new PauseTransition(Duration.seconds(delay));
+        transition.setOnFinished(e -> {
+            drawMap();
+        });
     }
 
     public MapHolder getMapHolder() {

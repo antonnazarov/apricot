@@ -233,6 +233,9 @@ public class ApricotViewHandler {
             }
             Border border = new Border(bs);
             pCanvas.setBorder(border);
+
+            //  redraw the map
+            mapHandler.drawMap();
         });
 
         return tab;

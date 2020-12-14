@@ -79,7 +79,7 @@ public class ResetViewHandler {
 
         if (synchronize) {
             snapshotHandler.synchronizeSnapshot(false);
-            scaleHandler.fitCanvasScale();
+            // scaleHandler.fitCanvasScale();
         }
     }
 }

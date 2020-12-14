@@ -59,7 +59,7 @@ public class CanvasAlignHandler {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
         resetViewHandler.resetView(false);
         alignIslands(canvas);
-        scaleHandler.fitCanvasScale();
+        // scaleHandler.fitCanvasScale();
     }
 
     private void alignIslands(ApricotCanvas canvas) {

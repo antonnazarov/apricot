@@ -18,6 +18,8 @@ import za.co.apricotdb.support.excel.TableWrapper;
 import za.co.apricotdb.support.excel.TableWrapper.ReportRow;
 import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
+import za.co.apricotdb.ui.map.MapHandler;
+import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.viewport.align.AlignCommand;
 import za.co.apricotdb.viewport.align.CanvasSizeAdjustor;
 import za.co.apricotdb.viewport.align.SimpleGridEntityAllocator;
@@ -67,6 +69,15 @@ public class ApricotCanvasHandler {
     @Autowired
     RelatedEntitiesHandler relatedEntitiesHandler;
 
+    @Autowired
+    CanvasAlignHandler canvasAlignHandler;
+
+    @Autowired
+    AlertMessageDecorator alertMessageDecorator;
+
+    @Autowired
+    MapHandler mapHandler;
+
     /**
      * Populate the given canvas with the information of snapshot, using the
      * provided skin.
@@ -93,8 +104,12 @@ public class ApricotCanvasHandler {
         populateCanvas(canvas, tables, v.getDetailLevel(), absenceInfo);
 
         // if view does not contain layout definitions, do default alignment
-        if ((v.getObjectLayouts() == null || v.getObjectLayouts().size() == 0) && v.isGeneral()) {
-            runAlignerAfterDelay(canvas, v, 0.1).play();
+        if (tables.size() > 0 && (v.getObjectLayouts() == null || v.getObjectLayouts().size() == 0) && v.isGeneral()) {
+            if (alertMessageDecorator.requestYesNoOption("Align Diagram", "Align the objects on the current diagram automatically?", "Align")) {
+                canvasAlignHandler.alignCanvasIslands();
+            } else {
+                runAlignerAfterDelay(canvas, v, 0.5).play();
+            }
         } else {
             runAllocation(canvas, v, ElementType.ENTITY);
             Platform.runLater(() -> {
@@ -108,16 +123,6 @@ public class ApricotCanvasHandler {
         });
 
         return tables;
-    }
-
-    /**
-     * Remove entity and all related relationships from the canvas.
-     */
-    public void removeEntityFromCanvas(ApricotTable table, ApricotCanvas canvas) {
-        ApricotEntity entity = canvas.findEntityByName(table.getName());
-        if (entity != null) {
-            canvas.removeElement(entity);
-        }
     }
 
     public ApricotCanvas getSelectedCanvas() {

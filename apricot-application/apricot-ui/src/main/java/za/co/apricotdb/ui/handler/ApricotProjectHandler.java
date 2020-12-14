@@ -91,7 +91,7 @@ public class ApricotProjectHandler {
     public void deleteProject() {
         if (deleteCurrentProject()) {
             ApricotProject project = projectManager.findCurrentProject();
-            deleteProjectService.init("Delete Project", "The project has been deleted...");
+            deleteProjectService.init("Delete Project", "Deleting the selected project...");
             deleteProjectService.initServiceData(project);
             deleteProjectService.start();
             deleteProjectService.setOnSucceeded(e -> {

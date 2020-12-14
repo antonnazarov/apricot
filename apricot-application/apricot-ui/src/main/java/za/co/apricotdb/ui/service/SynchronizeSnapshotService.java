@@ -18,6 +18,7 @@ import za.co.apricotdb.ui.handler.ApricotCanvasHandler;
 import za.co.apricotdb.ui.handler.EntityFilterHandler;
 import za.co.apricotdb.ui.handler.TabInfoObject;
 import za.co.apricotdb.ui.handler.TreeViewHandler;
+import za.co.apricotdb.ui.map.MapHandler;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ElementStatus;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
@@ -60,6 +61,9 @@ public class SynchronizeSnapshotService  extends Service<Boolean> implements Ini
 
     @Autowired
     EntityFilterHandler filterHandler;
+
+    @Autowired
+    MapHandler mapHandler;
 
     @Override
     protected Task<Boolean> createTask() {
@@ -117,8 +121,12 @@ public class SynchronizeSnapshotService  extends Service<Boolean> implements Ini
         reset();
         progressInitializer.init(title, headerText, this);
 
-        this.setOnFailed(e -> {
+        setOnFailed(e -> {
             throw new IllegalArgumentException(getException());
+        });
+
+        setOnSucceeded(e -> {
+            mapHandler.drawMap();
         });
     }
 
