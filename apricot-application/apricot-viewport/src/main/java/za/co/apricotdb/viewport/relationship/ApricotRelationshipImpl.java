@@ -91,6 +91,14 @@ public class ApricotRelationshipImpl implements ApricotRelationship {
                 break;
             case SELECTED:
                 relationshipShape.setSelected();
+
+                //  make the related entities selected
+                parent.setSelectPrimaryRelationshipsFlag(false);
+                child.setSelectPrimaryRelationshipsFlag(false);
+                parent.setElementStatus(ElementStatus.SELECTED);
+                child.setElementStatus(ElementStatus.SELECTED);
+                parent.setSelectPrimaryRelationshipsFlag(true);
+                child.setSelectPrimaryRelationshipsFlag(true);
                 break;
             case GRAYED:
                 relationshipShape.setGrayed();

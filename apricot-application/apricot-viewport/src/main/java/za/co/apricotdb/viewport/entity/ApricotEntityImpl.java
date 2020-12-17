@@ -35,6 +35,7 @@ public final class ApricotEntityImpl implements ApricotEntity {
     private EntitySetDetailedEntityShadowModifier shadowModifier;
     private boolean parentAbsent;
     private boolean childAbsent;
+    private boolean selectPrimaryRelationshipsFlag = true;
 
     /**
      * Construct a new instance of the ApricotEntity.
@@ -72,7 +73,9 @@ public final class ApricotEntityImpl implements ApricotEntity {
             case SELECTED:
                 entityShape.setSelected();
                 canvas.sendToFront(this);
-                makePrimaryRelationshipsSelected();
+                if (selectPrimaryRelationshipsFlag) {
+                    makePrimaryRelationshipsSelected();
+                }
                 break;
             case GRAYED:
                 entityShape.setGrayed();
@@ -217,5 +220,10 @@ public final class ApricotEntityImpl implements ApricotEntity {
     @Override
     public boolean isChildAbsent() {
         return childAbsent;
+    }
+
+    @Override
+    public void setSelectPrimaryRelationshipsFlag(boolean flag) {
+        selectPrimaryRelationshipsFlag = flag;
     }
 }

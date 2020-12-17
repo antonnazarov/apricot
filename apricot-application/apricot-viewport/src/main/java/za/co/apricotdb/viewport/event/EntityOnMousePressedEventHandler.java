@@ -60,7 +60,11 @@ public class EntityOnMousePressedEventHandler implements EventHandler<MouseEvent
                 // handle the context menu
                 if (entity.getElementStatus() == ElementStatus.DEFAULT) {
                     canvas.changeAllElementsStatus(ElementStatus.DEFAULT, false);
+
+                    ApricotEntity apricotEntity = (ApricotEntity) entity;
+                    apricotEntity.setSelectPrimaryRelationshipsFlag(false);
                     entity.setElementStatus(ElementStatus.SELECTED);
+                    apricotEntity.setSelectPrimaryRelationshipsFlag(true);
                 }
 
                 if (entity.getElementStatus() == ElementStatus.SELECTED) {

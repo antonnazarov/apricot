@@ -31,7 +31,7 @@ public class HatRelationshipEventModifier implements ElementVisualModifier {
     private EventHandler<MouseEvent> mouseRulerReleasedHandler = null;
 
     public HatRelationshipEventModifier(ApricotCanvas canvas, AlignCommand aligner) {
-        mousePressedHandler = new RelationshipOnMousePressedEventHandler();
+        mousePressedHandler = new RelationshipOnMousePressedEventHandler(canvas);
 
         mouseHRulerEnteredHandler = new RelationshipOnMouseEnteredHorizontalRulerEventHandler(canvas);
         mouseVRulerEnteredHandler = new RelationshipOnMouseEnteredVerticalRulerEventHandler(canvas);

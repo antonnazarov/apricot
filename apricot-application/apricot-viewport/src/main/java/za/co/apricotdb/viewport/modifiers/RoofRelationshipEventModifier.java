@@ -25,7 +25,7 @@ public class RoofRelationshipEventModifier implements ElementVisualModifier {
         mouseRulerExitedHandler = new RelationshipOnMouseExitedRulerEventHandler(canvas);
         mouseRulerPressedHandler = new RelationshipOnMousePressedRulerEventHandler("RulerY");
         mouseRulerDraggedHandler = new RelationshipOnMouseDraggedVerticalRulerEventHandler("RulerY", canvas);
-        mousePressedHandler = new RelationshipOnMousePressedEventHandler();
+        mousePressedHandler = new RelationshipOnMousePressedEventHandler(canvas);
     }
 
     @Override

@@ -6,7 +6,7 @@ import za.co.apricotdb.viewport.canvas.ElementStatus;
 
 /**
  * This event has been raised when any entity changed its status
- * (selected/desected).
+ * (selected/deselected).
  * 
  * @author Anton Nazarov
  * @since 02/10/2019

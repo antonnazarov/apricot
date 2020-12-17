@@ -59,6 +59,9 @@ public class OnKeyPressedEventHandler implements EventHandler<KeyEvent> {
     @Autowired
     HtmlEntityInfoHandler htmlEntityInfoHandler;
 
+    @Autowired
+    ObjectAllocationHandler allocationHandler;
+
     @Override
     public void handle(KeyEvent event) {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
@@ -141,6 +144,15 @@ public class OnKeyPressedEventHandler implements EventHandler<KeyEvent> {
                 break;
             case SPACE:
                 handleSpace();
+            case TAB:
+                //  the <TAB> button moves to the next selected entity on the right side
+                //  the <CTRL>+<TAB> moves the visible area to the next right selected entity
+                TabInfoObject tabInfo = canvasHandler.getCurrentViewTabInfo();
+                if (event.isControlDown()) {
+                    allocationHandler.scrollToNextEntity(tabInfo, false);
+                } else {
+                    allocationHandler.scrollToNextEntity(tabInfo, true);
+                }
             default:
                 break;
         }

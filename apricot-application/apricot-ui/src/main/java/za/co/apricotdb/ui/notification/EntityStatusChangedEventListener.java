@@ -3,8 +3,8 @@ package za.co.apricotdb.ui.notification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
-
 import za.co.apricotdb.ui.MainAppController;
+import za.co.apricotdb.ui.handler.ObjectAllocationHandler;
 import za.co.apricotdb.ui.map.MapHandler;
 import za.co.apricotdb.ui.toolbar.TbAlignBottomHandler;
 import za.co.apricotdb.ui.toolbar.TbAlignLeftHandler;
@@ -45,6 +45,9 @@ public class EntityStatusChangedEventListener implements ApplicationListener<Ent
     @Autowired
     MapHandler mapHandler;
 
+    @Autowired
+    ObjectAllocationHandler allocationHandler;
+
     @Override
     public void onApplicationEvent(EntityStatusChangedEvent event) {
         ApricotCanvas canvas = (ApricotCanvas) event.getSource();
@@ -54,6 +57,9 @@ public class EntityStatusChangedEventListener implements ApplicationListener<Ent
         if (event.getEntityName() != null) {
             mapHandler.changeEntityStatus(event.getEntityName(), event.getStatus());
         }
+
+        //  reset the current scroll entity
+        allocationHandler.setCurrentScrolledEntity(null);
     }
 
     private int countSelectedEntities(ApricotCanvas canvas) {

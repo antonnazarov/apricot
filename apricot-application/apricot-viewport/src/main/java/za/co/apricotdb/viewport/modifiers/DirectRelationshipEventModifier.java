@@ -27,7 +27,7 @@ public class DirectRelationshipEventModifier implements ElementVisualModifier {
         mouseRulerExitedHandler = new RelationshipOnMouseExitedRulerEventHandler(canvas);
         mouseRulerPressedHandler = new RelationshipOnMousePressedRulerEventHandler("RulerX");
         mouseRulerDraggedHandler = new RelationshipOnMouseDraggedHorizontalRulerEventHandler("RulerX", canvas);
-        mousePressedHandler = new RelationshipOnMousePressedEventHandler();
+        mousePressedHandler = new RelationshipOnMousePressedEventHandler(canvas);
         mouseRulerReleasedHandler = new RelationshipOnMouseReleasedEventHandler(canvas, aligner);
     }
 
