@@ -78,6 +78,9 @@ public class ApricotCanvasHandler {
     @Autowired
     MapHandler mapHandler;
 
+    @Autowired
+    RelationshipConsistencyValidator relationshipValidator;
+
     /**
      * Populate the given canvas with the information of snapshot, using the
      * provided skin.
@@ -88,7 +91,7 @@ public class ApricotCanvasHandler {
         // clean the canvas first
         canvas.cleanCanvas();
 
-        List<ApricotTable> tables = null;
+        List<ApricotTable> tables;
         Map<String, RelatedEntityAbsent> absenceInfo = null;
         if (v.isGeneral()) {
             tables = tableManager.getTablesForSnapshot(snapshot);
@@ -323,8 +326,11 @@ public class ApricotCanvasHandler {
         String parentColumn = r.getParent().getColumns().get(0).getColumn().getName();
         String childColumn = r.getChild().getColumns().get(0).getColumn().getName();
 
-        return rBuilder.buildRelationship(parentTable, childTable, parentColumn, childColumn, r.getId(),
-                getRelationshipType(childColumn, fieldDetails.get(childTable)));
+        za.co.apricotdb.viewport.relationship.ApricotRelationship ret =
+                rBuilder.buildRelationship(parentTable, childTable, parentColumn, childColumn, r.getId(),
+                getRelationshipType(childColumn, fieldDetails.get(childTable)), relationshipValidator.validateRelationship(r));
+
+        return ret;
     }
 
     private RelationshipType getRelationshipType(String childColumn, List<FieldDetail> childFields) {

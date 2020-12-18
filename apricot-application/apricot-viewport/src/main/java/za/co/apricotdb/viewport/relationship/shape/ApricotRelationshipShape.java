@@ -37,31 +37,37 @@ public abstract class ApricotRelationshipShape extends Group implements ApricotS
 
     @Override
     public void setDefault() {
-        if (path != null) {
-            path.setStrokeWidth(RELATIONSHIP_DEFAULT_STROKE_WIDTH);
-            path.setStroke(Color.BLACK);
-        }
-
-        if (startElement != null) {
-            setGroupStroke(startElement, RELATIONSHIP_DEFAULT_STROKE_WIDTH, Color.BLACK);
-        }
-        if (endElement != null) {
-            setGroupStroke(endElement, RELATIONSHIP_DEFAULT_STROKE_WIDTH, Color.BLACK);
-        }
+        setSelection(RELATIONSHIP_DEFAULT_STROKE_WIDTH);
     }
 
     @Override
     public void setSelected() {
+        setSelection(RELATIONSHIP_SELECTED_STROKE_WIDTH);
+    }
+
+    private void setSelection(double strokeWidth) {
         if (path != null) {
-            path.setStrokeWidth(RELATIONSHIP_SELECTED_STROKE_WIDTH);
-            path.setStroke(Color.BLACK);
+            path.setStrokeWidth(strokeWidth);
+            if (relationship.isValid()) {
+                path.setStroke(Color.BLACK);
+            } else {
+                path.setStroke(Color.RED);
+            }
         }
 
         if (startElement != null) {
-            setGroupStroke(startElement, RELATIONSHIP_SELECTED_STROKE_WIDTH, Color.BLACK);
+            if (relationship.isValid()) {
+                setGroupStroke(startElement, strokeWidth, Color.BLACK);
+            } else {
+                setGroupStroke(startElement, strokeWidth, Color.RED);
+            }
         }
         if (endElement != null) {
-            setGroupStroke(endElement, RELATIONSHIP_SELECTED_STROKE_WIDTH, Color.BLACK);
+            if (relationship.isValid()) {
+                setGroupStroke(endElement, strokeWidth, Color.BLACK);
+            } else {
+                setGroupStroke(endElement, strokeWidth, Color.RED);
+            }
         }
     }
 

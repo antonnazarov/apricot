@@ -13,6 +13,9 @@ import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * The handler/builder of the Context Menu of the Relationship.
  */
@@ -22,11 +25,14 @@ public class RelationshipContextMenuHandler {
     @Autowired
     ParentWindow parentWindow;
 
+    @Autowired
+    DeleteSelectedHandler deleteSelectedHandler;
+
     @ApricotErrorLogger(title = "Unable to create the Relationship context menu")
     public void createRelationshipContextMenu(ApricotRelationship relationship, double x, double y) {
         ContextMenu contextMenu = new ContextMenu();
         contextMenu.getItems().addAll(buildMenuHeader(relationship), new SeparatorMenuItem(), buildRelationshipInfoItem(),
-                buildEditRelationshipItem(), buildDeleteRelationshipItem());
+                buildEditRelationshipItem(), buildDeleteRelationshipItem(relationship));
 
         contextMenu.setAutoHide(true);
         contextMenu.show(parentWindow.getWindow(), x, y);
@@ -69,10 +75,12 @@ public class RelationshipContextMenuHandler {
         return item;
     }
 
-    public MenuItem buildDeleteRelationshipItem() {
+    public MenuItem buildDeleteRelationshipItem(ApricotRelationship relationship) {
         MenuItem item = new MenuItem("Delete Relationship");
         item.setOnAction(e -> {
-
+            List<ApricotRelationship> list = new ArrayList<>();
+            list.add(relationship);
+            deleteSelectedHandler.deleteRelationships(list);
         });
 
         return item;

@@ -86,7 +86,8 @@ public class DeleteSelectedHandler {
         return ret;
     }
 
-    private void deleteRelationships(List<ApricotRelationship> relationships) {
+    @ApricotErrorLogger(title = "Unable to delete the selected Relationship")
+    public void deleteRelationships(List<ApricotRelationship> relationships) {
         StringBuilder sb = new StringBuilder();
         sb.append("The following Relationship(s) will be deleted:\n");
         int elmCount = 0;

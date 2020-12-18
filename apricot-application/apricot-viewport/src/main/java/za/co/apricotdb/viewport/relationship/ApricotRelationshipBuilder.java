@@ -18,13 +18,14 @@ public class ApricotRelationshipBuilder implements RelationshipBuilder {
 
     @Override
     public ApricotRelationship buildRelationship(String parentEntityName, String childEntityName, String primaryKeyName,
-            String foreignKeyName, long relationshipId, RelationshipType type) {
+            String foreignKeyName, long relationshipId, RelationshipType type, boolean valid) {
 
         ApricotEntity parentEntity = canvas.findEntityByName(parentEntityName);
         ApricotEntity childEntity = canvas.findEntityByName(childEntityName);
 
         ApricotRelationship relationship = new ApricotRelationshipImpl(parentEntity, childEntity, primaryKeyName,
                 foreignKeyName, relationshipId, type, topology, canvas);
+        relationship.setValid(valid);
         relationship.setElementStatus(ElementStatus.DEFAULT);
 
         parentEntity.addLink(relationship, true);

@@ -14,11 +14,11 @@ import za.co.apricotdb.viewport.relationship.shape.RoofRelationship;
 
 public class RoofRelationshipEventModifier implements ElementVisualModifier {
 
-    private EventHandler<MouseEvent> mouseRulerEnteredHandler = null;
-    private EventHandler<MouseEvent> mouseRulerExitedHandler = null;
-    private EventHandler<MouseEvent> mouseRulerPressedHandler = null;
-    private EventHandler<MouseEvent> mouseRulerDraggedHandler = null;
-    private EventHandler<MouseEvent> mousePressedHandler = null;
+    private EventHandler<MouseEvent> mouseRulerEnteredHandler;
+    private EventHandler<MouseEvent> mouseRulerExitedHandler;
+    private EventHandler<MouseEvent> mouseRulerPressedHandler;
+    private EventHandler<MouseEvent> mouseRulerDraggedHandler;
+    private EventHandler<MouseEvent> mousePressedHandler;
 
     public RoofRelationshipEventModifier(ApricotCanvas canvas, AlignCommand aligner) {
         mouseRulerEnteredHandler = new RelationshipOnMouseEnteredVerticalRulerEventHandler(canvas);

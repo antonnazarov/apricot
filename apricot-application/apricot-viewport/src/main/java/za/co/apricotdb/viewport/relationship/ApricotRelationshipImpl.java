@@ -18,16 +18,17 @@ import za.co.apricotdb.viewport.relationship.shape.RelationshipTopology;
  */
 public class ApricotRelationshipImpl implements ApricotRelationship {
 
-    private ApricotEntity parent = null;
-    private ApricotEntity child = null;
-    private String primaryKeyName = null;
-    private String foreignKeyName = null;
+    private ApricotEntity parent;
+    private ApricotEntity child;
+    private String primaryKeyName;
+    private String foreignKeyName;
     private long relationshipId;
-    private RelationshipType type = null;
-    private ApricotRelationshipShape relationshipShape = null;
-    private RelationshipTopology topology = null;
-    private ApricotCanvas canvas = null;
+    private RelationshipType type;
+    private ApricotRelationshipShape relationshipShape;
+    private RelationshipTopology topology;
+    private ApricotCanvas canvas;
     private ElementStatus status = null;
+    private boolean valid;
 
     public ApricotRelationshipImpl(ApricotEntity parent, ApricotEntity child, String primaryKeyName,
             String foreignKeyName, long relationshipId, RelationshipType type, RelationshipTopology topology,
@@ -91,14 +92,6 @@ public class ApricotRelationshipImpl implements ApricotRelationship {
                 break;
             case SELECTED:
                 relationshipShape.setSelected();
-
-                //  make the related entities selected
-                parent.setSelectPrimaryRelationshipsFlag(false);
-                child.setSelectPrimaryRelationshipsFlag(false);
-                parent.setElementStatus(ElementStatus.SELECTED);
-                child.setElementStatus(ElementStatus.SELECTED);
-                parent.setSelectPrimaryRelationshipsFlag(true);
-                child.setSelectPrimaryRelationshipsFlag(true);
                 break;
             case GRAYED:
                 relationshipShape.setGrayed();
@@ -143,6 +136,16 @@ public class ApricotRelationshipImpl implements ApricotRelationship {
     @Override
     public long getRelationshipId() {
         return relationshipId;
+    }
+
+    @Override
+    public void setValid(boolean valid) {
+        this.valid = valid;
+    }
+
+    @Override
+    public boolean isValid() {
+        return valid;
     }
 
     @Override

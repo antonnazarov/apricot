@@ -1,13 +1,5 @@
 package za.co.apricotdb.viewport.event;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
-
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -20,6 +12,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ElementStatus;
 import za.co.apricotdb.viewport.notification.CanvasContextMenuEvent;
@@ -27,6 +22,10 @@ import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 import za.co.apricotdb.viewport.relationship.shape.ApricotRelationshipShape;
 import za.co.apricotdb.viewport.topology.LineSegment;
 import za.co.apricotdb.viewport.topology.TopologyManager;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 @Qualifier("CanvasOnMousePressedEventHandler")
@@ -41,11 +40,14 @@ public class CanvasOnMousePressedEventHandler implements EventHandler<MouseEvent
     public void handle(MouseEvent event) {
         if (event.getSource() instanceof ApricotCanvas) {
             ApricotCanvas canvas = (ApricotCanvas) event.getSource();
+            canvas.changeAllElementsStatus(ElementStatus.DEFAULT, false);
+
+            if (selectNearestRelationship(canvas, event)) {
+                event.consume();
+                return;
+            }
 
             if (event.getButton() == MouseButton.PRIMARY) {
-                canvas.changeAllElementsStatus(ElementStatus.DEFAULT, false);
-                selectNearestRelationship(canvas, event);
-
                 Pane pane = (Pane) canvas;
                 Scene scene = pane.getScene();
                 scene.setCursor(Cursor.NW_RESIZE);
@@ -125,7 +127,7 @@ public class CanvasOnMousePressedEventHandler implements EventHandler<MouseEvent
         return userData;
     }
 
-    private void selectNearestRelationship(ApricotCanvas canvas, MouseEvent event) {
+    private boolean selectNearestRelationship(ApricotCanvas canvas, MouseEvent event) {
         List<ApricotRelationship> relationships = canvas.getRelationships();
         Rectangle2D spot = new Rectangle2D(event.getX() - SELECTION_SPOT_SIZE / 2,
                 event.getY() - SELECTION_SPOT_SIZE / 2, SELECTION_SPOT_SIZE, SELECTION_SPOT_SIZE);
@@ -137,10 +139,15 @@ public class CanvasOnMousePressedEventHandler implements EventHandler<MouseEvent
             List<LineSegment> sgmts = topologyManager.getSegments(path);
             for (LineSegment ls : sgmts) {
                 if (topologyManager.intersects(ls, spot) && r.getElementStatus() != ElementStatus.GRAYED) {
-                    r.setElementStatus(ElementStatus.SELECTED);
-                    break;
+                    RelationshipOnMousePressedEventHandler relationshipOnMousePressedEventHandler =
+                            new RelationshipOnMousePressedEventHandler(canvas);
+                    relationshipOnMousePressedEventHandler.handle(canvas, r, (event.getButton() == MouseButton.SECONDARY), event.getScreenX(), event.getScreenY());
+
+                    return true;
                 }
             }
         }
+
+        return false;
     }
 }
