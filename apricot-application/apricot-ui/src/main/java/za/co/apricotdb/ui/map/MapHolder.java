@@ -64,4 +64,8 @@ public class MapHolder {
     public Pane getActiveFrame() {
         return activeFrame;
     }
+
+    public Map<String, VBox> getMapEntities() {
+        return mapEntities;
+    }
 }

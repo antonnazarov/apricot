@@ -1,6 +1,13 @@
 package za.co.apricotdb.ui.map;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
+import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
@@ -9,6 +16,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ApricotElement;
@@ -16,6 +24,8 @@ import za.co.apricotdb.viewport.canvas.ElementStatus;
 import za.co.apricotdb.viewport.canvas.ElementType;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
+
+import java.util.Map;
 
 /**
  * This component implements the functions specific to the Map Canvas.
@@ -26,6 +36,11 @@ import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
 @Component
 public class MapCanvasHandler {
 
+    @Autowired
+    CanvasOnMousePressedHandler mousePressedHandler;
+
+    private ObjectProperty<Label> currentLabel = new SimpleObjectProperty<>();
+
     /**
      * Create a new Map Canvas Pane.
      */
@@ -35,6 +50,7 @@ public class MapCanvasHandler {
                 BorderStrokeStyle.DOTTED, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         mapCanvas.setPrefWidth(((Pane)canvas).getWidth() * canvasRatio);
         mapCanvas.setPrefHeight(((Pane)canvas).getHeight() * canvasRatio);
+        mapCanvas.setOnMousePressed(mousePressedHandler);
 
         return mapCanvas;
     }
@@ -44,9 +60,34 @@ public class MapCanvasHandler {
             if (element.getElementType() == ElementType.ENTITY) {
                 ApricotEntityShape shape = ((ApricotEntity)element).getEntityShape();
                 Point2D position = new Point2D(shape.getLayoutX() * canvasRatio, shape.getLayoutY() * canvasRatio);
-                mapHolder.addEntity(((ApricotEntity)element).getTableName(),
-                        createEntity(shape.getWidth(), shape.getHeight(), canvasRatio, element.getElementStatus()), position);
+                String tableName = ((ApricotEntity)element).getTableName();
+                mapHolder.addEntity(tableName,
+                        createEntity(shape.getWidth(), shape.getHeight(), canvasRatio,
+                                element.getElementStatus()), position);
             }
+        }
+
+        addInfoOverlays(mapHolder);
+    }
+
+    private void addInfoOverlays(MapHolder mapHolder) {
+        Pane mapCanvas = mapHolder.getMapCanvas();
+        Map<String, VBox> entities = mapHolder.getMapEntities();
+        for (String entityName : entities.keySet()) {
+            VBox entity = entities.get(entityName);
+            Label info = new Label(entityName);
+
+            info.setEffect(new DropShadow(2.0, Color.BLACK));
+            info.setTextFill(Color.WHITE);
+            info.setBackground(new Background(new BackgroundFill(Color.rgb(0, 0, 80, 0.7), new CornerRadii(5.0), new Insets(-5.0))));
+
+            info.setLayoutX(entity.getLayoutX());
+            info.setLayoutY(entity.getLayoutY());
+            info.setVisible(false);
+            info.setOnMouseExited(e-> info.setVisible(false));
+            entity.setUserData(info);
+
+            mapCanvas.getChildren().add(info);
         }
     }
 
@@ -78,6 +119,21 @@ public class MapCanvasHandler {
         entity.setBorder(getBorder(status));
         entity.setPrefHeight(prefHeight);
         entity.setPrefWidth(prefWidth);
+
+        entity.setOnMouseEntered(e -> {
+            if (currentLabel.get() != null) {
+                currentLabel.get().setVisible(false);
+            }
+            if (entity.getUserData() != null) {
+                Label info = (Label) entity.getUserData();
+                info.setLayoutX(entity.getLayoutX() + e.getX());
+                info.setLayoutY(entity.getLayoutY() + e.getY());
+                info.setVisible(true);
+                currentLabel.set(info);
+
+                e.consume();
+            }
+        });
 
         return entity;
     }
