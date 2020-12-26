@@ -326,9 +326,15 @@ public class ApricotCanvasHandler {
         String parentColumn = r.getParent().getColumns().get(0).getColumn().getName();
         String childColumn = r.getChild().getColumns().get(0).getColumn().getName();
 
+        boolean valid = relationshipValidator.validateRelationship(r);
         za.co.apricotdb.viewport.relationship.ApricotRelationship ret =
                 rBuilder.buildRelationship(parentTable, childTable, parentColumn, childColumn, r.getId(),
-                getRelationshipType(childColumn, fieldDetails.get(childTable)), relationshipValidator.validateRelationship(r));
+                getRelationshipType(childColumn, fieldDetails.get(childTable)), valid);
+        if (!valid) {
+            //  transfer the validation message into the viewport relationship object
+            ret.setValidationMessage(r.getValidationMessage());
+        }
+        ret.setConstraintName(r.getChild().getName());
 
         return ret;
     }

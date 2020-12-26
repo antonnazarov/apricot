@@ -31,4 +31,12 @@ public interface ApricotRelationship extends ApricotElement {
     void setValid(boolean valid);
 
     boolean isValid();
+
+    void setValidationMessage(String message);
+
+    String getValidationMessage();
+
+    void setConstraintName(String constraintName);
+
+    String getConstraintName();
 }

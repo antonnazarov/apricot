@@ -1,11 +1,5 @@
 package za.co.apricotdb.ui;
 
-import javax.annotation.Resource;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
@@ -13,10 +7,17 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
+import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.ui.handler.NonTransactionalPort;
 import za.co.apricotdb.ui.model.EditRelationshipModel;
 import za.co.apricotdb.ui.model.EditRelationshipModelBuilder;
 import za.co.apricotdb.ui.model.ParentChildKeyHolder;
+
+import javax.annotation.Resource;
 
 /**
  * This controller serves the following interface form:
@@ -103,16 +104,28 @@ public class EditRelationshipController {
     public void init(EditRelationshipModel model) {
         this.model = model;
 
-        model.getRelationshipNameProperty().bind(relationshipName.textProperty());
-        if (relationshipName.getText() == null || "".equals(relationshipName.getText())) {
-            relationshipName.setText(NEW_RELATIONSHIP);
+        String rName;
+        if (StringUtils.isNotEmpty(model.getRelationshipNameProperty().getValue())) {
+            rName = model.getRelationshipNameProperty().getValue();
+        } else {
+            rName = NEW_RELATIONSHIP;
         }
+        relationshipName.textProperty().bindBidirectional(model.getRelationshipNameProperty());
+        relationshipName.setText(rName);
+
         parentEntity.setText(model.getParentTable().getName());
         childEntity.setText(model.getChildTable().getName());
         autoRelated.setSelected(model.isAutoRelationship());
 
         addKeyHolders(model);
         model.resetKeys();
+    }
+
+    /**
+     * Initialize the controller for the existing relationships.
+     */
+    public void init(EditRelationshipModel model, ApricotRelationship relationship) {
+        init(model);
     }
 
     public EditRelationshipModel getModel() {

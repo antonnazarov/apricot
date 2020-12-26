@@ -1,13 +1,16 @@
 package za.co.apricotdb.ui.model;
 
+import javafx.beans.property.SimpleStringProperty;
+import za.co.apricotdb.persistence.entity.ApricotColumnConstraint;
+import za.co.apricotdb.persistence.entity.ApricotConstraint;
+import za.co.apricotdb.persistence.entity.ApricotRelationship;
+import za.co.apricotdb.persistence.entity.ApricotTable;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javafx.beans.property.SimpleStringProperty;
-import za.co.apricotdb.persistence.entity.ApricotTable;
 
 public class EditRelationshipModel implements Serializable {
 
@@ -16,11 +19,21 @@ public class EditRelationshipModel implements Serializable {
     private SimpleStringProperty relationshipName = new SimpleStringProperty();
     private ApricotTable parentTable;
     private ApricotTable childTable;
+    private ApricotConstraint constraint;
+    private ApricotRelationship relationship;
     private Map<String, ParentChildKeyHolder> keys = new HashMap<>();
 
     public EditRelationshipModel(ApricotTable[] selectedTables) {
         this.parentTable = selectedTables[0];
         this.childTable = selectedTables[1];
+    }
+
+    public EditRelationshipModel(ApricotRelationship relationship) {
+        relationshipName.setValue(relationship.getChild().getName());
+        parentTable = relationship.getParent().getTable();
+        childTable = relationship.getChild().getTable();
+        constraint = relationship.getChild();
+        this.relationship = relationship;
     }
     
     public void setParentTable(ApricotTable parentTable) {
@@ -67,6 +80,13 @@ public class EditRelationshipModel implements Serializable {
         ParentChildKeyHolder keyHolder = keys.get(key);
         if (keyHolder != null) {
             keyHolder.populateForeignKey(fields);
+        }
+    }
+
+    public void setChildConstraintField(String key, ApricotColumnConstraint col) {
+        ParentChildKeyHolder keyHolder = keys.get(key);
+        if (keyHolder != null) {
+            keyHolder.setForeignField(col.getColumn().getName());
         }
     }
     
@@ -149,7 +169,15 @@ public class EditRelationshipModel implements Serializable {
         
         return false;
     }
-    
+
+    public ApricotConstraint getConstraint() {
+        return constraint;
+    }
+
+    public ApricotRelationship getRelationship() {
+        return relationship;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

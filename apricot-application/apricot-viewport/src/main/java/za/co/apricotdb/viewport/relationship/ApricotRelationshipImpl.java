@@ -29,6 +29,8 @@ public class ApricotRelationshipImpl implements ApricotRelationship {
     private ApricotCanvas canvas;
     private ElementStatus status = null;
     private boolean valid;
+    private String validationMessage;
+    private String constraintName;
 
     public ApricotRelationshipImpl(ApricotEntity parent, ApricotEntity child, String primaryKeyName,
             String foreignKeyName, long relationshipId, RelationshipType type, RelationshipTopology topology,
@@ -203,5 +205,25 @@ public class ApricotRelationshipImpl implements ApricotRelationship {
         }
         ApricotRelationshipImpl other = (ApricotRelationshipImpl) obj;
         return getRelationshipName().equals(other.getRelationshipName());
+    }
+
+    @Override
+    public String getValidationMessage() {
+        return validationMessage;
+    }
+
+    @Override
+    public void setValidationMessage(String validationMessage) {
+        this.validationMessage = validationMessage;
+    }
+
+    @Override
+    public String getConstraintName() {
+        return constraintName;
+    }
+
+    @Override
+    public void setConstraintName(String constraintName) {
+        this.constraintName = constraintName;
     }
 }
