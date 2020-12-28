@@ -18,16 +18,19 @@ import za.co.apricotdb.viewport.relationship.shape.RelationshipTopology;
  */
 public class ApricotRelationshipImpl implements ApricotRelationship {
 
-    private ApricotEntity parent = null;
-    private ApricotEntity child = null;
-    private String primaryKeyName = null;
-    private String foreignKeyName = null;
+    private ApricotEntity parent;
+    private ApricotEntity child;
+    private String primaryKeyName;
+    private String foreignKeyName;
     private long relationshipId;
-    private RelationshipType type = null;
-    private ApricotRelationshipShape relationshipShape = null;
-    private RelationshipTopology topology = null;
-    private ApricotCanvas canvas = null;
+    private RelationshipType type;
+    private ApricotRelationshipShape relationshipShape;
+    private RelationshipTopology topology;
+    private ApricotCanvas canvas;
     private ElementStatus status = null;
+    private boolean valid;
+    private String validationMessage;
+    private String constraintName;
 
     public ApricotRelationshipImpl(ApricotEntity parent, ApricotEntity child, String primaryKeyName,
             String foreignKeyName, long relationshipId, RelationshipType type, RelationshipTopology topology,
@@ -138,6 +141,16 @@ public class ApricotRelationshipImpl implements ApricotRelationship {
     }
 
     @Override
+    public void setValid(boolean valid) {
+        this.valid = valid;
+    }
+
+    @Override
+    public boolean isValid() {
+        return valid;
+    }
+
+    @Override
     public RelationshipType getRelationshipType() {
         return type;
     }
@@ -192,5 +205,25 @@ public class ApricotRelationshipImpl implements ApricotRelationship {
         }
         ApricotRelationshipImpl other = (ApricotRelationshipImpl) obj;
         return getRelationshipName().equals(other.getRelationshipName());
+    }
+
+    @Override
+    public String getValidationMessage() {
+        return validationMessage;
+    }
+
+    @Override
+    public void setValidationMessage(String validationMessage) {
+        this.validationMessage = validationMessage;
+    }
+
+    @Override
+    public String getConstraintName() {
+        return constraintName;
+    }
+
+    @Override
+    public void setConstraintName(String constraintName) {
+        this.constraintName = constraintName;
     }
 }

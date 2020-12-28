@@ -59,7 +59,7 @@ public class CanvasAlignHandler {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
         resetViewHandler.resetView(false);
         alignIslands(canvas);
-        scaleHandler.fitCanvasScale();
+        // scaleHandler.fitCanvasScale();
     }
 
     private void alignIslands(ApricotCanvas canvas) {
@@ -78,6 +78,6 @@ public class CanvasAlignHandler {
         CanvasChangedEvent canvasChangedEvent = new CanvasChangedEvent(canvas);
         eventPublisher.publishEvent(canvasChangedEvent);
         appController.save(null);
-        snapshotHandler.syncronizeSnapshot(false);
+        snapshotHandler.synchronizeSnapshot(false);
     }
 }

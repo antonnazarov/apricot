@@ -4,6 +4,7 @@ import javafx.event.Event;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyEvent;
+import za.co.apricotdb.ui.util.TooltipHelper;
 
 /**
  * The holder of the button state.
@@ -45,10 +46,7 @@ public abstract class TbButtonHandlerState implements TbButtonHandler {
         btn.setText(null);
         enable();
 
-        Tooltip tt = new Tooltip();
-        tt.setText(getToolpitText());
-        tt.setStyle("-fx-font: normal bold 12 Langdon; " + "-fx-base: #AE3522; " + "-fx-text-fill: orange;");
-        btn.setTooltip(tt);
+        btn.setTooltip(TooltipHelper.getApricotTooltip(getToolpitText()));
 
         button.addEventFilter(KeyEvent.ANY, Event::consume);
     }

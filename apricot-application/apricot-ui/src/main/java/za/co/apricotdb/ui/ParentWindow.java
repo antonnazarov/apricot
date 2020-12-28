@@ -2,7 +2,14 @@ package za.co.apricotdb.ui;
 
 import javafx.application.Application;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TreeView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -33,14 +40,10 @@ public class ParentWindow {
     private MainAppController controller;
     private List<ApricotTable> filterTables = new ArrayList<>();
     private TabPane viewsTabPane;
-    private ProgressBarModel progressBarModel;
     private Stage primaryStage;
 
     public void init(MainAppController controller) {
         this.controller = controller;
-        progressBarModel = new ProgressBarModel(controller.mainProgressBar);
-        controller.mainProgressBar.visibleProperty().bind(progressBarModel.getVisibleProperty());
-        controller.mainProgressBar.progressProperty().bind(progressBarModel.getProgressProperty());
     }
 
     public void setParentPane(Pane mainAppPane) {
@@ -148,10 +151,6 @@ public class ParentWindow {
 
     public void setViewsTabPane(TabPane viewsTabPane) {
         this.viewsTabPane = viewsTabPane;
-    }
-
-    public ProgressBarModel getProgressBarModel() {
-        return progressBarModel;
     }
 
     public Stage getPrimaryStage() {

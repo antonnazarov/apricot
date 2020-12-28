@@ -19,7 +19,6 @@ import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
-import za.co.apricotdb.ui.ParentWindow;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +31,7 @@ import java.util.Map;
  * @since 01/09/2020
  */
 @Component
-public class ReverseEngineService extends Service<MetaData>  {
+public class ReverseEngineService extends Service<MetaData> implements InitializableService {
 
     private ObjectProperty<ApricotTargetDatabase> targetDatabase = new SimpleObjectProperty<>();
     private StringProperty driverClassName = new SimpleStringProperty();
@@ -44,10 +43,10 @@ public class ReverseEngineService extends Service<MetaData>  {
     private ProgressDialog progressDialog;
 
     @Autowired
-    ParentWindow parentWindow;
+    MetaDataScannerFactory scannerFactory;
 
     @Autowired
-    MetaDataScannerFactory scannerFactory;
+    ProgressInitializer progressInitializer;
 
     public void initService(ApricotTargetDatabase targetDatabase, String driverClassName, String url, String schema,
                             String userName, String password, ApricotSnapshot snapshot) {
@@ -59,7 +58,7 @@ public class ReverseEngineService extends Service<MetaData>  {
         this.password.setValue(password);
         this.snapshot.setValue(snapshot);
 
-        initProgressDialog();
+        init("Reverse Engineering", "Scanning the database");
 
         this.reset();
     }
@@ -138,14 +137,8 @@ public class ReverseEngineService extends Service<MetaData>  {
         };
     }
 
-    public ProgressDialog initProgressDialog() {
-        if (progressDialog == null) {
-            progressDialog = new ProgressDialog(this);
-            progressDialog.initOwner(parentWindow.getPrimaryStage());
-        }
-        progressDialog.setTitle("Reverse Engineering");
-        progressDialog.setHeaderText("Scanning the database");
-
-        return progressDialog;
+    @Override
+    public void init(String title, String headerText) {
+        progressInitializer.init(title, headerText, this);
     }
 }

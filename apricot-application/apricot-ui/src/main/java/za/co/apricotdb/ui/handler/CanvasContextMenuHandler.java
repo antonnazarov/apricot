@@ -84,7 +84,7 @@ public class CanvasContextMenuHandler {
 
         MenuItem refreshCanvas = new MenuItem("Refresh <F5>");
         refreshCanvas.setOnAction(e -> {
-            snapshotHandler.syncronizeSnapshot(false);
+            snapshotHandler.synchronizeSnapshot(false);
         });
 
         MenuItem paste = new MenuItem("Paste <Ctrl+V>");
@@ -163,6 +163,6 @@ public class CanvasContextMenuHandler {
         canvas.setDetailLevel(view.getDetailLevel().toString());
 
         appController.save(null);
-        snapshotHandler.syncronizeSnapshot(false);
+        snapshotHandler.synchronizeSnapshot(false);
     }
 }

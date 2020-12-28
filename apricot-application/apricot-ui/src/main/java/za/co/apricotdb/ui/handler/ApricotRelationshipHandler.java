@@ -26,7 +26,6 @@ import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 
 import javax.transaction.Transactional;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -75,7 +74,7 @@ public class ApricotRelationshipHandler {
     DialogFormHandler formHandler;
 
     @Transactional
-    public void openRelationshipEditorForm(TabPane viewsTabPane) throws IOException {
+    public void openRelationshipEditorForm(TabPane viewsTabPane) {
 
         // check if one or two entities were selected on the current canvas
         ApricotTable[] selectedTables = getRelatedTables(viewsTabPane);
@@ -92,11 +91,26 @@ public class ApricotRelationshipHandler {
             return;
         }
 
+        showForm(model, null);
+    }
+
+    @Transactional
+    public void openRelationshipEditorForm(ApricotRelationship relationship) {
+        ApricotRelationship r = relationshipManager.findRelationshipById(relationship.getId());
+        EditRelationshipModel model = modelBuilder.buildModel(r);
+        showForm(model, relationship);
+    }
+
+    private void showForm(EditRelationshipModel model, ApricotRelationship relationship) {
         ApricotForm form = formHandler.buildApricotForm("/za/co/apricotdb/ui/apricot-relationship-editor.fxml",
                 "table-1-s1.jpg", "Create a new Relationship");
 
         EditRelationshipController controller = form.getController();
-        controller.init(model);
+        if (relationship == null) {
+            controller.init(model);
+        } else {
+            controller.init(model, relationship);
+        }
         modelBuilder.populateKeys(model);
 
         form.show();
@@ -117,13 +131,20 @@ public class ApricotRelationshipHandler {
     @Transactional
     public boolean saveRelationship(EditRelationshipController controller) {
         EditRelationshipModel model = controller.getModel();
+
+        //  if the constraint exists, delete the relationship first
+        if (model.getRelationship() != null) {
+            deleteRelationship(model.getRelationship());
+        }
+
         refreshTables(model);
         if (!relationshipValidator.validateRelationshipModel(model)) {
             return false;
         }
+
         appController.save(null);  //  save the current layout
         relationshipSerializer.serializeRelationship(model);
-        snapshotHandler.syncronizeSnapshot(true);
+        snapshotHandler.synchronizeSnapshot(true);
 
         return true;
     }

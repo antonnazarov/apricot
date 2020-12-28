@@ -28,6 +28,7 @@ import za.co.apricotdb.persistence.entity.ViewDetailLevel;
 import za.co.apricotdb.ui.MainAppController;
 import za.co.apricotdb.ui.ViewFormController;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
+import za.co.apricotdb.ui.map.MapHandler;
 import za.co.apricotdb.ui.model.ApricotForm;
 import za.co.apricotdb.ui.model.ApricotViewSerializer;
 import za.co.apricotdb.ui.model.EditViewModelBuilder;
@@ -98,6 +99,9 @@ public class ApricotViewHandler {
 
     @Autowired
     OnKeyPressedEventHandler keyPressedEventHandler;
+
+    @Autowired
+    MapHandler mapHandler;
 
     public List<ApricotView> getAllViews(ApricotProject project) {
         checkGeneralView(project);
@@ -202,6 +206,8 @@ public class ApricotViewHandler {
         tab.setOnSelectionChanged(e -> {
             ((Pane) canvas).fireEvent(e);
             ((Pane) canvas).requestFocus();
+
+            mapHandler.drawMap();
         });
         tabPane.getTabs().add(tab);
 
@@ -227,6 +233,9 @@ public class ApricotViewHandler {
             }
             Border border = new Border(bs);
             pCanvas.setBorder(border);
+
+            //  redraw the map
+            mapHandler.drawMap();
         });
 
         return tab;
@@ -259,7 +268,7 @@ public class ApricotViewHandler {
         appController.save(null); // save the current layout
         TabInfoObject tabInfo = canvasHandler.getCurrentViewTabInfo();
         viewSerializer.deleteEntitiesFromView(entities, tabInfo);
-        snapshotHandler.syncronizeSnapshot(false);
+        snapshotHandler.synchronizeSnapshot(false);
     }
 
     @ApricotErrorLogger(title = "Unable to add Entity(s) into the View")
@@ -267,7 +276,7 @@ public class ApricotViewHandler {
         appController.save(null); // save the current layout
         TabInfoObject tabInfo = canvasHandler.getCurrentViewTabInfo();
         viewSerializer.addEntitiesToView(entities, tabInfo);
-        snapshotHandler.syncronizeSnapshot(false);
+        snapshotHandler.synchronizeSnapshot(false);
         canvasHandler.makeEntitiesSelected(entities, true);
     }
 }

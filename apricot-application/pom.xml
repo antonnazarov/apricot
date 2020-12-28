@@ -7,7 +7,7 @@
 
     <groupId>za.co.apricot</groupId>
     <artifactId>apricotdb</artifactId>
-    <version>2.4</version>
+    <version>2.5</version>
     <packaging>pom</packaging>
     <name>The Apricot - database tool</name>
 
@@ -15,14 +15,14 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>14</maven.compiler.source>
         <maven.compiler.target>14</maven.compiler.target>
-        <revision>2.4</revision>
+        <revision>2.5</revision>
         <start-class>za.co.apricotdb.ui.ApricotMainApp</start-class>
     </properties>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.3.2.RELEASE</version>
+        <version>2.3.7.RELEASE</version>
         <relativePath />
     </parent>
 
@@ -90,6 +90,13 @@
             <version>1.0</version>
         </dependency>
 
+        <!-- SQLite database -->
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.32.3.2</version>
+        </dependency>
+
         <!-- Utilities -->
         <dependency>
             <groupId>com.h2database</groupId>
@@ -122,36 +129,42 @@
             <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
 
-        <!-- JavaFX is not included into Java 14 -->
+        <!-- JavaFX is not included into Java 15 -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-base</artifactId>
-            <version>14.0.2.1</version>
+            <version>15.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>14.0.2.1</version>
+            <version>15.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>14.0.2.1</version>
+            <version>15.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-web</artifactId>
-            <version>14.0.2.1</version>
+            <version>15.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-graphics</artifactId>
-            <version>14.0.2.1</version>
+            <version>15.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-swing</artifactId>
-            <version>14.0.2</version>
+            <version>15.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.jsqlparser</groupId>
+            <artifactId>jsqlparser</artifactId>
+            <version>3.2</version>
         </dependency>
     </dependencies>
 </project>

@@ -1,16 +1,6 @@
 package za.co.apricotdb.persistence.data;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import javax.annotation.Resource;
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
-
 import org.springframework.stereotype.Component;
-
 import za.co.apricotdb.persistence.entity.ApricotObjectLayout;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotView;
@@ -18,6 +8,14 @@ import za.co.apricotdb.persistence.entity.LayoutObjectType;
 import za.co.apricotdb.persistence.entity.ViewDetailLevel;
 import za.co.apricotdb.persistence.repository.ApricotObjectLayoutRepository;
 import za.co.apricotdb.persistence.repository.ApricotViewRepository;
+
+import javax.annotation.Resource;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ViewManager {
@@ -108,6 +106,13 @@ public class ViewManager {
         }
 
         viewRepository.delete(v);
+    }
+
+    public List<ApricotObjectLayout> getLayouts(ApricotView view) {
+        TypedQuery<ApricotObjectLayout> query = em.createNamedQuery("ApricotView.getLayouts", ApricotObjectLayout.class);
+        query.setParameter("view", view);
+
+        return query.getResultList();
     }
 
     public ApricotView saveView(ApricotView view) {

@@ -1,16 +1,11 @@
 package za.co.apricotdb.ui.handler;
 
-import java.io.File;
-import java.nio.charset.Charset;
-
+import javafx.scene.control.Alert;
+import javafx.stage.FileChooser;
+import javafx.stage.Window;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.stage.FileChooser;
-import javafx.stage.Window;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.ProjectParameterManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
@@ -19,8 +14,11 @@ import za.co.apricotdb.support.export.ImportProjectProcessor;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
+import java.io.File;
+import java.nio.charset.Charset;
+
 /**
- * This component inclapsulates the functions for importing of the Aprocit
+ * This component enclapsulates the functions for importing of the Apricot
  * Project.
  *
  * @author Anton Nazarov
@@ -63,13 +61,14 @@ public class ImportProjectHandler {
         fileChooser.getExtensionFilters().add(extFilter);
 
         File file = fileChooser.showOpenDialog(window);
-        String sProject = null;
         if (file != null) {
             importProject(file);
+            parameterManager.saveParameter(project, ProjectParameterManager.PROJECT_DEFAULT_OUTPUT_DIR,
+                    file.getParent());
+            Alert alert = alertDecorator.getAlert("Import Project",
+                    "The project \"" + project.getName() + "\" was successfully imported", Alert.AlertType.INFORMATION);
+            alert.showAndWait();
         }
-
-        parameterManager.saveParameter(project, ProjectParameterManager.PROJECT_DEFAULT_OUTPUT_DIR,
-                file.getParent());
     }
 
     @ApricotErrorLogger(title = "Unable to Import Project")
@@ -90,10 +89,6 @@ public class ImportProjectHandler {
         }
 
         ApricotProject project = importProcessor.importProject(sProject, true);
-
-        Alert alert = alertDecorator.getAlert("Import Project",
-                "The project \"" + importedProject.getName() + "\" was successfully imported", AlertType.INFORMATION);
-        alert.showAndWait();
 
         //  the the just imported project as current
         projectManager.setProjectCurrent(project);

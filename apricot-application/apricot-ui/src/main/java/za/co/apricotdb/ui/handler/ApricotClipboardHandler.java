@@ -87,7 +87,7 @@ public class ApricotClipboardHandler {
             List<String> sDuplicated = duplicateHandler.duplicate(sEntities, sourceViewName, sourceSnapshotName);
 
             appController.save(null);
-            snapshotHandler.syncronizeSnapshot(true);
+            snapshotHandler.synchronizeSnapshot(true);
             canvasHandler.makeEntitiesSelected(sDuplicated, true);
             selectInMainView(sDuplicated);
             treeViewHandler.selectEntities(sDuplicated);

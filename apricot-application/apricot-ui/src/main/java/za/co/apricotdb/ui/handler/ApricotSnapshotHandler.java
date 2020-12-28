@@ -1,24 +1,18 @@
 package za.co.apricotdb.ui.handler;
 
-import javafx.concurrent.Worker;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
 import org.apache.commons.text.WordUtils;
-import org.controlsfx.dialog.ProgressDialog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
-import za.co.apricotdb.persistence.data.ViewManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
-import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.EditSnapshotController;
 import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
@@ -28,13 +22,9 @@ import za.co.apricotdb.ui.model.EditSnapshotModelBuilder;
 import za.co.apricotdb.ui.model.NewSnapshotModelBuilder;
 import za.co.apricotdb.ui.model.SnapshotFormModel;
 import za.co.apricotdb.ui.service.DeleteSnapshotService;
+import za.co.apricotdb.ui.service.SynchronizeSnapshotService;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
-import za.co.apricotdb.viewport.canvas.ApricotCanvas;
-import za.co.apricotdb.viewport.canvas.ElementStatus;
-import za.co.apricotdb.viewport.entity.ApricotEntity;
-import za.co.apricotdb.viewport.relationship.ApricotRelationship;
 
-import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,18 +52,6 @@ public class ApricotSnapshotHandler {
     ParentWindow parentWindow;
 
     @Autowired
-    TreeViewHandler treeViewHandler;
-
-    @Autowired
-    ApricotCanvasHandler canvasHandler;
-
-    @Autowired
-    ViewManager viewManager;
-
-    @Autowired
-    EntityFilterHandler filterHandler;
-
-    @Autowired
     ApricotSnapshotSerializer snapshotSerializer;
 
     @Autowired
@@ -84,6 +62,9 @@ public class ApricotSnapshotHandler {
 
     @Autowired
     DeleteSnapshotService deleteSnapshotService;
+
+    @Autowired
+    SynchronizeSnapshotService synchronizeSnapshotService;
 
     @ApricotErrorLogger(title = "Unable to create the default (empty) snapshot")
     public void createDefaultSnapshot(ApricotProject project) {
@@ -162,7 +143,7 @@ public class ApricotSnapshotHandler {
             throw new IllegalArgumentException(deleteSnapshotService.getException());
         });
 
-        deleteSnapshotService.initProgressDialog("Delete Snapshot",
+        deleteSnapshotService.init("Delete Snapshot",
                 "The deletion of the snapshot \"" + snapshot.getName() + "\" is in progress");
     }
 
@@ -171,8 +152,10 @@ public class ApricotSnapshotHandler {
      * tree view representation of the data
      */
     @ApricotErrorLogger(title = "Unable to synchronize the Snapshot")
-    public void syncronizeSnapshot(boolean synchAllViews) {
-        syncSnapshotTransactional(synchAllViews);
+    public void synchronizeSnapshot(boolean synchAllViews) {
+        synchronizeSnapshotService.init("Synchronization of the snapshot", "The snapshot synchronization is is progress...");
+        synchronizeSnapshotService.setServiceData(synchAllViews);
+        synchronizeSnapshotService.start();
     }
 
     @ApricotErrorLogger(title = "Unable to save the current Snapshot")
@@ -186,51 +169,6 @@ public class ApricotSnapshotHandler {
         return false;
     }
 
-    @Transactional
-    public void syncSnapshotTransactional(boolean synchAllViews) {
-        TabInfoObject currentTab = canvasHandler.getCurrentViewTabInfo();
-        if (synchAllViews) {
-            TabPane tp = parentWindow.getProjectTabPane();
-            for (Tab tab : tp.getTabs()) {
-                TabInfoObject tabInfo = TabInfoObject.getTabInfo(tab);
-                if (tabInfo != null) {
-                    synchronizeViewTab(tabInfo);
-                }
-            }
-        } else {
-            synchronizeViewTab(currentTab);
-        }
-
-        treeViewHandler.populate(projectManager.findCurrentProject(), snapshotManager.getDefaultSnapshot());
-        treeViewHandler.markEntitiesIncludedIntoView(currentTab.getView());
-        treeViewHandler.sortEntitiesByView();
-    }
-
-    private void synchronizeViewTab(TabInfoObject tabInfo) {
-        // re-read the view info
-        ApricotView view = viewManager.findViewById(tabInfo.getView().getId());
-        tabInfo.setView(view);
-        ApricotSnapshot snapshot = tabInfo.getSnapshot();
-        List<ApricotTable> tables = canvasHandler.populateCanvas(snapshot, tabInfo.getView(), tabInfo.getCanvas());
-
-        if (filterHandler.isFilterOn()) {
-            List<ApricotEntity> filteredEntities = new ArrayList<>(); // the tables which were filtered out
-            ApricotCanvas canvas = tabInfo.getCanvas();
-            List<ApricotTable> filterTables = filterHandler.getFilterTables();
-            for (ApricotTable t : tables) {
-                if (!filterTables.contains(t)) {
-                    ApricotEntity entity = canvas.findEntityByName(t.getName());
-                    if (entity != null) {
-                        filteredEntities.add(entity);
-                        entity.setElementStatus(ElementStatus.GRAYED);
-                    }
-                }
-            }
-
-            setRelationshipsStatusToGray(filteredEntities);
-        }
-    }
-
     private Alert getAlert(AlertType alertType, String text) {
         Alert alert = new Alert(alertType, null, ButtonType.OK);
         alert.setTitle("Delete Snapshot");
@@ -241,18 +179,5 @@ public class ApricotSnapshotHandler {
         }
 
         return alert;
-    }
-
-    /**
-     * Set status to GRAYED for the relationships between the entities filtered out.
-     */
-    private void setRelationshipsStatusToGray(List<ApricotEntity> filteredEntities) {
-        for (ApricotEntity entity : filteredEntities) {
-            for (ApricotRelationship r : entity.getPrimaryLinks()) {
-                if (filteredEntities.contains(r.getChild())) {
-                    r.setElementStatus(ElementStatus.GRAYED);
-                }
-            }
-        }
     }
 }

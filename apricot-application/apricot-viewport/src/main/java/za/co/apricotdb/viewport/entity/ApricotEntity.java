@@ -1,10 +1,10 @@
 package za.co.apricotdb.viewport.entity;
 
-import java.util.List;
-
 import za.co.apricotdb.viewport.canvas.ApricotElement;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
+
+import java.util.List;
 
 /**
  * This interface is for a graphical representation of an entity.
@@ -33,4 +33,6 @@ public interface ApricotEntity extends ApricotElement {
     boolean isParentAbsent();
     
     boolean isChildAbsent();
+
+    void setSelectPrimaryRelationshipsFlag(boolean flag);
 }

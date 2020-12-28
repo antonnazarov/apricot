@@ -1,22 +1,22 @@
 package za.co.apricotdb.ui.handler;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import za.co.apricotdb.persistence.data.RelationshipManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.TableManager;
 import za.co.apricotdb.ui.MainAppController;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
+import za.co.apricotdb.ui.service.DeleteSelectedEntitiesService;
 import za.co.apricotdb.ui.undo.ApricotUndoManager;
 import za.co.apricotdb.ui.undo.UndoType;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This component deletes selected entities and relationships.
@@ -59,6 +59,9 @@ public class DeleteSelectedHandler {
     @Autowired
     MainAppController appController;
 
+    @Autowired
+    DeleteSelectedEntitiesService deleteSelectedEntitiesService;
+
     @ApricotErrorLogger(title = "Unable to delete the selected Entities/Relationship")
     public void deleteSelected() {
         ApricotCanvas canvas = canvasHandler.getSelectedCanvas();
@@ -83,7 +86,8 @@ public class DeleteSelectedHandler {
         return ret;
     }
 
-    private void deleteRelationships(List<ApricotRelationship> relationships) {
+    @ApricotErrorLogger(title = "Unable to delete the selected Relationship")
+    public void deleteRelationships(List<ApricotRelationship> relationships) {
         StringBuilder sb = new StringBuilder();
         sb.append("The following Relationship(s) will be deleted:\n");
         int elmCount = 0;
@@ -106,7 +110,7 @@ public class DeleteSelectedHandler {
                         .findRelationshipById(r.getRelationshipId());
                 relationshipHandler.deleteRelationship(rel);
             }
-            snapshotHandler.syncronizeSnapshot(true);
+            snapshotHandler.synchronizeSnapshot(true);
         }
     }
 
@@ -128,11 +132,8 @@ public class DeleteSelectedHandler {
             appController.save(null);
             undoManager.addSavepoint(UndoType.OBJECT_EDITED);
 
-            for (String e : entities) {
-                entityHandler.deleteEntity(e);
-            }
-
-            snapshotHandler.syncronizeSnapshot(true);
+            deleteSelectedEntitiesService.init(entities);
+            deleteSelectedEntitiesService.start();
         }
     }
 }

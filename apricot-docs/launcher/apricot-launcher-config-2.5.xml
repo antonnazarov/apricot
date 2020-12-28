@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch4jConfig>
+  <dontWrapJar>true</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>lib\apricot-ui-2.5.jar</jar>
+  <outfile>D:\AntonNazarov\apricot-packages\2.5-Windows\apricot\apricotdb.exe</outfile>
+  <errTitle></errTitle>
+  <cmdLine></cmdLine>
+  <chdir>.</chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl></supportUrl>
+  <stayAlive>false</stayAlive>
+  <restartOnCrash>false</restartOnCrash>
+  <manifest></manifest>
+  <icon>D:\AntonNazarov\git.apricot\apricot-docs\launcher\apricotdb.ico</icon>
+  <jre>
+    <path>java-runtime</path>
+    <bundledJre64Bit>true</bundledJre64Bit>
+    <bundledJreAsFallback>false</bundledJreAsFallback>
+    <minVersion></minVersion>
+    <maxVersion></maxVersion>
+    <jdkPreference>preferJre</jdkPreference>
+    <runtimeBits>64/32</runtimeBits>
+    <initialHeapSize>1024</initialHeapSize>
+    <maxHeapSize>2048</maxHeapSize>
+  </jre>
+  <splash>
+    <file>D:\AntonNazarov\git.apricot\apricot-docs\launcher\apricot-splash-screen-2.5.bmp</file>
+    <waitForWindow>true</waitForWindow>
+    <timeout>60</timeout>
+    <timeoutErr>true</timeoutErr>
+  </splash>
+  <versionInfo>
+    <fileVersion>2.4.0.0</fileVersion>
+    <txtFileVersion>Version 2.5 January 2021</txtFileVersion>
+    <fileDescription>Apricot DB</fileDescription>
+    <copyright>(c) Anton Nazarov, 2018-2021</copyright>
+    <productVersion>2.5.0.0</productVersion>
+    <txtProductVersion>Version 2.5 January 2021</txtProductVersion>
+    <productName>Apricot DB Entity Relationship Diagram Editor</productName>
+    <companyName></companyName>
+    <internalName>Apricot DB</internalName>
+    <originalFilename>apricotdb.exe</originalFilename>
+    <trademarks></trademarks>
+    <language>ENGLISH_US</language>
+  </versionInfo>
+</launch4jConfig>

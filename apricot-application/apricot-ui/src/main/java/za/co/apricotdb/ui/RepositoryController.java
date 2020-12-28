@@ -9,7 +9,6 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import za.co.apricotdb.ui.handler.ProgressBarHandler;
 import za.co.apricotdb.ui.handler.RepositoryConfigHandler;
 import za.co.apricotdb.ui.handler.RepositoryHandler;
 import za.co.apricotdb.ui.repository.LocalRepoService;
@@ -50,9 +49,6 @@ public class RepositoryController {
     @Autowired
     RepoCompareService compareService;
 
-    @Autowired
-    ProgressBarHandler progressBarHandler;
-
     @FXML
     Pane mainPane;
 
@@ -75,7 +71,7 @@ public class RepositoryController {
 
     @FXML
     public void refresh() {
-        repositoryHandler.refreshModel(true);
+        repositoryHandler.refreshModel();
     }
 
     @FXML

@@ -18,6 +18,8 @@ import za.co.apricotdb.support.excel.TableWrapper;
 import za.co.apricotdb.support.excel.TableWrapper.ReportRow;
 import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
+import za.co.apricotdb.ui.map.MapHandler;
+import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.viewport.align.AlignCommand;
 import za.co.apricotdb.viewport.align.CanvasSizeAdjustor;
 import za.co.apricotdb.viewport.align.SimpleGridEntityAllocator;
@@ -67,6 +69,18 @@ public class ApricotCanvasHandler {
     @Autowired
     RelatedEntitiesHandler relatedEntitiesHandler;
 
+    @Autowired
+    CanvasAlignHandler canvasAlignHandler;
+
+    @Autowired
+    AlertMessageDecorator alertMessageDecorator;
+
+    @Autowired
+    MapHandler mapHandler;
+
+    @Autowired
+    RelationshipConsistencyValidator relationshipValidator;
+
     /**
      * Populate the given canvas with the information of snapshot, using the
      * provided skin.
@@ -77,7 +91,7 @@ public class ApricotCanvasHandler {
         // clean the canvas first
         canvas.cleanCanvas();
 
-        List<ApricotTable> tables = null;
+        List<ApricotTable> tables;
         Map<String, RelatedEntityAbsent> absenceInfo = null;
         if (v.isGeneral()) {
             tables = tableManager.getTablesForSnapshot(snapshot);
@@ -89,11 +103,16 @@ public class ApricotCanvasHandler {
             });
             absenceInfo = relatedEntitiesHandler.getRelatedEntitiesAbsence(tbNames);
         }
+
         populateCanvas(canvas, tables, v.getDetailLevel(), absenceInfo);
 
         // if view does not contain layout definitions, do default alignment
-        if ((v.getObjectLayouts() == null || v.getObjectLayouts().size() == 0) && v.isGeneral()) {
-            runAlignerAfterDelay(canvas, v, 0.1).play();
+        if (tables.size() > 0 && (v.getObjectLayouts() == null || v.getObjectLayouts().size() == 0) && v.isGeneral()) {
+            if (alertMessageDecorator.requestYesNoOption("Align Diagram", "Align the objects on the current diagram automatically?", "Align")) {
+                canvasAlignHandler.alignCanvasIslands();
+            } else {
+                runAlignerAfterDelay(canvas, v, 0.5).play();
+            }
         } else {
             runAllocation(canvas, v, ElementType.ENTITY);
             Platform.runLater(() -> {
@@ -107,16 +126,6 @@ public class ApricotCanvasHandler {
         });
 
         return tables;
-    }
-
-    /**
-     * Remove entity and all related relationships from the canvas.
-     */
-    public void removeEntityFromCanvas(ApricotTable table, ApricotCanvas canvas) {
-        ApricotEntity entity = canvas.findEntityByName(table.getName());
-        if (entity != null) {
-            canvas.removeElement(entity);
-        }
     }
 
     public ApricotCanvas getSelectedCanvas() {
@@ -239,6 +248,28 @@ public class ApricotCanvasHandler {
         return null;
     }
 
+    public ApricotView getViewOnTab(Tab tab) {
+        for (Tab t : parentWindow.getProjectTabPane().getTabs()) {
+            if (t == tab) {
+                TabInfoObject o = (TabInfoObject) t.getUserData();
+                return o.getView();
+            }
+        }
+
+        return null;
+    }
+
+    public Tab getTabOnCurrentView() {
+        for (Tab t : parentWindow.getProjectTabPane().getTabs()) {
+            TabInfoObject o = (TabInfoObject) t.getUserData();
+            if (o.getView().isCurrent()) {
+                return t;
+            }
+        }
+
+        return null;
+    }
+
     public void makeEntitySelected(TabInfoObject tabInfo, String tableName, boolean deselectOthers) {
         ApricotEntity entity = tabInfo.getCanvas().findEntityByName(tableName);
         if (entity != null) {
@@ -295,8 +326,17 @@ public class ApricotCanvasHandler {
         String parentColumn = r.getParent().getColumns().get(0).getColumn().getName();
         String childColumn = r.getChild().getColumns().get(0).getColumn().getName();
 
-        return rBuilder.buildRelationship(parentTable, childTable, parentColumn, childColumn, r.getId(),
-                getRelationshipType(childColumn, fieldDetails.get(childTable)));
+        boolean valid = relationshipValidator.validateRelationship(r);
+        za.co.apricotdb.viewport.relationship.ApricotRelationship ret =
+                rBuilder.buildRelationship(parentTable, childTable, parentColumn, childColumn, r.getId(),
+                getRelationshipType(childColumn, fieldDetails.get(childTable)), valid);
+        if (!valid) {
+            //  transfer the validation message into the viewport relationship object
+            ret.setValidationMessage(r.getValidationMessage());
+        }
+        ret.setConstraintName(r.getChild().getName());
+
+        return ret;
     }
 
     private RelationshipType getRelationshipType(String childColumn, List<FieldDetail> childFields) {
@@ -331,13 +371,11 @@ public class ApricotCanvasHandler {
         return transition;
     }
 
-    private PauseTransition runAllocation(ApricotCanvas canvas, ApricotView view,
+    private void runAllocation(ApricotCanvas canvas, ApricotView view,
                                           ElementType elementType) {
         canvas.buildRelationships();
         CanvasAllocationMap map = tabViewHandler.readCanvasAllocationMap(view);
         canvas.applyAllocationMap(map, elementType);
-
-        return null;
     }
 
     private List<FieldDetail> getFieldDetails(ApricotTable table, List<ApricotRelationship> relationships) {

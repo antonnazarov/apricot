@@ -1,7 +1,5 @@
 package za.co.apricotdb.persistence.entity;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,6 +9,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import java.io.Serializable;
 
 /**
  * Entity for apricot_relationship.
@@ -52,6 +52,9 @@ public class ApricotRelationship implements Serializable {
     @JoinColumn(name = "child_constraint_id")
     private ApricotConstraint child;
 
+    @Transient
+    private String validationMessage;
+
     public long getId() {
         return id;
     }
@@ -74,6 +77,14 @@ public class ApricotRelationship implements Serializable {
 
     public void setChild(ApricotConstraint child) {
         this.child = child;
+    }
+
+    public String getValidationMessage() {
+        return validationMessage;
+    }
+
+    public void setValidationMessage(String validationMessage) {
+        this.validationMessage = validationMessage;
     }
 
     @Override

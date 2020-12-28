@@ -10,6 +10,7 @@ import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.ViewManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
+import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.EditEntityController;
@@ -21,7 +22,6 @@ import za.co.apricotdb.ui.model.ApricotConstraintData;
 import za.co.apricotdb.ui.model.EditEntityModel;
 import za.co.apricotdb.ui.model.EditRelationshipModel;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -115,11 +115,12 @@ public class NonTransactionalPort {
 
     @ApricotErrorLogger(title = "Unable to open the Relationship Editor form")
     public void openRelationshipEditorForm(TabPane viewsTabPane) {
-        try {
-            relationshipHandler.openRelationshipEditorForm(viewsTabPane);
-        } catch (IOException ex) {
-            throw new IllegalStateException(ex);
-        }
+        relationshipHandler.openRelationshipEditorForm(viewsTabPane);
+    }
+
+    @ApricotErrorLogger(title = "Unable to open the Relationship Editor form")
+    public void openRelationshipEditorForm(ApricotRelationship relationship) {
+        relationshipHandler.openRelationshipEditorForm(relationship);
     }
 
     @ApricotErrorLogger(title = "Unable to swap the Entities in the edited Relationship")

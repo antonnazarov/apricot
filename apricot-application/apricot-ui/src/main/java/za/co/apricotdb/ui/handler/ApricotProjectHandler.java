@@ -6,7 +6,6 @@ import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ProjectManager;
@@ -19,9 +18,9 @@ import za.co.apricotdb.ui.model.ApricotForm;
 import za.co.apricotdb.ui.model.EditProjectModelBuilder;
 import za.co.apricotdb.ui.model.NewProjectModelBuilder;
 import za.co.apricotdb.ui.model.ProjectFormModel;
+import za.co.apricotdb.ui.service.DeleteProjectService;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,6 +51,9 @@ public class ApricotProjectHandler {
 
     @Autowired
     DialogFormHandler formHandler;
+
+    @Autowired
+    DeleteProjectService deleteProjectService;
 
     @ApricotErrorLogger(title = "Unable to open the list of projects")
     public void createOpenProjectForm(Pane mainPane) {
@@ -85,7 +87,23 @@ public class ApricotProjectHandler {
         form.show();
     }
 
-    @Transactional
+    @ApricotErrorLogger(title = "Unable to delete the current Project")
+    public void deleteProject() {
+        if (deleteCurrentProject()) {
+            ApricotProject project = projectManager.findCurrentProject();
+            deleteProjectService.init("Delete Project", "Deleting the selected project...");
+            deleteProjectService.initServiceData(project);
+            deleteProjectService.start();
+            deleteProjectService.setOnSucceeded(e -> {
+                List<ApricotProject> projects = projectManager.getAllProjects();
+                if (projects != null && projects.size() > 0) {
+                    projectManager.setProjectCurrent(projects.get(0));
+                }
+                applicationInitializer.initializeDefault();
+            });
+        }
+    }
+
     public boolean deleteCurrentProject() {
         ApricotProject project = projectManager.findCurrentProject();
 
@@ -99,23 +117,10 @@ public class ApricotProjectHandler {
         Optional<ButtonType> result = alert.showAndWait();
 
         if (result.orElse(no) == yes) {
-            projectManager.deleteProject(project);
-            List<ApricotProject> prj = projectManager.getAllProjects();
-            if (prj != null && prj.size() > 0) {
-                projectManager.setProjectCurrent(prj.get(0));
-            }
-
             return true;
         }
 
         return false;
-    }
-
-    @ApricotErrorLogger(title = "Unable to delete the current Project")
-    public void deleteProject() {
-        if (deleteCurrentProject()) {
-            applicationInitializer.initializeDefault();
-        }
     }
 
     @ApricotErrorLogger(title = "Unable to open the selected Project")

@@ -7,6 +7,7 @@ import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ElementStatus;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
 import za.co.apricotdb.viewport.notification.AddLayoutSavepointEvent;
+import za.co.apricotdb.viewport.notification.RedrawMapEvent;
 
 public class EntityOnMouseReleasedEventHandler implements EventHandler<MouseEvent> {
 
@@ -31,11 +32,13 @@ public class EntityOnMouseReleasedEventHandler implements EventHandler<MouseEven
                 AddLayoutSavepointEvent evt = new AddLayoutSavepointEvent(event);
                 if (groupHandler.applyCurrentPosition(canvas, ElementStatus.SELECTED)) {
                     canvas.publishEvent(evt);
+                    canvas.publishEvent(new RedrawMapEvent(canvas));
                 } else {
                     if (entityShape.getUserData() != null && entityShape.getUserData() instanceof DragInitPosition) {
                         DragInitPosition pos = (DragInitPosition) entityShape.getUserData();
                         if (pos.getOrigWidth() != entityShape.getWidth()) {
                             canvas.publishEvent(evt);
+                            canvas.publishEvent(new RedrawMapEvent(canvas));
                         }
                     }
                 }

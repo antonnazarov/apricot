@@ -1,32 +1,30 @@
 package za.co.apricotdb.ui.handler;
 
-import javafx.application.Platform;
 import javafx.scene.control.Alert;
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import za.co.apricotdb.persistence.data.ProjectManager;
-import za.co.apricotdb.support.export.ExportProjectProcessor;
 import za.co.apricotdb.ui.RepositoryController;
-import za.co.apricotdb.ui.error.ApricotErrorHandler;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.model.ApricotForm;
 import za.co.apricotdb.ui.repository.ApricotRepositoryException;
 import za.co.apricotdb.ui.repository.LocalRepoService;
-import za.co.apricotdb.ui.repository.RemoteExportService;
 import za.co.apricotdb.ui.repository.RemoteRepositoryService;
 import za.co.apricotdb.ui.repository.RepoCompareService;
 import za.co.apricotdb.ui.repository.RepositoryConsistencyService;
 import za.co.apricotdb.ui.repository.RepositoryModel;
 import za.co.apricotdb.ui.repository.RepositoryRow;
-import za.co.apricotdb.ui.repository.RepositoryRowFactory;
+import za.co.apricotdb.ui.service.DeleteRemoteProjectService;
+import za.co.apricotdb.ui.service.ExportLocalProjectService;
+import za.co.apricotdb.ui.service.ImportRepoProjectService;
+import za.co.apricotdb.ui.service.ImportRepoSnapshotService;
+import za.co.apricotdb.ui.service.RefreshRepoModelService;
+import za.co.apricotdb.ui.service.ShowRepositoryFormService;
+import za.co.apricotdb.ui.service.UpdateRemoteSnapshotService;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
 
 /**
  * The Repository related functionality is supported by this component.
@@ -38,9 +36,6 @@ import java.nio.charset.Charset;
 public class RepositoryHandler {
 
     private final Logger logger = LoggerFactory.getLogger(RepositoryHandler.class);
-
-    @Autowired
-    RepositoryRowFactory rowFactory;
 
     @Autowired
     RepositoryConsistencyService consistencyService;
@@ -61,25 +56,7 @@ public class RepositoryHandler {
     RepoCompareService compareService;
 
     @Autowired
-    ProgressBarHandler progressBarHandler;
-
-    @Autowired
     RepositoryController repositoryController;
-
-    @Autowired
-    ImportProjectHandler importProjectHandler;
-
-    @Autowired
-    ExportProjectProcessor exportProcessor;
-
-    @Autowired
-    ProjectManager projectManager;
-
-    @Autowired
-    RemoteExportService remoteExportService;
-
-    @Autowired
-    ApricotErrorHandler errorHandler;
 
     @Autowired
     CompareSnapshotsHandler compareSnapshotsHandler;
@@ -96,44 +73,39 @@ public class RepositoryHandler {
     @Autowired
     DialogFormHandler formHandler;
 
+    @Autowired
+    ShowRepositoryFormService showRepositoryFormService;
+
+    @Autowired
+    ImportRepoProjectService importRepoProjectService;
+
+    @Autowired
+    ImportRepoSnapshotService importRepoSnapshotService;
+
+    @Autowired
+    ExportLocalProjectService exportLocalProjectService;
+
+    @Autowired
+    UpdateRemoteSnapshotService updateRemoteSnapshotService;
+
+    @Autowired
+    DeleteRemoteProjectService deleteRemoteProjectService;
+
+    @Autowired
+    RefreshRepoModelService refreshRepoModelService;
+
     @ApricotErrorLogger(title = "Unable to create the Apricot Repository form")
     public void showRepositoryForm() {
         if (!checkIfUrlConfigured()) {
             return;
         }
 
-        try {
-            localRepoService.initLocalRepo();
-        } catch (IOException ex) {
-            throw new IllegalArgumentException("Unable to initialize the local repository", ex);
-        }
-
         ApricotForm form = formHandler.buildApricotForm("/za/co/apricotdb/ui/apricot-repository.fxml",
                 "repository-small-s.png", "Apricot Repository Import/Export");
 
-        // this extra thread was created to reflect the Progress Bar on the long running process
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    RepositoryController controller = form.getController();
-                    progressBarHandler.initProgressBar();
-                    RepositoryModel model = compareService.generateModel();
-                    if (model != null) {
-                        controller.init(model);
-                    }
-
-                    Platform.runLater(() -> {
-                        form.show();
-                    });
-                } catch (Exception ex) {
-                    errorHandler.showErrorInfo("Unable to create the Apricot Repository form", "Apricot " +
-                            "Repository", ex);
-                } finally {
-                    progressBarHandler.finalizeProgressBar();
-                }
-            }
-        }).start();
+        showRepositoryFormService.setApricotForm(form);
+        showRepositoryFormService.init("The Repository Form", "preparing the form...");
+        showRepositoryFormService.start();
     }
 
     /**
@@ -145,24 +117,22 @@ public class RepositoryHandler {
             return;
         }
 
-        new Thread(() -> {
-            try {
-                progressBarHandler.initProgressBar();
-                progressBarHandler.setProgress(0.1d);
+        if (fullRefresh) {
+            localRepoService.refreshLocalRepo();
+        }
 
-                if (fullRefresh) {
-                    localRepoService.refreshLocalRepo();
-                }
-                RepositoryModel model = compareService.generateModel();
-                Platform.runLater(() -> {
-                    repositoryController.init(model);
-                });
-            } catch (Exception ex) {
-                errorHandler.showErrorInfo("Unable to refresh the Repository state", "Refresh State", ex);
-            } finally {
-                progressBarHandler.finalizeProgressBar();
-            }
-        }).start();
+        RepositoryModel model = compareService.generateModel();
+        repositoryController.init(model);
+    }
+
+    @ApricotErrorLogger(title = "Unable to refresh the Repository state")
+    public void refreshModel() {
+        if (!checkRemoteRepository()) {
+            return;
+        }
+
+        refreshRepoModelService.init("Refresh the repository", "The refresh- operation is in progress");
+        refreshRepoModelService.start();
     }
 
     /**
@@ -173,8 +143,9 @@ public class RepositoryHandler {
         if (f != null && alertDec.requestYesNoOption("Import Repo File",
                 "Do you want to import the project " + row.getObjectName() + "?", "Import",
                 Alert.AlertType.CONFIRMATION)) {
-            importProjectHandler.importProject(f);
-            refreshModel(false);
+            importRepoProjectService.init("Import Project", "The Apricot Project is being imported from the repository");
+            importRepoProjectService.setServiceData(f, row.getObjectName());
+            importRepoProjectService.start();
         }
     }
 
@@ -195,38 +166,9 @@ public class RepositoryHandler {
             return;
         }
 
-        new Thread(() -> {
-            progressBarHandler.initProgressBar();
-            try {
-                remoteExportService.removeTemporaryProject();
-                progressBarHandler.setProgress(0.1d);
-
-                remoteExportService.createTemporaryProject(row.getModelRow().getFile());
-                progressBarHandler.setProgress(0.3d);
-
-                remoteExportService.removeSnapshotInTargetProject(projectName, row.getObjectName());
-                progressBarHandler.setProgress(0.4d);
-
-                remoteExportService.cloneSnapshotIntoTargetProject(projectName, row.getObjectName());
-                progressBarHandler.setProgress(0.9d);
-
-                remoteExportService.removeTemporaryProject();
-                progressBarHandler.setProgress(1.0d);
-
-                Platform.runLater(() -> {
-                    refreshModel(false);
-                    Alert alert = alertDec.getAlert("Import Snapshot", "The snapshot \"" + row.getObjectName() + "\" " +
-                                    "was successfully imported into the local project \"" + projectName + "\"",
-                            Alert.AlertType.INFORMATION);
-                    alert.showAndWait();
-                });
-            } catch (Exception ex) {
-                errorHandler.showErrorInfo("Unable to import the snapshot from the repository",
-                        "Import Snapshot", ex);
-            } finally {
-                progressBarHandler.finalizeProgressBar();
-            }
-        }).start();
+        importRepoSnapshotService.init("Import Snapshot", "The snapshot is being imported from the repository...");
+        importRepoSnapshotService.setServiceData(row.getModelRow().getFile(), projectName, row.getObjectName());
+        importRepoSnapshotService.start();
     }
 
     /**
@@ -240,43 +182,9 @@ public class RepositoryHandler {
             return;
         }
 
-        new Thread(() -> {
-            progressBarHandler.initProgressBar();
-            try {
-                String projectName = row.getObjectName();
-                String sProject = exportProcessor.serializeProject(row.getObjectName());
-                progressBarHandler.setProgress(0.2d);
-
-                String fileName = exportProcessor.getDefaultProjectExportFileName(projectName);
-                File file = new File(LocalRepoService.LOCAL_REPO + "/" + fileName);
-                try {
-                    FileUtils.write(file, sProject, Charset.defaultCharset());
-                } catch (IOException e) {
-                    throw new IllegalArgumentException(e);
-                }
-                progressBarHandler.setProgress(0.5d);
-
-                localRepoService.commitProjectFile(fileName, "The project export file \"" + fileName + "\" was added");
-                progressBarHandler.setProgress(0.7d);
-
-                remoteRepositoryService.pushRepository();
-                progressBarHandler.setProgress(0.9d);
-
-                refreshModel(false);
-                progressBarHandler.setProgress(1.0d);
-
-                Platform.runLater(() -> {
-                    Alert alert = alertDec.getAlert("Export Project", "The project \"" + projectName + "\" has been " +
-                            "successfully exported into the Remote Repository", Alert.AlertType.INFORMATION);
-                    alert.showAndWait();
-                });
-            } catch (Exception ex) {
-                errorHandler.showErrorInfo("Unable to export the Project into the Remote Repository",
-                        "Export Project", ex);
-            } finally {
-                progressBarHandler.finalizeProgressBar();
-            }
-        }).start();
+        exportLocalProjectService.init("Export Project", "The local Apricot project is being exported...");
+        exportLocalProjectService.setProjectName(row.getObjectName());
+        exportLocalProjectService.start();
     }
 
     /**
@@ -314,32 +222,9 @@ public class RepositoryHandler {
             return;
         }
 
-        new Thread(() -> {
-            progressBarHandler.initProgressBar();
-            try {
-
-                String fileName = row.getModelRow().getFile().getName();
-                localRepoService.removeProjectFile(fileName, "The project \"" + fileName + "\" was deleted");
-                progressBarHandler.setProgress(0.3d);
-
-                remoteRepositoryService.pushRepository();
-                progressBarHandler.setProgress(0.8d);
-
-                refreshModel(false);
-                progressBarHandler.setProgress(1.0d);
-
-                Platform.runLater(() -> {
-                    Alert alert = alertDec.getAlert("Delete remote Project", "The project \"" + row.getObjectName() + "\" has been " +
-                            "successfully deleted in the Remote Repository", Alert.AlertType.INFORMATION);
-                    alert.showAndWait();
-                });
-            } catch (Exception ex) {
-                errorHandler.showErrorInfo("Unable to delete the Project in the Remote Repository",
-                        "Delete Project", ex);
-            } finally {
-                progressBarHandler.finalizeProgressBar();
-            }
-        }).start();
+        deleteRemoteProjectService.init("Delete Remote Project", "The deletion of the repository project is in progress...");
+        deleteRemoteProjectService.initServiceData(row.getObjectName(), row.getModelRow().getFile().getName());
+        deleteRemoteProjectService.start();
     }
 
     public void showRemoteSnapshotInfo(RepositoryRow row) {
@@ -367,45 +252,9 @@ public class RepositoryHandler {
 
     private void updateRemoteSnapshot(String projectName, String snapshotName, File file, String confirmationInfo,
                                       boolean remove) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                progressBarHandler.initProgressBar();
-                try {
-                    remoteExportService.removeTemporaryProject();
-                    progressBarHandler.setProgress(0.1d);
-
-                    remoteExportService.createTemporaryProject(file);
-                    progressBarHandler.setProgress(0.3d);
-
-                    remoteExportService.removeTargetSnapshotInTemporaryProject(snapshotName);
-                    progressBarHandler.setProgress(0.4d);
-
-                    if (!remove) {
-                        remoteExportService.cloneSnapshot(projectName, snapshotName);
-                        progressBarHandler.setProgress(0.5d);
-                    }
-
-                    remoteExportService.exportProject(ProjectManager.TMP_PROJECT_NAME, file, confirmationInfo, projectName);
-                    progressBarHandler.setProgress(0.8d);
-
-                    remoteExportService.removeTemporaryProject();
-                    progressBarHandler.setProgress(1.0d);
-                } catch (Exception ex) {
-                    errorHandler.showErrorInfo("Unable to update the remote snapshot information",
-                            "Update Snapshot", ex);
-                } finally {
-                    progressBarHandler.finalizeProgressBar();
-                }
-
-                Platform.runLater(() -> {
-                    refreshModel(false);
-                    Alert alert = alertDec.getAlert("Remote Snapshot", confirmationInfo, Alert.AlertType.INFORMATION);
-                    alert.showAndWait();
-                });
-            }
-        }).start();
+        updateRemoteSnapshotService.init("Update Remote Snapshot", "The Remote snapshot update is in progress...");
+        updateRemoteSnapshotService.initServiceData(projectName, snapshotName, file, confirmationInfo, remove);
+        updateRemoteSnapshotService.start();
     }
 
     /**

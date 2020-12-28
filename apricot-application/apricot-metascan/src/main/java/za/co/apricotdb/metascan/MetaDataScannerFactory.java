@@ -2,7 +2,6 @@ package za.co.apricotdb.metascan;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import za.co.apricotdb.metascan.db2.DB2Scanner;
 import za.co.apricotdb.metascan.db2.DB2UrlBuilder;
 import za.co.apricotdb.metascan.db2luw.DB2LuwScanner;
@@ -15,6 +14,8 @@ import za.co.apricotdb.metascan.oracle.OracleScanner;
 import za.co.apricotdb.metascan.oracle.OracleUrlBuilder;
 import za.co.apricotdb.metascan.postgresql.PostgreSqlScanner;
 import za.co.apricotdb.metascan.postgresql.PostgreSqlUrlBuilder;
+import za.co.apricotdb.metascan.sqlite.SqliteScanner;
+import za.co.apricotdb.metascan.sqlite.SqliteUrlBuilder;
 import za.co.apricotdb.metascan.sqlserver.SqlServerScanner;
 import za.co.apricotdb.metascan.sqlserver.SqlServerUrlBuilder;
 
@@ -69,33 +70,41 @@ public class MetaDataScannerFactory {
     @Autowired
     DB2LuwUrlBuilder db2luwUrlBuilder;
 
+    @Autowired
+    SqliteScanner sqliteScanner;
+
+    @Autowired
+    SqliteUrlBuilder sqliteUrlBuilder;
     /**
      * Recognize the appropriate scanner.
      */
     public MetaDataScanner getScanner(ApricotTargetDatabase targetDb) {
         MetaDataScanner scanner = null;
         switch (targetDb) {
-        case MSSQLServer:
-            scanner = sqlServerScanner;
-            break;
-        case Oracle:
-            scanner = oracleScanner;
-            break;
-        case H2:
-            scanner = h2Scanner;
-            break;
-        case PostrgeSQL:
-            scanner = postgreSqlScanner;
-            break;
-        case MySQL:
-            scanner = mySqlScanner;
-            break;
-        case DB2:
-            scanner = db2Scanner;
-            break;
-        case DB2_LUW:
-            scanner = db2luwScanner;
-            break;
+            case MSSQLServer:
+                scanner = sqlServerScanner;
+                break;
+            case Oracle:
+                scanner = oracleScanner;
+                break;
+            case H2:
+                scanner = h2Scanner;
+                break;
+            case PostrgeSQL:
+                scanner = postgreSqlScanner;
+                break;
+            case MySQL:
+                scanner = mySqlScanner;
+                break;
+            case DB2:
+                scanner = db2Scanner;
+                break;
+            case DB2_LUW:
+                scanner = db2luwScanner;
+                break;
+            case SQLite:
+                scanner = sqliteScanner;
+                break;
         }
 
         return scanner;
@@ -117,6 +126,8 @@ public class MetaDataScannerFactory {
             return ApricotTargetDatabase.MySQL;
         } else if (url.contains("jdbc:db2://")) {
             return ApricotTargetDatabase.DB2;
+        } else if (url.contains("jdbc:sqlite:")) {
+            return ApricotTargetDatabase.SQLite;
         }
 
         return ApricotTargetDatabase.MSSQLServer;
@@ -124,20 +135,22 @@ public class MetaDataScannerFactory {
 
     public DatabaseUrlBuilder getDatabaseUrlBuilder(ApricotTargetDatabase targetDb) {
         switch (targetDb) {
-        case MSSQLServer:
-            return sqlServerUrlBuilder;
-        case H2:
-            return h2UrlBuilder;
-        case Oracle:
-            return oracleUrlBuilder;
-        case PostrgeSQL:
-            return postgreSqlUrlBuilder;
-        case MySQL:
-            return mySqlUrlBuilder;
-        case DB2:
-            return db2UrlBuilder;
-        case DB2_LUW:
-            return db2luwUrlBuilder;
+            case MSSQLServer:
+                return sqlServerUrlBuilder;
+            case H2:
+                return h2UrlBuilder;
+            case Oracle:
+                return oracleUrlBuilder;
+            case PostrgeSQL:
+                return postgreSqlUrlBuilder;
+            case MySQL:
+                return mySqlUrlBuilder;
+            case DB2:
+                return db2UrlBuilder;
+            case DB2_LUW:
+                return db2luwUrlBuilder;
+            case SQLite:
+                return sqliteUrlBuilder;
         }
 
         return null;
@@ -162,7 +175,7 @@ public class MetaDataScannerFactory {
     }
 
     public String getUrl(ApricotTargetDatabase targetDb, String server, String port, String database,
-            boolean integratedSecurity) {
+                         boolean integratedSecurity) {
         DatabaseUrlBuilder urlBuilder = getDatabaseUrlBuilder(targetDb);
         if (urlBuilder != null) {
             return urlBuilder.getUrl(server, port, database, integratedSecurity);

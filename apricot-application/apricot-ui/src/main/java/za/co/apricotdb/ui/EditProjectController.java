@@ -80,7 +80,7 @@ public class EditProjectController {
         model.setErdNotation(ERDNotation.parseNotation(erdNotation.getSelectionModel().getSelectedItem()));
 
         if (projectSerializer.serializeProject(model, isCreateNew)) {
-            snapshotHandler.syncronizeSnapshot(true);
+            snapshotHandler.synchronizeSnapshot(true);
             getStage().close();
         }
     }

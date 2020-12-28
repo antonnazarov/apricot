@@ -80,7 +80,7 @@ public class EntityFilterHandler {
             // the filter is not empty
             parentWindow.getFilterTables().clear();
             parentWindow.getFilterTables().addAll(filterResult);
-            snapshotHandler.syncronizeSnapshot(true);
+            snapshotHandler.synchronizeSnapshot(true);
 
             positionOnCanvas(getEntitiesAsString(filterResult));
         }
@@ -101,7 +101,7 @@ public class EntityFilterHandler {
         List<ApricotTable> filterResult = tableManager.findTablesByName(s);
         if (!filterResult.isEmpty()) {
             parentWindow.getFilterTables().addAll(filterResult);
-            snapshotHandler.syncronizeSnapshot(true);
+            snapshotHandler.synchronizeSnapshot(true);
             positionOnCanvas(getEntitiesAsString(filterResult));
         }
     }
@@ -112,7 +112,7 @@ public class EntityFilterHandler {
     @ApricotErrorLogger(title = "Unable to reset the Entity Filter")
     public void resetEntityFilter() {
         parentWindow.getFilterTables().clear();
-        snapshotHandler.syncronizeSnapshot(true);
+        snapshotHandler.synchronizeSnapshot(true);
     }
 
     public boolean isFilterOn() {

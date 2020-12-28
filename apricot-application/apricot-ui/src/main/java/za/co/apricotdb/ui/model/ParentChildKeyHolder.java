@@ -1,10 +1,10 @@
 package za.co.apricotdb.ui.model;
 
-import java.util.List;
-
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+
+import java.util.List;
 
 /**
  * This bean is a storage of one line on the Parent Child chain in the
@@ -37,6 +37,11 @@ public class ParentChildKeyHolder {
     public void populateForeignKey(List<String> fields) {
         childForeignKey.getItems().addAll(fields);
         voidSlot = false;
+    }
+
+    public void setForeignField(String fieldName) {
+        childForeignKey.getItems().add(fieldName);
+        childForeignKey.setValue(fieldName);
     }
 
     public void setVoidSlot() {

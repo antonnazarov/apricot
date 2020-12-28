@@ -8,7 +8,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
@@ -45,6 +44,7 @@ import za.co.apricotdb.ui.handler.RepositoryHandler;
 import za.co.apricotdb.ui.handler.ReverseEngineHandler;
 import za.co.apricotdb.ui.handler.SelectViewTabHandler;
 import za.co.apricotdb.ui.handler.TabViewHandler;
+import za.co.apricotdb.ui.map.MapHandler;
 import za.co.apricotdb.ui.toolbar.TbAddFilterHandler;
 import za.co.apricotdb.ui.toolbar.TbButton;
 import za.co.apricotdb.ui.toolbar.TbQuickViewHandler;
@@ -168,6 +168,9 @@ public class MainAppController {
     @Autowired
     ExportDiagramToPdfHandler exportDiagramToPdfHandler;
 
+    @Autowired
+    MapHandler mapHandler;
+
     @FXML
     AnchorPane mainPane;
 
@@ -281,18 +284,18 @@ public class MainAppController {
     MenuItem menuMinWidth;
     @FXML
     MenuItem menuSameWidth;
-
     @FXML
     TextField filterField;
-
     @FXML
-    ProgressBar mainProgressBar;
+    Pane mapPane;
 
     public void init() {
         parentWindow.init(this);
         parentWindow.setParentPane(mainPane);
         parentWindow.setViewsTabPane(viewsTabPane);
 
+        //  initialize the mapHandler
+        mapHandler.setMapPane(mapPane);
         selTabHandler.initTabPane(viewsTabPane, scale);
 
         projectsTreeView.setOnContextMenuRequested(e -> {
@@ -334,6 +337,13 @@ public class MainAppController {
         tbResetFilterHandler.initButton(tbResetFilter);
         tbRepositoryHandler.initButton(tbRepository);
         tbQuickViewHandler.initButton(tbQuickView);
+
+        mapPane.heightProperty().addListener((obs, oldVal, newVal) -> {
+            mapHandler.drawMap();
+        });
+        mapPane.widthProperty().addListener((obs, oldVal, newVal) -> {
+            mapHandler.drawMap();
+        });
     }
 
     public void save(ActionEvent event) {
@@ -502,7 +512,7 @@ public class MainAppController {
 
     @FXML
     public void refresh(ActionEvent event) {
-        snapshotHandler.syncronizeSnapshot(false);
+        snapshotHandler.synchronizeSnapshot(false);
     }
 
     @FXML

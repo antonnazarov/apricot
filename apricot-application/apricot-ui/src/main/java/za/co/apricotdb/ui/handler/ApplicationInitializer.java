@@ -1,29 +1,25 @@
 package za.co.apricotdb.ui.handler;
 
-import java.util.List;
-
-import javax.transaction.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import javafx.animation.PauseTransition;
+import javafx.concurrent.Worker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
 import javafx.util.Duration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
-import za.co.apricotdb.persistence.data.TableManager;
-import za.co.apricotdb.persistence.data.ViewManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
-import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.handler.ProjectExplorerItem.ItemType;
+import za.co.apricotdb.ui.map.MapHandler;
+import za.co.apricotdb.ui.service.CanvasInitializerService;
 import za.co.apricotdb.ui.undo.ApricotUndoManager;
-import za.co.apricotdb.viewport.canvas.CanvasBuilder;
+
+import javax.transaction.Transactional;
 
 /**
  * This controller is responsible for initialization of the application on
@@ -42,32 +38,20 @@ public class ApplicationInitializer {
     SnapshotManager snapshotManager;
 
     @Autowired
-    TableManager tableManager;
-
-    @Autowired
-    TabViewHandler tabViewHandler;
-
-    @Autowired
-    ApricotViewHandler viewHandler;
-
-    @Autowired
-    ViewManager viewManager;
-
-    @Autowired
-    CanvasBuilder canvasBuilder;
-
-    @Autowired
     ApricotCanvasHandler canvasHandler;
 
     @Autowired
     ParentWindow parentWindow;
 
     @Autowired
-    TreeViewHandler treeViewHandler;
+    ApricotUndoManager undoManager;
 
     @Autowired
-    ApricotUndoManager undoManager;
-    
+    CanvasInitializerService canvasInitializerService;
+
+    @Autowired
+    MapHandler mapHandler;
+
     @Transactional
     public void initializeDefault() {
         ApricotProject currentProject = projectManager.findCurrentProject();
@@ -95,53 +79,31 @@ public class ApplicationInitializer {
 
     @Transactional
     public void initialize(ApricotProject project, ApricotSnapshot snapshot) {
-        // clear the current filter
-        parentWindow.getFilterTables().clear();
-        parentWindow.getFilterField().setText("*");
-                
-        // remember the current project
-        parentWindow.getApplicationData().setCurrentProject(project);
-
-        treeViewHandler.populate(project, snapshot);
-
-        ComboBox<String> combo = parentWindow.getSnapshotCombo();
-        if (combo.getUserData() != null && combo.getUserData().equals("snapshotCombo.selectSnapshot")) {
-            combo.setUserData("reset");
-        } else {
-            combo.setUserData("AppInitialize");
-            initCombo(project, snapshot, combo);
+        //  if there is another service in action, just leave the method
+        if (canvasInitializerService.getState() == Worker.State.RUNNING) {
+            return;
         }
 
-        ApricotView currentView = viewManager.getCurrentView(project);
-        Tab currentTab = null;
-        TabPane tabPane = parentWindow.getProjectTabPane();
-        tabPane.getTabs().clear();
-        for (ApricotView view : viewHandler.getAllViews(project)) {
-            // create Tabs for General view and for other views with the Layout Objects
-            if (view.isGeneral() || view.getObjectLayouts().size() != 0) {
-                Tab tb = viewHandler.createViewTab(snapshot, view, tabPane);
-                if (view.equals(currentView)) {
-                    currentTab = tb;
-                }
+        canvasInitializerService.init("Initialize Project/Snapshot", "Busy re-drawing the canvases...");
+        canvasInitializerService.setServiceData(project, snapshot);
+        canvasInitializerService.setOnSucceeded(ev -> {
+            //  make the current tab selected
+            TabPane tabPane = parentWindow.getProjectTabPane();
+            Tab currentTab = canvasHandler.getTabOnCurrentView();
+            if (currentTab != null) {
+                tabPane.getSelectionModel().select(currentTab);
             }
-        }
-        if (currentTab != null) {
-            tabPane.getSelectionModel().select(currentTab);
-        }
 
-        // initialize the undo stack
-        PauseTransition delay = new PauseTransition(Duration.seconds(0.5));
-        delay.setOnFinished(e -> undoManager.resetUndoBuffer());
-        delay.play();
-    }
+            // initialize the undo stack
+            PauseTransition delay = new PauseTransition(Duration.seconds(0.5));
+            delay.setOnFinished(e -> {
+                undoManager.resetUndoBuffer();
+                mapHandler.drawMap();
+            });
+            delay.play();
+        });
 
-    private void initCombo(ApricotProject project, ApricotSnapshot snapshot, ComboBox<String> combo) {
-        combo.getItems().clear();
-        List<ApricotSnapshot> snapshots = snapshotManager.getAllSnapshots(project);
-        for (ApricotSnapshot s : snapshots) {
-            combo.getItems().add(s.getName());
-        }
-        combo.setValue(snapshot.getName());
+        canvasInitializerService.start();
     }
 
     /**

@@ -16,9 +16,9 @@ import za.co.apricotdb.viewport.relationship.RelationshipType;
  */
 public abstract class RelationshipShapeBuilderImpl implements RelationshipShapeBuilder {
 
-    protected PrimitivesBuilder primitivesBuilder = null;
-    protected RelationshipTopology relationshipTopology = null;
-    protected ElementVisualModifier[] shapeModifiers = null;
+    protected PrimitivesBuilder primitivesBuilder;
+    protected RelationshipTopology relationshipTopology;
+    protected ElementVisualModifier[] shapeModifiers;
 
     public RelationshipShapeBuilderImpl(PrimitivesBuilder primitivesBuilder, RelationshipTopology relationshipTopology,
             ElementVisualModifier[] shapeModifiers) {

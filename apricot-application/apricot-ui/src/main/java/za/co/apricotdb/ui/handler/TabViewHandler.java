@@ -1,28 +1,19 @@
 package za.co.apricotdb.ui.handler;
 
-import java.util.Optional;
-import java.util.Set;
-
-import javax.transaction.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Orientation;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.Pane;
 import javafx.stage.WindowEvent;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ObjectLayoutManager;
 import za.co.apricotdb.persistence.data.RelationshipManager;
 import za.co.apricotdb.persistence.data.ViewManager;
@@ -33,11 +24,15 @@ import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.persistence.entity.LayoutObjectType;
 import za.co.apricotdb.ui.ParentWindow;
+import za.co.apricotdb.ui.map.ActiveFrameHandler;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.CanvasAllocationItem;
 import za.co.apricotdb.viewport.canvas.CanvasAllocationMap;
 import za.co.apricotdb.viewport.canvas.ElementType;
+
+import javax.transaction.Transactional;
+import java.util.Optional;
 
 /**
  * The controller of Tab- related functions.
@@ -68,6 +63,9 @@ public class TabViewHandler {
 
     @Autowired
     ParentWindow parent;
+
+    @Autowired
+    ActiveFrameHandler activeFrameHandler;
 
     /**
      * Build a new Tab and populate it with the initial data.
@@ -127,7 +125,7 @@ public class TabViewHandler {
     public CanvasAllocationMap readCanvasAllocationMap(ApricotView view) {
         CanvasAllocationMap map = new CanvasAllocationMap();
         for (ApricotObjectLayout layout : view.getObjectLayouts()) {
-            ElementType type = null;
+            ElementType type;
             if (layout.getObjectType() == LayoutObjectType.TABLE) {
                 type = ElementType.ENTITY;
             } else {
@@ -170,6 +168,18 @@ public class TabViewHandler {
 
     private ScrollPane buildScrollPane() {
         ScrollPane scroll = new ScrollPane();
+
+        //  move the Active Frame accordingly
+        scroll.vvalueProperty().addListener((obs, oldVal, newVal) -> {
+            if (!activeFrameHandler.isDragging()) {
+                activeFrameHandler.positionActiveFrame(scroll);
+            }
+        });
+        scroll.hvalueProperty().addListener((obs, oldVal, newVal) -> {
+            if (!activeFrameHandler.isDragging()) {
+                activeFrameHandler.positionActiveFrame(scroll);
+            }
+        });
 
         return scroll;
     }

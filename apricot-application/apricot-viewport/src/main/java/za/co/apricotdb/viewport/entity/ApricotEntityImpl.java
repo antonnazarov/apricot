@@ -1,8 +1,5 @@
 package za.co.apricotdb.viewport.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javafx.scene.Node;
 import za.co.apricotdb.support.util.SpringContext;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
@@ -14,6 +11,9 @@ import za.co.apricotdb.viewport.entity.shape.EntityShapeBuilder;
 import za.co.apricotdb.viewport.modifiers.EntitySetDetailedEntityShadowModifier;
 import za.co.apricotdb.viewport.notification.EntityStatusChangedEvent;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implementation of the ApricotEntity interface.
@@ -35,6 +35,7 @@ public final class ApricotEntityImpl implements ApricotEntity {
     private EntitySetDetailedEntityShadowModifier shadowModifier;
     private boolean parentAbsent;
     private boolean childAbsent;
+    private boolean selectPrimaryRelationshipsFlag = true;
 
     /**
      * Construct a new instance of the ApricotEntity.
@@ -72,7 +73,9 @@ public final class ApricotEntityImpl implements ApricotEntity {
             case SELECTED:
                 entityShape.setSelected();
                 canvas.sendToFront(this);
-                makePrimaryRelationshipsSelected();
+                if (selectPrimaryRelationshipsFlag) {
+                    makePrimaryRelationshipsSelected();
+                }
                 break;
             case GRAYED:
                 entityShape.setGrayed();
@@ -84,7 +87,7 @@ public final class ApricotEntityImpl implements ApricotEntity {
             shadowModifier.modify(entityShape);
 
             // notify the UI- side about the status was just changed
-            canvas.publishEvent(new EntityStatusChangedEvent(canvas));
+            canvas.publishEvent(new EntityStatusChangedEvent(canvas, this.getTableName(), status));
         }
     }
 
@@ -217,5 +220,10 @@ public final class ApricotEntityImpl implements ApricotEntity {
     @Override
     public boolean isChildAbsent() {
         return childAbsent;
+    }
+
+    @Override
+    public void setSelectPrimaryRelationshipsFlag(boolean flag) {
+        selectPrimaryRelationshipsFlag = flag;
     }
 }
