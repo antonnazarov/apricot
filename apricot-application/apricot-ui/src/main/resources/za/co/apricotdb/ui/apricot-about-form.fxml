@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="387.0" prefWidth="358.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.AboutFormController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="387.0" prefWidth="358.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.AboutFormController">
    <children>
       <ImageView fitHeight="281.0" fitWidth="358.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -21,7 +21,7 @@
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
-            <Label layoutX="88.0" layoutY="55.0" prefHeight="21.0" prefWidth="221.0" text="Version 2.5, work in progress">
+            <Label layoutX="88.0" layoutY="55.0" prefHeight="21.0" prefWidth="221.0" text="Version 2.5, January 2021">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
