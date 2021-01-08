@@ -5,9 +5,8 @@ This documentation contains description of the functions and features of "Aprico
 The current version of software: Release 2.5 (January 2021).
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
    :caption: Contents
 
    0010-preface
-   0020-getting-started
-   0030-apricot-interface
+   0020-quick-start

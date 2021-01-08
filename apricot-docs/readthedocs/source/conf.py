@@ -1,6 +1,3 @@
-import os
-import sys
-
 # -- Project information -----------------------------------------------------
 project = "ApricotDB Users Guide"
 copyright = "2018-2021, Anton Nazarov"
