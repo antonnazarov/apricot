@@ -1,14 +1,13 @@
 package za.co.apricotdb.persistence.comparator;
 
-import java.util.List;
-
-import javax.transaction.Transactional;
-
 import org.springframework.stereotype.Component;
-
 import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotTable;
+import za.co.apricotdb.persistence.entity.ConstraintType;
+
+import javax.transaction.Transactional;
+import java.util.List;
 
 /**
  * The comparator of the Apricot Tables.
@@ -64,6 +63,26 @@ public class TableComparator implements ApricotObjectComparator<ApricotTable, Ta
             if (srcCnt == null) {
                 ConstraintDifference cd = new ConstraintDifference(srcCnt, trgtCnt);
                 diff.getConstraintDiffs().add(cd);
+            }
+        }
+
+        //  02/02/2020 merge the Primary Key
+        ConstraintDifference pk1 = null;
+        ConstraintDifference pk2 = null;
+        for (ConstraintDifference cd : diff.getConstraintDiffs()) {
+            if (cd.isDifferent() && cd.getSourceObject() != null && cd.getSourceObject().getType() == ConstraintType.PRIMARY_KEY) {
+                pk1 = cd;
+            }
+            if (cd.isDifferent() && cd.getTargetObject() != null && cd.getTargetObject().getType() == ConstraintType.PRIMARY_KEY) {
+                pk2 = cd;
+            }
+        }
+        if (pk1 != null && pk2 != null) {
+            ConstraintDifference newCd = new ConstraintDifference(pk1.getSourceObject(), pk2.getTargetObject());
+            if (!newCd.isDifferent()) {
+                diff.getConstraintDiffs().remove(pk1);
+                diff.getConstraintDiffs().remove(pk2);
+                diff.getConstraintDiffs().add(newCd);
             }
         }
     }
