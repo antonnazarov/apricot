@@ -58,7 +58,7 @@ Click on the "Reverse Enginnering" toolbar button to run the Reverse Engineering
 
    The "Reverse Engineering" toolbar button
 
-The connect to database form will be shown.
+The Connect to the Database" form will be shown.
 
 .. note::
    This form might be different depending on the target database type. 
@@ -83,5 +83,5 @@ The new diagram will be aligned and shown. Any further alignment and editing mig
 .. figure:: figures/apricot-reversed-diagram.jpg
    :align: center
 
-In general this was the shortest sequence of steps shown, to Reverse Engineer any database supported by "Apricot DB" tool.
+In general these was the shortest sequence of steps shown, to Reverse Engineer any existing database, supported by "Apricot DB" tool.
    
