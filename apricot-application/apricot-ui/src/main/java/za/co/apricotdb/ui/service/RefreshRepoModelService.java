@@ -2,6 +2,8 @@ package za.co.apricotdb.ui.service;
 
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.ui.RepositoryController;
@@ -17,6 +19,8 @@ import za.co.apricotdb.ui.repository.RepositoryModel;
  */
 @Component
 public class RefreshRepoModelService extends Service<Boolean> implements InitializableService {
+
+    private static final Logger logger = LoggerFactory.getLogger(RefreshRepoModelService.class);
 
     @Autowired
     ProgressInitializer progressInitializer;
@@ -35,6 +39,8 @@ public class RefreshRepoModelService extends Service<Boolean> implements Initial
         return new Task<>() {
             @Override
             protected Boolean call() {
+                long start = System.currentTimeMillis();
+
                 updateProgress(1, 4);
                 updateMessage("Refreshing the local repository...");
                 localRepoService.refreshLocalRepo();
@@ -46,6 +52,8 @@ public class RefreshRepoModelService extends Service<Boolean> implements Initial
                 updateProgress(3, 4);
                 updateMessage("Initializing the model...");
                 repositoryController.init(model);
+
+                logger.info("RefreshRepoModelService: " + (System.currentTimeMillis()-start) + " ms");
 
                 return true;
             }

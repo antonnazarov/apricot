@@ -4,6 +4,8 @@ import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ConstraintManager;
@@ -29,6 +31,8 @@ import java.util.List;
  */
 @Component
 public class DeleteSnapshotService extends Service<Boolean> implements InitializableService {
+
+    private static final Logger logger = LoggerFactory.getLogger(DeleteSnapshotService.class);
 
     @Autowired
     TableManager tableManager;
@@ -69,6 +73,8 @@ public class DeleteSnapshotService extends Service<Boolean> implements Initializ
         return new Task<>() {
             @Override
             protected Boolean call() {
+                long start = System.currentTimeMillis();
+
                 ApricotSnapshot snapshot = snapshotManager.findSnapshotById(getSnapshotId());
                 String snapshotName = snapshot.getName();
                 List<ApricotTable> tables = tableManager.getTablesForSnapshot(snapshot);
@@ -99,6 +105,8 @@ public class DeleteSnapshotService extends Service<Boolean> implements Initializ
                 snapshotRepository.delete(snapshot);
                 updateProgress(total, total);
                 updateMessage("All done: the Snapshot " + snapshotName + " has been removed");
+
+                logger.info("DeleteSnapshotService: " + (System.currentTimeMillis()-start) + " ms");
 
                 return true;
             }

@@ -98,9 +98,7 @@ public class CompareSnapshotsHandler {
     @Transactional
     public TreeItem<CompareSnapshotRow> compare(ApricotSnapshot sourceSnapshot, ApricotSnapshot targetSnapshot,
                                                 boolean diffOnly) {
-
         SnapshotDifference diff = snapshotComparator.compare(sourceSnapshot, targetSnapshot);
-        logger.info(diff.toString());
 
         CompareState state = null;
         if (diff.isDifferent()) {

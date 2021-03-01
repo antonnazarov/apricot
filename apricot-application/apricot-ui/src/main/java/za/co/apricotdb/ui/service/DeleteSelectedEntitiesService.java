@@ -53,6 +53,8 @@ public class DeleteSelectedEntitiesService extends Service<Boolean> implements I
         return new Task<>() {
             @Override
             protected Boolean call() {
+                long start = System.currentTimeMillis();
+
                 int cnt = 0;
                 for (String e : entities) {
                     entityHandler.deleteEntity(e);
@@ -60,6 +62,8 @@ public class DeleteSelectedEntitiesService extends Service<Boolean> implements I
                     updateMessage("Removing Entity: " + e);
                     cnt++;
                 }
+
+                logger.info("DeleteSelectedEntitiesService: " + (System.currentTimeMillis()-start) + " ms");
 
                 return true;
             }

@@ -4,6 +4,8 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.support.export.ExportProjectProcessor;
@@ -24,6 +26,8 @@ import java.nio.charset.Charset;
  */
 @Component
 public class ExportLocalProjectService extends Service<Boolean> implements InitializableService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ExportLocalProjectService.class);
 
     @Autowired
     ProgressInitializer progressInitializer;
@@ -50,6 +54,8 @@ public class ExportLocalProjectService extends Service<Boolean> implements Initi
         return new Task<>() {
             @Override
             protected Boolean call() {
+                long start = System.currentTimeMillis();
+
                 updateProgress(1, 5);
                 updateMessage("Serializing the current project...");
                 String sProject = exportProcessor.serializeProject(projectName);
@@ -75,6 +81,8 @@ public class ExportLocalProjectService extends Service<Boolean> implements Initi
                 updateProgress(5, 5);
                 updateMessage("Refreshing the model...");
                 repositoryHandler.refreshModel(false);
+
+                logger.info("ExportLocalProjectService: " + (System.currentTimeMillis()-start) + " ms");
 
                 return true;
             }

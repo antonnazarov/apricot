@@ -3,6 +3,8 @@ package za.co.apricotdb.ui.service;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
@@ -20,6 +22,8 @@ import java.io.File;
  */
 @Component
 public class ImportRepoProjectService extends Service<Boolean> implements InitializableService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ImportRepoProjectService.class);
 
     @Autowired
     ProgressInitializer progressInitializer;
@@ -44,6 +48,8 @@ public class ImportRepoProjectService extends Service<Boolean> implements Initia
         return new Task<>() {
             @Override
             protected Boolean call() {
+                long start = System.currentTimeMillis();
+
                 updateProgress(1, 5);
                 updateMessage("Importing the project data...");
                 importProjectHandler.importProject(file);
@@ -51,6 +57,8 @@ public class ImportRepoProjectService extends Service<Boolean> implements Initia
                 updateProgress(4, 5);
                 updateMessage("Refreshing the data model...");
                 repositoryHandler.refreshModel(false);
+
+                logger.info("ImportRepoProjectService: " + (System.currentTimeMillis()-start) + " ms");
 
                 return true;
             }

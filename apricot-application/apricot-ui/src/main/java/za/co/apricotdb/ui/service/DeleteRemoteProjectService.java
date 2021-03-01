@@ -3,6 +3,8 @@ package za.co.apricotdb.ui.service;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.ui.handler.RepositoryHandler;
@@ -18,6 +20,8 @@ import za.co.apricotdb.ui.util.AlertMessageDecorator;
  */
 @Component
 public class DeleteRemoteProjectService  extends Service<Boolean> implements InitializableService {
+
+    private static final Logger logger = LoggerFactory.getLogger(DeleteRemoteProjectService.class);
 
     @Autowired
     ProgressInitializer progressInitializer;
@@ -42,6 +46,8 @@ public class DeleteRemoteProjectService  extends Service<Boolean> implements Ini
         return new Task<>() {
             @Override
             protected Boolean call() {
+                long start = System.currentTimeMillis();
+
                 updateProgress(1, 3);
                 updateMessage("Removing the project file...");
                 localRepoService.removeProjectFile(fileName, "The project \"" + fileName + "\" was deleted");
@@ -53,6 +59,8 @@ public class DeleteRemoteProjectService  extends Service<Boolean> implements Ini
                 updateProgress(3, 3);
                 updateMessage("Refreshing the model...");
                 repositoryHandler.refreshModel(false);
+
+                logger.info("DeleteRemoteProjectService: " + (System.currentTimeMillis()-start) + " ms");
 
                 return true;
             }

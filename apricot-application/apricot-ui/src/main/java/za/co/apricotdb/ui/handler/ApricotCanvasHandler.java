@@ -18,6 +18,7 @@ import za.co.apricotdb.support.excel.TableWrapper;
 import za.co.apricotdb.support.excel.TableWrapper.ReportRow;
 import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
+import za.co.apricotdb.ui.log.ApricotInfoLogger;
 import za.co.apricotdb.ui.map.MapHandler;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.viewport.align.AlignCommand;
@@ -86,6 +87,7 @@ public class ApricotCanvasHandler {
      * provided skin.
      */
     @Transactional
+    @ApricotInfoLogger
     public List<ApricotTable> populateCanvas(ApricotSnapshot snapshot, ApricotView view, ApricotCanvas canvas) {
         ApricotView v = viewHandler.readApricotView(view);
         // clean the canvas first

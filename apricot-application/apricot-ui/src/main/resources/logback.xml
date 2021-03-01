@@ -1,5 +1,4 @@
 <configuration>
-
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
             <Pattern>
@@ -8,12 +7,29 @@
         </layout>
     </appender>
 
-    <logger name="za.co.apricotdb" level="debug" additivity="false">
-        <appender-ref ref="CONSOLE"/>
-    </logger>
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${user.home}/.apricotdb/logs/apricotdb.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>
+                ${user.home}/.apricotdb/logs/apricotdb-%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>5</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} - %msg%n</pattern>
+        </encoder>
+    </appender>
 
-    <root level="error">
-        <appender-ref ref="CONSOLE"/>
+    <logger name="za.co.apricotdb" level="INFO" />
+    <logger name="org.springframework" level="ERROR" />
+    <logger name="org.hibernate" level="ERROR" />
+    <logger name="net.sf" level="ERROR" />
+
+    <root level="INFO">
+        <appender-ref ref="FILE"/>
     </root>
-
 </configuration>

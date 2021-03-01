@@ -7,6 +7,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,12 +23,13 @@ import za.co.apricotdb.ui.util.ImageHelper;
 @SpringBootApplication(scanBasePackages = "za.co.apricotdb")
 public class ApricotMainApp extends Application {
 
+    Logger logger = LoggerFactory.getLogger(ApricotMainApp.class);
+
     private ConfigurableApplicationContext context;
     private Pane rootNode;
     private MainAppController controller;
 
     ApplicationInitializer initializer;
-
 
     @Override
     public void init() throws Exception {
@@ -39,7 +42,8 @@ public class ApricotMainApp extends Application {
 
         controller = loader.<MainAppController>getController();
         controller.init();
-        System.out.println("ApricotMainApp: the main app controller was instantiated: " + controller.toString());
+
+        logger.info("Apricot DB has been successfully initialized");
     }
 
     @Override
@@ -73,7 +77,7 @@ public class ApricotMainApp extends Application {
     }
 
     @Override
-    public void stop() throws Exception {
+    public void stop() {
         context.close();
     }
 
