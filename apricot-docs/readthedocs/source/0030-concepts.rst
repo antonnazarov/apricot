@@ -1,8 +1,8 @@
 "Apricot DB" concepts
----------------------
+#####################
 
 The Project, Snapshot and View
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+******************************
 
 The Project is the top of the hierarchy of objects in "Apricot DB". Project contains the Snapshots and Views.
 
@@ -20,7 +20,7 @@ The "Apricot DB" project can include multiple Snapshots and Views.
    It is recommended to have a dedicated "Apricot DB" Project for each physical database.
 
 The Snapshot
-^^^^^^^^^^^^
+************
 
 Each Snapshot represents one version of the existing (physical) database or the database being designed. 
 For example, there might be several working environments, installed on the different servers, dedicated to 
@@ -68,7 +68,7 @@ The currently selected Snapshots might be edited or deleted. The Snapshot menu i
    The Snapshot menu
 
 The View
-^^^^^^^^
+********
 
 A View in "Apricot DB" is an Entity Relationship Diagram, which contains a subset (or all) of entities of the current Snapshot.
 There might be multiple Views created for the Project.
@@ -109,7 +109,55 @@ The options "Initialize from" at the bottom of the form allow to initialize the 
 The "Initialize from" choice might be changed at any moment during the creation of the new View. The view content list will be edited accordingly.
 
 The Context Menus in "Apricot DB"
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+*********************************
 
 The objects on Apricot DB diagrams or Project Explorer have the Context Menu, which can be activated by the right mouse button click. 
 The Context Menu permits to access the essential functions/operations related to the selected object type (Canvas, Entity, Relationsip, multiple selected Entities and so on).
+
+The Entity Context Menu
+=======================
+
+If an individual Entity is selected, the following Context Menu is shown:
+
+.. figure:: figures/apricot-entity-context-menu.jpg
+   :align: center
+
+Here:
+
+#. **Edit** - run the Edit Form of the selected Entity;
+#. **Copy** - copies the selected Entity into the Clipboard;
+#. **Show As Text** - shows the detailed information of the selected Entity as a text, which might be convenient for the copy/paste of the information;
+#. **Delete** - delete the selected Entity;
+#. **Select in Project Explorer** - finds and selects the Entity in the list of the Project Explorer (the left side of the application screen);
+#. **Select Related Entities** - selects the Entities, which have been related to the current one. If the current View does not contain some related entities, the "Select Related Entities" form will be open;
+#. **New auto- relationship** - runs the form of creation of new auto- Relationship. The **auto**- is a relationship which connects the selected Entity to itself;
+#. **Quick View** - creates a new view (Quick View) which include the only Entity - the selected one.
+
+The Context Menu when the multiple Entities selected
+====================================================
+
+When more than one Entity is selected (you can select multiple Entities with the left "Ctrl" button locked), the following context menu would be shown on the right mouse button:
+
+.. figure:: figures/apricot-mult-entity-context-menu.jpg
+   :align: center
+
+Here:
+
+#. **Copy** - copies the selected Entities into the Clipboiard;
+#. **Delete** - delete the selected Entities;
+#. **Select in Project Explorer** - selects the Entities in the Project Explorer;
+#. **Make Same Width** - make all selected Entities the same width (which would be the maximum width of all selected Entities);
+#. **Minimize Width** - minimize width of all selected Entities;
+#. **Align Left** - align the selected Entities as the most left Entity;
+#. **Align Right** - align the selected Entities as the most right Entity;
+#. **Align Up** - align the selected Entities as the most upper Entity;
+#. **Align Down** - align the selected Entities as the most bottom Entity;
+#. **New relationship** - if 2 Entites have been selected, the "New Relationship" form will be shown;
+#. **Quick View** - creates a new view (Quick View) which include the selected Entities.
+
+The Canvas Context Menu
+=======================
+
+.. figure:: figures/apricot-canvas-context-menu.jpg
+   :align: center
+

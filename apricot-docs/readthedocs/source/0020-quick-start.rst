@@ -1,5 +1,5 @@
 The Quick Start Guide
----------------------
+#####################
 
 Here I provide several basic steps and techniques to start using the application.
 
@@ -7,7 +7,7 @@ One of the most demanded operation of any ERD tool is a reverse engineering proc
 Below I present the user interface of "Apricot DB" with short definitions of all main areas it consists of, and then, a sequence of steps to reverse engineer some database.
 
 The "Apricot DB" Interface
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+**************************
 
 .. figure:: figures/apricot-main-screen.jpg
    :align: center
@@ -25,7 +25,7 @@ The user interface of the application contains the following areas:
 7. The scaled Apricot map, which reflects the current diagram in the appropriate scale.
 
 The Testing Database
-^^^^^^^^^^^^^^^^^^^^
+********************
 
 Before the reverse engineering exercise is started you need some testing database. 
 The list of database types, currently supported by "Apricot DB" is shown below:
@@ -37,7 +37,8 @@ For most not file based databases you need to know the server and database name,
 Have this parameters before the reverse engineering is started.
 
 Creating a new Project
-^^^^^^^^^^^^^^^^^^^^^^
+**********************
+
 In order to create a new Project, select Project/New item in the main menu.
 
 .. figure:: figures/apricot-create-new-project.jpg
@@ -49,7 +50,7 @@ The form requests a name for the new Project. Select the type of your testing da
 The new Project will be created.
 
 Running the Reverse Engineering process
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+***************************************
 
 Click on the "Reverse Enginnering" toolbar button to run the Reverse Engineering process.
 
