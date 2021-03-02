@@ -110,4 +110,8 @@ public class MapHandler {
 
         return ratio;
     }
+
+    public Pane getMapPane() {
+        return mapPane;
+    }
 }

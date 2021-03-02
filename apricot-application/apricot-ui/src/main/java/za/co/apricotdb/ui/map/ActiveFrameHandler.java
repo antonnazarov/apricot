@@ -1,6 +1,7 @@
 package za.co.apricotdb.ui.map;
 
 import javafx.geometry.Point2D;
+import javafx.scene.Cursor;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
@@ -47,6 +48,14 @@ public class ActiveFrameHandler {
         activeFrame.setBorder(new Border(new BorderStroke(Color.GREEN,
                 BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(2))));
 
+        Pane pane = mapHandler.getMapPane();
+        activeFrame.setOnMouseEntered(e -> {
+            pane.setCursor(Cursor.HAND);
+        });
+        activeFrame.setOnMouseExited(e -> {
+            pane.setCursor(Cursor.DEFAULT);
+        });
+
         return activeFrame;
     }
 
@@ -67,11 +76,11 @@ public class ActiveFrameHandler {
     }
 
     public double getScrollHvalue(Pane mapCanvas, Pane activeFrame, double activeFrameX) {
-        return activeFrameX/(mapCanvas.getWidth()-activeFrame.getWidth());
+        return activeFrameX / (mapCanvas.getWidth() - activeFrame.getWidth());
     }
 
     public double getScrollVvalue(Pane mapCanvas, Pane activeFrame, double activeFrameY) {
-        return activeFrameY/(mapCanvas.getHeight()-activeFrame.getHeight());
+        return activeFrameY / (mapCanvas.getHeight() - activeFrame.getHeight());
     }
 
     public boolean isDragging() {
