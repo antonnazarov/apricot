@@ -128,6 +128,7 @@ Here:
 #. **Copy** - copies the selected Entity into the Clipboard;
 #. **Show As Text** - shows the detailed information of the selected Entity as a text, which might be convenient for the copy/paste of the information;
 #. **Delete** - delete the selected Entity;
+#. **Remove from View** - removes the selected Entity from the current View, not deleting it from the Snapshot. *Note:* not available on the Main View;
 #. **Select in Project Explorer** - finds and selects the Entity in the list of the Project Explorer (the left side of the application screen);
 #. **Select Related Entities** - selects the Entities, which have been related to the current one. If the current View does not contain some related entities, the "Select Related Entities" form will be open;
 #. **New auto- relationship** - runs the form of creation of new auto- Relationship. The **auto**- is a relationship which connects the selected Entity to itself;
@@ -145,6 +146,7 @@ Here:
 
 #. **Copy** - copies the selected Entities into the Clipboiard;
 #. **Delete** - delete the selected Entities;
+#. **Remove from View** - removes the selected Entities from the current View, not deleting them from the Snapshot. *Note:* not available on the Main View;
 #. **Select in Project Explorer** - selects the Entities in the Project Explorer;
 #. **Make Same Width** - make all selected Entities the same width (which would be the maximum width of all selected Entities);
 #. **Minimize Width** - minimize width of all selected Entities;
@@ -158,6 +160,59 @@ Here:
 The Canvas Context Menu
 =======================
 
+If to right click in on the free field the diagram, the following Context Menu will be shown:
+
 .. figure:: figures/apricot-canvas-context-menu.jpg
    :align: center
 
+Here:
+
+#. **Refresh** - re-draws the current ER- diagram/view, reading its current condition from the database;
+#. **Edit View** - runs the form of editing of information of the current View, including the View's name, comment and the Entities included into the view. **Note:** a name and content of the "Main View" not editable. It is always names as "Main View" and includes all the Entities of the current Snapshot;
+#. **New Entity** - runs the form of creation of the new Entity;
+#. **Simple View** - turn the current diagram to reflect a minimum of the information: only Entity name, the Primary Key and the Relationships between Entities;
+#. **Default View** - reflect the default Entity information, which includes all the fields names amd mandatory/optional option;
+#. **Extended View** - in addition to the Default View shows the types and lengths (if any) of the fields;
+#. **Align View** - runs the procedure of the automatic alignment of the Entities on the current Diagram;
+#. **Reset View** - runs the simplest "matrix" allocation of the Entities on the current Diagram;
+#. **Export Diagram to picture** - exports the current Diagram into the PNG- graphical format;
+#. **Export Diagram to PDF** - exports the current Diagram into the PDF document;
+
+
+The Project Explorer Context Menu
+=================================
+
+The Prohect item in the Project Explorer has the following Context Menu:
+
+.. figure:: figures/apricot-project-context-menu.jpg
+   :align: center
+
+With this menu you can **Edit** or permanently **Delete** the current project.
+
+The Entity Items of the Project Explorer have the Context Menu similar to the Entity one (see above).
+
+.. figure:: figures/apricot-project-explorer-context-menu.jpg
+   :align: center
+
+Here:
+
+#. **Edit** - run the Edit Form of the selected Entity;
+#. **Show As Text** - shows the detailed information of the selected Entity as a text, which might be convenient for the copy/paste of the information;
+#. **Delete** - delete the selected Entity;
+#. **Remove from View** - removes the selected Entity from the current View, not deleting it from the Snapshot. *Note:* not available on the Main View;
+#. **Select on Diagram** - select the Entity on the current Diagram;
+#. **Select Related Entities** - selects the Entities, which have been related to the current one. If the current View does not contain some related entities, the "Select Related Entities" form will be open;
+
+
+The View Tab Context Menu
+=========================
+
+The View Tabs have the following Context Menu:
+
+.. figure:: figures/apricot-view-tab-context-menu.jpg
+   :align: center
+
+Here you can:
+
+#. **Edit View** - edit the name, comment of the View as well as a set the Entities included into the View;
+#. **Delete View** - request the permanent delete of the View.
