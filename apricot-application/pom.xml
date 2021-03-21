@@ -15,7 +15,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>15</maven.compiler.source>
         <maven.compiler.target>15</maven.compiler.target>
-        <revision>2.5</revision>
+        <revision>2.6</revision>
         <start-class>za.co.apricotdb.ui.ApricotMainApp</start-class>
     </properties>
 

@@ -22,6 +22,8 @@ import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.support.util.FieldAttributeHelper;
+import za.co.apricotdb.ui.CompareSnapshotInitLocal;
+import za.co.apricotdb.ui.CompareSnapshotInitRemote;
 import za.co.apricotdb.ui.CompareSnapshotsController;
 import za.co.apricotdb.ui.comparator.CompareRowType;
 import za.co.apricotdb.ui.comparator.CompareSnapshotRow;
@@ -66,6 +68,12 @@ public class CompareSnapshotsHandler {
     @Autowired
     DialogFormHandler formHandler;
 
+    @Autowired
+    CompareSnapshotInitLocal controllerLocalInit;
+
+    @Autowired
+    CompareSnapshotInitRemote controllerRemoteInit;
+
     /**
      * Open the Snapshot comparator form.
      *
@@ -82,10 +90,10 @@ public class CompareSnapshotsHandler {
                 "/za/co/apricotdb/ui/toolbar/tbCompareSnapshotEnabled.png", "Compare Snapshots");
         CompareSnapshotsController controller = form.getController();
         if (!compareRemote) {
-            controller.init();
+            controllerLocalInit.init(controller);
         } else {
             if (row != null) {
-                controller.initCompareRemote(row.getLocalSnapshot(), row.getRemoteSnapshot());
+                controllerRemoteInit.init(controller, row.getLocalSnapshot(), row.getRemoteSnapshot());
             }
         }
 
