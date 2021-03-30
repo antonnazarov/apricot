@@ -24,7 +24,9 @@ import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.support.util.FieldAttributeHelper;
 import za.co.apricotdb.ui.CompareSnapshotInitLocal;
 import za.co.apricotdb.ui.CompareSnapshotInitRemote;
+import za.co.apricotdb.ui.CompareSnapshotInitReversed;
 import za.co.apricotdb.ui.CompareSnapshotsController;
+import za.co.apricotdb.ui.SnapshotComparisonType;
 import za.co.apricotdb.ui.comparator.CompareRowType;
 import za.co.apricotdb.ui.comparator.CompareSnapshotRow;
 import za.co.apricotdb.ui.comparator.CompareState;
@@ -74,27 +76,37 @@ public class CompareSnapshotsHandler {
     @Autowired
     CompareSnapshotInitRemote controllerRemoteInit;
 
+    @Autowired
+    CompareSnapshotInitReversed controllerReversedInit;
+
     /**
      * Open the Snapshot comparator form.
-     *
-     * @param compareRemote if true, the form is used for the comparison between local and remote snapshots
-     * @param row           if compareRemote=true, then this parameter should be not null - the Repository model row
      */
     @ApricotErrorLogger(title = "Unable to open the Compare Snapshots form")
-    public void openCompareSnapshotsForm(boolean compareRemote, ModelRow row) {
-        if (!compareRemote && !validate()) {
+    public void openCompareSnapshotsForm(SnapshotComparisonType comparisonType, ModelRow row) {
+        if (comparisonType == SnapshotComparisonType.LOCAL && !validate()) {
             return;
         }
 
         ApricotForm form = formHandler.buildApricotForm("/za/co/apricotdb/ui/apricot-compare-snapshots.fxml",
                 "/za/co/apricotdb/ui/toolbar/tbCompareSnapshotEnabled.png", "Compare Snapshots");
         CompareSnapshotsController controller = form.getController();
-        if (!compareRemote) {
-            controllerLocalInit.init(controller);
-        } else {
-            if (row != null) {
-                controllerRemoteInit.init(controller, row.getLocalSnapshot(), row.getRemoteSnapshot());
-            }
+
+        switch (comparisonType) {
+            case LOCAL:
+                controllerLocalInit.init(controller);
+                break;
+            case REMOTE:
+                if (row != null) {
+                    controllerRemoteInit.init(controller, row.getLocalSnapshot(), row.getRemoteSnapshot());
+                }
+                break;
+
+            case REVERSED:
+                if (row != null) {
+                    controllerReversedInit.init(controller, row.getLocalSnapshot(), row.getRemoteSnapshot());
+                }
+                break;
         }
 
         form.show();

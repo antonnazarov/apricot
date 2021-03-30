@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.metascan.ApricotTargetDatabase;
 import za.co.apricotdb.metascan.MetaDataScannerFactory;
-import za.co.apricotdb.persistence.data.MetaData;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
@@ -144,11 +143,22 @@ public class ConnectionSqlServerController {
 
         reverseEngineService.initService(targetDb, driverClass, url, schema.getValue(),
                 user.getSelectionModel().getSelectedItem(), password.getText(), snapshot);
+
+        //  success
         reverseEngineService.setOnSucceeded(e -> {
             getStage().close();
-            reverseEngineHandler.openScanResultForm(reverseEngineService.getValue(), blackListHandler.getBlackListTables(project),
-                    composeReverseEngineeringParameters());
+
+            String[] blackList = blackListHandler.getBlackListTables(project);
+            String reverseResult = composeReverseEngineeringParameters();
+            if (snapshotManager.isCurrentSnapshotEmpty()) {
+                reverseEngineHandler.openScanResultForm(reverseEngineService.getValue(), blackList, reverseResult);
+            } else {
+                //  the current snapshot contains Entities
+                reverseEngineHandler.reverseInCurrentSnapshot(reverseEngineService.getValue(), blackList, reverseResult);
+            }
         });
+
+        //  failure
         reverseEngineService.setOnFailed(e -> {
             throw new IllegalArgumentException(reverseEngineService.getException());
         });

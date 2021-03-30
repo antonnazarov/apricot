@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.ui.RepositoryController;
+import za.co.apricotdb.ui.SnapshotComparisonType;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.model.ApricotForm;
 import za.co.apricotdb.ui.repository.ApricotRepositoryException;
@@ -305,6 +306,6 @@ public class RepositoryHandler {
     }
 
     public void showSnapshotDifferences(RepositoryRow row) {
-        compareSnapshotsHandler.openCompareSnapshotsForm(true, row.getModelRow());
+        compareSnapshotsHandler.openCompareSnapshotsForm(SnapshotComparisonType.REMOTE, row.getModelRow());
     }
 }

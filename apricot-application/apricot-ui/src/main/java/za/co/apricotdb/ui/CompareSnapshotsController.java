@@ -9,6 +9,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -67,6 +68,9 @@ public class CompareSnapshotsController {
     @FXML
     Button compareButton;
 
+    @FXML
+    HBox buttonBar;
+
     TreeItem<CompareSnapshotRow> root;
     boolean compared = false;
 
@@ -97,7 +101,7 @@ public class CompareSnapshotsController {
     }
 
     @FXML
-    public void cancel(ActionEvent event) {
+    public void cancel() {
         getStage().close();
     }
 

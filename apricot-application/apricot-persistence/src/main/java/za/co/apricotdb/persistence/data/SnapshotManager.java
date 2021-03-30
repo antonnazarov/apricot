@@ -189,4 +189,14 @@ public class SnapshotManager {
 
         return null;
     }
+
+    /**
+     * Check if the current (active) Snapshot does not contain any Entities.
+     */
+    public boolean isCurrentSnapshotEmpty() {
+        ApricotSnapshot defaultSnapshot = getDefaultSnapshot();
+        List<ApricotTable> tables = tableManager.getTablesForSnapshot(defaultSnapshot);
+
+        return (tables == null || tables.size() == 0);
+    }
 }

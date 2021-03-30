@@ -1,9 +1,7 @@
 package za.co.apricotdb.persistence.entity;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -19,9 +17,10 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Entity for apricot_constraint table.
@@ -79,6 +78,9 @@ public class ApricotConstraint implements Serializable {
     @NoExport
     @OneToMany(mappedBy = "constraint", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ApricotColumnConstraint> columns = new ArrayList<>();
+
+    @Transient
+    private ApricotRelationship relationship;
 
     public long getId() {
         return id;
@@ -196,5 +198,13 @@ public class ApricotConstraint implements Serializable {
         }
 
         return null;
+    }
+
+    public ApricotRelationship getRelationship() {
+        return relationship;
+    }
+
+    public void setRelationship(ApricotRelationship relationship) {
+        this.relationship = relationship;
     }
 }

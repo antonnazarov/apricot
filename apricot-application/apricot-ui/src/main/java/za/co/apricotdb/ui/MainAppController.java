@@ -447,7 +447,7 @@ public class MainAppController {
 
     @FXML
     public void compareSnapshots(ActionEvent event) {
-        compareSnapshotsHandler.openCompareSnapshotsForm(false, null);
+        compareSnapshotsHandler.openCompareSnapshotsForm(SnapshotComparisonType.LOCAL, null);
     }
 
     /**
