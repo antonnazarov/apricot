@@ -3,19 +3,13 @@ package za.co.apricotdb.ui.handler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.SnapshotManager;
-import za.co.apricotdb.persistence.entity.ApricotConstraint;
-import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
-import za.co.apricotdb.persistence.entity.ApricotTable;
-import za.co.apricotdb.persistence.entity.ConstraintType;
-import za.co.apricotdb.persistence.repository.ApricotRelationshipRepository;
-import za.co.apricotdb.persistence.repository.ApricotTableRepository;
+import za.co.apricotdb.ui.service.CopySnapshotService;
 import za.co.apricotdb.ui.service.DeleteSelectedEntitiesService;
 
-import javax.annotation.Resource;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 /**
  * This component overrides the whole content of the current snapshot by the given (unmanaged) Snapshot.
@@ -35,11 +29,8 @@ public class OverrideSnapshotHandler {
     @Autowired
     ApricotSnapshotHandler snapshotHandler;
 
-    @Resource
-    ApricotTableRepository tableRepository;
-
-    @Resource
-    ApricotRelationshipRepository relationshipRepository;
+    @Autowired
+    CopySnapshotService copySnapshotService;
 
     /**
      * Fully override the snapshot content.
@@ -50,36 +41,30 @@ public class OverrideSnapshotHandler {
         deleteSelectedEntitiesService.init(targetSnapshot.getTablesAsString());
         deleteSelectedEntitiesService.setOnSucceeded(e -> {
             saveSnapshotData(targetSnapshot, snapshot);
-            snapshotHandler.synchronizeSnapshot(true);
         });
         deleteSelectedEntitiesService.start();
     }
 
     private void saveSnapshotData(ApricotSnapshot targetSnapshot, ApricotSnapshot snapshot) {
-        targetSnapshot.setTables(snapshot.getTables());
-        List<ApricotRelationship> relationships = new ArrayList<>();
-        for (ApricotTable table : snapshot.getTables()) {
-            table.setSnapshot(targetSnapshot);
-            tableRepository.save(table);
+        copySnapshotService.init("Save Snapshot data", "Saving of the Snapshot data is in progress...");
+        copySnapshotService.setSourceSnapshot(snapshot);
+        copySnapshotService.setOnSucceeded(e -> {
+            snapshotHandler.synchronizeSnapshot(true);
+            saveSnapshotComment(snapshot.getComment());
+        });
+        copySnapshotService.start();
+    }
 
-            for (ApricotConstraint constraint : table.getConstraints()) {
-                if (constraint.getType() == ConstraintType.FOREIGN_KEY) {
-                    ApricotRelationship relationship = constraint.getRelationship();
-                    if (relationship != null) {
-                        relationships.add(relationship);
-                    } else {
-                        throw new IllegalArgumentException("The Relationship was not found for the FK constraint: " + constraint.getName());
-                    }
-                }
-            }
-        }
+    private void saveSnapshotComment(String comment) {
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        StringBuilder sb = new StringBuilder();
+        sb.append("The content of this snapshot was reverse engineered and overridden the original on ")
+                .append(df.format(new java.util.Date())).append(" with the following parameters: \n")
+                .append(comment);
+        ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
+        snapshot.setComment(sb.toString());
+        snapshot.setUpdated(new java.util.Date());
 
-        for (ApricotRelationship relationship : relationships) {
-            relationshipRepository.save(relationship);
-        }
-
-        targetSnapshot.setComment(snapshot.getComment());
-        targetSnapshot.setUpdated(new java.util.Date());
-        //  snapshotManager.saveSnapshot(targetSnapshot);
+        snapshotManager.saveSnapshot(snapshot);
     }
 }
