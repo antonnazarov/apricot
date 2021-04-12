@@ -138,8 +138,11 @@ public class ApricotEntityHandler {
         TabInfoObject tabInfo = canvasHandler.getCurrentViewTabInfo();
         if (model.isNewEntity()) {
             allocationHandler.centerEntityOnView(tabInfo, entityName, 0, 0);
+            snapshotHandler.synchronizeSnapshot(true);
+        } else {
+            canvasHandler.overrideEntityOnCanvas(entityName);
         }
-        snapshotHandler.synchronizeSnapshot(true);
+
         treeViewHandler.selectEntity(entityName);
         canvasHandler.makeEntitySelected(tabInfo, entityName, true);
 

@@ -1,21 +1,19 @@
 package za.co.apricotdb.viewport.relationship;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.PostConstruct;
-
-import org.springframework.stereotype.Component;
-
 import javafx.geometry.Side;
+import org.springframework.stereotype.Component;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.SelectedElementsBuffer;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 import za.co.apricotdb.viewport.entity.shape.DefaultEntityShape;
 import za.co.apricotdb.viewport.relationship.shape.RelationshipTopology;
 import za.co.apricotdb.viewport.relationship.shape.RelationshipTopologyImpl;
+
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * This component selectively builds the relationships for the provided list of
@@ -43,9 +41,8 @@ public class RelationshipBatchBuilder {
         SelectedElementsBuffer buffer = canvas.getSelectedElementsBuffer();
         buffer.getRelatedSelectedObjects(relatedEntities, relatedRelationships);
 
-        buildRelationships(new ArrayList<ApricotEntity>(relatedEntities),
-                new ArrayList<ApricotRelationship>(relatedRelationships), canvas.getDetailLevel());
-
+        buildRelationships(new ArrayList(relatedEntities),
+                new ArrayList(relatedRelationships), canvas.getDetailLevel());
     }
 
     /**
@@ -116,8 +113,6 @@ public class RelationshipBatchBuilder {
                                     }
                                     break;
                                 case TOP:
-                                    break;
-
                                 default:
                                     break;
                                 }

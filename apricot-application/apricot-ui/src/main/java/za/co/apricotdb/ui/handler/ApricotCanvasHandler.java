@@ -3,6 +3,7 @@ package za.co.apricotdb.ui.handler;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.util.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,6 +35,7 @@ import za.co.apricotdb.viewport.entity.DefaultEntityBuilder;
 import za.co.apricotdb.viewport.entity.EntityBuilder;
 import za.co.apricotdb.viewport.entity.FieldDetail;
 import za.co.apricotdb.viewport.relationship.ApricotRelationshipBuilder;
+import za.co.apricotdb.viewport.relationship.RelationshipBatchBuilder;
 import za.co.apricotdb.viewport.relationship.RelationshipBuilder;
 import za.co.apricotdb.viewport.relationship.RelationshipType;
 
@@ -81,6 +83,8 @@ public class ApricotCanvasHandler {
 
     @Autowired
     RelationshipConsistencyValidator relationshipValidator;
+
+    private final RelationshipBatchBuilder relationshipsBuilder = new RelationshipBatchBuilder();
 
     /**
      * Populate the given canvas with the information of snapshot, using the
@@ -204,6 +208,7 @@ public class ApricotCanvasHandler {
                         isChildAbsent);
                 canvas.addElement(element);
             }
+
             fieldDetails.put(t.getName(), fd);
         }
 
@@ -214,6 +219,46 @@ public class ApricotCanvasHandler {
                         rBuilder);
                 if (wpar != null) {
                     canvas.addElement(wpar);
+                }
+            }
+        }
+    }
+
+    /**
+     * Override the given Entity on Canvas and redraw its relationships.
+     */
+    @Transactional
+    public void overrideEntityOnCanvas(String tableName) {
+        TabPane tp = parentWindow.getProjectTabPane();
+        ApricotTable table = tableManager.getTableByName(tableName);
+
+        //  scan through the tabs, replacing the entity and related relationships
+        for (Tab tab : tp.getTabs()) {
+            TabInfoObject tabInfo = TabInfoObject.getTabInfo(tab);
+            if (tabInfo != null) {
+                ApricotCanvas canvas = tabInfo.getCanvas();
+
+                ApricotEntity entity = canvas.findEntityByName(tableName);
+                if (entity != null) {
+                    canvas.removeElement(entity);
+
+                    List<ApricotTable> tables = relatedEntitiesHandler.getRelatedTablesOnView(table, tabInfo.getView());
+                    RelatedEntityAbsent absence = relatedEntitiesHandler.getAbsenceForEntity(tableName, tabInfo.getView());
+                    Map<String, RelatedEntityAbsent> absMap = new HashMap<>();
+                    absMap.put(tableName, absence);
+                    populateCanvas(canvas, tables, tabInfo.getView().getDetailLevel(), absMap);
+
+                    CanvasAllocationMap allocMap = tabViewHandler.readCanvasAllocationMap(tabInfo.getView(), table);
+                    if (allocMap != null) {
+                        canvas.applyAllocationMap(allocMap, ElementType.ENTITY);
+                        Platform.runLater(() -> {
+                            makeEntitySelected(tabInfo, tableName, true);
+                            relationshipsBuilder.buildRelationships(canvas);
+                            canvas.applyAllocationMap(allocMap, ElementType.RELATIONSHIP);
+
+                            relationshipsBuilder.buildRelationships(canvas);
+                        });
+                    }
                 }
             }
         }
@@ -331,7 +376,7 @@ public class ApricotCanvasHandler {
         boolean valid = relationshipValidator.validateRelationship(r);
         za.co.apricotdb.viewport.relationship.ApricotRelationship ret =
                 rBuilder.buildRelationship(parentTable, childTable, parentColumn, childColumn, r.getId(),
-                getRelationshipType(childColumn, fieldDetails.get(childTable)), valid);
+                        getRelationshipType(childColumn, fieldDetails.get(childTable)), valid);
         if (!valid) {
             //  transfer the validation message into the viewport relationship object
             ret.setValidationMessage(r.getValidationMessage());
@@ -374,7 +419,7 @@ public class ApricotCanvasHandler {
     }
 
     private void runAllocation(ApricotCanvas canvas, ApricotView view,
-                                          ElementType elementType) {
+                               ElementType elementType) {
         canvas.buildRelationships();
         CanvasAllocationMap map = tabViewHandler.readCanvasAllocationMap(view);
         canvas.applyAllocationMap(map, elementType);
