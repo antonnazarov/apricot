@@ -7,8 +7,10 @@ import javafx.scene.control.TabPane;
 import javafx.util.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.RelationshipManager;
 import za.co.apricotdb.persistence.data.TableManager;
+import za.co.apricotdb.persistence.data.ViewManager;
 import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
@@ -41,6 +43,7 @@ import za.co.apricotdb.viewport.relationship.RelationshipType;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,6 +86,12 @@ public class ApricotCanvasHandler {
 
     @Autowired
     RelationshipConsistencyValidator relationshipValidator;
+
+    @Autowired
+    ViewManager viewManager;
+
+    @Autowired
+    ProjectManager projectManager;
 
     private final RelationshipBatchBuilder relationshipsBuilder = new RelationshipBatchBuilder();
 
@@ -215,10 +224,10 @@ public class ApricotCanvasHandler {
         RelationshipBuilder rBuilder = new ApricotRelationshipBuilder(canvas);
         for (ApricotRelationship ar : relationships) {
             if (canvas.findRelationshipByName(ar.getName()) == null) {
-                za.co.apricotdb.viewport.relationship.ApricotRelationship wpar = convertRelationship(ar, fieldDetails,
+                za.co.apricotdb.viewport.relationship.ApricotRelationship vPortRelationship = convertRelationship(ar, fieldDetails,
                         rBuilder);
-                if (wpar != null) {
-                    canvas.addElement(wpar);
+                if (vPortRelationship != null) {
+                    canvas.addElement(vPortRelationship);
                 }
             }
         }
@@ -238,6 +247,7 @@ public class ApricotCanvasHandler {
             if (tabInfo != null) {
                 ApricotCanvas canvas = tabInfo.getCanvas();
 
+                CanvasAllocationMap allocMap = tabViewHandler.readCanvasAllocationMap(tabInfo.getView(), table);
                 ApricotEntity entity = canvas.findEntityByName(tableName);
                 if (entity != null) {
                     canvas.removeElement(entity);
@@ -248,7 +258,6 @@ public class ApricotCanvasHandler {
                     absMap.put(tableName, absence);
                     populateCanvas(canvas, tables, tabInfo.getView().getDetailLevel(), absMap);
 
-                    CanvasAllocationMap allocMap = tabViewHandler.readCanvasAllocationMap(tabInfo.getView(), table);
                     if (allocMap != null) {
                         canvas.applyAllocationMap(allocMap, ElementType.ENTITY);
                         Platform.runLater(() -> {
@@ -259,6 +268,9 @@ public class ApricotCanvasHandler {
                             relationshipsBuilder.buildRelationships(canvas);
                         });
                     }
+                } else if (allocMap != null && !allocMap.isEmpty()) {
+                    //  this is a newly created Entity
+                    populateCanvas(canvas, new ArrayList(Arrays.asList(table)), tabInfo.getView().getDetailLevel(), null);
                 }
             }
         }
@@ -282,6 +294,12 @@ public class ApricotCanvasHandler {
         }
 
         return null;
+    }
+
+    public TabInfoObject getMainViewTabInfo() {
+        ApricotView mainView = viewManager.getGeneralView(projectManager.findCurrentProject());
+
+        return getTabInfoOnView(mainView);
     }
 
     public TabInfoObject getTabInfoOnView(ApricotView view) {

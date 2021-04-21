@@ -27,7 +27,11 @@ public class CanvasAllocationMap implements Serializable {
     }
     
     public List<CanvasAllocationItem> getAllocations() {
-        return new ArrayList<CanvasAllocationItem>(allocations.values());
+        return new ArrayList(allocations.values());
+    }
+
+    public boolean isEmpty() {
+        return allocations.isEmpty();
     }
     
     @Override

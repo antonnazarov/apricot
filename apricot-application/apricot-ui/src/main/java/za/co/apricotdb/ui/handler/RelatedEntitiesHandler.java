@@ -183,10 +183,10 @@ public class RelatedEntitiesHandler {
                     !ret.contains(relatedTable)) {
                 ret.add(relatedTable);
             }
+        }
 
-            if (!ret.contains(table)) {
-                ret.add(table);
-            }
+        if (!ret.contains(table)) {
+            ret.add(table);
         }
 
         return ret;

@@ -10,6 +10,7 @@ import za.co.apricotdb.persistence.data.TableManager;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotTable;
+import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.persistence.entity.ConstraintType;
 import za.co.apricotdb.ui.EditEntityController;
 import za.co.apricotdb.ui.MainAppController;
@@ -139,6 +140,11 @@ public class ApricotEntityHandler {
         if (model.isNewEntity()) {
             allocationHandler.centerEntityOnView(tabInfo, entityName, 0, 0);
             snapshotHandler.synchronizeSnapshot(true);
+
+            //  for the non Main View, create the Entity object in Main View
+            if (!tabInfo.getView().getName().equals(ApricotView.MAIN_VIEW)) {
+                allocationHandler.centerEntityOnView(canvasHandler.getMainViewTabInfo(), entityName, 0, 0);
+            }
         } else {
             canvasHandler.overrideEntityOnCanvas(entityName);
         }
