@@ -1,3 +1,10 @@
+Projects and Snapshots in "Apricot DB"
+	Compare Snapshots
+
+Reverse Engineering in "Apricot DB"
+	Reversing the database into the new Snapshot
+	Reversing the database into the existing Snapshot
+
 Entities: Select and Find
 	Selecting Entities in the Project Explorer and on the Diagram
 	Select all Entities on the Diagram
@@ -20,12 +27,12 @@ Relationships: create, edit, delete
 	Edit the Relationship
 	Delete the Relationship
 
-Aligning the content of the Diagram
+Navigation in the Diagram, aligning in "Apricot DB"
 	Allocation of Entities and Retaionships
 	Automatic alignment
 	Reset the Diagram
 	Refresh the Diagram content
-	Undo of the changes
+	Undo of the changes made
 
 The Diagram: forms and notations
 	Two graphical notations supported by "Apricot DB"
