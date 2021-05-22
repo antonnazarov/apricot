@@ -8,6 +8,18 @@
     <groupId>za.co.apricot</groupId>
     <artifactId>apricotdb</artifactId>
     <version>2.6</version>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>15</source>
+                    <target>15</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     <packaging>pom</packaging>
     <name>The Apricot - database tool</name>
 
@@ -54,8 +66,8 @@
         <!-- Oracle -->
         <dependency>
             <groupId>com.oracle</groupId>
-            <artifactId>ojdbc7</artifactId>
-            <version>12.1.0</version>
+            <artifactId>ojdbc11</artifactId>
+            <version>21.1</version>
         </dependency>
 
         <!-- PostgreSQL -->
