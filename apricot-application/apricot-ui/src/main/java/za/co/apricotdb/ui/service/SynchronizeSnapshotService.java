@@ -14,6 +14,7 @@ import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.ParentWindow;
+import za.co.apricotdb.ui.error.ApricotErrorHandler;
 import za.co.apricotdb.ui.handler.ApricotCanvasHandler;
 import za.co.apricotdb.ui.handler.EntityFilterHandler;
 import za.co.apricotdb.ui.handler.TabInfoObject;
@@ -64,6 +65,9 @@ public class SynchronizeSnapshotService  extends Service<Boolean> implements Ini
 
     @Autowired
     MapHandler mapHandler;
+
+    @Autowired
+    ApricotErrorHandler errorHandler;
 
     @Override
     protected Task<Boolean> createTask() {
@@ -122,7 +126,8 @@ public class SynchronizeSnapshotService  extends Service<Boolean> implements Ini
         progressInitializer.init(title, headerText, this);
 
         setOnFailed(e -> {
-            throw new IllegalArgumentException(getException());
+            errorHandler.showErrorInfo("Unable to synchronize the Snapshot", "Synchronize Snapshot",
+                    getException());
         });
 
         setOnSucceeded(e -> {

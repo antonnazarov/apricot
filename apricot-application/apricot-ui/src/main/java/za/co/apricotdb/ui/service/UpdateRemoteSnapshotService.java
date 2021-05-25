@@ -6,6 +6,7 @@ import javafx.scene.control.Alert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ProjectManager;
+import za.co.apricotdb.ui.error.ApricotErrorHandler;
 import za.co.apricotdb.ui.handler.RepositoryHandler;
 import za.co.apricotdb.ui.repository.RemoteExportService;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
@@ -32,6 +33,9 @@ public class UpdateRemoteSnapshotService extends Service<Boolean> implements Ini
 
     @Autowired
     RemoteExportService remoteExportService;
+
+    @Autowired
+    ApricotErrorHandler errorHandler;
 
     private String projectName;
     private String snapshotName;
@@ -88,7 +92,8 @@ public class UpdateRemoteSnapshotService extends Service<Boolean> implements Ini
             alert.showAndWait();
         });
         setOnFailed(e -> {
-            throw new IllegalArgumentException(getException());
+            errorHandler.showErrorInfo("Unable to update the Remote Snapshot", "Update Remote Snapshot",
+                    getException());
         });
     }
 

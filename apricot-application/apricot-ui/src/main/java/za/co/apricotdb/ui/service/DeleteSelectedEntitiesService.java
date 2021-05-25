@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import za.co.apricotdb.ui.error.ApricotErrorHandler;
 import za.co.apricotdb.ui.handler.ApricotEntityHandler;
 import za.co.apricotdb.ui.handler.ApricotSnapshotHandler;
 
@@ -31,6 +32,9 @@ public class DeleteSelectedEntitiesService extends Service<Boolean> implements I
     @Autowired
     ApricotSnapshotHandler snapshotHandler;
 
+    @Autowired
+    ApricotErrorHandler errorHandler;
+
     private List<String> entities;
 
     public void init(List<String> entities) {
@@ -43,8 +47,8 @@ public class DeleteSelectedEntitiesService extends Service<Boolean> implements I
         });
 
         setOnFailed(e -> {
-            logger.error("Unable to delete Entity(s)", getException());
-            throw new IllegalArgumentException(getException());
+            errorHandler.showErrorInfo("Unable to delete Entity(s)", "Delete Entity(s)",
+                    getException());
         });
     }
 

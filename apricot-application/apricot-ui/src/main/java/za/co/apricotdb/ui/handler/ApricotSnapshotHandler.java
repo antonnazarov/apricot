@@ -15,6 +15,7 @@ import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.ui.EditSnapshotController;
 import za.co.apricotdb.ui.ParentWindow;
+import za.co.apricotdb.ui.error.ApricotErrorHandler;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.model.ApricotForm;
 import za.co.apricotdb.ui.model.ApricotSnapshotSerializer;
@@ -65,6 +66,9 @@ public class ApricotSnapshotHandler {
 
     @Autowired
     SynchronizeSnapshotService synchronizeSnapshotService;
+
+    @Autowired
+    ApricotErrorHandler errorHandler;
 
     @ApricotErrorLogger(title = "Unable to create the default (empty) snapshot")
     public void createDefaultSnapshot(ApricotProject project) {
@@ -140,7 +144,8 @@ public class ApricotSnapshotHandler {
         });
 
         deleteSnapshotService.setOnFailed(e -> {
-            throw new IllegalArgumentException(deleteSnapshotService.getException());
+            errorHandler.showErrorInfo("Unable to delete Snapshot", "Delete Snapshot",
+                    deleteSnapshotService.getException());
         });
 
         deleteSnapshotService.init("Delete Snapshot",

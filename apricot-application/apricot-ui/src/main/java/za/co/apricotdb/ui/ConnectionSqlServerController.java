@@ -15,11 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.metascan.ApricotTargetDatabase;
 import za.co.apricotdb.metascan.MetaDataScannerFactory;
-import za.co.apricotdb.persistence.data.MetaData;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
+import za.co.apricotdb.ui.error.ApricotErrorHandler;
 import za.co.apricotdb.ui.handler.BlackListHandler;
 import za.co.apricotdb.ui.handler.ReverseEngineHandler;
 import za.co.apricotdb.ui.model.ConnectionAppParameterModel;
@@ -62,6 +62,9 @@ public class ConnectionSqlServerController {
 
     @Autowired
     ParentWindow parent;
+
+    @Autowired
+    ApricotErrorHandler errorHandler;
 
     @FXML
     Pane mainPane;
@@ -125,12 +128,12 @@ public class ConnectionSqlServerController {
     }
 
     @FXML
-    public void cancel(ActionEvent event) {
+    public void cancel() {
         getStage().close();
     }
 
     @FXML
-    public void forward(ActionEvent event) {
+    public void forward() {
         // check the connection firstly
         reverseEngineHandler.testConnection(server.getSelectionModel().getSelectedItem(),
                 port.getSelectionModel().getSelectedItem(), database.getSelectionModel().getSelectedItem(),
@@ -150,7 +153,8 @@ public class ConnectionSqlServerController {
                     composeReverseEngineeringParameters());
         });
         reverseEngineService.setOnFailed(e -> {
-            throw new IllegalArgumentException(reverseEngineService.getException());
+            errorHandler.showErrorInfo("Unable to Reverse Engineer the target database", "Reverse Engineering Failure",
+                    reverseEngineService.getException());
         });
         reverseEngineService.start();
     }

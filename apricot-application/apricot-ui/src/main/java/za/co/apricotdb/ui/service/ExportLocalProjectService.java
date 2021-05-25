@@ -7,6 +7,7 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.support.export.ExportProjectProcessor;
+import za.co.apricotdb.ui.error.ApricotErrorHandler;
 import za.co.apricotdb.ui.handler.RepositoryHandler;
 import za.co.apricotdb.ui.repository.LocalRepoService;
 import za.co.apricotdb.ui.repository.RemoteRepositoryService;
@@ -42,6 +43,9 @@ public class ExportLocalProjectService extends Service<Boolean> implements Initi
 
     @Autowired
     RemoteRepositoryService remoteRepositoryService;
+
+    @Autowired
+    ApricotErrorHandler errorHandler;
 
     private String projectName;
 
@@ -91,6 +95,9 @@ public class ExportLocalProjectService extends Service<Boolean> implements Initi
             alert.showAndWait();
         });
         setOnFailed(e -> {
+            errorHandler.showErrorInfo("Unable to export the Local Project", "Export Local Project",
+                    getException());
+
             throw new IllegalArgumentException(getException());
         });
     }

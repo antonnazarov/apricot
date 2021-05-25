@@ -5,6 +5,7 @@ import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import za.co.apricotdb.ui.error.ApricotErrorHandler;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
 import za.co.apricotdb.ui.handler.ImportProjectHandler;
 import za.co.apricotdb.ui.handler.RepositoryHandler;
@@ -35,6 +36,9 @@ public class ImportRepoProjectService extends Service<Boolean> implements Initia
 
     @Autowired
     ApplicationInitializer applicationInitializer;
+
+    @Autowired
+    ApricotErrorHandler errorHandler;
 
     private File file;
     private String projectName;
@@ -69,7 +73,8 @@ public class ImportRepoProjectService extends Service<Boolean> implements Initia
         });
 
         setOnFailed(e -> {
-            throw new IllegalArgumentException(getException());
+            errorHandler.showErrorInfo("Unable to import Project from the Repository", "Import from Repository",
+                    getException());
         });
     }
 

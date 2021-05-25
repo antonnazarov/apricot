@@ -5,6 +5,7 @@ import javafx.concurrent.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.ui.RepositoryController;
+import za.co.apricotdb.ui.error.ApricotErrorHandler;
 import za.co.apricotdb.ui.repository.LocalRepoService;
 import za.co.apricotdb.ui.repository.RepoCompareService;
 import za.co.apricotdb.ui.repository.RepositoryModel;
@@ -29,6 +30,9 @@ public class RefreshRepoModelService extends Service<Boolean> implements Initial
 
     @Autowired
     RepositoryController repositoryController;
+
+    @Autowired
+    ApricotErrorHandler errorHandler;
 
     @Override
     protected Task<Boolean> createTask() {
@@ -57,7 +61,8 @@ public class RefreshRepoModelService extends Service<Boolean> implements Initial
         reset();
         progressInitializer.init(title, headerText, this);
         setOnFailed(e -> {
-            throw new IllegalArgumentException(getException());
+            errorHandler.showErrorInfo("Unable to refresh the Repository data", "Refresh Repository",
+                    getException());
         });
     }
 }

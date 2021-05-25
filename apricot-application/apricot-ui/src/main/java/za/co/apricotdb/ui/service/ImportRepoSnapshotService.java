@@ -5,6 +5,7 @@ import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import za.co.apricotdb.ui.error.ApricotErrorHandler;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
 import za.co.apricotdb.ui.handler.ApricotSnapshotHandler;
 import za.co.apricotdb.ui.handler.RepositoryHandler;
@@ -40,6 +41,8 @@ public class ImportRepoSnapshotService extends Service<Boolean> implements Initi
     @Autowired
     ApplicationInitializer applicationInitializer;
 
+    @Autowired
+    ApricotErrorHandler errorHandler;
 
     private File file;
     private String projectName;
@@ -95,7 +98,8 @@ public class ImportRepoSnapshotService extends Service<Boolean> implements Initi
         });
 
         setOnFailed(e -> {
-            throw new IllegalArgumentException(getException());
+            errorHandler.showErrorInfo("Unable to import Snapshot", "Import Snapshot",
+                    getException());
         });
     }
 

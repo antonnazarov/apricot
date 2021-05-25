@@ -19,6 +19,7 @@ import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
+import za.co.apricotdb.ui.error.ApricotErrorLogger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,6 +95,7 @@ public class ReverseEngineService extends Service<MetaData> implements Initializ
     @Override
     protected Task<MetaData> createTask() {
         return new Task<>() {
+
             @Override
             protected MetaData call() {
                 MetaDataScanner scanner = scannerFactory.getScanner(getTargetDatabase());

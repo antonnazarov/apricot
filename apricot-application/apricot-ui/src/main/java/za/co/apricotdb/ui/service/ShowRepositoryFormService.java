@@ -5,6 +5,7 @@ import javafx.concurrent.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.ui.RepositoryController;
+import za.co.apricotdb.ui.error.ApricotErrorHandler;
 import za.co.apricotdb.ui.model.ApricotForm;
 import za.co.apricotdb.ui.repository.LocalRepoService;
 import za.co.apricotdb.ui.repository.RepoCompareService;
@@ -29,6 +30,9 @@ public class ShowRepositoryFormService extends Service<Boolean> implements Initi
 
     @Autowired
     RepoCompareService compareService;
+
+    @Autowired
+    ApricotErrorHandler errorHandler;
 
     private ApricotForm form;
 
@@ -72,7 +76,8 @@ public class ShowRepositoryFormService extends Service<Boolean> implements Initi
             form.show();
         });
         setOnFailed(e -> {
-            throw new IllegalArgumentException(getException());
+            errorHandler.showErrorInfo("Unable to show Repository", "Initialize Repository",
+                    getException());
         });
     }
 

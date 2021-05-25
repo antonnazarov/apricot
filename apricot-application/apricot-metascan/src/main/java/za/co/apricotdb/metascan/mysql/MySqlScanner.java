@@ -1,12 +1,7 @@
 package za.co.apricotdb.metascan.mysql;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.stereotype.Component;
-
 import za.co.apricotdb.metascan.MetaDataScannerBase;
 import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
@@ -14,6 +9,10 @@ import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ConstraintType;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Scanner for the MySql database.
@@ -64,15 +63,21 @@ public class MySqlScanner extends MetaDataScannerBase {
                     c.setNullable(false);
                 }
                 c.setDataType(rs.getString("data_type"));
-                if (rs.getInt("character_maximum_length") != 0) {
-                    if (rs.getInt("character_maximum_length") == -1) {
+                long length = rs.getLong("character_maximum_length");
+                if (length != 0) {
+                    if (length == -1) {
                         // exclusion: length=-1 with any type has to be migrated as "max"
                         c.setValueLength("max");
                     } else if (c.getDataType().equalsIgnoreCase("text")) {
                         // ignore any Value Length if type is "text"
                         c.setValueLength(null);
                     } else {
-                        c.setValueLength(String.valueOf(rs.getInt("character_maximum_length")));
+                        String sLength = String.valueOf(length);
+                        if (sLength.length() <= 10) {
+                            c.setValueLength(sLength);
+                        } else {
+                            c.setValueLength("max");
+                        }
                     }
                 }
                 c.setTable(t);

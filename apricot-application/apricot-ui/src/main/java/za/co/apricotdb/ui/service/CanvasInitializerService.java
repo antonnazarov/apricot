@@ -14,6 +14,7 @@ import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.ParentWindow;
+import za.co.apricotdb.ui.error.ApricotErrorHandler;
 import za.co.apricotdb.ui.handler.ApricotViewHandler;
 import za.co.apricotdb.ui.handler.TreeViewHandler;
 
@@ -48,6 +49,9 @@ public class CanvasInitializerService extends Service<Boolean> implements Initia
 
     @Autowired
     ApricotViewHandler viewHandler;
+
+    @Autowired
+    ApricotErrorHandler errorHandler;
 
     private ApricotProject project;
     private ApricotSnapshot snapshot;
@@ -118,7 +122,8 @@ public class CanvasInitializerService extends Service<Boolean> implements Initia
         progressInitializer.init(title, headerText, this);
 
         this.setOnFailed(e -> {
-            throw new IllegalArgumentException(getException());
+            errorHandler.showErrorInfo("Unable to initialize View", "Canvas Initializer",
+                    getException());
         });
     }
 

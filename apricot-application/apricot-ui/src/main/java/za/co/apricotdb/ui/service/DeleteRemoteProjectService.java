@@ -5,6 +5,7 @@ import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import za.co.apricotdb.ui.error.ApricotErrorHandler;
 import za.co.apricotdb.ui.handler.RepositoryHandler;
 import za.co.apricotdb.ui.repository.LocalRepoService;
 import za.co.apricotdb.ui.repository.RemoteRepositoryService;
@@ -33,6 +34,9 @@ public class DeleteRemoteProjectService  extends Service<Boolean> implements Ini
 
     @Autowired
     RepositoryHandler repositoryHandler;
+
+    @Autowired
+    ApricotErrorHandler errorHandler;
 
     private String projectName;
     private String fileName;
@@ -69,7 +73,8 @@ public class DeleteRemoteProjectService  extends Service<Boolean> implements Ini
             alert.showAndWait();
         });
         setOnFailed(e -> {
-            throw new IllegalArgumentException(getException());
+            errorHandler.showErrorInfo("Unable to delete Remote Project", "Delete Remote Project",
+                    getException());
         });
     }
 

@@ -13,6 +13,7 @@ import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.persistence.repository.ApricotProjectRepository;
+import za.co.apricotdb.ui.error.ApricotErrorHandler;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -43,6 +44,9 @@ public class DeleteProjectService extends Service<Boolean> implements Initializa
 
     @Autowired
     ProjectManager projectManager;
+
+    @Autowired
+    ApricotErrorHandler errorHandler;
 
     private ApricotProject project;
 
@@ -94,7 +98,8 @@ public class DeleteProjectService extends Service<Boolean> implements Initializa
         setOnSucceeded(e -> {
         });
         setOnFailed(e -> {
-            throw new IllegalArgumentException(getException());
+            errorHandler.showErrorInfo("Unable to delete Project", "Delete Project",
+                    getException());
         });
     }
 
