@@ -1,8 +1,8 @@
 package za.co.apricotdb.metascan.sqlserver;
 
 import org.springframework.stereotype.Component;
-
 import za.co.apricotdb.metascan.DatabaseUrlBuilder;
+import za.co.apricotdb.metascan.oracle.OracleServiceType;
 
 /**
  * A builder of the SQL Server- specific URL from the given parameters.
@@ -14,7 +14,7 @@ import za.co.apricotdb.metascan.DatabaseUrlBuilder;
 public class SqlServerUrlBuilder implements DatabaseUrlBuilder {
 
     @Override
-    public String getUrl(String server, String port, String database, boolean integratedSecurity) {
+    public String getUrl(String server, String port, String database, boolean integratedSecurity, OracleServiceType serviceType, String pathToTnsnamesOraFile) {
         // example of the SQLServer URL
         // jdbc:sqlserver://DST15404:1433;databaseName=apricot-tests
         StringBuilder sb = new StringBuilder("jdbc:sqlserver://").append(server).append(":").append(port).append(";")

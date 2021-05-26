@@ -1,8 +1,8 @@
 package za.co.apricotdb.metascan.h2;
 
 import org.springframework.stereotype.Component;
-
 import za.co.apricotdb.metascan.DatabaseUrlBuilder;
+import za.co.apricotdb.metascan.oracle.OracleServiceType;
 
 /**
  * The builder of H2 specific URL.
@@ -14,7 +14,7 @@ import za.co.apricotdb.metascan.DatabaseUrlBuilder;
 public class H2UrlBuilder implements DatabaseUrlBuilder {
 
     @Override
-    public String getUrl(String server, String port, String service, boolean integratedSecurity) {
+    public String getUrl(String server, String port, String service, boolean integratedSecurity, OracleServiceType serviceType, String pathToTnsnamesOraFile) {
         return getUrl(server);
     }
 

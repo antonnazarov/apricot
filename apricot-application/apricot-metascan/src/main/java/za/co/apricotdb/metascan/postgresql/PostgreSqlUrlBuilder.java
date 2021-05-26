@@ -1,8 +1,8 @@
 package za.co.apricotdb.metascan.postgresql;
 
 import org.springframework.stereotype.Component;
-
 import za.co.apricotdb.metascan.DatabaseUrlBuilder;
+import za.co.apricotdb.metascan.oracle.OracleServiceType;
 
 /**
  * The PostgreSQL JDBC URL builder.
@@ -14,7 +14,7 @@ import za.co.apricotdb.metascan.DatabaseUrlBuilder;
 public class PostgreSqlUrlBuilder implements DatabaseUrlBuilder {
 
     @Override
-    public String getUrl(String server, String port, String database, boolean integratedSecurity) {
+    public String getUrl(String server, String port, String database, boolean integratedSecurity, OracleServiceType serviceType, String pathToTnsnamesOraFile) {
         // example of the PostgreSQL URL
         // jdbc:postgresql://<server>:<port5432>/<database>
         StringBuilder sb = new StringBuilder("jdbc:postgresql://").append(server).append(":").append(port).append("/")

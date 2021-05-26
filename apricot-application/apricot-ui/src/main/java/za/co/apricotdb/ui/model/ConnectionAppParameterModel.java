@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 /**
  * The Json ready model for the application level parameter of the history of the successful connections.
@@ -31,14 +30,6 @@ public class ConnectionAppParameterModel implements Serializable {
         this.connectionParameters = connectionParameters;
     }
 
-    public String getLatestConnectionId() {
-        return latestConnectionId;
-    }
-
-    public void setLatestConnectionId(String latestConnectionId) {
-        this.latestConnectionId = latestConnectionId;
-    }
-
     public boolean addConnection(ConnectionParametersModel connectionModel) {
         boolean found = false;
         for (ConnectionParametersModel m : connectionParameters) {
@@ -49,12 +40,13 @@ public class ConnectionAppParameterModel implements Serializable {
             }
         }
 
-        if (!found) {
-            String id = UUID.randomUUID().toString();
-            connectionModel.setId(id);
-            connectionParameters.add(connectionModel);
-            latestConnectionId = id;
+        String id = UUID.randomUUID().toString();
+        if (found) {
+            connectionParameters.remove(connectionModel);
         }
+        connectionModel.setId(id);
+        connectionParameters.add(connectionModel);
+        latestConnectionId = id;
 
         return true;
     }
@@ -91,10 +83,17 @@ public class ConnectionAppParameterModel implements Serializable {
         Set<String> databases = new HashSet<>();
         Set<String> schemas = new HashSet<>();
         Set<String> users = new HashSet<>();
+        Set<String> serviceNames = new HashSet<>();
         for (ConnectionParametersModel m : connectionParameters) {
-            servers.add(m.getServer());
-            ports.add(m.getPort());
-            databases.add(m.getDatabase());
+            if (StringUtils.isNotEmpty(m.getServer())) {
+                servers.add(m.getServer());
+            }
+            if (StringUtils.isNotEmpty(m.getPort())) {
+                ports.add(m.getPort());
+            }
+            if (StringUtils.isNotEmpty(m.getDatabase())) {
+                databases.add(m.getDatabase());
+            }
             if (StringUtils.isNotEmpty(m.getSchema())) {
                 schemas.add(m.getSchema());
             }

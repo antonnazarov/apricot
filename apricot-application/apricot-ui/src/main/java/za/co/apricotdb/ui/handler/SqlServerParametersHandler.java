@@ -11,6 +11,8 @@ import za.co.apricotdb.ui.model.ConnectionAppParameterModel;
 import za.co.apricotdb.ui.model.ConnectionParametersModel;
 import za.co.apricotdb.ui.util.GsonFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -33,11 +35,11 @@ public class SqlServerParametersHandler implements ConnectionParametersHandler {
      */
     @Override
     public void saveConnectionParameters(String dbType, String server, String port, String database, String schema,
-                                         String user, String password) {
+                                         String user, String password, String serviceType, String tnsNamesOraPath) {
 
         ConnectionAppParameterModel model = getModel();
         ConnectionParametersModel connModel = new ConnectionParametersModel(dbType, server, port, database, schema,
-                user, password);
+                user, password, serviceType, tnsNamesOraPath);
         if (model.addConnection(connModel)) {
             //  the model was altered
             saveModel(model);
@@ -63,6 +65,23 @@ public class SqlServerParametersHandler implements ConnectionParametersHandler {
             model = new ConnectionAppParameterModel();
         }
 
+        return model;
+    }
+
+    /**
+     * Get the saved connections for the given database type.
+     */
+    public ConnectionAppParameterModel getModel(String dbType) {
+        ConnectionAppParameterModel model = getModel();
+
+        List<ConnectionParametersModel> filteredByDbType = new ArrayList<>();
+        for (ConnectionParametersModel cm : model.getConnectionParameters()) {
+            if (cm.getDbType().equals(dbType)) {
+                filteredByDbType.add(cm);
+            }
+        }
+
+        model.setConnectionParameters(filteredByDbType);
         return model;
     }
 

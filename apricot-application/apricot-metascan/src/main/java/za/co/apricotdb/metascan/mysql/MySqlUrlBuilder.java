@@ -1,8 +1,8 @@
 package za.co.apricotdb.metascan.mysql;
 
 import org.springframework.stereotype.Component;
-
 import za.co.apricotdb.metascan.DatabaseUrlBuilder;
+import za.co.apricotdb.metascan.oracle.OracleServiceType;
 
 /**
  * The MySQL JDBC URL builder.
@@ -28,7 +28,7 @@ public class MySqlUrlBuilder implements DatabaseUrlBuilder {
     }
 
     @Override
-    public String getUrl(String server, String port, String database, boolean integratedSecurity) {
+    public String getUrl(String server, String port, String database, boolean integratedSecurity, OracleServiceType serviceType, String pathToTnsnamesOraFile) {
         // jdbc:mysql://<server>:<port3306>/<database>
         StringBuilder sb = new StringBuilder("jdbc:mysql://").append(server).append(":").append(port).append("/")
                 .append(database);

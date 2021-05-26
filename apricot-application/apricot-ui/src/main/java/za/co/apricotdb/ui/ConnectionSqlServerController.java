@@ -118,7 +118,7 @@ public class ConnectionSqlServerController {
         reverseEngineHandler.testConnection(server.getSelectionModel().getSelectedItem(),
                 port.getSelectionModel().getSelectedItem(), database.getSelectionModel().getSelectedItem(),
                 schema.getSelectionModel().getSelectedItem(), user.getSelectionModel().getSelectedItem(),
-                password.getText(), targetDb, useWindowsUserFlag.isSelected());
+                password.getText(), targetDb, useWindowsUserFlag.isSelected(), null, null);
         Alert alert = getAlert(AlertType.INFORMATION, "The connection was successfully established");
         alert.showAndWait();
     }
@@ -134,12 +134,12 @@ public class ConnectionSqlServerController {
         reverseEngineHandler.testConnection(server.getSelectionModel().getSelectedItem(),
                 port.getSelectionModel().getSelectedItem(), database.getSelectionModel().getSelectedItem(),
                 schema.getSelectionModel().getSelectedItem(), user.getSelectionModel().getSelectedItem(),
-                password.getText(), targetDb, useWindowsUserFlag.isSelected());
+                password.getText(), targetDb, useWindowsUserFlag.isSelected(), null, null);
 
         String driverClass = scannerFactory.getDriverClass(targetDb);
         String url = scannerFactory.getUrl(targetDb, server.getSelectionModel().getSelectedItem(),
                 port.getSelectionModel().getSelectedItem(), database.getSelectionModel().getSelectedItem(),
-                useWindowsUserFlag.isSelected());
+                useWindowsUserFlag.isSelected(), null, null);
 
         reverseEngineService.initService(targetDb, driverClass, url, schema.getValue(),
                 user.getSelectionModel().getSelectedItem(), password.getText(), snapshot);

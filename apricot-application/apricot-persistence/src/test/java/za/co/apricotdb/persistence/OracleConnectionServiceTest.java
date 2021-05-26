@@ -1,6 +1,5 @@
 package za.co.apricotdb.persistence;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.sql.Connection;
@@ -17,7 +16,6 @@ import java.sql.Statement;
  * @author Anton Nazarov
  * @since 22/05/2021
  */
-@Ignore
 public class OracleConnectionServiceTest {
 
     static final String DB_URL = "jdbc:oracle:thin:@//localhost:1521/XE";

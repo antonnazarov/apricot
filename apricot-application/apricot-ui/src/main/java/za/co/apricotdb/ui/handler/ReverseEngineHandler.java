@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 import za.co.apricotdb.metascan.ApricotTargetDatabase;
 import za.co.apricotdb.metascan.MetaDataScanner;
 import za.co.apricotdb.metascan.MetaDataScannerFactory;
+import za.co.apricotdb.metascan.oracle.OracleServiceType;
 import za.co.apricotdb.persistence.data.DataSaver;
 import za.co.apricotdb.persistence.data.MetaData;
 import za.co.apricotdb.persistence.data.ProjectManager;
@@ -29,6 +30,7 @@ import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.ui.ConnectionH2Controller;
+import za.co.apricotdb.ui.ConnectionOracleController;
 import za.co.apricotdb.ui.ConnectionSqlServerController;
 import za.co.apricotdb.ui.ConnectionSqliteController;
 import za.co.apricotdb.ui.FiledbController;
@@ -191,10 +193,10 @@ public class ReverseEngineHandler {
 
     @ApricotErrorLogger(title = "Unable to establish connection to the database", stop = true)
     public void testConnection(String server, String port, String database, String schema, String user, String password,
-                               ApricotTargetDatabase targetDb, boolean integratedSecurity) {
+                               ApricotTargetDatabase targetDb, boolean integratedSecurity, OracleServiceType serviceType, String tnsNamesOraPath) {
 
         String driverClass = scannerFactory.getDriverClass(targetDb);
-        String url = scannerFactory.getUrl(targetDb, server, port, database, integratedSecurity);
+        String url = scannerFactory.getUrl(targetDb, server, port, database, integratedSecurity, serviceType, tnsNamesOraPath);
 
         JdbcOperations op = MetaDataScanner.getTargetJdbcOperations(driverClass, url, user, password);
         RowMapper<String> rowMapper = (rs, rowNum) -> {
@@ -203,7 +205,8 @@ public class ReverseEngineHandler {
         op.query(scannerFactory.getTestSQL(targetDb), rowMapper);
 
         // Success! Save the connection parameters in the project- parameter
-        parametersHandler.saveConnectionParameters(targetDb.getDatabaseName(), server, port, database, schema, user, password);
+        parametersHandler.saveConnectionParameters(targetDb.getDatabaseName(), server, port, database, schema, user,
+                password, serviceType.name(), tnsNamesOraPath);
     }
 
     /**
@@ -237,7 +240,7 @@ public class ReverseEngineHandler {
 
     private void openDatabaseConnectionForm(ApricotProject project) throws IOException {
         ApricotTargetDatabase targetDatabase = ApricotTargetDatabase.parse(project.getTargetDatabase());
-        ConnectionAppParameterModel model = parametersHandler.getModel();
+        ConnectionAppParameterModel model = parametersHandler.getModel(project.getTargetDatabase());
 
         Pane window = null;
         FXMLLoader loader = null;
@@ -249,7 +252,11 @@ public class ReverseEngineHandler {
                 break;
             case Oracle:
                 title = "Connect to Oracle database";
-                window = initFormController(model);
+                loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-re-oracle.fxml"));
+                loader.setControllerFactory(context::getBean);
+                window = loader.load();
+                ConnectionOracleController oracleController = loader.getController();
+                oracleController.init(model);
                 break;
             case PostrgeSQL:
                 title = "Connect to PostgreSQL database";

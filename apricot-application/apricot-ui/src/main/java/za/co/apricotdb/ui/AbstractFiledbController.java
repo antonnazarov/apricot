@@ -148,7 +148,7 @@ public abstract class AbstractFiledbController implements FiledbController {
         }
 
         String driverClass = urlBuilder.getDriverClass();
-        String url = urlBuilder.getUrl(getFileName(fileName.getText()), null, null, false);
+        String url = urlBuilder.getUrl(getFileName(fileName.getText()), null, null, false, null, null);
         MetaData metaData = reverseEngineHandler.getMetaData(target, driverClass, url,
                 schema.getText(), userName.getText(), password.getText(), snapshot);
         String[] blackList = blackListHandler.getBlackListTables(project);
@@ -165,7 +165,7 @@ public abstract class AbstractFiledbController implements FiledbController {
 
         // save the parameters filed in the form
         parametersHandler.saveConnectionParameters("H2", fileName.getText(), "N/A", "N/A", schema.getText(),
-                userName.getText(), password.getText());
+                userName.getText(), password.getText(), "N/A", "N/A");
     }
 
     @FXML

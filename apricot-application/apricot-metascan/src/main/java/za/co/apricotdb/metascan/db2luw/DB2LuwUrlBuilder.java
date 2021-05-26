@@ -1,8 +1,8 @@
 package za.co.apricotdb.metascan.db2luw;
 
 import org.springframework.stereotype.Component;
-
 import za.co.apricotdb.metascan.DatabaseUrlBuilder;
+import za.co.apricotdb.metascan.oracle.OracleServiceType;
 
 /**
  * The URL builder of DB2 LUW.
@@ -25,7 +25,7 @@ public class DB2LuwUrlBuilder implements DatabaseUrlBuilder {
     }
 
     @Override
-    public String getUrl(String server, String port, String database, boolean integratedSecurity) {
+    public String getUrl(String server, String port, String database, boolean integratedSecurity, OracleServiceType serviceType, String pathToTnsnamesOraFile) {
         // jdbc:db2://host:50001/schema
         StringBuilder sb = new StringBuilder("jdbc:db2://").append(server).append(":").append(port).append("/")
                 .append(database);

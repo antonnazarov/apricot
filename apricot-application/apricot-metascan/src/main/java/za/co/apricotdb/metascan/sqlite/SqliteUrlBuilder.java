@@ -2,6 +2,7 @@ package za.co.apricotdb.metascan.sqlite;
 
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.metascan.DatabaseUrlBuilder;
+import za.co.apricotdb.metascan.oracle.OracleServiceType;
 
 /**
  * The builder of SQLite specific URL.
@@ -13,7 +14,7 @@ import za.co.apricotdb.metascan.DatabaseUrlBuilder;
 public class SqliteUrlBuilder implements DatabaseUrlBuilder {
 
     @Override
-    public String getUrl(String server, String port, String service, boolean integratedSecurity) {
+    public String getUrl(String server, String port, String service, boolean integratedSecurity, OracleServiceType serviceType, String pathToTnsnamesOraFile) {
         return getUrl(server);
     }
 

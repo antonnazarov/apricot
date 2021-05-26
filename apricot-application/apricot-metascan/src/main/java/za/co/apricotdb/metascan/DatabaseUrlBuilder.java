@@ -1,5 +1,7 @@
 package za.co.apricotdb.metascan;
 
+import za.co.apricotdb.metascan.oracle.OracleServiceType;
+
 /**
  * All JDBC URL builders have to implement this interface.
  * 
@@ -12,7 +14,8 @@ public interface DatabaseUrlBuilder {
     
     String getDefaultSchemaName(String url, String userName);
     
-    String getUrl(String server, String port, String database, boolean integratedSecurity);
+    String getUrl(String server, String port, String database, boolean integratedSecurity,
+                  OracleServiceType serviceType, String pathToTnsnamesOraFile);
     
     String getTestSQL();
 }
