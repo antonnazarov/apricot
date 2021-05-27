@@ -94,6 +94,7 @@ public class MetaDataScannerFactory {
             case PostrgeSQL:
                 scanner = postgreSqlScanner;
                 break;
+            case MariaDB:
             case MySQL:
                 scanner = mySqlScanner;
                 break;
@@ -144,6 +145,7 @@ public class MetaDataScannerFactory {
                 return oracleUrlBuilder;
             case PostrgeSQL:
                 return postgreSqlUrlBuilder;
+            case MariaDB:
             case MySQL:
                 return mySqlUrlBuilder;
             case DB2:

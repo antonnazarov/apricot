@@ -14,16 +14,11 @@ import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.metascan.ApricotTargetDatabase;
-import za.co.apricotdb.metascan.MetaDataScannerFactory;
 import za.co.apricotdb.persistence.data.ProjectManager;
-import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
-import za.co.apricotdb.persistence.entity.ApricotSnapshot;
-import za.co.apricotdb.ui.handler.BlackListHandler;
 import za.co.apricotdb.ui.handler.ReverseEngineHandler;
 import za.co.apricotdb.ui.model.ConnectionAppParameterModel;
 import za.co.apricotdb.ui.model.ConnectionParametersModel;
-import za.co.apricotdb.ui.service.ReverseEngineService;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
 import java.util.List;
@@ -45,19 +40,7 @@ public class ConnectionSqlServerController {
     ReverseEngineHandler reverseEngineHandler;
 
     @Autowired
-    SnapshotManager snapshotManager;
-
-    @Autowired
     ProjectManager projectManager;
-
-    @Autowired
-    BlackListHandler blackListHandler;
-
-    @Autowired
-    MetaDataScannerFactory scannerFactory;
-
-    @Autowired
-    ReverseEngineService reverseEngineService;
 
     @Autowired
     ParentWindow parent;
@@ -90,13 +73,11 @@ public class ConnectionSqlServerController {
     CheckBox useWindowsUserFlag;
 
     private ConnectionAppParameterModel model;
-    private ApricotSnapshot snapshot;
     private ApricotProject project;
     private ApricotTargetDatabase targetDb;
 
     public void init(ConnectionAppParameterModel model) {
         this.model = model;
-        snapshot = snapshotManager.getDefaultSnapshot();
         project = projectManager.findCurrentProject();
         targetDb = ApricotTargetDatabase.parse(project.getTargetDatabase());
         applyModel(model);
@@ -124,45 +105,15 @@ public class ConnectionSqlServerController {
     }
 
     @FXML
-    public void cancel(ActionEvent event) {
+    public void cancel() {
         getStage().close();
     }
 
     @FXML
-    public void forward(ActionEvent event) {
-        // check the connection firstly
-        reverseEngineHandler.testConnection(server.getSelectionModel().getSelectedItem(),
-                port.getSelectionModel().getSelectedItem(), database.getSelectionModel().getSelectedItem(),
-                schema.getSelectionModel().getSelectedItem(), user.getSelectionModel().getSelectedItem(),
-                password.getText(), targetDb, useWindowsUserFlag.isSelected(), null, null);
-
-        String driverClass = scannerFactory.getDriverClass(targetDb);
-        String url = scannerFactory.getUrl(targetDb, server.getSelectionModel().getSelectedItem(),
-                port.getSelectionModel().getSelectedItem(), database.getSelectionModel().getSelectedItem(),
-                useWindowsUserFlag.isSelected(), null, null);
-
-        reverseEngineService.initService(targetDb, driverClass, url, schema.getValue(),
-                user.getSelectionModel().getSelectedItem(), password.getText(), snapshot);
-
-        //  success
-        reverseEngineService.setOnSucceeded(e -> {
-            getStage().close();
-
-            String[] blackList = blackListHandler.getBlackListTables(project);
-            String reverseResult = composeReverseEngineeringParameters();
-            if (snapshotManager.isCurrentSnapshotEmpty()) {
-                reverseEngineHandler.openScanResultForm(reverseEngineService.getValue(), blackList, reverseResult);
-            } else {
-                //  the current snapshot contains Entities
-                reverseEngineHandler.reverseInCurrentSnapshot(reverseEngineService.getValue(), blackList, reverseResult);
-            }
-        });
-
-        //  failure
-        reverseEngineService.setOnFailed(e -> {
-            throw new IllegalArgumentException(reverseEngineService.getException());
-        });
-        reverseEngineService.start();
+    public void forward() {
+        reverseEngineHandler.doReverseProcess(server.getValue(), port.getValue(), database.getValue(), schema.getValue(),
+                user.getValue(), password.getText(), targetDb, useWindowsUserFlag.isSelected(), null,
+                null, getStage(), composeReverseEngineeringParameters());
     }
 
     @FXML
