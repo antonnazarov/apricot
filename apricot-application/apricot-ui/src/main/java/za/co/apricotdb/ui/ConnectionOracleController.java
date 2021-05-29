@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import za.co.apricotdb.metascan.ApricotTargetDatabase;
 import za.co.apricotdb.metascan.oracle.OracleServiceType;
 import za.co.apricotdb.ui.handler.ReverseEngineHandler;
+import za.co.apricotdb.ui.handler.ReverseProcessHandler;
 import za.co.apricotdb.ui.handler.SqlServerParametersHandler;
 import za.co.apricotdb.ui.model.ConnectionAppParameterModel;
 import za.co.apricotdb.ui.model.ConnectionParametersModel;
@@ -80,6 +81,9 @@ public class ConnectionOracleController {
     @Autowired
     AlertMessageDecorator alertHandler;
 
+    @Autowired
+    ReverseProcessHandler reverseProcessHandler;
+
     private final ToggleGroup serviceTypeGroup = new ToggleGroup();
     private OracleServiceType serviceType;
 
@@ -126,9 +130,9 @@ public class ConnectionOracleController {
 
     @FXML
     public void forward() {
-        parametersHandler.saveConnectionParameters(ApricotTargetDatabase.Oracle.name(), server.getValue(),
-                port.getValue(), serviceName.getValue(), schema.getValue(), user.getValue(), password.getText(), serviceType.name(),
-                pathToTnsnamesOraFile.getText());
+        reverseProcessHandler.doReverseProcess(server.getValue(), port.getValue(), serviceName.getValue(), schema.getValue(),
+                user.getValue(), password.getText(), ApricotTargetDatabase.Oracle, false, serviceType,
+                pathToTnsnamesOraFile.getText(), getStage(), composeReverseEngineeringParameters());
     }
 
     /**
@@ -213,5 +217,32 @@ public class ConnectionOracleController {
                 setTnsType(true);
                 break;
         }
+    }
+
+    /**
+     * Compose the Oracle specific parameters.
+     */
+    private String composeReverseEngineeringParameters() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Database: Oracle").append("\n");
+        switch (serviceType) {
+            case SERVICE:
+                sb.append("Service: ").append(serviceName).append("\n");
+                break;
+            case SID:
+                sb.append("SID: ").append(serviceName).append("\n");
+                break;
+            case TNS:
+                sb.append("TNS: ").append(serviceName).append("\n");
+                break;
+        }
+        if (serviceType != OracleServiceType.TNS) {
+            sb.append("Server: ").append(server.getSelectionModel().getSelectedItem()).append("\n");
+            sb.append("Port: ").append(port.getSelectionModel().getSelectedItem()).append("\n");
+        }
+        sb.append("User: ").append(user.getSelectionModel().getSelectedItem()).append("\n");
+
+        return sb.toString();
     }
 }

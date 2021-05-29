@@ -42,7 +42,6 @@ import za.co.apricotdb.ui.model.ApricotForm;
 import za.co.apricotdb.ui.model.ConnectionAppParameterModel;
 import za.co.apricotdb.ui.repository.ModelRow;
 import za.co.apricotdb.ui.repository.RowType;
-import za.co.apricotdb.ui.service.ReverseEngineService;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.ui.util.ImageHelper;
 
@@ -112,9 +111,6 @@ public class ReverseEngineHandler {
 
     @Autowired
     CompareSnapshotsHandler compareSnapshotsHandler;
-
-    @Autowired
-    ReverseEngineService reverseEngineService;
 
     @ApricotErrorLogger(title = "Unable to start the Reverse Engineering process")
     public void startReverseEngineering() {
@@ -210,7 +206,7 @@ public class ReverseEngineHandler {
 
         // Success! Save the connection parameters in the project- parameter
         parametersHandler.saveConnectionParameters(targetDb.getDatabaseName(), server, port, database, schema, user,
-                password, serviceType!=null?serviceType.name():null, tnsNamesOraPath);
+                password, serviceType != null ? serviceType.name() : null, tnsNamesOraPath);
     }
 
     /**
@@ -227,39 +223,6 @@ public class ReverseEngineHandler {
             row.setRemoteSnapshot(reversedSnapshot);
             compareSnapshotsHandler.openCompareSnapshotsForm(SnapshotComparisonType.REVERSED, row);
         }
-    }
-
-    /**
-     * Start the Reverse Engineering process (the "Forward" button).
-     */
-    public void doReverseProcess(String server, String port, String database, String schema, String user,
-                                    String password, ApricotTargetDatabase targetDb, boolean useWindowsUserFlag,
-                                    OracleServiceType serviceType, String tnsNamesOraPath, Stage stage, String connectionSummary) {
-        // check the connection firstly
-        testConnection(server, port, database, schema, user, password, targetDb, useWindowsUserFlag, serviceType, tnsNamesOraPath);
-
-        String driverClass = scannerFactory.getDriverClass(targetDb);
-        String url = scannerFactory.getUrl(targetDb, server, port, database, useWindowsUserFlag, serviceType, tnsNamesOraPath);
-
-        reverseEngineService.initService(targetDb, driverClass, url, schema, user, password, snapshotManager.getDefaultSnapshot());
-
-        //  success
-        reverseEngineService.setOnSucceeded(e -> {
-            stage.close();
-            String[] blackList = blackListHandler.getBlackListTables(projectManager.findCurrentProject());
-            if (snapshotManager.isCurrentSnapshotEmpty()) {
-                openScanResultForm(reverseEngineService.getValue(), blackList, connectionSummary);
-            } else {
-                //  the current snapshot contains Entities
-                reverseInCurrentSnapshot(reverseEngineService.getValue(), blackList, connectionSummary);
-            }
-        });
-
-        //  failure
-        reverseEngineService.setOnFailed(e -> {
-            throw new IllegalArgumentException(reverseEngineService.getException());
-        });
-        reverseEngineService.start();
     }
 
     private String getMessageForExtraExclude(Map<ApricotTable, ApricotTable> extraExclude) {

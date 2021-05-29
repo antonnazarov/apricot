@@ -17,6 +17,7 @@ import za.co.apricotdb.metascan.ApricotTargetDatabase;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.ui.handler.ReverseEngineHandler;
+import za.co.apricotdb.ui.handler.ReverseProcessHandler;
 import za.co.apricotdb.ui.model.ConnectionAppParameterModel;
 import za.co.apricotdb.ui.model.ConnectionParametersModel;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
@@ -44,6 +45,9 @@ public class ConnectionSqlServerController {
 
     @Autowired
     ParentWindow parent;
+
+    @Autowired
+    ReverseProcessHandler reverseProcessHandler;
 
     @FXML
     Pane mainPane;
@@ -111,7 +115,7 @@ public class ConnectionSqlServerController {
 
     @FXML
     public void forward() {
-        reverseEngineHandler.doReverseProcess(server.getValue(), port.getValue(), database.getValue(), schema.getValue(),
+        reverseProcessHandler.doReverseProcess(server.getValue(), port.getValue(), database.getValue(), schema.getValue(),
                 user.getValue(), password.getText(), targetDb, useWindowsUserFlag.isSelected(), null,
                 null, getStage(), composeReverseEngineeringParameters());
     }
