@@ -109,12 +109,14 @@ public class SynchronizeSnapshotService extends Service<Boolean> implements Init
                 updateProgress(++count, total);
                 updateMessage("The views have been synchronized...");
 
-                treeViewHandler.populate(projectManager.findCurrentProject(), snapshotManager.getDefaultSnapshot());
+                Platform.runLater(() -> {
+                            treeViewHandler.populate(projectManager.findCurrentProject(), snapshotManager.getDefaultSnapshot());
+                            treeViewHandler.markEntitiesIncludedIntoView(currentTab.getView());
+                            treeViewHandler.sortEntitiesByView();
+                        });
+
                 updateProgress(++count, total);
                 updateMessage("The Project Explorer has been refreshed...");
-
-                treeViewHandler.markEntitiesIncludedIntoView(currentTab.getView());
-                treeViewHandler.sortEntitiesByView();
 
                 logger.info("SynchronizeSnapshotService: " + (System.currentTimeMillis()-start) + " ms");
 
@@ -133,7 +135,9 @@ public class SynchronizeSnapshotService extends Service<Boolean> implements Init
         });
 
         setOnSucceeded(e -> {
-            mapHandler.drawMap();
+            Platform.runLater(() -> {
+                mapHandler.drawMap();
+            });
         });
     }
 
