@@ -28,6 +28,8 @@ import za.co.apricotdb.persistence.entity.ViewDetailLevel;
 import za.co.apricotdb.ui.MainAppController;
 import za.co.apricotdb.ui.ViewFormController;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
+import za.co.apricotdb.ui.log.ApricotInfoLogger;
+import za.co.apricotdb.ui.log.LogParam;
 import za.co.apricotdb.ui.map.MapHandler;
 import za.co.apricotdb.ui.model.ApricotForm;
 import za.co.apricotdb.ui.model.ApricotViewSerializer;
@@ -199,6 +201,9 @@ public class ApricotViewHandler {
     }
 
     @Transactional
+    @ApricotInfoLogger
+    @LogParam(name = "snapshot", paramValue = "getName")
+    @LogParam(name = "view", paramValue = "getName")
     public Tab createViewTab(ApricotSnapshot snapshot, ApricotView view, TabPane tabPane) {
         ApricotCanvas canvas = canvasBuilder.buildCanvas(view.getDetailLevel().toString(),
                 snapshot.getProject().getErdNotation().toString());

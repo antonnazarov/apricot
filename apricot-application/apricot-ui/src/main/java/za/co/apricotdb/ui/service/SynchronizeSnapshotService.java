@@ -5,6 +5,8 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ProjectManager;
@@ -35,7 +37,9 @@ import java.util.List;
  * @since 20/11/2020
  */
 @Component
-public class SynchronizeSnapshotService  extends Service<Boolean> implements InitializableService {
+public class SynchronizeSnapshotService extends Service<Boolean> implements InitializableService {
+
+    private static final Logger logger = LoggerFactory.getLogger(SynchronizeSnapshotService.class);
 
     @Autowired
     ProgressInitializer progressInitializer;
@@ -76,6 +80,7 @@ public class SynchronizeSnapshotService  extends Service<Boolean> implements Ini
 
             @Override
             protected Boolean call() {
+                long start = System.currentTimeMillis();
 
                 int count = 0;
                 int total = 1;
@@ -108,12 +113,16 @@ public class SynchronizeSnapshotService  extends Service<Boolean> implements Ini
                 updateProgress(++count, total);
                 updateMessage("The views have been synchronized...");
 
-                treeViewHandler.populate(projectManager.findCurrentProject(), snapshotManager.getDefaultSnapshot());
+                Platform.runLater(() -> {
+                            treeViewHandler.populate(projectManager.findCurrentProject(), snapshotManager.getDefaultSnapshot());
+                            treeViewHandler.markEntitiesIncludedIntoView(currentTab.getView());
+                            treeViewHandler.sortEntitiesByView();
+                        });
+
                 updateProgress(++count, total);
                 updateMessage("The Project Explorer has been refreshed...");
 
-                treeViewHandler.markEntitiesIncludedIntoView(currentTab.getView());
-                treeViewHandler.sortEntitiesByView();
+                logger.info("SynchronizeSnapshotService: " + (System.currentTimeMillis()-start) + " ms");
 
                 return true;
             }
@@ -131,7 +140,9 @@ public class SynchronizeSnapshotService  extends Service<Boolean> implements Ini
         });
 
         setOnSucceeded(e -> {
-            mapHandler.drawMap();
+            Platform.runLater(() -> {
+                mapHandler.drawMap();
+            });
         });
     }
 

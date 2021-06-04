@@ -8,7 +8,8 @@ package za.co.apricotdb.metascan;
  */
 public enum ApricotTargetDatabase {
     MSSQLServer("MSSQLServer", true), Oracle("Oracle", true), MySQL("MySQL", true), PostrgeSQL("PostgreSQL", true),
-    DB2("DB2", true), DB2_LUW("DB2 (LUW)", true), H2("H2", true), SQLite("SQLite", true);
+    DB2("DB2", true), DB2_LUW("DB2 (LUW)", true), H2("H2", true), SQLite("SQLite", true),
+    MariaDB("MariaDB", true);
 
     private boolean supported;
     private String databaseName;

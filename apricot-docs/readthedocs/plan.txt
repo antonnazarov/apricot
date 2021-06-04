@@ -1,0 +1,58 @@
+Projects and Snapshots in "Apricot DB"
+	Compare Snapshots
+
+Reverse Engineering in "Apricot DB"
+	Reversing the database into the new Snapshot
+	Reversing the database into the existing Snapshot
+
+Entities: Select and Find
+	Selecting Entities in the Project Explorer and on the Diagram
+	Select all Entities on the Diagram
+	Adding and removing the Entities of the Snapshot on the View
+	Selecting and moving multiple Entities
+	Selecting the linked Entities
+	Adding linked Entities to the current view
+	Filtering Entities
+	Navigating in the Diagram using the Diagram Map
+	The advanced search of Entities
+	The Quick View
+
+Entities: create, edit delete
+	Create a new Entity
+	Edit the Entity
+	Delete the Entity
+
+Relationships: create, edit, delete
+	Create a new Relationship
+	Edit the Relationship
+	Delete the Relationship
+
+Navigation in the Diagram, aligning in "Apricot DB"
+	Allocation of Entities and Retaionships
+	Automatic alignment
+	Reset the Diagram
+	Refresh the Diagram content
+	Undo of the changes made
+
+The Diagram: forms and notations
+	Two graphical notations supported by "Apricot DB"
+	Three levels of detalisation of the Diagram
+	
+Generation of the Scripts
+	The "Create" script
+	The "Delete" Script
+	The "Drop" script
+	                 
+Exporting Diagrams into other document formats
+	Exporting and importing the Project to/from the file
+	Exporting the Diagram into the graphic format
+	Exporting the Diagram into the PDF format
+	Exposrting the Diagram into the Excel document
+
+Using "Apricot DB" in the team
+	Using Git as a shared repository of "Apricot DB"
+	Creating the Git repository
+	Configuring the Git connection
+	Synchronizing the local and remote Projects
+
+The database design best practices with "Apricot DB" 

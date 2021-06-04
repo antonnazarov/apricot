@@ -1,16 +1,15 @@
 package za.co.apricotdb.ui.handler;
 
+import org.springframework.stereotype.Component;
+import za.co.apricotdb.persistence.entity.ApricotRelationship;
+import za.co.apricotdb.persistence.entity.ApricotTable;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.springframework.stereotype.Component;
-
-import za.co.apricotdb.persistence.entity.ApricotRelationship;
-import za.co.apricotdb.persistence.entity.ApricotTable;
 
 /**
  * This class is responsible for consistency of the database schema after the
@@ -99,7 +98,7 @@ public class ConsistencyHandler {
 
         return ret;
     }
-    
+
     private Map<ApricotTable, ApricotTable> getConsistentExclude(List<ApricotTable> excluded,
             List<ApricotRelationship> relationships) {
         Map<ApricotTable, ApricotTable> ret = new HashMap<>();

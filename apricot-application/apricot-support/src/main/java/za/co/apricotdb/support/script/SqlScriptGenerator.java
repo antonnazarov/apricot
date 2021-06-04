@@ -265,7 +265,7 @@ public class SqlScriptGenerator {
         StringBuilder sb = new StringBuilder();
 
         // first drop the outgoing/external relationships
-        List<ApricotRelationship> externalRelationships = relationshipManager.findExernalRelationships(tables, true);
+        List<ApricotRelationship> externalRelationships = relationshipManager.findExternalRelationships(tables, true);
         for (ApricotRelationship r : externalRelationships) {
             sb.append(dropConstraint(r.getChild(), schema));
         }
@@ -322,7 +322,7 @@ public class SqlScriptGenerator {
 
         List<ApricotTable> tbl = new ArrayList<>(tables);
         while (true) {
-            List<ApricotRelationship> externalRelationships = relationshipManager.findExernalRelationships(tbl, true);
+            List<ApricotRelationship> externalRelationships = relationshipManager.findExternalRelationships(tbl, true);
             if (externalRelationships.size() == 0) {
                 break;
             }

@@ -5,6 +5,8 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TabPane;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ProjectManager;
@@ -28,6 +30,8 @@ import java.util.List;
  */
 @Component
 public class CanvasInitializerService extends Service<Boolean> implements InitializableService {
+
+    private static final Logger logger = LoggerFactory.getLogger(CanvasInitializerService.class);
 
     @Autowired
     ProgressInitializer progressInitializer;
@@ -62,6 +66,8 @@ public class CanvasInitializerService extends Service<Boolean> implements Initia
 
             @Override
             protected Boolean call() {
+                long start = System.currentTimeMillis();
+
                 int count = 0;
                 updateProgress(0, 5);
                 updateMessage("Reading the project data...");
@@ -110,6 +116,8 @@ public class CanvasInitializerService extends Service<Boolean> implements Initia
                         });
                     }
                 }
+
+                logger.info("CanvasInitializerService: " + (System.currentTimeMillis()-start) + " ms");
 
                 return true;
             }

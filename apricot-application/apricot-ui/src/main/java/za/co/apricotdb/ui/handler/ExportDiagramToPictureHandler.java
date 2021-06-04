@@ -1,5 +1,6 @@
 package za.co.apricotdb.ui.handler;
 
+import javafx.application.Application;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.control.Alert;
 import javafx.scene.image.WritableImage;
@@ -71,6 +72,9 @@ public class ExportDiagramToPictureHandler {
             alert.showAndWait();
             parameterManager.saveParameter(projectManager.findCurrentProject(), ProjectParameterManager.EXPORT_PICTURE_OUTPUT_DIR,
                     file.getParent());
+
+            Application app = parentWindow.getApplication();
+            app.getHostServices().showDocument(file.getAbsolutePath());
         }
     }
 }

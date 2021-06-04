@@ -14,17 +14,13 @@ import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.metascan.ApricotTargetDatabase;
-import za.co.apricotdb.metascan.MetaDataScannerFactory;
 import za.co.apricotdb.persistence.data.ProjectManager;
-import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
-import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.ui.error.ApricotErrorHandler;
-import za.co.apricotdb.ui.handler.BlackListHandler;
 import za.co.apricotdb.ui.handler.ReverseEngineHandler;
+import za.co.apricotdb.ui.handler.ReverseProcessHandler;
 import za.co.apricotdb.ui.model.ConnectionAppParameterModel;
 import za.co.apricotdb.ui.model.ConnectionParametersModel;
-import za.co.apricotdb.ui.service.ReverseEngineService;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
 import java.util.List;
@@ -46,22 +42,13 @@ public class ConnectionSqlServerController {
     ReverseEngineHandler reverseEngineHandler;
 
     @Autowired
-    SnapshotManager snapshotManager;
-
-    @Autowired
     ProjectManager projectManager;
 
     @Autowired
-    BlackListHandler blackListHandler;
-
-    @Autowired
-    MetaDataScannerFactory scannerFactory;
-
-    @Autowired
-    ReverseEngineService reverseEngineService;
-
-    @Autowired
     ParentWindow parent;
+
+    @Autowired
+    ReverseProcessHandler reverseProcessHandler;
 
     @Autowired
     ApricotErrorHandler errorHandler;
@@ -94,13 +81,11 @@ public class ConnectionSqlServerController {
     CheckBox useWindowsUserFlag;
 
     private ConnectionAppParameterModel model;
-    private ApricotSnapshot snapshot;
     private ApricotProject project;
     private ApricotTargetDatabase targetDb;
 
     public void init(ConnectionAppParameterModel model) {
         this.model = model;
-        snapshot = snapshotManager.getDefaultSnapshot();
         project = projectManager.findCurrentProject();
         targetDb = ApricotTargetDatabase.parse(project.getTargetDatabase());
         applyModel(model);
@@ -122,7 +107,7 @@ public class ConnectionSqlServerController {
         reverseEngineHandler.testConnection(server.getSelectionModel().getSelectedItem(),
                 port.getSelectionModel().getSelectedItem(), database.getSelectionModel().getSelectedItem(),
                 schema.getSelectionModel().getSelectedItem(), user.getSelectionModel().getSelectedItem(),
-                password.getText(), targetDb, useWindowsUserFlag.isSelected());
+                password.getText(), targetDb, useWindowsUserFlag.isSelected(), null, null);
         Alert alert = getAlert(AlertType.INFORMATION, "The connection was successfully established");
         alert.showAndWait();
     }
@@ -134,29 +119,9 @@ public class ConnectionSqlServerController {
 
     @FXML
     public void forward() {
-        // check the connection firstly
-        reverseEngineHandler.testConnection(server.getSelectionModel().getSelectedItem(),
-                port.getSelectionModel().getSelectedItem(), database.getSelectionModel().getSelectedItem(),
-                schema.getSelectionModel().getSelectedItem(), user.getSelectionModel().getSelectedItem(),
-                password.getText(), targetDb, useWindowsUserFlag.isSelected());
-
-        String driverClass = scannerFactory.getDriverClass(targetDb);
-        String url = scannerFactory.getUrl(targetDb, server.getSelectionModel().getSelectedItem(),
-                port.getSelectionModel().getSelectedItem(), database.getSelectionModel().getSelectedItem(),
-                useWindowsUserFlag.isSelected());
-
-        reverseEngineService.initService(targetDb, driverClass, url, schema.getValue(),
-                user.getSelectionModel().getSelectedItem(), password.getText(), snapshot);
-        reverseEngineService.setOnSucceeded(e -> {
-            getStage().close();
-            reverseEngineHandler.openScanResultForm(reverseEngineService.getValue(), blackListHandler.getBlackListTables(project),
-                    composeReverseEngineeringParameters());
-        });
-        reverseEngineService.setOnFailed(e -> {
-            errorHandler.showErrorInfo("Unable to Reverse Engineer the target database", "Reverse Engineering Failure",
-                    reverseEngineService.getException());
-        });
-        reverseEngineService.start();
+        reverseProcessHandler.doReverseProcess(server.getValue(), port.getValue(), database.getValue(), schema.getValue(),
+                user.getValue(), password.getText(), targetDb, useWindowsUserFlag.isSelected(), null,
+                null, getStage(), composeReverseEngineeringParameters());
     }
 
     @FXML

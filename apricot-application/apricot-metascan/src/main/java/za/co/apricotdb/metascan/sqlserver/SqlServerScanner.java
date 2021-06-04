@@ -113,9 +113,11 @@ public class SqlServerScanner extends MetaDataScannerBase {
                     break;
                 }
 
-                ApricotConstraint c = new ApricotConstraint(constraintName, constraintType, table);
-                table.getConstraints().add(c);
-                constraints.put(c.getName(), c);
+                if (constraintType != null) {
+                    ApricotConstraint c = new ApricotConstraint(constraintName, constraintType, table);
+                    table.getConstraints().add(c);
+                    constraints.put(c.getName(), c);
+                }
             }
 
             return null;

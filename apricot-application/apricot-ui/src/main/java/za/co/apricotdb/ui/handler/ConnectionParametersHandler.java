@@ -1,7 +1,5 @@
 package za.co.apricotdb.ui.handler;
 
-import java.util.Properties;
-
 /**
  * This interface describes operations common for connection handlers, implemented for different databases.
  * 
@@ -11,5 +9,5 @@ import java.util.Properties;
 public interface ConnectionParametersHandler {
     
     void saveConnectionParameters(String dbType, String server, String port, String database, String schema,
-                                  String user, String password);
+                                  String user, String password, String serviceType, String tnsNamesOraPath);
 }

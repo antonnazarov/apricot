@@ -8,6 +8,8 @@ import javafx.beans.property.StringProperty;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import org.controlsfx.dialog.ProgressDialog;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.stereotype.Component;
@@ -33,6 +35,8 @@ import java.util.Map;
  */
 @Component
 public class ReverseEngineService extends Service<MetaData> implements InitializableService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ReverseEngineService.class);
 
     private ObjectProperty<ApricotTargetDatabase> targetDatabase = new SimpleObjectProperty<>();
     private StringProperty driverClassName = new SimpleStringProperty();
@@ -98,6 +102,8 @@ public class ReverseEngineService extends Service<MetaData> implements Initializ
 
             @Override
             protected MetaData call() {
+                long start = System.currentTimeMillis();
+
                 MetaDataScanner scanner = scannerFactory.getScanner(getTargetDatabase());
 
                 if (StringUtils.isEmpty(getSchema())) {
@@ -133,6 +139,8 @@ public class ReverseEngineService extends Service<MetaData> implements Initializ
                 MetaData ret = new MetaData();
                 ret.setTables(new ArrayList<>(tables.values()));
                 ret.setRelationships(relationships);
+
+                logger.info("ReverseEngineService: " + (System.currentTimeMillis()-start) + " ms");
 
                 return ret;
             }

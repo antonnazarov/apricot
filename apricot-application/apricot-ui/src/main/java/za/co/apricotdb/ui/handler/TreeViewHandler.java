@@ -1,17 +1,11 @@
 package za.co.apricotdb.ui.handler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseButton;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.TableManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
@@ -20,6 +14,12 @@ import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.handler.ProjectExplorerItem.ItemType;
+import za.co.apricotdb.ui.log.ApricotInfoLogger;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This component serves the TreeView on the left side of the main form.
@@ -48,6 +48,7 @@ public class TreeViewHandler {
     @Autowired
     NonTransactionalPort port;
 
+    @ApricotInfoLogger
     public void populate(ApricotProject project, ApricotSnapshot snapshot) {
         List<ApricotTable> tables = new ArrayList<>();
         if (filterHandler.isFilterOn()) {
@@ -78,12 +79,20 @@ public class TreeViewHandler {
         tw.getSelectionModel().clearSelection();
         TreeItem<ProjectExplorerItem> root = tw.getRoot();
         Map<String, TreeItem<ProjectExplorerItem>> items = getTreeItemsMap(root.getChildren());
+        boolean first = true;
+        int selectedIdx = 0;
         for (String entity : entities) {
             TreeItem<ProjectExplorerItem> item = items.get(entity);
             if (item != null) {
                 tw.getSelectionModel().select(item);
+                if (first) {
+                    selectedIdx = root.getChildren().indexOf(item);
+                    first = false;
+                }
             }
         }
+
+        tw.scrollTo(selectedIdx);
     }
 
     /**

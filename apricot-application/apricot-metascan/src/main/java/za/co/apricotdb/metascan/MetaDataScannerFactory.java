@@ -11,6 +11,7 @@ import za.co.apricotdb.metascan.h2.H2UrlBuilder;
 import za.co.apricotdb.metascan.mysql.MySqlScanner;
 import za.co.apricotdb.metascan.mysql.MySqlUrlBuilder;
 import za.co.apricotdb.metascan.oracle.OracleScanner;
+import za.co.apricotdb.metascan.oracle.OracleServiceType;
 import za.co.apricotdb.metascan.oracle.OracleUrlBuilder;
 import za.co.apricotdb.metascan.postgresql.PostgreSqlScanner;
 import za.co.apricotdb.metascan.postgresql.PostgreSqlUrlBuilder;
@@ -93,6 +94,7 @@ public class MetaDataScannerFactory {
             case PostrgeSQL:
                 scanner = postgreSqlScanner;
                 break;
+            case MariaDB:
             case MySQL:
                 scanner = mySqlScanner;
                 break;
@@ -143,6 +145,7 @@ public class MetaDataScannerFactory {
                 return oracleUrlBuilder;
             case PostrgeSQL:
                 return postgreSqlUrlBuilder;
+            case MariaDB:
             case MySQL:
                 return mySqlUrlBuilder;
             case DB2:
@@ -175,10 +178,10 @@ public class MetaDataScannerFactory {
     }
 
     public String getUrl(ApricotTargetDatabase targetDb, String server, String port, String database,
-                         boolean integratedSecurity) {
+                         boolean integratedSecurity, OracleServiceType serviceType, String pathToTnsnamesOraFile) {
         DatabaseUrlBuilder urlBuilder = getDatabaseUrlBuilder(targetDb);
         if (urlBuilder != null) {
-            return urlBuilder.getUrl(server, port, database, integratedSecurity);
+            return urlBuilder.getUrl(server, port, database, integratedSecurity, serviceType, pathToTnsnamesOraFile);
         }
 
         return null;

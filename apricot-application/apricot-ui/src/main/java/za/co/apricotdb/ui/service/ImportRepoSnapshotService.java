@@ -3,6 +3,8 @@ package za.co.apricotdb.ui.service;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.ui.error.ApricotErrorHandler;
@@ -22,6 +24,8 @@ import java.io.File;
  */
 @Component
 public class ImportRepoSnapshotService extends Service<Boolean> implements InitializableService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ImportRepoSnapshotService.class);
 
     @Autowired
     ProgressInitializer progressInitializer;
@@ -53,6 +57,8 @@ public class ImportRepoSnapshotService extends Service<Boolean> implements Initi
         return new Task<>() {
             @Override
             protected Boolean call() {
+                long start = System.currentTimeMillis();
+
                 updateProgress(1, 6);
                 updateMessage("Cleaning the temporary projects...");
                 remoteExportService.removeTemporaryProject();
@@ -76,6 +82,8 @@ public class ImportRepoSnapshotService extends Service<Boolean> implements Initi
                 updateProgress(5, 6);
                 updateMessage("Refreshing the data model...");
                 repositoryHandler.refreshModel(false);
+
+                logger.info("ImportRepoSnapshotService: " + (System.currentTimeMillis()-start) + " ms");
 
                 return true;
             }

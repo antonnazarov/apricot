@@ -1,16 +1,15 @@
 package za.co.apricotdb.viewport.canvas;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.context.ApplicationEvent;
-
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
+import org.springframework.context.ApplicationEvent;
 import za.co.apricotdb.viewport.align.OrderManager;
 import za.co.apricotdb.viewport.entity.ApricotEntity;
 import za.co.apricotdb.viewport.relationship.ApricotRelationship;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * The canvas on which the ER- diagram will be drawn.

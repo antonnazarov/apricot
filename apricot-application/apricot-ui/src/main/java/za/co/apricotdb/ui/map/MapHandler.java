@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.handler.ApricotCanvasHandler;
 import za.co.apricotdb.ui.handler.TabInfoObject;
+import za.co.apricotdb.ui.log.ApricotInfoLogger;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 import za.co.apricotdb.viewport.canvas.ElementStatus;
 import za.co.apricotdb.viewport.entity.shape.ApricotEntityShape;
@@ -43,6 +44,7 @@ public class MapHandler {
      * Draw/re-draw the map from scratch.
      */
     @ApricotErrorLogger(title = "Unable to draw the scaled map")
+    @ApricotInfoLogger
     public void drawMap() {
         if (mapPane == null) {
             throw new IllegalArgumentException("The mapPane object was hot initialized");
@@ -107,5 +109,9 @@ public class MapHandler {
         }
 
         return ratio;
+    }
+
+    public Pane getMapPane() {
+        return mapPane;
     }
 }

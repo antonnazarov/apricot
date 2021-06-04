@@ -14,10 +14,24 @@ import za.co.apricotdb.metascan.DatabaseUrlBuilder;
 public class OracleUrlBuilder implements DatabaseUrlBuilder {
 
     @Override
-    public String getUrl(String server, String port, String service, boolean integratedSecurity) {
-        // example of the Oracle URL jdbc:oracle:thin:@localhost:1521:orcl
-        StringBuilder sb = new StringBuilder("jdbc:oracle:thin:@").append(server).append(":").append(port).append(":")
-                .append(service);
+    public String getUrl(String server, String port, String service, boolean integratedSecurity, OracleServiceType serviceType, String pathToTnsnamesOraFile) {
+        StringBuilder sb = null;
+        switch (serviceType) {
+            case SERVICE:
+                // jdbc:oracle:thin:@//localhost:1521/XE
+                sb = new StringBuilder("jdbc:oracle:thin:@//").append(server).append(":").append(port).append("/")
+                        .append(service);
+                break;
+            case TNS:
+                // jdbc:oracle:thin:@XE
+                sb = new StringBuilder("jdbc:oracle:thin:@").append(service);
+                System.setProperty("oracle.net.tns_admin", pathToTnsnamesOraFile);
+                break;
+            case SID:
+                // jdbc:oracle:thin:@localhost:1521:XE
+                sb = new StringBuilder("jdbc:oracle:thin:@").append(server).append(":").append(port).append(":")
+                        .append(service);
+        }
 
         return sb.toString();
     }

@@ -2,6 +2,8 @@ package za.co.apricotdb.ui.service;
 
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ObjectLayoutManager;
@@ -26,6 +28,8 @@ import java.util.List;
  */
 @Component
 public class DeleteProjectService extends Service<Boolean> implements InitializableService {
+
+    private static final Logger logger = LoggerFactory.getLogger(DeleteProjectService.class);
 
     @Resource
     private ApricotProjectRepository projectRepository;
@@ -55,6 +59,8 @@ public class DeleteProjectService extends Service<Boolean> implements Initializa
         return new Task<>() {
             @Override
             protected Boolean call() {
+                long start = System.currentTimeMillis();
+
                 project = projectManager.getProjectByName(project.getName());
 
                 List<ApricotSnapshot> snapshots = snapshotManager.getAllSnapshots(project);
@@ -85,6 +91,8 @@ public class DeleteProjectService extends Service<Boolean> implements Initializa
                 updateProgress(total, total);
                 updateMessage("Removing the project");
                 projectRepository.delete(project);
+
+                logger.info("DeleteProjectService: " + (System.currentTimeMillis()-start) + " ms");
 
                 return true;
             }

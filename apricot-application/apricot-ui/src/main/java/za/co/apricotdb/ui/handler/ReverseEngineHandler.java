@@ -20,28 +20,33 @@ import org.springframework.stereotype.Component;
 import za.co.apricotdb.metascan.ApricotTargetDatabase;
 import za.co.apricotdb.metascan.MetaDataScanner;
 import za.co.apricotdb.metascan.MetaDataScannerFactory;
+import za.co.apricotdb.metascan.oracle.OracleServiceType;
 import za.co.apricotdb.persistence.data.DataSaver;
 import za.co.apricotdb.persistence.data.MetaData;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
-import za.co.apricotdb.persistence.data.TableManager;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.ui.ConnectionH2Controller;
+import za.co.apricotdb.ui.ConnectionOracleController;
 import za.co.apricotdb.ui.ConnectionSqlServerController;
 import za.co.apricotdb.ui.ConnectionSqliteController;
 import za.co.apricotdb.ui.FiledbController;
 import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.ReversedTablesController;
+import za.co.apricotdb.ui.SnapshotComparisonType;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.model.ApricotForm;
 import za.co.apricotdb.ui.model.ConnectionAppParameterModel;
+import za.co.apricotdb.ui.repository.ModelRow;
+import za.co.apricotdb.ui.repository.RowType;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 import za.co.apricotdb.ui.util.ImageHelper;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -67,9 +72,6 @@ public class ReverseEngineHandler {
 
     @Autowired
     ProjectManager projectManager;
-
-    @Autowired
-    TableManager tableManager;
 
     @Autowired
     AlertMessageDecorator alertDecorator;
@@ -101,26 +103,22 @@ public class ReverseEngineHandler {
     @Autowired
     ConnectionSqliteController sqliteController;
 
+    @Autowired
+    SnapshotMatchChecker snapshotMatchChecker;
+
+    @Autowired
+    MetaDataHandler metaDataHandler;
+
+    @Autowired
+    CompareSnapshotsHandler compareSnapshotsHandler;
+
     @ApricotErrorLogger(title = "Unable to start the Reverse Engineering process")
-    public boolean startReverseEngineering() {
-        ApricotSnapshot snapshot = snapshotManager.getDefaultSnapshot();
-        List<ApricotTable> tables = tableManager.getTablesForSnapshot(snapshot);
-        if (tables != null && tables.size() > 0) {
-            // the reverse eng operation cannot be performed of the non empty snapshot
-            Alert alert = getAlert("The snapshot \"" + snapshot.getName() + "\" contains entities.\n"
-                    + "You only can perform the database reverse engineering operation \ninto an EMPTY snapshot.");
-            alert.showAndWait();
-
-            return false;
-        }
-
+    public void startReverseEngineering() {
         try {
-            openDatabaseConnectionForm(snapshot.getProject());
+            openDatabaseConnectionForm(projectManager.findCurrentProject());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IllegalStateException("Unable to open the Database connection form", e);
         }
-
-        return false;
     }
 
     @ApricotErrorLogger(title = "Unable to open the result of the scan process")
@@ -145,8 +143,8 @@ public class ReverseEngineHandler {
             alert.setTitle("Save results of the scan");
             alert.setHeaderText(WordUtils
                     .wrap("Some Parent tables were excluded from the resulting list. "
-                            + "In order to maintain consistency of the scanned database structure, "
-                            + "the corresponding Child tables will be excluded from the result:\n\n", 60)
+                            + "In order to maintain the consistency of the scanned database structure, "
+                            + "the corresponding Child tables will be excluded from the result accordingly:\n\n", 60)
                     + getMessageForExtraExclude(extraExclude));
             alertDecorator.decorateAlert(alert);
             alert.initOwner(pw.getWindow());
@@ -195,10 +193,10 @@ public class ReverseEngineHandler {
 
     @ApricotErrorLogger(title = "Unable to establish connection to the database", stop = true)
     public void testConnection(String server, String port, String database, String schema, String user, String password,
-                               ApricotTargetDatabase targetDb, boolean integratedSecurity) {
+                               ApricotTargetDatabase targetDb, boolean integratedSecurity, OracleServiceType serviceType, String tnsNamesOraPath) {
 
         String driverClass = scannerFactory.getDriverClass(targetDb);
-        String url = scannerFactory.getUrl(targetDb, server, port, database, integratedSecurity);
+        String url = scannerFactory.getUrl(targetDb, server, port, database, integratedSecurity, serviceType, tnsNamesOraPath);
 
         JdbcOperations op = MetaDataScanner.getTargetJdbcOperations(driverClass, url, user, password);
         RowMapper<String> rowMapper = (rs, rowNum) -> {
@@ -207,7 +205,24 @@ public class ReverseEngineHandler {
         op.query(scannerFactory.getTestSQL(targetDb), rowMapper);
 
         // Success! Save the connection parameters in the project- parameter
-        parametersHandler.saveConnectionParameters(targetDb.getDatabaseName(), server, port, database, schema, user, password);
+        parametersHandler.saveConnectionParameters(targetDb.getDatabaseName(), server, port, database, schema, user,
+                password, serviceType != null ? serviceType.name() : null, tnsNamesOraPath);
+    }
+
+    /**
+     * Perform the Reverse Engineering operation into the current snapshot.
+     */
+    @Transactional
+    public void reverseInCurrentSnapshot(MetaData metaData, String[] blackList, String reverseEngineeringParameters) {
+        if (snapshotMatchChecker.checkMatch(metaData, blackList, 80)) {
+            ApricotSnapshot localSnapshot = snapshotManager.getDefaultSnapshot();
+            ApricotSnapshot reversedSnapshot = metaDataHandler.createSnapshot(metaData, blackList);
+            reversedSnapshot.setComment(reverseEngineeringParameters);
+            ModelRow row = new ModelRow(RowType.SNAPSHOT, false, localSnapshot.getName(), "Reversed Snapshot");
+            row.setLocalSnapshot(localSnapshot);
+            row.setRemoteSnapshot(reversedSnapshot);
+            compareSnapshotsHandler.openCompareSnapshotsForm(SnapshotComparisonType.REVERSED, row);
+        }
     }
 
     private String getMessageForExtraExclude(Map<ApricotTable, ApricotTable> extraExclude) {
@@ -223,19 +238,9 @@ public class ReverseEngineHandler {
         return sb.toString();
     }
 
-    private Alert getAlert(String text) {
-        Alert alert = new Alert(AlertType.ERROR, null, ButtonType.OK);
-        alert.setTitle("Start Reverse Engineering process");
-        alert.setHeaderText(text);
-        alert.initOwner(pw.getWindow());
-        alertDecorator.decorateAlert(alert);
-
-        return alert;
-    }
-
     private void openDatabaseConnectionForm(ApricotProject project) throws IOException {
         ApricotTargetDatabase targetDatabase = ApricotTargetDatabase.parse(project.getTargetDatabase());
-        ConnectionAppParameterModel model = parametersHandler.getModel();
+        ConnectionAppParameterModel model = parametersHandler.getModel(project.getTargetDatabase());
 
         Pane window = null;
         FXMLLoader loader = null;
@@ -247,10 +252,18 @@ public class ReverseEngineHandler {
                 break;
             case Oracle:
                 title = "Connect to Oracle database";
-                window = initFormController(model);
+                loader = new FXMLLoader(getClass().getResource("/za/co/apricotdb/ui/apricot-re-oracle.fxml"));
+                loader.setControllerFactory(context::getBean);
+                window = loader.load();
+                ConnectionOracleController oracleController = loader.getController();
+                oracleController.init(model);
                 break;
             case PostrgeSQL:
                 title = "Connect to PostgreSQL database";
+                window = initFormController(model);
+                break;
+            case MariaDB:
+                title = "Connect to MariaDB database";
                 window = initFormController(model);
                 break;
             case MySQL:
@@ -299,6 +312,16 @@ public class ReverseEngineHandler {
         });
 
         dialog.show();
+    }
+
+    public String composeSnapshotReversedComment(String reverseEngineeringParameters) {
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        StringBuilder sb = new StringBuilder();
+        sb.append(df.format(new java.util.Date())).append(" -> ");
+        sb.append("The Reverse Engineering was successfully performed into this Snapshot with the following connection parameters:\n");
+        sb.append(reverseEngineeringParameters);
+
+        return sb.toString();
     }
 
     private void setSnapshotReverseResultComment(String reverseEngineeringParameters) {

@@ -15,6 +15,7 @@ import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.handler.ProjectExplorerItem.ItemType;
+import za.co.apricotdb.ui.log.ApricotInfoLogger;
 import za.co.apricotdb.ui.map.MapHandler;
 import za.co.apricotdb.ui.service.CanvasInitializerService;
 import za.co.apricotdb.ui.undo.ApricotUndoManager;
@@ -53,6 +54,7 @@ public class ApplicationInitializer {
     MapHandler mapHandler;
 
     @Transactional
+    @ApricotInfoLogger
     public void initializeDefault() {
         ApricotProject currentProject = projectManager.findCurrentProject();
         if (currentProject == null) {
@@ -71,6 +73,7 @@ public class ApplicationInitializer {
     }
 
     @Transactional
+    @ApricotInfoLogger
     public void initializeForProject(ApricotProject project) {
         parentWindow.setEmptyEnv(false);
         ApricotSnapshot defaultSnapshot = snapshotManager.getDefaultSnapshot(project);
@@ -78,6 +81,7 @@ public class ApplicationInitializer {
     }
 
     @Transactional
+    @ApricotInfoLogger
     public void initialize(ApricotProject project, ApricotSnapshot snapshot) {
         //  if there is another service in action, just leave the method
         if (canvasInitializerService.getState() == Worker.State.RUNNING) {

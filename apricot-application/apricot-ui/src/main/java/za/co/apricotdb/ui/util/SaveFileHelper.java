@@ -35,6 +35,10 @@ public class SaveFileHelper {
                 outputDirParameter);
         if (param != null) {
             outputDir = param.getValue();
+            File f = new File(outputDir);
+            if (!f.isDirectory()) {
+                outputDir = System.getProperty("user.dir");
+            }
         } else {
             outputDir = System.getProperty("user.dir");
         }

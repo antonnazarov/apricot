@@ -3,14 +3,18 @@ package za.co.apricotdb.ui.handler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.RelationshipManager;
+import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.TableManager;
+import za.co.apricotdb.persistence.data.ViewManager;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotTable;
+import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.RelatedEntitiesController;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.model.ApricotForm;
 import za.co.apricotdb.viewport.canvas.ApricotCanvas;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -38,6 +42,15 @@ public class RelatedEntitiesHandler {
 
     @Autowired
     DialogFormHandler formHandler;
+
+    @Autowired
+    SnapshotManager snapshotManager;
+
+    @Autowired
+    ViewManager viewManager;
+
+    @Autowired
+    ApricotViewHandler viewHandler;
 
     /**
      * Select tables, related to the given list.
@@ -109,18 +122,71 @@ public class RelatedEntitiesHandler {
 
         for (String tableName : tables) {
             ApricotTable table = tableManager.getTableByName(tableName);
-            RelatedEntityAbsent absence = new RelatedEntityAbsent(tableName);
-            for (ApricotRelationship r : relationshipManager.getRelationshipsForTable(table)) {
-                boolean isChild = r.getChild().getTable().getName().equals(tableName); // the side of the relationship
-                if (isChild && !tables.contains(r.getParent().getTable().getName())) {
-                    absence.setParent(true);
+            RelatedEntityAbsent absence = getAbsenceForTable(table, tables);
+            ret.put(tableName, absence);
+        }
+
+        return ret;
+    }
+
+    @Transactional
+    public RelatedEntityAbsent getAbsenceForEntity(String tableName, ApricotView view) {
+        RelatedEntityAbsent absence = new RelatedEntityAbsent(tableName);
+
+        ApricotTable table = tableManager.getTableByName(tableName);
+        ApricotView v = viewManager.getViewById(view.getId());
+        if (v != null) {
+            List<ApricotTable> viewTables = viewHandler.getTablesForView(snapshotManager.getDefaultSnapshot(), v);
+            if (viewTables != null) {
+                List<String> tables = new ArrayList<>();
+                for (ApricotTable t : viewTables) {
+                    tables.add(t.getName());
                 }
-                if (!isChild && !tables.contains(r.getChild().getTable().getName())) {
-                    absence.setChild(true);
-                }
+
+                absence = getAbsenceForTable(table, tables);
+            }
+        }
+
+        return absence;
+    }
+
+    private RelatedEntityAbsent getAbsenceForTable(ApricotTable table, List<String> tables) {
+        RelatedEntityAbsent absence = new RelatedEntityAbsent(table.getName());
+        for (ApricotRelationship r : relationshipManager.getRelationshipsForTable(table)) {
+            boolean isChild = r.getChild().getTable().getName().equals(table.getName()); // the side of the relationship
+            if (isChild && !tables.contains(r.getParent().getTable().getName())) {
+                absence.setParent(true);
+            }
+            if (!isChild && !tables.contains(r.getChild().getTable().getName())) {
+                absence.setChild(true);
+            }
+        }
+
+        return absence;
+    }
+
+    /**
+     * Retrieve all related entities for the given one, which have been presented on the current view.
+     */
+    @Transactional
+    public List<ApricotTable> getRelatedTablesOnView(ApricotTable table, ApricotView view) {
+        List<ApricotTable> ret = new ArrayList<>();
+
+        List<ApricotTable> viewTables = viewHandler.getTablesForView(snapshotManager.getDefaultSnapshot(), view);
+        for (ApricotRelationship rel : relationshipManager.getRelationshipsForTable(table)) {
+            ApricotTable relatedTable = rel.getChild().getTable();
+            if (table.equals(rel.getChild().getTable())) {
+                relatedTable = rel.getParent().getTable();
             }
 
-            ret.put(tableName, absence);
+            if (viewTables.contains(relatedTable) &&
+                    !ret.contains(relatedTable)) {
+                ret.add(relatedTable);
+            }
+        }
+
+        if (!ret.contains(table)) {
+            ret.add(table);
         }
 
         return ret;
