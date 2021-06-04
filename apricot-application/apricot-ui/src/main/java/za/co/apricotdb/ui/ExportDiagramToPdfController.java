@@ -85,6 +85,7 @@ public class ExportDiagramToPdfController {
         }
 
         exportDiagramToPdfHandler.exportDiagram(fileName, pageFormat.getValue(), portrait.isSelected());
+        getStage().close();
     }
 
     @FXML

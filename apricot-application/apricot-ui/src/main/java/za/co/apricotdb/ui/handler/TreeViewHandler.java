@@ -79,12 +79,20 @@ public class TreeViewHandler {
         tw.getSelectionModel().clearSelection();
         TreeItem<ProjectExplorerItem> root = tw.getRoot();
         Map<String, TreeItem<ProjectExplorerItem>> items = getTreeItemsMap(root.getChildren());
+        boolean first = true;
+        int selectedIdx = 0;
         for (String entity : entities) {
             TreeItem<ProjectExplorerItem> item = items.get(entity);
             if (item != null) {
                 tw.getSelectionModel().select(item);
+                if (first) {
+                    selectedIdx = root.getChildren().indexOf(item);
+                    first = false;
+                }
             }
         }
+
+        tw.scrollTo(selectedIdx);
     }
 
     /**

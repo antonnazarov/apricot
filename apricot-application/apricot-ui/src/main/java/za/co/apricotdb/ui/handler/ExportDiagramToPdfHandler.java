@@ -7,6 +7,7 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Image;
+import javafx.application.Application;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.control.Alert;
 import javafx.scene.image.WritableImage;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.ProjectParameterManager;
 import za.co.apricotdb.ui.ExportDiagramToPdfController;
+import za.co.apricotdb.ui.ParentWindow;
 import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.model.ApricotForm;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
@@ -23,6 +25,7 @@ import za.co.apricotdb.viewport.canvas.ApricotCanvasImpl;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -50,6 +53,9 @@ public class ExportDiagramToPdfHandler {
 
     @Autowired
     AlertMessageDecorator alertDecorator;
+
+    @Autowired
+    ParentWindow parentWindow;
 
     @ApricotErrorLogger(title = "Unable to open the Export Diagram to PDF screen")
     public void openSearchForm() {
@@ -89,12 +95,12 @@ public class ExportDiagramToPdfHandler {
         }
 
         File file = new File(fileName);
-        Alert alert = alertDecorator.getAlert("Export Diagram",
-                "The current Diagram was successfully exported into: " + file.getAbsolutePath(), Alert.AlertType.INFORMATION);
-        alert.showAndWait();
 
         parameterManager.saveParameter(projectManager.findCurrentProject(),
                 ProjectParameterManager.EXPORT_PDF_OUTPUT_DIR, file.getParent());
+
+        Application app = parentWindow.getApplication();
+        app.getHostServices().showDocument(fileName);
     }
 
     private PageSize getPageSize(String size) {
