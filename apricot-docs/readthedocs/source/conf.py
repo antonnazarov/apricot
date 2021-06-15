@@ -12,7 +12,7 @@ extensions = [
 ]
 
 # -- Options for HTML output -------------------------------------------------
-html_title = "ApricotDB Release 2.5"
+html_title = "ApricotDB Release 2.6 (July 2021)"
 
 # NOTE: All the lines are after this are the theme-specific ones. These are
 #       written as part of the site generation pipeline for this project.
