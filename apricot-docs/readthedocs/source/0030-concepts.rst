@@ -212,6 +212,8 @@ The View Tabs have the following Context Menu:
 .. figure:: figures/apricot-view-tab-context-menu.jpg
    :align: center
 
+Note: this context menu is available for all view except the "Main View". A user cannot delete the "Main View" or change its name.
+
 Here you can:
 
 #. **Edit View** - edit the name, comment of the View as well as a set the Entities included into the View;
