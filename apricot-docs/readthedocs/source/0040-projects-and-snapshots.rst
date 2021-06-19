@@ -61,3 +61,5 @@ To generate the alignment script use the "Generate Script" button:
 .. figure:: figures/apricot-compare-generate.jpg
    :align: center
 
+The generated script includes the changes made in the earlier steps of this example. The script can be saved as a file or copied direct into the preferred SQL-tool and applied on the testing environment.
+In this way any two Snapshots contained in the Project can be compared.
