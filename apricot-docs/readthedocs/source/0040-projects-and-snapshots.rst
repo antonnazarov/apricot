@@ -24,6 +24,7 @@ For example, it was requested to make the following alteration in the database f
 
 .. figure:: figures/apricot-original-snapshot.jpg
    :align: center
+   :scale: 50 %
 
    The original database structure
 
@@ -35,6 +36,7 @@ where the requested alterations will be done.
 
 .. figure:: figures/apricot-new-snapshot-from-existing.jpg
    :align: center
+   :scale: 50 %
 
    Creating a new Snapshot out of the existing one
 
@@ -46,6 +48,7 @@ Then I've made requested changes in the database structure:
 
 .. figure:: figures/apricot-edited-structure.jpg
    :align: center
+   :scale: 50 %
 
    The updated database structure
 
@@ -55,6 +58,7 @@ and one with the changes made: "Release 2":
 
 .. figure:: figures/apricot-two-snapshots.jpg
    :align: center
+   :scale: 50 %
 
    The "Snapshot" dropdown shows all the Snapshots contained in the current Project
 
@@ -63,6 +67,7 @@ In order to check the changes made and generate the alighnment script (the scrip
 
 .. figure:: figures/apricot-compare-function.jpg
    :align: center
+   :scale: 50 %
 
    The "Compare" button of the Apricot toolbar
 
@@ -71,6 +76,7 @@ On the "compare" screen check "show differences only". Here the changes made hav
 
 .. figure:: figures/apricot-compare-screen.jpg
    :align: center
+   :scale: 50 %
 
    The "Compare Snapshots" screen shows the differences between selected Snapshots
 
@@ -79,6 +85,7 @@ To generate the alignment script use the "Generate Script" button:
 
 .. figure:: figures/apricot-compare-generate.jpg
    :align: center
+   :scale: 50 %
 
    The "compare" script generated
 
