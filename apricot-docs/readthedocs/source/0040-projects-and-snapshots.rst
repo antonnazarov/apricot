@@ -25,6 +25,8 @@ For example, it was requested to make the following alteration in the database f
 .. figure:: figures/apricot-original-snapshot.jpg
    :align: center
 
+   The original database structure
+
 Assume we already have been created a Project and reverse engineered the current database structure into the empty Snapshot.
 In order to make alterations in the database structure, the following sequence of steps is recommended in "Apricot DB":
 
@@ -34,6 +36,9 @@ where the requested alterations will be done.
 .. figure:: figures/apricot-new-snapshot-from-existing.jpg
    :align: center
 
+   Creating a new Snapshot out of the existing one
+
+
 I've called the new Snapshot "Release 2". In "Initialize From" I've selected the option "Snapshot" and selected the existing Snapshot "Reverse of the demo database".
 All Entities and Relationships of the Snapshot "Reverse of the demo database" will be copied into the newly created "Release 2".
 
@@ -42,11 +47,17 @@ Then I've made requested changes in the database structure:
 .. figure:: figures/apricot-edited-structure.jpg
    :align: center
 
+   The updated database structure
+
+
 Now I have two Snapshots: the original one - "Reverse of the demo database", 
 and one with the changes made: "Release 2": 
 
 .. figure:: figures/apricot-two-snapshots.jpg
    :align: center
+
+   The "Snapshot" dropdown shows all the Snapshots contained in the current Project
+
 
 In order to check the changes made and generate the alighnment script (the script which transforms the original database structure into the new one) I use the "Compare" function:
 
@@ -55,12 +66,14 @@ In order to check the changes made and generate the alighnment script (the scrip
 
    The "Compare" button of the Apricot toolbar
 
+
 On the "compare" screen check "show differences only". Here the changes made have been shown:
 
 .. figure:: figures/apricot-compare-screen.jpg
    :align: center
 
    The "Compare Snapshots" screen shows the differences between selected Snapshots
+
 
 To generate the alignment script use the "Generate Script" button:
 
