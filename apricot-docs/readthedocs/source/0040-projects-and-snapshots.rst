@@ -28,7 +28,8 @@ For example, it was requested to make the following alteration in the database f
 Assume we already have been created a Project and reverse engineered the current database structure into the empty Snapshot.
 In order to make alterations in the database structure, the following sequence of steps is recommended in "Apricot DB":
 
-#. Create a new Snapshot, where the requested alterations will be done.
+Create a new Snapshot, 
+where the requested alterations will be done.
 
 .. figure:: figures/apricot-new-snapshot-from-existing.jpg
    :align: center
@@ -41,7 +42,8 @@ Then I've made requested changes in the database structure:
 .. figure:: figures/apricot-edited-structure.jpg
    :align: center
 
-Now I have two Snapshots: the original one - "Reverse of the demo database", and one with the changes made: "Release 2":
+Now I have two Snapshots: the original one - "Reverse of the demo database", 
+and one with the changes made: "Release 2": 
 
 .. figure:: figures/apricot-two-snapshots.jpg
    :align: center
@@ -51,15 +53,21 @@ In order to check the changes made and generate the alighnment script (the scrip
 .. figure:: figures/apricot-compare-function.jpg
    :align: center
 
+   The "Compare" button of the Apricot toolbar
+
 On the "compare" screen check "show differences only". Here the changes made have been shown:
 
 .. figure:: figures/apricot-compare-screen.jpg
    :align: center
 
+   The "Compare Snapshots" screen shows the differences between selected Snapshots
+
 To generate the alignment script use the "Generate Script" button:
 
 .. figure:: figures/apricot-compare-generate.jpg
    :align: center
+
+   The "compare" script generated
 
 The generated script includes the changes made in the earlier steps of this example. The script can be saved as a file or copied direct into the preferred SQL-tool and applied on the testing environment.
 In this way any two Snapshots contained in the Project can be compared.
