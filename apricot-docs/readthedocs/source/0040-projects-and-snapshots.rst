@@ -4,14 +4,14 @@ Projects and Snapshots in "Apricot DB"
 Create a new Project
 ********************
 
-By default, on the first run of the application, "Apricot DB"  contains a default Project, which contains one Snapshot and no Entities or Relationships.
+By default, on the first run of the application, "Apricot DB" already contains a default Project, which contains one Snapshot with no Entities or Relationships in it.
 
 It is recommended to create a dedicated Project for each database domain (or physical database) in your information system.
 
 The Project should contain at least one Snapshot. A Snapshot represents one condition of the domain: current, historical or planned for implementation/modification.
-The Snapshots of one Project can be compared between each other, using the function "Compare". This in turn, allows to analyse the changes made in the domain.
-Another example of use of the multiple Snapshots is when the testing environment contains multiple testing environment. It is sometimes useful to have individual 
-Snapshot for each testing environment, to be able co compare them.
+The Snapshots in one Project can be compared between each other, using the function "Compare". This in turn, allows to analyse the changes made in the domain.
+The Snapshots have been useful when the environment contains multiple testing databases: each testing environment can be represented by individual Snapshot. This allows to operatively compare 
+the structures of the testing environments.
 
 Use Case: Automate Generation of the Structure Change Script 
 ************************************************************
@@ -44,7 +44,7 @@ where the requested alterations will be done.
 I've called the new Snapshot "Release 2". In "Initialize From" I've selected the option "Snapshot" and selected the existing Snapshot "Reverse of the demo database".
 All Entities and Relationships of the Snapshot "Reverse of the demo database" will be copied into the newly created "Release 2".
 
-Then I've made requested changes in the database structure:
+Then I've made requested changes in the database structure.
 
 .. figure:: figures/apricot-edited-structure.jpg
    :align: center
@@ -53,8 +53,7 @@ Then I've made requested changes in the database structure:
    The updated database structure
 
 
-Now I have two Snapshots: the original one - "Reverse of the demo database", 
-and one with the changes made: "Release 2": 
+Now I have two Snapshots: the original one - "Reverse of the demo database", and one with the changes made: "Release 2".
 
 .. figure:: figures/apricot-two-snapshots.jpg
    :align: center
@@ -63,7 +62,7 @@ and one with the changes made: "Release 2":
    The "Snapshot" dropdown shows all the Snapshots contained in the current Project
 
 
-In order to check the changes made and generate the alighnment script (the script which transforms the original database structure into the new one) I use the "Compare" function:
+In order to check the changes made and generate the alighnment script (the script which transforms the original database structure into the new one) I use the "Compare" function.
 
 .. figure:: figures/apricot-compare-function.jpg
    :align: center
@@ -71,8 +70,7 @@ In order to check the changes made and generate the alighnment script (the scrip
 
    The "Compare" button of the Apricot toolbar
 
-
-On the "compare" screen check "show differences only". Here the changes made have been shown:
+On the "compare" screen check "show differences only". Here the changes made have been shown.
 
 .. figure:: figures/apricot-compare-screen.jpg
    :align: center
@@ -80,8 +78,7 @@ On the "compare" screen check "show differences only". Here the changes made hav
 
    The "Compare Snapshots" screen shows the differences between selected Snapshots
 
-
-To generate the alignment script use the "Generate Script" button:
+To generate the alignment script use the "Generate Script" button.
 
 .. figure:: figures/apricot-compare-generate.jpg
    :align: center
