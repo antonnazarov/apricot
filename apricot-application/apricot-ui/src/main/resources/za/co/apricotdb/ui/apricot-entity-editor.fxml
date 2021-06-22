@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="838.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.EditEntityController">
+<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="1059.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.EditEntityController">
    <children>
       <VBox layoutX="10.0" layoutY="9.0" prefHeight="489.0" prefWidth="823.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -33,12 +33,13 @@
                                  <children>
                                     <TableView fx:id="columnDefinitionTable" editable="true" prefHeight="344.0" VBox.vgrow="ALWAYS">
                                        <columns>
-                                          <TableColumn fx:id="columnName" prefWidth="312.0" text="Column Name" />
-                                          <TableColumn fx:id="primaryKey" prefWidth="92.0" text="Primary Key" />
-                                          <TableColumn fx:id="allowsNull" prefWidth="77.0" text="Allows Null" />
-                                          <TableColumn fx:id="dataType" prefWidth="115.0" text="Data Type" />
-                                          <TableColumn fx:id="length" prefWidth="56.0" text="Length" />
-                                          <TableColumn fx:id="comment" prefWidth="125.0" text="PK/FK" />
+                                          <TableColumn fx:id="columnName" prefWidth="284.0" text="Column Name" />
+                                          <TableColumn fx:id="primaryKey" text="Primary Key" />
+                                          <TableColumn fx:id="allowsNull" prefWidth="74.0" text="Allows Null" />
+                                          <TableColumn fx:id="dataType" prefWidth="119.0" text="Data Type" />
+                                          <TableColumn fx:id="length" prefWidth="70.0" text="Length" />
+                                          <TableColumn fx:id="pkfk" prefWidth="83.0" text="PK/FK" />
+                                          <TableColumn fx:id="comment" prefWidth="315.0" text="Comment" />
                                        </columns>
                                     </TableView>
                                     <HBox alignment="CENTER_LEFT" prefHeight="43.0" prefWidth="818.0" spacing="10.0" VBox.vgrow="NEVER">

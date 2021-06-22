@@ -1,14 +1,5 @@
 package za.co.apricotdb.ui;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,6 +25,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.ApplicationParameterManager;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.entity.ApricotApplicationParameter;
@@ -45,6 +38,12 @@ import za.co.apricotdb.ui.model.ApricotConstraintData;
 import za.co.apricotdb.ui.model.ApricotConstraintSerializer;
 import za.co.apricotdb.ui.model.EditEntityModel;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * This controller is allocated under the apricot-entity-editor.fxml form.
@@ -98,6 +97,9 @@ public class EditEntityController {
     TableColumn<ApricotColumnData, String> length;
 
     @FXML
+    TableColumn<ApricotColumnData, String> pkfk;
+
+    @FXML
     TableColumn<ApricotColumnData, String> comment;
 
     @FXML
@@ -148,14 +150,9 @@ public class EditEntityController {
 
     private void initColumnsTab() {
         columnDefinitionTable.getSelectionModel().cellSelectionEnabledProperty().set(true);
-        columnName.setCellValueFactory(e -> e.getValue().getName());
 
-        Callback<TableColumn<ApricotColumnData, String>, TableCell<ApricotColumnData, String>> editCellFactory = new Callback<TableColumn<ApricotColumnData, String>, TableCell<ApricotColumnData, String>>() {
-            @Override
-            public TableCell<ApricotColumnData, String> call(TableColumn<ApricotColumnData, String> p) {
-                return new EditCell();
-            }
-        };
+        columnName.setCellValueFactory(e -> e.getValue().getName());
+        Callback<TableColumn<ApricotColumnData, String>, TableCell<ApricotColumnData, String>> editCellFactory = p -> new EditCell();
         columnName.setCellFactory(editCellFactory);
 
         primaryKey.setCellValueFactory(e -> e.getValue().getPrimaryKey());
@@ -184,7 +181,10 @@ public class EditEntityController {
             model.setEdited(true);
         });
 
-        comment.setCellValueFactory(new PropertyValueFactory<ApricotColumnData, String>("comment"));
+        pkfk.setCellValueFactory(new PropertyValueFactory<>("pkfk"));
+
+        comment.setCellValueFactory(e -> e.getValue().getComment());
+        comment.setCellFactory(editCellFactory);
     }
 
     private void initConstraintsTab() {
@@ -215,14 +215,11 @@ public class EditEntityController {
     }
 
     private <S, T> Callback<TableColumn<S, T>, TableCell<S, T>> getComboCallback(final ObservableList<T> items) {
-        return new Callback<TableColumn<S, T>, TableCell<S, T>>() {
-            @Override
-            public TableCell<S, T> call(TableColumn<S, T> list) {
-                ComboBoxTableCell<S, T> comboCell = new ComboBoxTableCell<S, T>(items);
-                comboCell.comboBoxEditableProperty().setValue(true);
+        return list -> {
+            ComboBoxTableCell<S, T> comboCell = new ComboBoxTableCell<S, T>(items);
+            comboCell.comboBoxEditableProperty().setValue(true);
 
-                return comboCell;
-            }
+            return comboCell;
         };
     }
 
@@ -380,7 +377,7 @@ public class EditEntityController {
     }
 
     @FXML
-    public void deleteConstraint(ActionEvent event) {
+    public void deleteConstraint() {
         if (model.getConstraints().size() == 0) {
             return;
         }
@@ -397,7 +394,7 @@ public class EditEntityController {
     }
 
     @FXML
-    public void cancel(ActionEvent event) {
+    public void cancel() {
         if (model.isEdited() || model.isNewEntity()) {
             if (alertDecorator.requestYesNoOption("Exit", "You are about to loose the changes you've made", "Exit")) {
                 getStage().close();
@@ -408,7 +405,7 @@ public class EditEntityController {
     }
 
     @FXML
-    public void save(ActionEvent event) {
+    public void save() {
         if (port.saveEntity(model, entityName.getText(), this)) {
             getStage().close();
         }

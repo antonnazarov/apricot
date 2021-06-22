@@ -1,8 +1,5 @@
 package za.co.apricotdb.ui.model;
 
-import java.io.Serializable;
-import java.util.List;
-
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import za.co.apricotdb.persistence.entity.ApricotColumn;
@@ -10,6 +7,9 @@ import za.co.apricotdb.persistence.entity.ApricotColumnConstraint;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ConstraintType;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * The wrapper and extender of the ApricotColumn entity object.
@@ -27,7 +27,8 @@ public class ApricotColumnData implements Serializable {
     private SimpleStringProperty dataType;
     private SimpleBooleanProperty nullable;
     private SimpleStringProperty valueLength;
-    private String comment;
+    private String pkfk;
+    private SimpleStringProperty comment;
     private boolean added;
     private boolean deleted;
     private ApricotColumn column;
@@ -38,6 +39,7 @@ public class ApricotColumnData implements Serializable {
         dataType = new SimpleStringProperty();
         nullable = new SimpleBooleanProperty();
         valueLength = new SimpleStringProperty();
+        comment = new SimpleStringProperty();
     }
 
     public ApricotColumnData(ApricotColumn col) {
@@ -48,6 +50,7 @@ public class ApricotColumnData implements Serializable {
         dataType = new SimpleStringProperty(col.getDataType());
         nullable = new SimpleBooleanProperty(col.isNullable());
         valueLength = new SimpleStringProperty(col.getValueLength());
+        comment = new SimpleStringProperty();
     }
 
     private boolean isPrimaryKey(ApricotColumn col) {
@@ -91,12 +94,20 @@ public class ApricotColumnData implements Serializable {
         return valueLength;
     }
 
-    public String getComment() {
+    public String getPkfk() {
+        return pkfk;
+    }
+
+    public void setPkfk(String pkfk) {
+        this.pkfk = pkfk;
+    }
+
+    public SimpleStringProperty getComment() {
         return comment;
     }
 
     public void setComment(String comment) {
-        this.comment = comment;
+        this.comment.setValue(comment);
     }
 
     public boolean isAdded() {

@@ -1,16 +1,18 @@
 package za.co.apricotdb.ui.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import za.co.apricotdb.persistence.data.ColumnManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.TableManager;
 import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.persistence.entity.ApricotTable;
+import za.co.apricotdb.ui.handler.CommentHandler;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This component serializes the new or edited entity into the Apricot project
@@ -33,6 +35,9 @@ public class ApricotEntitySerializer {
     
     @Autowired
     ColumnManager columnManager;
+
+    @Autowired
+    CommentHandler commentHandler;
 
     public void serialize(EditEntityModel model) {
         updateTable(model);
@@ -59,6 +64,7 @@ public class ApricotEntitySerializer {
 
     private void updateColumns(EditEntityModel model) {
         int pos = 0;
+        Map<String, String> comments = new HashMap<>();
         for (ApricotColumnData cd : model.getColumns()) {
             ApricotColumn column = null;
             if (cd.isAdded()) {
@@ -84,8 +90,12 @@ public class ApricotEntitySerializer {
             column.setValueLength(cd.getValueLength().getValue());
             column.setTable(model.getTable());
 
+            comments.put(cd.getName().getValue(), cd.getComment().getValue());
+
             pos++;
         }
+
+        commentHandler.saveComments(model.getEntityName(), comments);
     }
 
     private List<ApricotColumn> getDeletedColumns(EditEntityModel model) {

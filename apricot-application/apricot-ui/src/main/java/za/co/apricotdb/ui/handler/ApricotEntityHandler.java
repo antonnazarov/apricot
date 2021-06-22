@@ -106,7 +106,7 @@ public class ApricotEntityHandler {
         EditEntityController controller = form.getController();
         keyHandler.setEditEntityController(controller);
         form.getDialog().setOnCloseRequest(e -> {
-            controller.cancel(null);
+            controller.cancel();
             e.consume();
         });
 
