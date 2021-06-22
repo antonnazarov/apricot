@@ -12,3 +12,4 @@ The current version of software: Release 2.6 (July 2021).
    0020-quick-start
    0030-concepts
    0040-projects-and-snapshots
+   0050-reverse-engineering
