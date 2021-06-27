@@ -1,19 +1,17 @@
 package za.co.apricotdb.metascan;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import com.microsoft.sqlserver.jdbc.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcOperations;
-
-import com.microsoft.sqlserver.jdbc.StringUtils;
-
 import za.co.apricotdb.persistence.data.MetaData;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public abstract class MetaDataScannerBase implements MetaDataScanner {
 
@@ -42,7 +40,7 @@ public abstract class MetaDataScannerBase implements MetaDataScanner {
         List<ApricotRelationship> relationships = getRelationships(jdbc, constraints, schema);
 
         MetaData ret = new MetaData();
-        ret.setTables(new ArrayList<ApricotTable>(tables.values()));
+        ret.setTables(new ArrayList<>(tables.values()));
         ret.setRelationships(relationships);
 
         return ret;

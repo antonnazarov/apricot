@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 import za.co.apricotdb.metascan.MetaDataScannerBase;
 import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
+import za.co.apricotdb.persistence.entity.ApricotDatabaseView;
+import za.co.apricotdb.persistence.entity.ApricotDatabaseViewColumn;
+import za.co.apricotdb.persistence.entity.ApricotDatabaseViewRelatedTable;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
@@ -122,5 +125,20 @@ public class SqliteScanner extends MetaDataScannerBase {
         }
 
         return ret;
+    }
+
+    @Override
+    public Map<String, ApricotDatabaseView> getDatabaseViews(JdbcOperations jdbc, ApricotSnapshot snapshot, String schema) {
+        return null;
+    }
+
+    @Override
+    public List<ApricotDatabaseViewColumn> getDatabaseViewColumns(JdbcOperations jdbc, Map<String, ApricotDatabaseView> databaseViews, String schema) {
+        return null;
+    }
+
+    @Override
+    public List<ApricotDatabaseViewRelatedTable> getDatabaseViewRelatedTables(JdbcOperations jdbc, Map<String, ApricotDatabaseView> databaseViews, String schema) {
+        return null;
     }
 }

@@ -18,10 +18,10 @@ import za.co.apricotdb.metascan.MetaDataScanner;
 import za.co.apricotdb.metascan.MetaDataScannerFactory;
 import za.co.apricotdb.persistence.data.MetaData;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
+import za.co.apricotdb.persistence.entity.ApricotDatabaseView;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
-import za.co.apricotdb.ui.error.ApricotErrorLogger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,27 +118,40 @@ public class ReverseEngineService extends Service<MetaData> implements Initializ
                 updateMessage("Establishing connection...");
                 JdbcOperations jdbc = MetaDataScanner.getTargetJdbcOperations(getDriverClassName(), getUrl(),
                         getUserName(), getPassword());
-                updateProgress(1, 5);
+                updateProgress(1, 8);
 
                 updateMessage("Scanning the tables...");
                 Map<String, ApricotTable> tables = scanner.getTables(jdbc, getSnapshot(), getSchema());
-                updateProgress(2, 5);
+                updateProgress(2, 8);
 
                 updateMessage("Scanning the columns...");
                 scanner.getColumns(jdbc, tables, getSchema());
-                updateProgress(3, 5);
+                updateProgress(3, 8);
 
                 updateMessage("Scanning the constraints...");
                 Map<String, ApricotConstraint> constraints = scanner.getConstraints(jdbc, tables, getSchema());
-                updateProgress(4, 5);
+                updateProgress(4, 8);
 
                 updateMessage("Scanning the relationships...");
                 List<ApricotRelationship> relationships = scanner.getRelationships(jdbc, constraints, getSchema());
-                updateProgress(5, 5);
+                updateProgress(5, 8);
+
+                updateMessage("Scanning the database views...");
+                Map<String, ApricotDatabaseView> databaseViews = scanner.getDatabaseViews(jdbc, getSnapshot(), getSchema());
+                updateProgress(6, 8);
+
+                updateMessage("Scanning the database view columns...");
+                scanner.getDatabaseViewColumns(jdbc, databaseViews, getSchema());
+                updateProgress(7, 8);
+
+                updateMessage("Scanning the tables referenced in database views...");
+                scanner.getDatabaseViewRelatedTables(jdbc, databaseViews, getSchema());
+                updateProgress(8, 8);
 
                 MetaData ret = new MetaData();
                 ret.setTables(new ArrayList<>(tables.values()));
                 ret.setRelationships(relationships);
+                ret.setViews(new ArrayList<>(databaseViews.values()));
 
                 logger.info("ReverseEngineService: " + (System.currentTimeMillis()-start) + " ms");
 

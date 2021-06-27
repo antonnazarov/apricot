@@ -2,6 +2,7 @@ package za.co.apricotdb.persistence.entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -79,9 +80,8 @@ public class ApricotTable implements Serializable {
     }
 
     public List<ApricotColumn> getColumns() {
-        columns.sort((c1, c2) -> {
-            return c1.getOrdinalPosition() - c2.getOrdinalPosition();
-        });
+        columns.sort(Comparator.comparingInt(ApricotColumn::getOrdinalPosition));
+
         return columns;
     }
 

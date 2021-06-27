@@ -1,13 +1,5 @@
 package za.co.apricotdb.ui;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -19,6 +11,8 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.MetaData;
 import za.co.apricotdb.persistence.data.ObjectLayoutManager;
 import za.co.apricotdb.persistence.data.ProjectManager;
@@ -29,6 +23,12 @@ import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
 import za.co.apricotdb.ui.handler.CanvasAlignHandler;
 import za.co.apricotdb.ui.handler.ReverseEngineHandler;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * The controller of the apricot-re-tables-list.fxml form.
@@ -81,9 +81,9 @@ public class ReversedTablesController {
 
         reversedTablesList.getItems().clear();
         List<ApricotTable> tables = metaData.getTables();
-        Collections.sort(tables, (t1, t2) -> t1.getName().compareTo(t2.getName()));
+        Collections.sort(tables, Comparator.comparing(ApricotTable::getName));
         for (ApricotTable t : metaData.getTables()) {
-            ReversedTableRow r = null;
+            ReversedTableRow r;
             if (Arrays.stream(blackList).anyMatch(t.getName()::equals)) {
                 r = new ReversedTableRow(t, false);
             } else {
@@ -94,13 +94,8 @@ public class ReversedTablesController {
         reversedTablesList.getSelectionModel().select(0);
 
         tableColumn.setCellValueFactory(new PropertyValueFactory<ReversedTableRow, String>("tableName"));
-        Callback<TableColumn<ReversedTableRow, Boolean>, TableCell<ReversedTableRow, Boolean>> booleanCellFactory = new Callback<TableColumn<ReversedTableRow, Boolean>, TableCell<ReversedTableRow, Boolean>>() {
-            @Override
-            public TableCell<ReversedTableRow, Boolean> call(TableColumn<ReversedTableRow, Boolean> p) {
-                return new BooleanCell();
-            }
-        };
-        includedColumn.setCellValueFactory(new PropertyValueFactory<ReversedTableRow, Boolean>("included"));
+        Callback<TableColumn<ReversedTableRow, Boolean>, TableCell<ReversedTableRow, Boolean>> booleanCellFactory = p -> new BooleanCell();
+        includedColumn.setCellValueFactory(new PropertyValueFactory<>("included"));
         includedColumn.setCellFactory(booleanCellFactory);
         includedColumn.setStyle("-fx-alignment: CENTER;");
 
@@ -126,7 +121,7 @@ public class ReversedTablesController {
         }
 
         if (reverseEngineHandler.saveReversedObjects(included, excluded, metaData.getRelationships(),
-                reverseEngineeringParameters)) {
+                reverseEngineeringParameters, metaData.getViews())) {
             // refresh the snapshot view
             applicationInitializer.initializeDefault();
             

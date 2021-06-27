@@ -1,20 +1,22 @@
 package za.co.apricotdb.metascan.db2;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.stereotype.Component;
-
 import za.co.apricotdb.metascan.MetaDataScannerBase;
 import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
+import za.co.apricotdb.persistence.entity.ApricotDatabaseView;
+import za.co.apricotdb.persistence.entity.ApricotDatabaseViewColumn;
+import za.co.apricotdb.persistence.entity.ApricotDatabaseViewRelatedTable;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ConstraintType;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This is the DB2 database scanner.
@@ -216,6 +218,21 @@ public class DB2Scanner extends MetaDataScannerBase {
         });
 
         return ret;
+    }
+
+    @Override
+    public Map<String, ApricotDatabaseView> getDatabaseViews(JdbcOperations jdbc, ApricotSnapshot snapshot, String schema) {
+        return null;
+    }
+
+    @Override
+    public List<ApricotDatabaseViewColumn> getDatabaseViewColumns(JdbcOperations jdbc, Map<String, ApricotDatabaseView> databaseViews, String schema) {
+        return null;
+    }
+
+    @Override
+    public List<ApricotDatabaseViewRelatedTable> getDatabaseViewRelatedTables(JdbcOperations jdbc, Map<String, ApricotDatabaseView> databaseViews, String schema) {
+        return null;
     }
 
     private Map<String, ApricotTable> getConstraintTables(Map<String, ApricotConstraint> constraints) {

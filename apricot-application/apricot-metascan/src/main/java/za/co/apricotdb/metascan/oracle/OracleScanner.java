@@ -1,22 +1,24 @@
 package za.co.apricotdb.metascan.oracle;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.stereotype.Component;
-
 import za.co.apricotdb.metascan.MetaDataScannerBase;
 import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
+import za.co.apricotdb.persistence.entity.ApricotDatabaseView;
+import za.co.apricotdb.persistence.entity.ApricotDatabaseViewColumn;
+import za.co.apricotdb.persistence.entity.ApricotDatabaseViewRelatedTable;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ConstraintType;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Scanner for the Oracle database.
@@ -222,6 +224,21 @@ public class OracleScanner extends MetaDataScannerBase {
         });
 
         return ret;
+    }
+
+    @Override
+    public Map<String, ApricotDatabaseView> getDatabaseViews(JdbcOperations jdbc, ApricotSnapshot snapshot, String schema) {
+        return null;
+    }
+
+    @Override
+    public List<ApricotDatabaseViewColumn> getDatabaseViewColumns(JdbcOperations jdbc, Map<String, ApricotDatabaseView> databaseViews, String schema) {
+        return null;
+    }
+
+    @Override
+    public List<ApricotDatabaseViewRelatedTable> getDatabaseViewRelatedTables(JdbcOperations jdbc, Map<String, ApricotDatabaseView> databaseViews, String schema) {
+        return null;
     }
 
     private String getConstraintsAsString(Map<String, ApricotConstraint> constraints) {

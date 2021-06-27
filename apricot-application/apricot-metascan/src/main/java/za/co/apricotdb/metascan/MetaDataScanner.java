@@ -1,18 +1,20 @@
 package za.co.apricotdb.metascan;
 
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-
 import za.co.apricotdb.persistence.data.MetaData;
 import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
+import za.co.apricotdb.persistence.entity.ApricotDatabaseView;
+import za.co.apricotdb.persistence.entity.ApricotDatabaseViewColumn;
+import za.co.apricotdb.persistence.entity.ApricotDatabaseViewRelatedTable;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * The main interface of Meta Scan - the scanner of the DB- structure.
@@ -33,6 +35,14 @@ public interface MetaDataScanner {
 
     List<ApricotRelationship> getRelationships(JdbcOperations jdbc, Map<String, ApricotConstraint> constraints,
             String schema);
+
+    //  the database views have been introduced from 24/06/2021
+    Map<String, ApricotDatabaseView> getDatabaseViews(JdbcOperations jdbc, ApricotSnapshot snapshot, String schema);
+
+    List<ApricotDatabaseViewColumn> getDatabaseViewColumns(JdbcOperations jdbc, Map<String, ApricotDatabaseView> databaseViews, String schema);
+
+    List<ApricotDatabaseViewRelatedTable> getDatabaseViewRelatedTables(JdbcOperations jdbc, Map<String, ApricotDatabaseView> databaseViews,
+                                                           String schema);
 
     static JdbcOperations getTargetJdbcOperations(String driverClassName, String url, String userName,
             String password) {

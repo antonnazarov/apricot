@@ -25,6 +25,7 @@ import za.co.apricotdb.persistence.data.DataSaver;
 import za.co.apricotdb.persistence.data.MetaData;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
+import za.co.apricotdb.persistence.entity.ApricotDatabaseView;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
@@ -133,7 +134,8 @@ public class ReverseEngineHandler {
 
     @ApricotErrorLogger(title = "Unable to save the reversed objects in the current Snapshot")
     public boolean saveReversedObjects(List<ApricotTable> included, List<ApricotTable> excluded,
-                                       List<ApricotRelationship> relationships, String reverseEngineeringParameters) {
+                                       List<ApricotRelationship> relationships, String reverseEngineeringParameters,
+                                       List<ApricotDatabaseView> databaseViews) {
         Map<ApricotTable, ApricotTable> extraExclude = consistencyHandler.getFullConsistentExclude(excluded,
                 relationships);
         if (!extraExclude.isEmpty()) {
@@ -174,6 +176,7 @@ public class ReverseEngineHandler {
         MetaData md = new MetaData();
         md.setTables(included);
         md.setRelationships(filteredRelationships);
+        md.setViews(databaseViews);
         dataSaver.saveMetaData(md);
 
         // save the extension of the snapshot comment

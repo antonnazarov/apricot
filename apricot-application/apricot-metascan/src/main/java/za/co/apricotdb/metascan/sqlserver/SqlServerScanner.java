@@ -1,19 +1,23 @@
 package za.co.apricotdb.metascan.sqlserver;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import org.hibernate.engine.jdbc.internal.BasicFormatterImpl;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.stereotype.Component;
-
 import za.co.apricotdb.metascan.MetaDataScannerBase;
 import za.co.apricotdb.persistence.entity.ApricotColumn;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
+import za.co.apricotdb.persistence.entity.ApricotDatabaseView;
+import za.co.apricotdb.persistence.entity.ApricotDatabaseViewColumn;
+import za.co.apricotdb.persistence.entity.ApricotDatabaseViewRelatedTable;
 import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotSnapshot;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ConstraintType;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation of the scanner for SQL Server.
@@ -168,6 +172,116 @@ public class SqlServerScanner extends MetaDataScannerBase {
         });
 
         return ret;
+    }
+
+    @Override
+    public Map<String, ApricotDatabaseView> getDatabaseViews(JdbcOperations jdbc, ApricotSnapshot snapshot, String schema) {
+        BasicFormatterImpl sqlFormatter = new BasicFormatterImpl();
+        String sql = String.format(
+                "select table_name, view_definition from INFORMATION_SCHEMA.VIEWS where table_schema='%s' order by table_name",
+                schema);
+        List<ApricotDatabaseView> dbViews = jdbc.query(sql, (rs, rowNum) -> {
+            ApricotDatabaseView t = new ApricotDatabaseView();
+            t.setDbViewName(rs.getString("table_name"));
+            t.setDbViewDefinition(sqlFormatter.format(rs.getString("view_definition")));
+            t.setSnapshot(snapshot);
+
+            return t;
+        });
+
+        Map<String, ApricotDatabaseView> ret = new HashMap<>();
+        for (ApricotDatabaseView v : dbViews) {
+            ret.put(v.getDbViewName(), v);
+        }
+
+        return ret;
+    }
+
+    @Override
+    public List<ApricotDatabaseViewColumn> getDatabaseViewColumns(JdbcOperations jdbc, Map<String, ApricotDatabaseView> databaseViews, String schema) {
+        String sql = "select v.name as view_name, c.name as column_name, t.name as type, c.max_length as column_length, c.precision, c.is_nullable, c.column_id, t.max_length " +
+                "from sys.views v " +
+                "join sys.columns c on c.object_id=v.object_id " +
+                "join sys.types t on t.system_type_id=c.system_type_id " +
+                "order by v.name, c.column_id";
+
+        List<ApricotDatabaseViewColumn> dbViewColumns = jdbc.query(sql, (rs, rowNum) -> {
+            ApricotDatabaseView databaseView = databaseViews.get(rs.getString("view_name"));
+            if (databaseView != null) {
+                ApricotDatabaseViewColumn vc = new ApricotDatabaseViewColumn();
+                vc.setName(rs.getString("column_name"));
+                vc.setOrdinalPosition(rs.getInt("column_id"));
+                vc.setNullable(rs.getBoolean("is_nullable"));
+                vc.setDataType(rs.getString("type"));
+
+                int maxLength = rs.getInt("max_length");
+                if (maxLength > 100) {
+                    //  the length needs to be used
+                    int precision = rs.getInt("precision");
+                    if (precision != 0) {
+                        vc.setValueLength(rs.getInt("column_length") + "," + precision);
+                    } else {
+                        vc.setValueLength(String.valueOf(rs.getInt("column_length")));
+                    }
+                }
+
+                vc.setDatabaseView(databaseView);
+
+                return vc;
+            }
+
+            return null;
+        });
+
+        for (ApricotDatabaseViewColumn col : dbViewColumns) {
+            col.getDatabaseView().getViewColumns().add(col);
+        }
+
+        return dbViewColumns;
+    }
+
+    @Override
+    public List<ApricotDatabaseViewRelatedTable> getDatabaseViewRelatedTables(JdbcOperations jdbc, Map<String, ApricotDatabaseView> databaseViews, String schema) {
+        String sql = String.format("select view_name, table_name, column_name from INFORMATION_SCHEMA.VIEW_COLUMN_USAGE where view_schema='%s' order by view_name, table_name", schema);
+        List<ApricotDatabaseViewRelatedTable> ret = new ArrayList<>();
+        List<ColumnUsage> columnUsages = jdbc.query(sql, (rs, rowNum) -> {
+            ColumnUsage usage = new ColumnUsage();
+            usage.viewName = rs.getString("view_name");
+            usage.tableName = rs.getString("table_name");
+            usage.columnName = rs.getString("column_name");
+
+            return usage;
+        });
+
+        ApricotDatabaseViewRelatedTable rel = null;
+        for (ColumnUsage usg : columnUsages) {
+            if (rel == null || !usg.viewName.equals(rel.getDatabaseView().getDbViewName()) || !usg.tableName.equals(rel.getRefTableName())) {
+                //  start a new view
+                ApricotDatabaseView view = databaseViews.get(usg.viewName);
+                if (view != null) {
+                    rel = new ApricotDatabaseViewRelatedTable();
+                    rel.setDatabaseView(view);
+                    rel.setRefTableName(usg.tableName);
+                    rel.setRefTableColumns(usg.columnName);
+                    ret.add(rel);
+                }
+            } else {
+                //  continue with the current database view
+                rel.setRefTableColumns(rel.getRefTableColumns() + "," + usg.columnName);
+            }
+        }
+
+        for (ApricotDatabaseViewRelatedTable rt : ret) {
+            rt.getDatabaseView().getRelatedTables().add(rt);
+        }
+
+        return ret;
+    }
+
+    static class ColumnUsage {
+        String viewName;
+        String tableName;
+        String columnName;
     }
 
     private void addIndexes(JdbcOperations jdbc, Map<String, ApricotTable> tables,
