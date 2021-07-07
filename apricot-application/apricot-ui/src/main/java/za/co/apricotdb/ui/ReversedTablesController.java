@@ -3,13 +3,12 @@ package za.co.apricotdb.ui;
 import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import javafx.util.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,12 +16,14 @@ import za.co.apricotdb.persistence.data.MetaData;
 import za.co.apricotdb.persistence.data.ObjectLayoutManager;
 import za.co.apricotdb.persistence.data.ProjectManager;
 import za.co.apricotdb.persistence.data.ViewManager;
+import za.co.apricotdb.persistence.entity.ApricotDatabaseView;
 import za.co.apricotdb.persistence.entity.ApricotProject;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ApricotView;
 import za.co.apricotdb.ui.handler.ApplicationInitializer;
 import za.co.apricotdb.ui.handler.CanvasAlignHandler;
 import za.co.apricotdb.ui.handler.ReverseEngineHandler;
+import za.co.apricotdb.viewport.canvas.ElementType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,10 +62,10 @@ public class ReversedTablesController {
     TableView<ReversedTableRow> reversedTablesList;
 
     @FXML
-    TableColumn<ReversedTableRow, String> tableColumn;
+    TableColumn<ReversedTableRow, HBox> tableColumn;
 
     @FXML
-    TableColumn<ReversedTableRow, Boolean> includedColumn;
+    TableColumn<ReversedTableRow, HBox> includedColumn;
 
     @FXML
     Label summaryInfo;
@@ -85,21 +86,30 @@ public class ReversedTablesController {
         for (ApricotTable t : metaData.getTables()) {
             ReversedTableRow r;
             if (Arrays.stream(blackList).anyMatch(t.getName()::equals)) {
-                r = new ReversedTableRow(t, false);
+                r = new ReversedTableRow(t, false, ElementType.ENTITY);
             } else {
-                r = new ReversedTableRow(t, true);
+                r = new ReversedTableRow(t, true, ElementType.ENTITY);
             }
             reversedTablesList.getItems().add(r);
         }
+
+        List<ApricotDatabaseView> views = metaData.getViews();
+        Collections.sort(views, Comparator.comparing(ApricotDatabaseView::getDbViewName));
+        for (ApricotDatabaseView v : views) {
+            if (Arrays.stream(blackList).anyMatch(v.getDbViewName()::equals)) {
+                reversedTablesList.getItems().add(new ReversedTableRow(new ApricotTable(v.getDbViewName(), null, null, null), false, ElementType.DBVIEW));
+            } else {
+                reversedTablesList.getItems().add(new ReversedTableRow(new ApricotTable(v.getDbViewName(), null, null, null), true, ElementType.DBVIEW));
+            }
+        }
         reversedTablesList.getSelectionModel().select(0);
 
-        tableColumn.setCellValueFactory(new PropertyValueFactory<ReversedTableRow, String>("tableName"));
-        Callback<TableColumn<ReversedTableRow, Boolean>, TableCell<ReversedTableRow, Boolean>> booleanCellFactory = p -> new BooleanCell();
+        tableColumn.setCellValueFactory(new PropertyValueFactory<>("element"));
+        // Callback<TableColumn<ReversedTableRow, Boolean>, TableCell<ReversedTableRow, Boolean>> booleanCellFactory = p -> new BooleanCell();
         includedColumn.setCellValueFactory(new PropertyValueFactory<>("included"));
-        includedColumn.setCellFactory(booleanCellFactory);
-        includedColumn.setStyle("-fx-alignment: CENTER;");
+        // includedColumn.setCellFactory(booleanCellFactory);
 
-        summaryInfo.setText(metaData.getTables().size() + " tables were scanned; " + blackList.length
+        summaryInfo.setText(metaData.getTables().size() + " tables and " + views.size() + " views have been scanned; " + blackList.length
                 + " tables in the black list");
     }
 
