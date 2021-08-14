@@ -1,12 +1,8 @@
 package za.co.apricotdb.ui.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import javafx.scene.control.Alert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import javafx.scene.control.Alert;
 import za.co.apricotdb.persistence.data.ConstraintManager;
 import za.co.apricotdb.persistence.data.RelationshipManager;
 import za.co.apricotdb.persistence.entity.ApricotColumn;
@@ -20,10 +16,13 @@ import za.co.apricotdb.ui.error.ApricotErrorLogger;
 import za.co.apricotdb.ui.handler.ApricotEntityHandler;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * All values validation business logic of the Relationship being created is
  * located in this component.
- * 
+ *
  * @author Anton Nazarov
  * @since 15/03/2019
  */
@@ -81,13 +80,17 @@ public class ApricotRelationshipValidator {
         return false;
     }
 
-    public boolean isColumnForeignKey(ApricotTable table, ApricotColumn column) {
+    public boolean allColumnsInOneForeignKey(ApricotTable table, List<ApricotColumn> columns) {
         for (ApricotConstraint c : table.getConstraints()) {
             if (c.getType() == ConstraintType.FOREIGN_KEY) {
+                List<ApricotColumn> constrColumns = new ArrayList<>();
                 for (ApricotColumnConstraint acc : c.getColumns()) {
-                    if (acc.getColumn().equals(column)) {
-                        return true;
-                    }
+                    constrColumns.add(acc.getColumn());
+                }
+
+                if (constrColumns.size() == columns.size() && constrColumns.containsAll(columns)
+                        && columns.containsAll(constrColumns)) {
+                    return true;
                 }
             }
         }
@@ -115,6 +118,8 @@ public class ApricotRelationshipValidator {
         List<String> columns = new ArrayList<>();
         boolean hasPK = false;
         boolean allPK = true;
+        List<ApricotColumn> reusedColumns = new ArrayList<>();
+
         for (ParentChildKeyHolder h : model.getKeys()) {
             String columnName = h.getForeignKeyField();
             if (columnName == null || columnName.equals("")) {
@@ -131,15 +136,7 @@ public class ApricotRelationshipValidator {
                 return false;
             }
 
-            ApricotColumn column = model.getChildTable().getColumnByName(columnName);
-            if (column != null) {
-                if (isColumnForeignKey(model.getChildTable(), column)) {
-                    Alert alert = alertDecorator.getErrorAlert("New Relationship",
-                            "The field \"" + columnName + "\" is already included in the foreign key");
-                    alert.showAndWait();
-                    return false;
-                }
-            } else if (h.isPrimaryKey()) {
+            if (model.getChildTable().getColumnByName(columnName) == null && h.isPrimaryKey()) {
                 // for the new field and if it was marked as a Primary Key, check that the
                 // existing primary
                 // key of the child- table is not included into any existing relationship.
@@ -148,7 +145,7 @@ public class ApricotRelationshipValidator {
                     if (r.getParent().getTable().equals(model.getChildTable())) {
                         Alert alert = alertDecorator.getErrorAlert("New Relationship", "The field \"" + columnName
                                 + "\" cannot be created as a part of the Primary Key of the Child table, "
-                                + "because there is already a Relationship, where the this table acts as a parent.");
+                                + "because there is already a Relationship, where this table acts as a parent.");
                         alert.showAndWait();
                         return false;
                     }
@@ -162,6 +159,13 @@ public class ApricotRelationshipValidator {
             }
 
             columns.add(columnName);
+        }
+
+        if (allColumnsInOneForeignKey(model.getChildTable(), reusedColumns)) {
+            Alert alert = alertDecorator.getErrorAlert("New Relationship",
+                    "The field  in the foreign key already have been included in some other foreign key");
+            alert.showAndWait();
+            return false;
         }
 
         if (hasPK && !allPK) {

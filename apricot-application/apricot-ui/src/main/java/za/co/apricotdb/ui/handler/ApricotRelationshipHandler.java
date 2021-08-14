@@ -106,11 +106,7 @@ public class ApricotRelationshipHandler {
                 "table-1-s1.jpg", "Create a new Relationship");
 
         EditRelationshipController controller = form.getController();
-        if (relationship == null) {
-            controller.init(model);
-        } else {
-            controller.init(model, relationship);
-        }
+        controller.init(model);
         modelBuilder.populateKeys(model);
 
         form.show();

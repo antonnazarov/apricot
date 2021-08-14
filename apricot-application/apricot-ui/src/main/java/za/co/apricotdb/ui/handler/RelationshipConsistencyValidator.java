@@ -24,9 +24,9 @@ public class RelationshipConsistencyValidator {
             return false;
         }
 
-        if (!checkChildMandatoryFields(relationship)) {
-            return false;
-        }
+        // if (!checkChildMandatoryFields(relationship)) {
+        //    return false;
+        // }
 
         return true;
     }

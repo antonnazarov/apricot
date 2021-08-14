@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.EditConstraintController">
+<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.EditConstraintController">
    <children>
       <VBox fx:id="mainPane" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="354.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -39,6 +39,8 @@
                      <children>
                         <Button fx:id="selectBtn" mnemonicParsing="false" onAction="#selectColumn" prefHeight="25.0" prefWidth="69.0" text="&gt;" />
                         <Button fx:id="deselectBtn" layoutX="24.0" layoutY="110.0" mnemonicParsing="false" onAction="#deselectColumn" prefHeight="25.0" prefWidth="69.0" text="&lt;" />
+                        <Button fx:id="upBtn" layoutX="15.0" layoutY="153.0" mnemonicParsing="false" onAction="#upColumn" prefHeight="25.0" prefWidth="69.0" text="Up" />
+                        <Button fx:id="downBtn" layoutX="15.0" layoutY="170.0" mnemonicParsing="false" onAction="#downColumn" prefHeight="25.0" prefWidth="69.0" text="Down" />
                      </children>
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
