@@ -19,6 +19,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -115,6 +116,7 @@ public class ApricotConstraint implements Serializable {
     }
 
     public List<ApricotColumnConstraint> getColumns() {
+        columns.sort(Comparator.comparingInt(ApricotColumnConstraint::getOrdinalPosition));
         return columns;
     }
 

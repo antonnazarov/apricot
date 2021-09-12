@@ -14,7 +14,9 @@ import za.co.apricotdb.ui.handler.NonTransactionalPort;
 import za.co.apricotdb.ui.util.AlertMessageDecorator;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class EditRelationshipModelBuilder {
@@ -64,7 +66,11 @@ public class EditRelationshipModelBuilder {
             fkColumns = model.getConstraint().getColumns();
         }
 
-        for (ApricotColumnConstraint acc : pk.getColumns()) {
+        List<ApricotColumnConstraint> sortedColumns = new ArrayList<>(pk.getColumns());
+        sortedColumns.stream().sorted(Comparator.comparingInt(ApricotColumnConstraint::getOrdinalPosition))
+                .collect(Collectors.toList());
+
+        for (ApricotColumnConstraint acc : sortedColumns) {
             String key = "childForeignKey_" + cnt;
             ApricotColumn column = acc.getColumn();
             model.setPimaryKeyField(key, column.getName());

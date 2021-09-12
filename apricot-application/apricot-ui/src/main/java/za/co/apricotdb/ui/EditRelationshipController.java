@@ -11,7 +11,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
-import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.ui.handler.NonTransactionalPort;
 import za.co.apricotdb.ui.model.EditRelationshipModel;
 import za.co.apricotdb.ui.model.EditRelationshipModelBuilder;
@@ -119,13 +118,6 @@ public class EditRelationshipController {
 
         addKeyHolders(model);
         model.resetKeys();
-    }
-
-    /**
-     * Initialize the controller for the existing relationships.
-     */
-    public void init(EditRelationshipModel model, ApricotRelationship relationship) {
-        init(model);
     }
 
     public EditRelationshipModel getModel() {

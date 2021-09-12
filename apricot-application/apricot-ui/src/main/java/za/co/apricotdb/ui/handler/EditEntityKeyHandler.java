@@ -38,7 +38,7 @@ public class EditEntityKeyHandler implements EventHandler<KeyEvent> {
                 //  this does not work properly if editing the field
                 //  controller.deleteColumn(null);
             } else {
-                controller.deleteConstraint(null);
+                controller.deleteConstraint();
                 event.consume();
             }
             break;

@@ -1,7 +1,5 @@
 package za.co.apricotdb.persistence.entity;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -13,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 /**
  * The apricot_object_layout table.
@@ -27,6 +26,7 @@ import javax.persistence.Table;
 @NamedQuery(name = "ApricotObjectLayout.getLayoutsForView", query = "SELECT ol FROM ApricotObjectLayout ol WHERE ol.view = :view")
 @NamedQuery(name = "ApricotObjectLayout.getLayoutsForProject", query = "SELECT ol FROM ApricotProject p JOIN p.views v JOIN v.objectLayouts ol WHERE p = :project AND ol.objectName = :objectName")
 @NamedQuery(name = "ApricotObjectLayout.getRelationshipLayoutsForProject", query = "SELECT ol FROM ApricotProject p JOIN p.views v JOIN v.objectLayouts ol WHERE p = :project AND ol.objectType = :objectType AND ol.objectName LIKE CONCAT('%', :objectName, '%')")
+@NamedQuery(name = "ApricotObjectLayout.getLayoutsForViewAndNamePrefix", query = "SELECT ol FROM ApricotObjectLayout ol WHERE ol.view = :view AND ol.objectType = :objectType AND ol.objectName LIKE CONCAT(:objectName, '::%')")
 public class ApricotObjectLayout implements Serializable {
 
     private static final long serialVersionUID = -7584762504719191646L;

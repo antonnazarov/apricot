@@ -1,18 +1,16 @@
 package za.co.apricotdb.ui.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import za.co.apricotdb.persistence.data.ConstraintManager;
 import za.co.apricotdb.persistence.entity.ApricotColumnConstraint;
 import za.co.apricotdb.persistence.entity.ApricotConstraint;
 import za.co.apricotdb.persistence.entity.ConstraintType;
 import za.co.apricotdb.ui.handler.ApricotConstraintHandler;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This is a serialise of constraints after the entity added/edited.
@@ -46,7 +44,7 @@ public class ApricotConstraintSerializer {
                 continue;
             }
 
-            ApricotConstraint constraint = null;
+            ApricotConstraint constraint;
             if (cd.isAdded()) {
                 constraint = model.getTable().getConstraintByName(cd.getConstraintName().getValue());
                 if (constraint == null) {
@@ -62,8 +60,9 @@ public class ApricotConstraintSerializer {
                     && !cd.getConstraintTypeAsString().equals(ConstraintType.FOREIGN_KEY.name())) {
                 constraint.setType(ConstraintType.valueOf(cd.getConstraintTypeAsString()));
                 constraint.setTable(model.getTable());
-                serializeConstraintColumns(constraint, cd, model);
             }
+
+            serializeConstraintColumns(constraint, cd, model);
         }
     }
 

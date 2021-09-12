@@ -1,15 +1,11 @@
 package za.co.apricotdb.ui.model;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import za.co.apricotdb.persistence.data.RelationshipManager;
 import za.co.apricotdb.persistence.data.SnapshotManager;
 import za.co.apricotdb.persistence.data.TableManager;
@@ -21,6 +17,11 @@ import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ConstraintType;
 import za.co.apricotdb.support.excel.TableWrapper;
 import za.co.apricotdb.support.excel.TableWrapper.ReportRow;
+import za.co.apricotdb.ui.handler.CommentHandler;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A model builder for the EditEntityModel.
@@ -39,6 +40,9 @@ public class EditEntityModelBuilder {
 
     @Autowired
     RelationshipManager relationshipManager;
+
+    @Autowired
+    CommentHandler commentHandler;
     
     public EditEntityModel buildModel(boolean newEntity, String tableName, Stage dialog) {
         EditEntityModel model = new EditEntityModel(newEntity, dialog);
@@ -71,13 +75,21 @@ public class EditEntityModelBuilder {
         TableWrapper wrapper = new TableWrapper(table, rels);
         Map<String, ReportRow> rows = wrapper.getRowMap();
 
+        Map<String, String> comments = commentHandler.retrieveComments(tableName);
         ObservableList<ApricotColumnData> columns = FXCollections.observableArrayList();
         for (ApricotColumn col : table.getColumns()) {
             ApricotColumnData cd = new ApricotColumnData(col);
             if (rows.get(col.getName()) != null) {
                 ReportRow r = rows.get(col.getName());
-                cd.setComment(r.getConstraints());
+                cd.setPkfk(r.getConstraints());
             }
+
+            //  handle a comment, if any
+            String comment = comments.get(col.getName());
+            if (StringUtils.isNotEmpty(comment)) {
+                cd.setComment(comment);
+            }
+
             columns.add(cd);
         }
         model.setColumns(columns);
