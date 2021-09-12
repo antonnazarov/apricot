@@ -123,7 +123,7 @@ public class ReversedTablesController {
         List<ApricotTable> included = new ArrayList<>();
         List<ApricotTable> excluded = new ArrayList<>();
         for (ReversedTableRow r : reversedTablesList.getItems()) {
-            if (r.isIncluded()) {
+            if (r.isIncluded() && r.getElementType() == ElementType.ENTITY) {
                 included.add(r.getTable());
             } else {
                 excluded.add(r.getTable());
