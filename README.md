@@ -7,3 +7,4 @@ a new database structure from scratch. Allows to generate the essential DDL- scr
 CREATE/DROP/DELETE- operations based on the current ERD.
 
 For the current stable release of "Apricot DB" visit https://sourceforge.net/projects/apricot-db/
+latest change 2021-09-12
