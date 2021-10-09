@@ -30,8 +30,8 @@ public class MySqlUrlBuilder implements DatabaseUrlBuilder {
     @Override
     public String getUrl(String server, String port, String database, boolean integratedSecurity, OracleServiceType serviceType, String pathToTnsnamesOraFile) {
         // jdbc:mysql://<server>:<port3306>/<database>
-        StringBuilder sb = new StringBuilder("jdbc:mysql://").append(server).append(":").append(port).append("/")
-                .append(database);
+        StringBuilder sb = new StringBuilder("jdbc:mysql://").append(server).append(":").append(port).append("/");
+//                .append(database);
         
         return sb.toString();
     }

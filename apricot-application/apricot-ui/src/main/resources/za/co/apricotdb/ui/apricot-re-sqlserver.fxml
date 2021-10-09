@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="234.0" prefWidth="399.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.ConnectionSqlServerController">
+<VBox fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="234.0" prefWidth="399.0" spacing="10.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="za.co.apricotdb.ui.ConnectionSqlServerController">
    <children>
       <GridPane prefHeight="173.0" prefWidth="379.0">
         <columnConstraints>
@@ -34,11 +34,6 @@
             <Label text="User:" GridPane.rowIndex="4" />
             <Label text="Password:" GridPane.rowIndex="5" />
             <ComboBox fx:id="server" editable="true" onAction="#serverSelected" prefHeight="25.0" prefWidth="315.0" GridPane.columnIndex="1" />
-            <ComboBox fx:id="database" editable="true" prefHeight="25.0" prefWidth="315.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <ComboBox fx:id="user" editable="true" onAction="#userSelected" prefHeight="25.0" prefWidth="315.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <PasswordField fx:id="password" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <Label text="Schema:" GridPane.rowIndex="3" />
-            <ComboBox fx:id="schema" editable="true" onAction="#userSelected" prefHeight="25.0" prefWidth="315.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <HBox prefHeight="100.0" prefWidth="200.0" spacing="14.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
                   <ComboBox fx:id="port" editable="true" prefHeight="25.0" prefWidth="160.0" />
@@ -55,6 +50,11 @@
                   <Insets bottom="3.0" top="3.0" />
                </padding>
             </HBox>
+            <ComboBox fx:id="database" editable="true" prefHeight="25.0" prefWidth="315.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <ComboBox fx:id="schema" editable="true" onAction="#userSelected" prefHeight="25.0" prefWidth="315.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <ComboBox fx:id="user" editable="true" onAction="#userSelected" prefHeight="25.0" prefWidth="315.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <PasswordField fx:id="password" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Label text="Schema:" GridPane.rowIndex="3" />
          </children>
       </GridPane>
       <HBox alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="474.0" spacing="10.0">

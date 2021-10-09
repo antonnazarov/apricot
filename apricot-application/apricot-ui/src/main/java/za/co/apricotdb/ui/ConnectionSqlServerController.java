@@ -90,15 +90,13 @@ public class ConnectionSqlServerController {
         targetDb = ApricotTargetDatabase.parse(project.getTargetDatabase());
         applyModel(model);
 
-        if (targetDb == ApricotTargetDatabase.Oracle) {
-            serviceLabel.setText("SID:");
-            schema.setDisable(true);
-            // the schema and user name are the same for the Oracle database
-            schema.valueProperty().bind(user.valueProperty());
-        }
-
         if (targetDb == ApricotTargetDatabase.MSSQLServer) {
             useWindowsUserFlag.setVisible(true);
+        }
+
+        if (targetDb == ApricotTargetDatabase.MySQL || targetDb == ApricotTargetDatabase.MariaDB) {
+            database.setValue("N/A");
+            database.setDisable(true);
         }
     }
 
