@@ -6,3 +6,5 @@ call mvn install:install-file -Dfile=db2jcc_license_cisuz.jar -DgroupId=com.ibm.
 call mvn install:install-file -Dfile=db2jcc_license_cu.jar -DgroupId=com.ibm.db2 -DartifactId=license_cu -Dversion=1.0 -Dpackaging=jar
 REM updated 22/05/2021
 call mvn install:install-file -Dfile=ojdbc11.jar -DgroupId=com.oracle -DartifactId=ojdbc11 -Dversion=21.1 -Dpackaging=jar
+call mvn install:install-file -Dfile=orai18n.jar -DgroupId=com.oracle -DartifactId=orai18n -Dversion=21.1 -Dpackaging=jar
+
