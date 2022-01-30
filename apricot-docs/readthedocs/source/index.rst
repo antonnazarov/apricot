@@ -1,8 +1,8 @@
 ApricotDB: The Users Guide
 ##########################
 
-This documentation contains description of the functions and features of "Apricot DB" - the database modelling and design tool.
-The current version of software: Release 2.6 (July 2021).
+This documentation contains the detailed technical description of the main functionality and accompanying features of "Apricot DB" - the database modelling and design tool.
+The current version of the software: Release 2.6.2 (November 2021).
 
 .. toctree::
    :maxdepth: 2

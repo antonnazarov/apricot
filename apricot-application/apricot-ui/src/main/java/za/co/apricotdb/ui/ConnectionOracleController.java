@@ -224,17 +224,18 @@ public class ConnectionOracleController {
      */
     private String composeReverseEngineeringParameters() {
         StringBuilder sb = new StringBuilder();
+        String sName = serviceName.getValue();
 
         sb.append("Database: Oracle").append("\n");
         switch (serviceType) {
             case SERVICE:
-                sb.append("Service: ").append(serviceName).append("\n");
+                sb.append("Service: ").append(sName).append("\n");
                 break;
             case SID:
-                sb.append("SID: ").append(serviceName).append("\n");
+                sb.append("SID: ").append(sName).append("\n");
                 break;
             case TNS:
-                sb.append("TNS: ").append(serviceName).append("\n");
+                sb.append("TNS: ").append(sName).append("\n");
                 break;
         }
         if (serviceType != OracleServiceType.TNS) {

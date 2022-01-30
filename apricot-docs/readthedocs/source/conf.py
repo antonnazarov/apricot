@@ -1,6 +1,6 @@
 # -- Project information -----------------------------------------------------
 project = "ApricotDB Users Guide"
-copyright = "2018-2021, Anton Nazarov"
+copyright = "2018-2022, Anton Nazarov"
 author = "Anton Nazarov"
 
 # -- Extensions --------------------------------------------------------------
@@ -12,7 +12,7 @@ extensions = [
 ]
 
 # -- Options for HTML output -------------------------------------------------
-html_title = "ApricotDB Release 2.6 (July 2021)"
+html_title = "ApricotDB Release 2.6.2 (November 2021)"
 
 # NOTE: All the lines are after this are the theme-specific ones. These are
 #       written as part of the site generation pipeline for this project.
