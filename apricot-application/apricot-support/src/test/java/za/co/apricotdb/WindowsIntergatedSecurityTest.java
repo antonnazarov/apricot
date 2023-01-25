@@ -27,7 +27,7 @@ public class WindowsIntergatedSecurityTest {
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             Connection conn = DriverManager.getConnection(
-                    "jdbc:sqlserver://Sanpay2017_db_dev.sanlam.co.za:1433;databaseName=Intermediary_Compensation;integratedSecurity=true");
+                    "jdbc:sqlserver://localhost:1433;databaseName=MyDatabase;integratedSecurity=true");
             PreparedStatement ps = conn.prepareStatement("select * from audit");
             ResultSet rs = ps.executeQuery();
             System.out.println("The native access!!");
@@ -43,7 +43,7 @@ public class WindowsIntergatedSecurityTest {
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             Connection conn = DriverManager.getConnection(
-                    "jdbc:sqlserver://Sanpay2017_db_dev.sanlam.co.za:1433;databaseName=Intermediary_Compensation",
+                    "jdbc:sqlserver://localhost:1433;databaseName=MyDatabase",
                     "Intermediary_Compensation_Read", "$@TionRe@d01");
             PreparedStatement ps = conn.prepareStatement("select * from audit");
             ResultSet rs = ps.executeQuery();
