@@ -1,12 +1,8 @@
 package za.co.apricotdb.ui.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import za.co.apricotdb.persistence.data.ConstraintManager;
 import za.co.apricotdb.persistence.data.RelationshipManager;
 import za.co.apricotdb.persistence.data.TableManager;
@@ -17,6 +13,9 @@ import za.co.apricotdb.persistence.entity.ApricotRelationship;
 import za.co.apricotdb.persistence.entity.ApricotTable;
 import za.co.apricotdb.persistence.entity.ConstraintType;
 import za.co.apricotdb.ui.handler.ApricotEntityHandler;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This component performs the serialisation of the new Relationship.
@@ -43,9 +42,12 @@ public class ApricotRelationshipSerializer {
         List<ApricotColumn> columns = getForeignKeyColumns(model);
         ApricotConstraint fk = new ApricotConstraint(model.getRelationshipNameProperty().getValue(),
                 ConstraintType.FOREIGN_KEY, model.getChildTable());
+        int ordNum = 0;
         for (ApricotColumn c : columns) {
             ApricotColumnConstraint acc = new ApricotColumnConstraint(fk, c);
+            acc.setOrdinalPosition(ordNum);
             fk.getColumns().add(acc);
+            ordNum++;
         }
         if (model.getChildTable().getConstraintByName(fk.getName()) == null) {
             model.getChildTable().getConstraints().add(fk);

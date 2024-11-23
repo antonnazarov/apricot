@@ -11,7 +11,7 @@ import java.sql.SQLException;
  * @since 10/07/2020
  */
 public class AdapterRunner {
-    public static final DatabaseStructureAdapter[] adapters = {new Release23Adapter(), new Release24MR1Adapter()};
+    public static final DatabaseStructureAdapter[] adapters = {new Release23Adapter(), new Release24MR1Adapter(), new Release26Adapter()};
 
     public boolean runAdapters() {
         String dbFile = System.getProperty("user.home") + "/.apricotdb/apricot-project";

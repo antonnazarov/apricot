@@ -18,3 +18,4 @@ html_title = "ApricotDB Release 2.6 (July 2021)"
 #       written as part of the site generation pipeline for this project.
 # !! MARKER !!
 html_theme = "sphinx_rtd_theme"
+pdf_break_level = 0

@@ -8,6 +8,7 @@ import za.co.apricotdb.persistence.entity.ApricotTable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -130,13 +131,16 @@ public class EditRelationshipModel implements Serializable {
      */
     public List<ParentChildKeyHolder> getKeys() {
         List<ParentChildKeyHolder> ret = new ArrayList<>();
-        
-        for (ParentChildKeyHolder h : keys.values()) {
+
+        List<String> keyIds = new ArrayList<>(keys.keySet());
+        Collections.sort(keyIds);
+        for (String key : keyIds) {
+            ParentChildKeyHolder h = keys.get(key);
             if (!h.isVoidSlot()) {
                 ret.add(h);
             }
         }
-        
+
         return ret;
     }
     
